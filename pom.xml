@@ -451,7 +451,7 @@
         <repository>
             <id>nexus</id>
             <name>Nexus</name>
-            <url>http://120.26.119.192:8081/nexus/content/groups/public/</url>
+            <url>http://maven.yuntaohongbao.com:8081/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -462,7 +462,7 @@
         <repository>
             <id>thirdparty</id>
             <name>thirdparty</name>
-            <url>http://120.26.119.192:8081/nexus/content/repositories/thirdparty/</url>
+            <url>http://maven.yuntaohongbao.com:8081/nexus/content/repositories/thirdparty/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -475,7 +475,7 @@
         <pluginRepository>
             <id>nexus</id>
             <name>Nexus</name>
-            <url>http://120.26.119.192:8081/nexus/content/groups/public/</url>
+            <url>http://maven.yuntaohongbao.com:8081/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
