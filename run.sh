@@ -26,8 +26,8 @@ case "$module" in
         ;;
 esac
 
-cd /u01/project/hongbao_${module_dir}
+cd /u01/project/zhushou_${module_dir}
 ./tomcat.sh stop
 sleep 5
-ps aux | grep /u01/project/hongbao_${module_dir}/ | grep -v grep | awk '{print $2 }' | xargs kill
+ps aux | grep /u01/project/zhushou_${module_dir}/ | grep -v grep | awk '{print $2 }' | xargs kill
 ./tomcat.sh start

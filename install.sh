@@ -29,7 +29,7 @@ case "$module" in
         exit 0
         ;;
 esac
-rm -fr /u01/project/hongbao_${module_dir}/webapps/*
-echo "cp -r zhushou-${src_dir}/target/zhushou-${src_dir} /u01/project/hongbao_${module_dir}/webapps/ROOT"
-cp -r zhushou-${src_dir}/target/zhushou-${src_dir} /u01/project/hongbao_${module_dir}/webapps/ROOT
+rm -fr /u01/project/zhushou_${module_dir}/webapps/*
+echo "cp -r zhushou-${src_dir}/target/zhushou-${src_dir} /u01/project/zhushou_${module_dir}/webapps/ROOT"
+cp -r zhushou-${src_dir}/target/zhushou-${src_dir} /u01/project/zhushou_${module_dir}/webapps/ROOT
 
