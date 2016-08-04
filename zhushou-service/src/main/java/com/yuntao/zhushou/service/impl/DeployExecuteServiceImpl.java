@@ -59,7 +59,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
     public void complie(User user,String appName, String branch, String model) {
         App app = appService.findByName(appName);
         String codeName = app.getCodeName();
-        String cmd = "sh /u01/deploy/deploy.sh package,"+codeName+"," + branch + "," + model;
+        String cmd = "sh /u01/deploy2/deploy.sh package,"+codeName+"," + branch + "," + model;
         execShellScript(cmd, "complie");
     }
 
@@ -67,7 +67,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
     public void deploy(User user, String appName, String model, List<String> ipList) {
         App app = appService.findByName(appName);
         String codeName = app.getCodeName();
-        String cmd = "sh /u01/deploy/deploy.sh run,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
+        String cmd = "sh /u01/deploy2/deploy.sh run,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
         execShellScript(cmd, "deploy");
         saveLog(user, appName, model, "发布", ipList);
 
@@ -77,7 +77,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
     public void deployStatic(User user, String appName, String model, List<String> ipList) {
         App app = appService.findByName(appName);
         String codeName = app.getCodeName();
-        String cmd = "sh /u01/deploy/deploy.sh install,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
+        String cmd = "sh /u01/deploy2/deploy.sh install,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
         if(newAppNameList.contains(appName)){  //is new version appName
         }
         execShellScript(cmd, "deployStatic");
@@ -86,14 +86,14 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
 
     @Override
     public void restart(User user, String appName, String model, List<String> ipList) {
-        String cmd = "sh /u01/deploy/deploy.sh restart " + appName + " " + StringUtils.join(ipList, ",");
+        String cmd = "sh /u01/deploy2/deploy.sh restart " + appName + " " + StringUtils.join(ipList, ",");
         execShellScript(cmd, "restart");
         saveLog(user, appName, model, "重启", ipList);
     }
 
     @Override
     public void stop(User user, String appName, String model, List<String> ipList) {
-        String cmd = "sh /u01/deploy/deploy.sh stop " + appName + " " + StringUtils.join(ipList, ",");
+        String cmd = "sh /u01/deploy2/deploy.sh stop " + appName + " " + StringUtils.join(ipList, ",");
         execShellScript(cmd, "stop");
         saveLog(user, appName, model, "下线", ipList);
 
@@ -101,7 +101,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
 
     @Override
     public void rollback(User user, String appName, String model, String backVer, List<String> ipList) {
-        String cmd = "sh /u01/deploy/deploy.sh rollback," + backVer + " " + appName + " " + StringUtils.join(ipList, ",");
+        String cmd = "sh /u01/deploy2/deploy.sh rollback," + backVer + " " + appName + " " + StringUtils.join(ipList, ",");
         execShellScript(cmd, "rollback");
         saveLog(user, appName, model, "回滚", ipList);
     }
@@ -110,7 +110,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
     public List<String> branchList(String appName) {
         App app = appService.findByName(appName);
         String codeName = app.getCodeName();
-        String cmd = "sh /u01/deploy/branch_list.sh "+codeName;
+        String cmd = "sh /u01/deploy2/branch_list.sh "+codeName;
         execShellScript(cmd, "branchList");
         String msg = null;
         Set<String> resultSet = new TreeSet<>();
