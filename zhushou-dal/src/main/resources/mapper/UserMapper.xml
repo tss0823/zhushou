@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuntao.zhushou.dal.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="User">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="accountNo" property="accountNo" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="nickName" property="nickName" jdbcType="VARCHAR"/>
+        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP"/>
+        <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="qq" property="qq" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`accountNo`,`pwd`,`nickName`,`gmtCreate`,`gmtModify`,`delStatus`,`level`,`type`,
+        `status`,`email`,`mobile`,`qq`
+    </sql>
+    <sql id="Base_Table_Name">
+        user
+    </sql>
+    <sql id="Base_Where">
+        delStatus = 1
+        <if test="id != null">and id = #{id}</if>
+        <if test="accountNo != null and accountNo != ''">and accountNo = #{accountNo}</if>
+        <if test="type != null">and type = #{type}</if>
+        <if test="level != null">and level = #{level}</if>
+        <if test="status != null">and status = #{status}</if>
+
+    </sql>
+
+    <select id="findById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        where id = #{id}
+    </select>
+
+    <select id="findByCondition" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        <selectKey resultType="long" keyProperty="id">
+            SELECT
+            LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (`accountNo`,`pwd`,`nickName`,`gmtCreate`,`gmtModify`,`delStatus`,`level`,`type`,`status`,
+        `email`,`mobile`,`qq`)
+        values
+        (#{accountNo},#{pwd},#{nickName},now(6),now(6),1,#{level},#{type},#{status},#{email},#{mobile},#{qq})
+    </insert>
+
+    <update id="updateById">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            <if test="accountNo != null and accountNo !=''">`accountNo`=#{accountNo},</if>
+            <if test="pwd != null and pwd !=''">`pwd`=#{pwd},</if>
+            <if test="nickName != null and nickName !=''">`nickName`=#{nickName},</if>
+            <if test="gmtCreate != null and gmtCreate !=''">`gmtCreate`=#{gmtCreate},</if>
+            <if test="gmtModify != null and gmtModify !=''">`gmtModify`=#{gmtModify},</if>
+            <if test="level != null and level !=''">`level`=#{level},</if>
+            <if test="type != null">`type`=#{type},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="email != null and email !=''">`email`=#{email},</if>
+            <if test="mobile != null and mobile !=''">`mobile`=#{mobile},</if>
+            <if test="qq != null and qq !=''">`qq`=#{qq},</if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById">
+        update
+        <include refid="Base_Table_Name"/>
+        set delStatus = 0
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            gmtModify=now(),
+            <if test="newStatus != null">`status`=#{newStatus},</if>
+        </set>
+
+        where id = #{id} and status = #{oldStatus}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+     http://www.springframework.org/schema/tx 
+                     http://www.springframework.org/schema/tx/spring-tx.xsd 
+                     http://www.springframework.org/schema/aop 
+                     http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-lazy-init="true" default-autowire="byName">
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="initialPoolSize" value="10"/>
+        <property name="minPoolSize" value="10"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="acquireIncrement" value="3"/>
+        <property name="acquireRetryAttempts" value="30"/>
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="maxIdleTime" value="25000"/>
+        <property name="maxStatementsPerConnection" value="10"/>
+        <property name="maxStatements" value="1000"/>
+        <property name="numHelperThreads" value="5"/>
+        <property name="preferredTestQuery" value="SELECT @@SQL_MODE"/>
+        <property name="testConnectionOnCheckin" value="true"/>
+        <property name="testConnectionOnCheckout" value="false"/>
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password">
+            <value><![CDATA[${jdbc.password}]]></value>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" read-only="false" rollback-for="Throwable" propagation="REQUIRED"
+                       isolation="REPEATABLE_READ"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="servicePointcut" expression="execution(* com.yuntao.zhushou.service..*Impl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="servicePointcut"/>
+    </aop:config>
+
+</beans>

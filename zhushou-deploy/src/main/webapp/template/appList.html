@@ -1,0 +1,52 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <!--<th class="center">-->
+            <!--<label>-->
+            <!--<input type="checkbox" class="ace">-->
+            <!--<span class="lbl"></span>-->
+            <!--</label>-->
+            <!--</th>-->
+            <th width="5%">应用</th>
+            <th width="10%">描述</th>
+            <th width="6%">负责人</th>
+            <th width="8%">
+                <i class="icon-time "></i>
+                最后操作时间
+            </th>
+            <th width="25%">操作日志</th>
+            <th width="10%">操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbContent">
+        {{each dataList as bean i}}
+        <tr class="selected">
+            <td>
+                <a href="#">{{bean.name}}</a>
+            </td>
+            <td>{{bean.desc}}</td>
+            <td>{{bean.userName}}</td>
+            <td>{{bean.lastTime}}</td>
+            <td>{{bean.log}}</td>
+
+            <td class="hidden-480">
+                <a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="test" appName="{{bean.name}}" color="green"  ><strong style="color:green">测试</strong></a>
+                <a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="prod" appName="{{bean.name}}" color="red"  ><strong style="color:red">线上</strong></a>
+                [<strong>{{bean.name}}</strong>]
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div><!-- /.page-content -->
+<script src="/_resources/scripts/module/app.js" ></script>

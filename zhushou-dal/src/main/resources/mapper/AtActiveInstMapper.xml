@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yuntao.zhushou.dal.mapper.AtActiveInstMapper">  
+   
+  <resultMap type="AtActiveInst" id="BaseResultMap">
+     <id column="id" property="id" jdbcType="BIGINT" />
+       <result  column="processInstId" property="processInstId"/>
+     <result  column="name" property="name"/>
+     <result  column="status" property="status"/>
+     <result  column="httpStatus" property="httpStatus"/>
+     <result  column="errMsg" property="errMsg"/>
+     <result  column="result" property="result"/>
+     <result  column="gmtCreate" property="gmtCreate"/>
+     <result  column="gmtModify" property="gmtModify"/>
+     <result  column="delStatus" property="delStatus"/>
+</resultMap>
+        
+    
+ <sql id="Base_Column_List">
+    `id`,`processInstId`,`name`,`status`,`httpStatus`,`errMsg`,`result`,`gmtCreate`,       
+    `gmtModify`,`delStatus`       
+    
+  </sql>
+        
+    
+  <sql id="Base_Table_Name">
+      atActiveInst
+  </sql>
+        
+    
+  <sql id="Base_Where">
+    delStatus = 1
+    <if test="id != null and id != '' ">and  `id` = #{id}</if> 
+    <if test="processInstId != null and processInstId != '' ">and  `processInstId` = #{processInstId}</if> 
+    <if test="name != null and name != '' ">and  `name` = #{name}</if> 
+    <if test="status != null and status != '' ">and  `status` = #{status}</if> 
+    <if test="httpStatus != null and httpStatus != '' ">and  `httpStatus` = #{httpStatus}</if> 
+    <if test="errMsg != null and errMsg != '' ">and  `errMsg` = #{errMsg}</if> 
+    <if test="result != null and result != '' ">and  `result` = #{result}</if> 
+    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
+    <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
+  </sql>
+  
+        
+    
+  <select id="findById" resultMap="BaseResultMap">
+     select <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" /> WHERE id = #{id}
+  </select>
+        
+    
+  <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" />
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+       order by id desc
+     <if test="pageInfo != null ">
+          limit #{pageInfo.offset}, #{pageInfo.pageSize}
+    </if>
+    </select>
+    
+        
+    
+  <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+      SELECT count(*) from <include refid="Base_Table_Name" />
+      <where>
+          <include refid="Base_Where"/>
+      </where>
+  </select>
+ 
+        
+    
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="AtActiveInst">
+      <selectKey resultType="long" keyProperty="id">
+          SELECT
+          LAST_INSERT_ID() AS id
+      </selectKey>
+    insert into  <include refid="Base_Table_Name" />
+    (
+    `processInstId`,`name`,`status`,`httpStatus`,`errMsg`,`result`,       
+    `gmtCreate`,`gmtModify`,`delStatus`
+    ) 
+    values
+    (
+    #{processInstId},#{name},#{status},#{httpStatus},#{errMsg},#{result},now(6),now(6),       
+    1
+    )
+  </insert>  
+    
+  <update id="updateById">  
+    update <include refid="Base_Table_Name" />
+      <set>
+           <if test="processInstId != null and processInstId !=''">`processInstId` = #{processInstId},</if>
+       <if test="name != null and name !=''">`name` = #{name},</if>
+       <if test="status != null and status !=''">`status` = #{status},</if>
+       <if test="httpStatus != null and httpStatus !=''">`httpStatus` = #{httpStatus},</if>
+       <if test="errMsg != null and errMsg !=''">`errMsg` = #{errMsg},</if>
+       <if test="result != null and result !=''">`result` = #{result},</if>
+     </set>
+   ,gmtModify = now(6)
+   where id = #{id}
+  </update>  
+        
+    
+   <update id="deleteById" parameterType="Long">  
+      update  <include refid="Base_Table_Name" /> set delStatuse = 0  where id = #{id}
+   </update>  
+   
+     <!-- user definition code start -->
+     <!-- user definition code end -->
+</mapper> 

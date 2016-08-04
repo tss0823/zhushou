@@ -1,0 +1,14 @@
+.idea/
+target
+.settings
+.DS_Store
+.settings/
+.project
+.classpath
+*.class
+bin/
+.iml
+.orig
+*.iml
+*.orig
+.rebel*

@@ -1,0 +1,99 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" onsubmit="return false;">
+                <div class="form-group" style="padding-left: 50px">
+                    名称：
+                    <input type="text" id="name" placeholder="请输入模板名称" class="input-xlarge">
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    环境：
+                    <select id="model" name="model">
+                    </select>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <div class="hr hr-18 dotted hr-double"></div>
+                    活动模板：
+                    <button class="btn btn-sm btn-yellow" id="btnSelActive">选择</button>
+                </div>
+
+                <div class="form-group" style="padding-left: 50px">
+                    <div class="dd dd-draghandle">
+                        <ol class="dd-list" id="activeList" style="width:1200px">
+                            <li class="dd-item dd2-item" id="activeItem">
+                                <div class="dd-handle dd2-handle" id="activeItemIcon">
+                                    <i class="normal-icon icon-reorder blue bigger-130"></i>
+                                    <i class="drag-icon icon-move bigger-125"></i>
+                                </div>
+                                <div class="dd2-content" id="activeItemText">
+                                    http://www.baidu.com
+                                    <div class="pull-right action-buttons" id="itemRemove">
+                                        <a class="red" href="#" >
+                                            <i class="icon-trash bigger-130"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <ol class="dd-list" id="activeChildItem">
+                                    <li class="dd-item dd2-item" >
+                                        <div class="dd-handle dd2-handle">
+                                            <i class="normal-icon icon-eye-open green bigger-130"></i>
+                                            <i class="drag-icon icon-move bigger-125"></i>
+                                        </div>
+                                        <div class="dd2-content">
+                                            <input type="text" name="code" id="code" value="{{code}}" placeholder="编码" class="input-medium">
+                                            [<input type="text" name="name" id="name" value="{{name}}" placeholder="名称" class="input-block">
+                                            <select id="dataType">
+                                                <option value="text">文本</option>
+                                                <option value="file">文件</option>
+                                            </select>]=
+                                            <input type="text" name="dataValue" id="dataValue" value="{{dataValue}}" placeholder="值" class="input-xlarge">
+                                            规则=
+                                            [<select id="ruleType" name="ruleType">
+                                        </select>
+                                            <input type="text" name="script" id="script" value="{{script}}" placeholder="脚本" class="input-xlarge">
+                                            ]
+                                            <div class="pull-right action-buttons" id="itemChildRemove">
+                                                <a class="red" href="#" >
+                                                    <i class="icon-trash bigger-130"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </li>
+
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="button">
+                            <i class="icon-ok bigger-110"></i>
+                            保存
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            取消
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->
+<script src="/_resources/scripts/module/at/templateNew.js"></script>
