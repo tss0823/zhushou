@@ -144,7 +144,7 @@
 
     $(document).ready(function () {
         var isLogin = YunTao.deploy.checkLogin();
-        if (isLogin) { //跳转到登陆录列表
+        if (!isLogin) { //跳转到登陆录列表
             $(document.body).addClass("login-layout");
             YunTao.deploy.routeIndex("/login.html", appData);
             return;
