@@ -2,32 +2,9 @@
 #
 module=$1
 module_dir="deploy"
-case "$module" in
-    deploy)
-        module_dir="deploy"
 
-        ;;
-    task1)
-        module_dir="task1"
-
-        ;;
-    task2)
-        module_dir="task2"
-
-        ;;
-    task3)
-        module_dir="task3"
-        ;;
-
-       *)
-        #echo "usage [logstash|zookeeper|solr]"
-        echo "usage [deploy|task1|task2|task3]"
-	exit 0
-        ;;
-esac
-
-cd /u01/deploy/project/tomcat_${module_dir}
+cd /u01/deploy/project/tomcat_zhushou
 ./tomcat.sh stop
 sleep 5
-ps aux | grep /u01/deploy/project/tomcat_${module_dir}/ | grep -v grep | awk '{print $2 }' | xargs kill
+ps aux | grep /u01/deploy/project/tomcat_zhushou/ | grep -v grep | awk '{print $2 }' | xargs kill
 ./tomcat.sh start
