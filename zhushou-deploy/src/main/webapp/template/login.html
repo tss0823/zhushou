@@ -1,4 +1,3 @@
-<body class="login-layout">
 <div class="main-container">
     <div class="main-content">
         <div class="row">
@@ -90,8 +89,7 @@ $(document).ready(function(){
         $.post("user/login",params,function(d){
             if(d.success){
                 //跳转到应用列表
-                $(document.body).removeClass("login-layout");
-                YunTao.deploy.routeIndex("/list.html", appData);
+                YunTao.deploy.goIndexPage();
             }else{
                 alert("登陆失败 原因："+ d.message);
             }
@@ -99,5 +97,3 @@ $(document).ready(function(){
     });
 });
 </script>
-</body>
-</html>

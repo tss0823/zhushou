@@ -39,7 +39,7 @@
                 } else {
                     alert(d.message);
                     if (d.code == YT.deploy.constant.NOT_LOGIN) {
-                        window.location = "/login.html";
+                        YT.deploy.goLoginPage();
                     }
                     return false;
                 }
@@ -53,7 +53,7 @@
                 } else {
                     alert(d.message);
                     if (d.code == YT.deploy.constant.NOT_LOGIN) {
-                        window.location = "/login.html";
+                        YT.deploy.goLoginPage();
                     }
                 }
             });
@@ -390,7 +390,7 @@
                     } else {
                         alert(d.message);
                         if (d.code == "01") {
-                            window.location = "/login.html";
+                            YT.deploy.goLoginPage();
                         }
                     }
                 },
@@ -400,6 +400,8 @@
             });
             return isLogin;
         },
+
+
 
         route: function (url, param, tpl_url, ext_data) {
             // $this = this;
@@ -429,6 +431,18 @@
                 var html = render(ext_data);
                 $("#indexBlock").html(html);
             });
+        },
+
+        //跳到登录
+        goLoginPage: function () {
+            $(document.body).addClass("login-layout");
+            YunTao.deploy.routeIndex("/login.html", appData);
+        },
+
+        //跳到首页
+        goIndexPage: function () {
+            $(document.body).removeClass("login-layout");
+            YT.deploy.routeIndex("/list.html", appData);
         },
 
         route_callback: function () {
