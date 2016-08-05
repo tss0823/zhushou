@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,5 +36,10 @@ public class ConfigServiceImpl extends AbstService implements ConfigService {
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("name", name);
         return configMapper.findByCondition(queryMap);
+    }
+
+    @Override
+    public List<Config> selectList() {
+        return configMapper.selectList(new HashMap());
     }
 }

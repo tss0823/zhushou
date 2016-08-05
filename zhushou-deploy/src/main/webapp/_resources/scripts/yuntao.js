@@ -377,6 +377,30 @@
     };
 
     var common = {
+        checkLogin: function () {
+            var isLogin = false;
+            //获取用户信息
+            $.ajax({
+                url: "/user/getLoginUser",
+                async: false,
+                success: function (d) {
+                    if (d.success) {
+                        appData["user"] = d.data;
+                        isLogin = true;
+                    } else {
+                        alert(d.message);
+                        if (d.code == "01") {
+                            window.location = "/login.html";
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(textStatus);
+                }
+            });
+            return isLogin;
+        },
+
         route: function (url, param, tpl_url, ext_data) {
             // $this = this;
             YT.deploy.util.reqGet(url, param, function (d) {
@@ -395,6 +419,15 @@
                     YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, ext_data);
 
                 });
+            });
+        },
+
+        //请求 index.html 进行路由 
+        routeIndex: function (tpl_url, ext_data) {
+            $.get(tpl_url, function (source) {
+                var render = template.compile(source);
+                var html = render(ext_data);
+                $("#indexBlock").html(html);
             });
         },
 

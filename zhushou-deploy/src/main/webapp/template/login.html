@@ -1,46 +1,3 @@
-<!DOCTYPE html>
-<html lang="cn">
-<head>
-    <meta charset="utf-8" />
-    <title>登录页面 - 云淘助手-发布系统</title>
-    <meta name="keywords" content="云淘助手" />
-    <meta name="description" content="云淘助手" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- basic styles -->
-
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
-
-    <!--[if IE 7]>
-    <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
-    <![endif]-->
-
-    <!-- page specific plugin styles -->
-
-    <!-- fonts -->
-
-    <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />-->
-
-    <!-- ace styles -->
-
-    <link rel="stylesheet" href="assets/css/ace.min.css" />
-    <link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
-
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
-    <![endif]-->
-
-    <!-- inline styles related to this page -->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-
-    <!--[if lt IE 9]>
-    <script src="assets/js/html5shiv.js"></script>
-    <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-</head>
-
 <body class="login-layout">
 <div class="main-container">
     <div class="main-content">
@@ -50,9 +7,9 @@
                     <div class="center">
                         <h1>
                             <i class="icon-leaf green"></i>
-                            <span class="white">云淘助手</span>
+                            <span class="white">{{projectName}}</span>
                         </h1>
-                        <h4 class="blue">&copy; 杭州云淘网络科技有限公司</h4>
+                        <h4 class="blue">&copy; {{company}}</h4>
                     </div>
 
                     <div class="space-6"></div>
@@ -121,35 +78,6 @@
     </div>
 </div><!-- /.main-container -->
 
-<!-- basic scripts -->
-
-<!--[if !IE]> -->
-<script src="assets/js/jquery-2.0.3.min.js"></script>
-<!-- <![endif]-->
-
-<!--[if IE]>
-<script src="assets/js/jquery-1.10.2.min.js"></script>
-<![endif]-->
-
-<!--[if !IE]> -->
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
-</script>
-<!-- <![endif]-->
-
-<!--[if IE]>
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
-
-<script type="text/javascript">
-    if("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-</script>
-
-<!-- inline scripts related to this page -->
-
-<script src="/_resources/scripts/header.js"></script>
 <script src="/_resources/scripts/md5.js"></script>
 <![endif]-->
 <script type="text/javascript">
@@ -161,13 +89,14 @@ $(document).ready(function(){
         params["pwd"] = pwd;
         $.post("user/login",params,function(d){
             if(d.success){
-                window.location =  "/list.html"
+                //跳转到应用列表
+                $(document.body).removeClass("login-layout");
+                YunTao.deploy.routeIndex("/list.html", appData);
             }else{
                 alert("登陆失败 原因："+ d.message);
             }
         });
     });
-
 });
 </script>
 </body>

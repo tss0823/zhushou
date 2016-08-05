@@ -14,29 +14,40 @@
 
 
     YT.deploy.index = {
-        checkLogin: function () {
-            var isLogin = false;
-            //获取用户信息
+        initData:function(){
+
+            //获取系统枚举值
             $.ajax({
-                url: "/user/getLoginUser",
+                url: "/data/enums",
                 async: false,
                 success: function (d) {
-                    if (d.success) {
-                        var nickName = d.data.nickName;
-                        $("#nickName").html(nickName);
-                        isLogin = true;
-                    } else {
-                        alert(d.message);
-                        if (d.code == "01") {
-                            window.location = "/login.html";
-                        }
-                    }
+                    var enums = {enums: d.data};
+                    $.extend(YT.deploy.data, enums);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert(textStatus);
                 }
             });
-            return isLogin;
+
+            //获取系统列表值
+            // $.ajax({
+            //     url: "/data/appDataList",
+            //     async: false,
+            //     success: function (d) {
+            //         var enums = {appData: d.data};
+            //         $.extend(YT.deploy.data, enums);
+            //     },
+            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //         alert(textStatus);
+            //     }
+            // });
+            //end
+
+
+            $.extend(YT.deploy.data, appData);
+            var nickName = YT.deploy.data.user.nickName;
+            $("#nickName").html(nickName);
+
         },
 
         activeMenu: null,  //激活菜单
@@ -101,7 +112,9 @@
 
             $("#logout").click(function () {
                 YT.deploy.util.reqGet("/user/logout", {}, function (d) {
-                    window.location = "/login.html";
+                    $(document.body).addClass("login-layout");
+                    YunTao.deploy.routeIndex("/login.html", appData);
+                    // window.location = "/login.html";
                 });
 
             });
@@ -154,34 +167,7 @@
 
 
             //============初始化公共数据================
-
-            //获取系统枚举值
-            $.ajax({
-                url: "/data/enums",
-                async: false,
-                success: function (d) {
-                    var enums = {enums: d.data};
-                    $.extend(YT.deploy.data, enums);
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(textStatus);
-                }
-            });
-            
-            //获取系统列表值
-            $.ajax({
-                url: "/data/appDataList",
-                async: false,
-                success: function (d) {
-                    var enums = {appData: d.data};
-                    $.extend(YT.deploy.data, enums);
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert(textStatus);
-                }
-            });
-            //end
-
+            YT.deploy.index.initData();
 
             //webSocket
             var hostname = location.hostname;

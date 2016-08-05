@@ -10,7 +10,7 @@ public class EmbeddedServer2 {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(38002);
         tomcat.setBaseDir("target/tomcat");
-        tomcat.addWebapp("/", new File("c:\\workspace\\zhushou\\zhushou-deploy\\src\\main\\webapp").getAbsolutePath());
+        tomcat.addWebapp("/", new File("c:\\workspace\\mynixi_zhushou\\zhushou-deploy\\src\\main\\webapp").getAbsolutePath());
 
         tomcat.start();
         tomcat.getServer().await();

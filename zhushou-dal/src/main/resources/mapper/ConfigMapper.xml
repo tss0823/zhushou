@@ -49,7 +49,7 @@
         <where>
             <include refid="Base_Where"/>
         </where>
-        order by status desc
+        order by id desc
         <if test="pageInfo != null ">
             limit #{pageInfo.offset}, #{pageInfo.pageSize}
         </if>

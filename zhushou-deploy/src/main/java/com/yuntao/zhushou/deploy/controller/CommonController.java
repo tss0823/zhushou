@@ -27,14 +27,7 @@ public class CommonController extends BaseController {
 
     @RequestMapping("/")
     public String index() {
-        User user = userService.getCurrentUser();
-        if (user == null) {
-            return "redirect:/login.html";
-        } else {
-            return "redirect:/list.html";
-
-        }
-
+        return "redirect:/index.html";
     }
 
     @RequestMapping("checkServerStatus")
