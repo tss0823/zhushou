@@ -84,7 +84,7 @@
             });
 
             //监控状态
-            var appNameParam = {"biz":[28081,5],"proxy":[28082,5],"user":[28083,5],"task":[28085,5],"web":[28084,5],
+            var appNameParam = {"member":[28081,5],"proxy":[28082,5],"user":[28083,5],"task":[28085,5],"web":[28084,5],
                 "bos":[28086,5],"search":[28088,5],"taskmq":[28089,5]};
             $("input[id='ip']").each(function(index,item){
                 var ip = $(item).val();
