@@ -413,6 +413,7 @@
                         data[key] = ext_data[key];
                     }
                 }
+                $.extend(data,appData);
                 $.get(tpl_url, function (source) {
                     var render = template.compile(source);
                     var html = render(data);
