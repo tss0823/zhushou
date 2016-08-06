@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ModuleType {
 
-    search("search", "搜索"),
-
     user("user", "用户"),  //用户，基础模块
+    
+    search("search", "搜索"),
 
     proxy("proxy", "代理商"),
 
