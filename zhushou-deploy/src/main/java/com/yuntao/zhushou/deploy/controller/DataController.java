@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.deploy.controller;
 
+import com.yuntao.zhushou.common.CustomizedPropertyConfigurer;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.enums.*;
@@ -57,6 +58,10 @@ public class DataController extends  BaseController {
                 responseObject.put(config.getName(),config.getValue());
             }
         }
+        //
+        String serverCheck = CustomizedPropertyConfigurer.getContextProperty("server.check");
+        responseObject.put("serverCheck",Boolean.valueOf(serverCheck));
+
         return responseObject;
     }
 }

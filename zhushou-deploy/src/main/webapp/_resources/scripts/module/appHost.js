@@ -86,14 +86,18 @@
 
             // debugger;
             //监控状态
-            var appNameParam = {"member":[28081,5],"trainer":[28082,5]};
-            $("input[id='ip']").each(function(index,item){
-                var ip = $(item).val();
-                var appName = YT.deploy.appHost.appName;
-                var port = appNameParam[appName][0];
-                var checkNum = appNameParam[appName][1];
-                YT.deploy.appHost.checkServerUrl(ip,port,checkNum);
-            });
+            var serverCheck = YT.deploy.data.serverCheck;
+            if(serverCheck){
+                var appNameParam = {"member":[28082,5],"trainer":[28083,5]};
+                $("input[id='chkForm']").each(function(index,item){
+                    var ip = $(item).val();
+                    var appName = YT.deploy.appHost.appName;
+                    var port = appNameParam[appName][0];
+                    var checkNum = appNameParam[appName][1];
+                    YT.deploy.appHost.checkServerUrl(ip,port,checkNum);
+                });
+            }
+
             //end
 
             YT.deploy.appHost.refreshBranch(false);

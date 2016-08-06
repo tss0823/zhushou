@@ -89,6 +89,7 @@ $(document).ready(function(){
         $.post("user/login",params,function(d){
             if(d.success){
                 //跳转到应用列表
+                appData["user"] = d.data;
                 YunTao.deploy.goIndexPage();
             }else{
                 alert("登陆失败 原因："+ d.message);
