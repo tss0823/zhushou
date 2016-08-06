@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum ModuleType {
 
     user("user", "用户"),  //用户，基础模块
-    
-    search("search", "搜索"),
+
+    sign("sign", "打卡"),  //
+
+    stats("stats", "统计"),  //
 
     proxy("proxy", "代理商"),
 
@@ -18,6 +20,7 @@ public enum ModuleType {
 
     pay("pay", "支付"),
 
+    search("search", "搜索"),
 
 
     ;
