@@ -82,7 +82,7 @@
         openParameterDialog:function(id){
             var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
             YT.deploy.util.reqGet("/activeSelect/findMasterByStackId", params, function (d) {
-                debugger;
+                //debugger;
                 var jsonObj = JSON.parse(d.data.parameters);
                 var dataList = [];
                 for(var key in jsonObj){

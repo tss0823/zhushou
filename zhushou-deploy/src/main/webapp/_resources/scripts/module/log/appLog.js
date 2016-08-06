@@ -157,7 +157,7 @@
         openParameterDialog:function(id){
             var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
-                debugger;
+               // debugger;
                 var jsonObj = JSON.parse(d.data.parameters);
                 var dataList = [];
                 for(var key in jsonObj){
@@ -256,7 +256,7 @@
                     var val = jsonObjRes[key];
                     resDataList.push({key:key,value:val});
                 }
-                debugger;
+               // debugger;
                 var param = {reqTitle:"请求头列表",reqDataList:reqDataList,resTitle:"返回头列表",resDataList:resDataList};
                 $.get("/log/msgFormat.html", function (source) {
                     var render = template.compile(source);

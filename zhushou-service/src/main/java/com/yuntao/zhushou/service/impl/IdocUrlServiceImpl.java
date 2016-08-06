@@ -17,6 +17,7 @@ import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.service.inter.IdocParamService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.LogService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,9 +142,11 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocUrl.setCreateUserName(user.getNickName());
         this.insert(idocUrl);
 
-        for (IdocParam idocParam : paramList) {
-            idocParam.setParentId(idocUrl.getId());
-            idocParamService.insert(idocParam);
+        if (CollectionUtils.isNotEmpty(paramList)) {
+            for (IdocParam idocParam : paramList) {
+                idocParam.setParentId(idocUrl.getId());
+                idocParamService.insert(idocParam);
+            }
         }
 
     }
@@ -160,9 +163,11 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocParamService.deleteByParentId(idocUrl.getId());
 
         //再保存
-        for (IdocParam idocParam : paramList) {
-            idocParam.setParentId(idocUrl.getId());
-            idocParamService.insert(idocParam);
+        if (CollectionUtils.isNotEmpty(paramList)) {
+            for (IdocParam idocParam : paramList) {
+                idocParam.setParentId(idocUrl.getId());
+                idocParamService.insert(idocParam);
+            }
         }
     }
 

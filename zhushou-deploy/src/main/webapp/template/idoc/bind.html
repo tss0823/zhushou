@@ -37,8 +37,7 @@
                 <div class="form-group" style="padding-left: 50px">
                     <label>URL：</label>
                     <span>
-                        <input type="hidden" id="url" name="url" value="{{url}}">
-                        {{url}}
+                        <input type="text" id="url" name="url" value="{{url}}" style="width:450px">
                     </span>
                 </div>
                 <div class="space-4"></div>
@@ -64,11 +63,31 @@
                                <th width="8%">名称</th>
                                <th width="10%">备注</th>
                                <th width="6%">规则</th>
-                               <th width="4%">操作</th>
+                               <th width="6%">操作</th>
                            </tr>
                         </thead>
 
                         <tbody id="tbContent">
+                        <tr class="selected" name="dataItem" style="display: none">
+                            <td> <input type="text" id="code"  /> </td>
+                            <td> <input type="text" id="name"   /> </td>
+                            <td> <input type="text" id="memo"   /> </td>
+                            <td> <input type="text" id="rule"   /> </td>
+                            <td class="hidden-480">
+                                <div class="pull-right action-buttons" >
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                                        <i class="icon-arrow-up bigger-130"></i>
+                                    </a>
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                                        <i class="icon-arrow-down bigger-130"></i>
+                                    </a>
+                                    &nbsp;
+                                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                                        <i class="icon-trash bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         {{each paramList as bean i}}
                         <tr class="selected" name="dataItem">
                             <td> <input type="text" id="code" value="{{bean.code}}" /> </td>
@@ -76,8 +95,15 @@
                             <td> <input type="text" id="memo" value="{{bean.memo}}"  /> </td>
                             <td> <input type="text" id="rule" value="{{bean.rule}}"  /> </td>
                             <td class="hidden-480">
-                                <div class="pull-right action-buttons" name="itemRemove">
-                                    <a class="red" href="#" >
+                                <div class="pull-right action-buttons" >
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                                        <i class="icon-arrow-up bigger-130"></i>
+                                    </a>
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                                        <i class="icon-arrow-down bigger-130"></i>
+                                    </a>
+                                    &nbsp;
+                                    <a class="red" href="javascript:void(0)" name="itemRemove">
                                         <i class="icon-trash bigger-130"></i>
                                     </a>
                                 </div>

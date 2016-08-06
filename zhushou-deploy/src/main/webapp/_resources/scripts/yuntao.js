@@ -310,7 +310,7 @@
 
         //下一个路由
         nextRoute: function () {
-            debugger;
+            //debugger;
             var currentIndex = YT.deploy.routeStackProcess.currentIndex;
             var rsArray = YT.deploy.routeStackProcess.rsArray;
             if(rsArray.length == 0){
@@ -423,6 +423,21 @@
 
                 });
             });
+        },
+        
+        //只跳转模板，不请求数据
+        routeTpl: function (tpl_url, data) {
+            // $this = this;
+            data = data || {};
+            $.extend(data,appData);
+            $.get(tpl_url, function (source) {
+                var render = template.compile(source);
+                var html = render(data);
+                $(".page-content").html(html);
+                YT.deploy.route_callback(data,data);
+                // YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, data);
+            });
+            
         },
 
         //请求 index.html 进行路由 

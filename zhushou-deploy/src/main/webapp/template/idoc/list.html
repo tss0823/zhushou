@@ -8,7 +8,7 @@
         </h1>
         <h1 style="text-align: right">
             <small>
-                <form id="deployLogForm" onsubmit="return false">
+                <form id="idocListForm" onsubmit="return false">
                     应用：
                     <select id="appName" name="appName">
                         <option value=""></option>
@@ -28,7 +28,7 @@
                     负责人：
                     <input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />
                     <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
-                    <!--<button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>-->
+                    <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
                 </form>
             </small>
         </h1>
@@ -53,7 +53,7 @@
         {{each dataList as bean i}}
         <tr class="selected">
             <td>
-                <a href="#">{{bean.appName}}</a>
+                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.appName}}</a>
             </td>
             <td>{{bean.module}}</td>
             <td>{{bean.name}}</td>
@@ -128,4 +128,4 @@
     <!--page end-->
 
 </div><!-- /.page-content -->
-<script src="/_resources/scripts/module/idoc/idoc.js" ></script>
+<script src="/_resources/scripts/module/idoc/idocList.js?ver{{ver}}" ></script>
