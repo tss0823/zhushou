@@ -47,7 +47,6 @@ public class ApplicationConsumerConfig {
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerDev() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
         ppc.setLocation(new ClassPathResource("config-dev.properties"));
-        ppc.setLocation(new ClassPathResource("config-dev.properties"));
         LOG.info("env/config-dev.properties loaded");
         return ppc;
     }
@@ -57,7 +56,6 @@ public class ApplicationConsumerConfig {
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerTest() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
         ppc.setLocation(new ClassPathResource("config-test.properties"));
-        ppc.setLocation(new ClassPathResource("consumer-config.properties"));
         LOG.info("env/config-test.properties loaded");
         return ppc;
     }

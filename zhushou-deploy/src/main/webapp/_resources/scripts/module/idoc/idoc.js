@@ -12,8 +12,7 @@
         route_callback: function (d, data) {
             console.log("app list after render call");
             //组件初始化之后
-            var appData = YT.deploy.data.appData;
-            var appList = appData.appList;
+            var appList = YT.deploy.data.appList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
             var enums = YT.deploy.data.enums;

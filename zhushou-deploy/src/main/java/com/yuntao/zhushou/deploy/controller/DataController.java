@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.CustomizedPropertyConfigurer;
+import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.enums.*;
@@ -9,6 +10,7 @@ import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ConfigService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +28,9 @@ public class DataController extends  BaseController {
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer;
 
     @RequestMapping("appConfigData")
     public ResponseObject appConfigData() {
@@ -59,9 +64,8 @@ public class DataController extends  BaseController {
             }
         }
         //
-        String serverCheck = CustomizedPropertyConfigurer.getContextProperty("server.check");
+        String serverCheck = AppConfigUtils.getValue("server.check");
         responseObject.put("serverCheck",Boolean.valueOf(serverCheck));
-
         return responseObject;
     }
 }

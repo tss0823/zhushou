@@ -12,7 +12,6 @@
         route_callback: function (d,data) {
             console.log("app list after render call");
             //组件初始化之后
-            var appData = YT.deploy.data.appData;
             var appList = appData.appList;
             YT.deploy.util.initSelect(appList,"name","name","appName",data.appName);
 
