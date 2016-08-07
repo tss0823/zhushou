@@ -16,11 +16,12 @@
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
         <result column="qq" property="qq" jdbcType="VARCHAR"/>
+        <result column="role" property="role" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         `id`,`accountNo`,`pwd`,`nickName`,`gmtCreate`,`gmtModify`,`delStatus`,`level`,`type`,
-        `status`,`email`,`mobile`,`qq`
+        `status`,`email`,`mobile`,`qq`,`role`
     </sql>
     <sql id="Base_Table_Name">
         user
@@ -84,9 +85,10 @@
         insert into
         <include refid="Base_Table_Name"/>
         (`accountNo`,`pwd`,`nickName`,`gmtCreate`,`gmtModify`,`delStatus`,`level`,`type`,`status`,
-        `email`,`mobile`,`qq`)
+        `email`,`mobile`,`qq`,`role`)
         values
-        (#{accountNo},#{pwd},#{nickName},now(6),now(6),1,#{level},#{type},#{status},#{email},#{mobile},#{qq})
+        (#{accountNo},#{pwd},#{nickName},now(6),now(6),1,#{level},#{type},#{status},#{email},#{mobile},
+        #{qq},#{role})
     </insert>
 
     <update id="updateById">
@@ -104,6 +106,7 @@
             <if test="email != null and email !=''">`email`=#{email},</if>
             <if test="mobile != null and mobile !=''">`mobile`=#{mobile},</if>
             <if test="qq != null and qq !=''">`qq`=#{qq},</if>
+            <if test="role != null and role !=''">`role`=#{role},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

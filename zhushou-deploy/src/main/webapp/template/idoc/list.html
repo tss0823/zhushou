@@ -28,7 +28,9 @@
                     负责人：
                     <input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />
                     <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
+                    {{if authMap.enterIdoc.child.btnNewTemplate }}
                     <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
+                    {{/if}}
                 </form>
             </small>
         </h1>
@@ -62,7 +64,9 @@
             <td>{{bean.lastTime}}</td>
 
             <td class="hidden-480">
-                <a href="javascript:void(0)" name="btnDelete" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
+                {{if authMap.enterIdoc.child.btnDel }}
+                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
+                {{/if}}
                 <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" ><strong style="color:green">详细</strong></a>
             </td>
         </tr>

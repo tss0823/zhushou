@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.yuntao.zhushou.dal.mapper.AuthResMapper">  
+   
+  <resultMap type="AuthRes" id="BaseResultMap">
+     <id column="id" property="id" jdbcType="BIGINT" />
+       <result  column="code" property="code"/>
+     <result  column="name" property="name"/>
+     <result  column="url" property="url"/>
+     <result  column="tplUrl" property="tplUrl"/>
+     <result  column="menu" property="menu"/>
+     <result  column="display" property="display"/>
+     <result  column="actionId" property="actionId"/>
+     <result  column="icon" property="icon"/>
+     <result  column="level" property="level"/>
+     <result  column="status" property="status"/>
+     <result  column="parentId" property="parentId"/>
+     <result  column="gmtCreate" property="gmtCreate"/>
+     <result  column="gmtModify" property="gmtModify"/>
+     <result  column="delStatus" property="delStatus"/>
+      <result  column="orderBy" property="orderBy"/>
+</resultMap>
+
+
+    <sql id="Base_Column_List">
+        `id`,`code`,`name`,`url`,`tplUrl`,`menu`,`display`,`actionId`,
+        `icon`,`level`,`status`,`parentId`,`gmtCreate`,`gmtModify`,`delStatus`,`orderBy`
+    </sql>
+
+    
+  <sql id="Base_Table_Name">
+      authRes
+  </sql>
+        
+    
+  <sql id="Base_Where">
+    delStatus = 1
+    <if test="id != null and id != '' ">and  `id` = #{id}</if> 
+    <if test="code != null and code != '' ">and  `code` = #{code}</if> 
+    <if test="name != null and name != '' ">and  `name` = #{name}</if> 
+    <if test="url != null and url != '' ">and  `url` = #{url}</if> 
+    <if test="tplUrl != null and tplUrl != '' ">and  `tplUrl` = #{tplUrl}</if> 
+    <if test="menu != null and menu != '' ">and  `menu` = #{menu}</if> 
+    <if test="display != null and display != '' ">and  `display` = #{display}</if> 
+    <if test="actionId != null and actionId != '' ">and  `actionId` = #{actionId}</if> 
+    <if test="icon != null and icon != '' ">and  `icon` = #{icon}</if> 
+    <if test="level != null and level != '' ">and  `level` = #{level}</if> 
+    <if test="status != null and status != '' ">and  `status` = #{status}</if>
+      <if test="orderBy != null ">and  `orderBy` = #{orderBy}</if>
+    <if test="parentId != null and parentId != '' ">and  `parentId` = #{parentId}</if>
+    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
+    <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
+  </sql>
+  
+        
+    
+  <select id="findById" resultMap="BaseResultMap">
+     select <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" /> WHERE id = #{id}
+  </select>
+        
+    
+  <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" />
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+       order by id desc
+     <if test="pageInfo != null ">
+          limit #{pageInfo.offset}, #{pageInfo.pageSize}
+    </if>
+    </select>
+    
+        
+    
+  <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+      SELECT count(*) from <include refid="Base_Table_Name" />
+      <where>
+          <include refid="Base_Where"/>
+      </where>
+  </select>
+ 
+        
+    
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="AuthRes">
+      <selectKey resultType="long" keyProperty="id">
+          SELECT
+          LAST_INSERT_ID() AS id
+      </selectKey>
+    insert into  <include refid="Base_Table_Name" />
+    (
+    `code`,       
+    `name`,`url`,`tplUrl`,`menu`,`display`,`actionId`,`icon`,`level`,       
+    `status`,`parentId`,`gmtCreate`,`gmtModify`,`delStatus`,`orderBy`
+    ) 
+    values
+    (
+    #{code},#{name},#{url},#{tplUrl},#{menu},#{display},#{actionId},#{icon},       
+    #{level},#{status},#{parentId},now(6),now(6),1,#{orderBy}
+    )
+  </insert>  
+    
+  <update id="updateById">  
+    update <include refid="Base_Table_Name" />
+      <set>
+           <if test="code != null and code !=''">`code` = #{code},</if>
+       <if test="name != null and name !=''">`name` = #{name},</if>
+       <if test="url != null and url !=''">`url` = #{url},</if>
+       <if test="tplUrl != null and tplUrl !=''">`tplUrl` = #{tplUrl},</if>
+       <if test="menu != null and menu !=''">`menu` = #{menu},</if>
+       <if test="display != null and display !=''">`display` = #{display},</if>
+       <if test="actionId != null and actionId !=''">`actionId` = #{actionId},</if>
+       <if test="icon != null and icon !=''">`icon` = #{icon},</if>
+       <if test="level != null and level !=''">`level` = #{level},</if>
+       <if test="status != null and status !=''">`status` = #{status},</if>
+       <if test="orderBy != null">`orderBy` = #{orderBy},</if>
+       <if test="parentId != null and parentId !=''">`parentId` = #{parentId},</if>
+     </set>
+   ,gmtModify = now(6)
+   where id = #{id}
+  </update>  
+        
+    
+   <update id="deleteById" parameterType="Long">  
+      update  <include refid="Base_Table_Name" /> set delStatuse = 0  where id = #{id}
+   </update>  
+   
+     <!-- user definition code start -->
+    <select id="selectByRole" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        t1.id,t1.code,t1.name,t1.url,t1.tplUrl,t1.menu,t1.display,t1.actionId,
+        t1.icon,t1.level,t1.status,t1.parentId,t1.gmtCreate,t1.gmtModify,t1.delStatus
+        from authRes t1,roleAuthRes t2 where t1.id = t2.authResId
+        <if test="roleIds != null ">
+            and t2.roleId in
+            <foreach item="item" index="index" collection="roleIds"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by orderBy
+    </select>
+     <!-- user definition code end -->
+</mapper> 

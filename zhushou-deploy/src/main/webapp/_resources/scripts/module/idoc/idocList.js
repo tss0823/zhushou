@@ -57,7 +57,7 @@
                 }
             });
 
-            $("a[name='btnDelete']").click(function () {
+            $("a[name='btnDel']").click(function () {
                 if (!confirm("您确认需要删除吗？")) {
                     return;
                 }

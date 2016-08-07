@@ -2,6 +2,8 @@ package com.yuntao.zhushou.dal.config;
 
 import com.yuntao.zhushou.dal.mapper.*;
 import com.yuntao.zhushou.dal.mybatis.IdTypeHandler;
+import com.yuntao.zhushou.model.domain.AuthRes;
+import com.yuntao.zhushou.model.domain.Role;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -86,6 +88,22 @@ public class DalConfig {
     @Bean
     public IdocParamMapper idocParamMapper() throws Exception {
         return newMapperFactoryBean(IdocParamMapper.class).getObject();
+    }
+
+    @Bean
+    public RoleMapper roleMapper() throws Exception {
+        return newMapperFactoryBean(RoleMapper.class).getObject();
+    }
+
+
+    @Bean
+    public AuthResMapper authResMapper() throws Exception {
+        return newMapperFactoryBean(AuthResMapper.class).getObject();
+    }
+
+    @Bean
+    public RoleAuthResMapper roleAuthResMapper() throws Exception {
+        return newMapperFactoryBean(RoleAuthResMapper.class).getObject();
     }
 
 

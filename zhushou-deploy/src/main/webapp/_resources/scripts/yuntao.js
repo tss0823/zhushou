@@ -385,7 +385,8 @@
                 async: false,
                 success: function (d) {
                     if (d.success) {
-                        appData["user"] = d.data;
+                        appData["user"] = d.data.user;
+                        appData["authResList"] = d.data.authResList;
                         isLogin = true;
                     } else {
                         alert(d.message);

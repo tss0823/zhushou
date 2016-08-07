@@ -23,6 +23,9 @@
         <typeAlias alias="AtActiveInst" type="com.yuntao.zhushou.model.domain.AtActiveInst"/>
         <typeAlias alias="IdocUrl" type="com.yuntao.zhushou.model.domain.IdocUrl"/>
         <typeAlias alias="IdocParam" type="com.yuntao.zhushou.model.domain.IdocParam"/>
+        <typeAlias alias="Role" type="com.yuntao.zhushou.model.domain.Role"/>
+        <typeAlias alias="AuthRes" type="com.yuntao.zhushou.model.domain.AuthRes"/>
+        <typeAlias alias="RoleAuthRes" type="com.yuntao.zhushou.model.domain.RoleAuthRes"/>
     </typeAliases>
 
     <mappers>
@@ -38,6 +41,9 @@
         <mapper resource="mapper/AtActiveInstMapper.xml"/>
         <mapper resource="mapper/IdocUrlMapper.xml"/>
         <mapper resource="mapper/IdocParamMapper.xml"/>
+        <mapper resource="mapper/RoleMapper.xml"/>
+        <mapper resource="mapper/AuthResMapper.xml"/>
+        <mapper resource="mapper/RoleAuthResMapper.xml"/>
     </mappers>
 
 </configuration>

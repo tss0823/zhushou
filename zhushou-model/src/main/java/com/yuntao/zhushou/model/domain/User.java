@@ -66,6 +66,8 @@ public class User implements Serializable {
 
     private String qq;
 
+    private String role;
+
     public Long getId() {
         return id;
     }
@@ -168,5 +170,13 @@ public class User implements Serializable {
 
     public void setQq(String qq) {
         this.qq = qq;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

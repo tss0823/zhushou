@@ -29,6 +29,8 @@
                 }
             });
 
+
+
             //获取系统列表值
             // $.ajax({
             //     url: "/data/appDataList",
@@ -43,10 +45,33 @@
             // });
             //end
 
+            //初始化权限资源
+            var authResList = appData.authResList;
+            var authMap = {};
+            for(var i = 0; i < authResList.length; i++){
+                var authRes = authResList[i]
+                var authResChildList = authRes.childList;
+                var child = {};
+                if(authResChildList.length > 0){
+                    for(var x = 0; x < authResChildList.length; x++){
+                        var authResChild = authResChildList[x];
+                        child[authResChild.actionId] = authResChild;
+                    }
+                }
+                authRes["child"] = child;
+                authMap[authRes.actionId] = authRes;
+            }
+
+            // debugger;
+            appData.authMap = authMap;
+
+            //end
 
             $.extend(YT.deploy.data, appData);
             var nickName = YT.deploy.data.user.nickName;
             $("#nickName").html(nickName);
+
+
 
         },
 

@@ -6,7 +6,9 @@ import com.yuntao.zhushou.dal.annotation.NotNeedLogin;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.UserStatus;
 import com.yuntao.zhushou.model.enums.UserType;
+import com.yuntao.zhushou.model.vo.AuthResVo;
 import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.AuthResService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -15,12 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("user")
 public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthResService authResService;
 
 
     @RequestMapping("register")
@@ -47,10 +54,13 @@ public class UserController extends BaseController {
                                   @RequestParam String pwd) {
         // validate
         // login
-        ResponseObject ret = new ResponseObject();
+        ResponseObject responseObject = new ResponseObject();
         User user = userService.login(accountNo, pwd);
-        ret.setData(user);
-        return ret;
+        responseObject.put("user",user);
+        //
+        List<AuthResVo> authResVoList = authResService.selectByUserId(user.getId());
+        responseObject.put("authResList",authResVoList);
+        return responseObject;
     }
 
     @RequestMapping("logout")
@@ -68,9 +78,14 @@ public class UserController extends BaseController {
     public ResponseObject getLoginUser() {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
-        responseObject.setData(user);
+        responseObject.put("user",user);
+
+        //
+        List<AuthResVo> authResVoList = authResService.selectByUserId(user.getId());
+        responseObject.put("authResList",authResVoList);
         return responseObject;
     }
+
 
     @RequestMapping("list")
     @NeedLogin
