@@ -27,13 +27,7 @@
                     &nbsp;
                     负责人：
                     <input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />
-                    <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
-                    {{if authMap.enterIdoc.child.btnNewTemplate }}
-                    <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
-                    {{/if}}
-                    {{if authMap.enterIdoc.child.btnListAll }}
-                    <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 查询导出 </button>&nbsp;&nbsp;&nbsp;
-                    {{/if}}
+                    <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
                 </form>
             </small>
         </h1>
@@ -46,11 +40,6 @@
             <th width="10%">名称</th>
             <th width="16%">URL</th>
             <th width="6%">负责人</th>
-            <th width="7%">
-                <i class="icon-time "></i>
-                操作时间
-            </th>
-            <th width="4%">操作</th>
         </tr>
         </thead>
 
@@ -64,24 +53,12 @@
             <td>{{bean.name}}</td>
             <td>{{bean.url}}</td>
             <td>{{bean.createUserName}}</td>
-            <td>{{bean.lastTime}}</td>
-
-            <td class="hidden-480">
-                {{if authMap.enterIdoc.child.btnEnterEdit }}
-                <a href="javascript:void(0)" name="btnEnterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>
-                {{/if}}
-                {{if authMap.enterIdoc.child.btnDel }}
-                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
-                {{/if}}
-                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" ><strong style="color:green">详细</strong></a>
-            </td>
         </tr>
-        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" style="display: none">
+        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
             <td colspan="7">
                 <div id="tabs">
                     <ul>
                         <li> <a href="#tabs-1">请求参数列表</a> </li>
-                        <li> <a href="#tabs-2">返回数据结果</a> </li>
                     </ul>
 
                     <div id="tabs-1">
@@ -104,16 +81,20 @@
                             </tbody>
                         </table>
                     </div>
-
+                </div>
+            </td>
+        </tr>
+        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
+            <td colspan="7">
+                <div id="tabs">
+                    <ul>
+                        <li> <a href="#tabs-2">返回数据结果</a> </li>
+                    </ul>
                     <div id="tabs-2">
                        <pre>{{bean.resultData}}</pre>
                     </div>
-
                 </div>
 
-                <!--<div>-->
-                    <!--请求参数列表：-->
-                <!--</div>-->
             </td>
         </tr>
         {{/each}}

@@ -31,6 +31,14 @@
                 $(this).attr("disabled", "true");
                 YT.deploy.idocList.query(pageNum, pageSize);
             });
+            
+            $("#btnListAll").click(function () {
+                var pageNum = 1;  //查询触发从第一页开始
+                var pageSize = $("#pageSize").val();
+                $(this).html("查询中...");
+                $(this).attr("disabled", "true");
+                YT.deploy.idocList.queryExport(pageNum, pageSize);
+            });
 
             //分页信息init
             YT.deploy.util.paginationInit(d.data, YT.deploy.idocList.query);
@@ -86,6 +94,14 @@
             params["pageSize"] = pageSize;
             var ext_data = $.extend(params, {title: "接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
+        },
+        
+        queryExport: function (pageNum, pageSize) {
+            var params = YT.deploy.util.getFormParams("#idocListForm");
+            params["pageNum"] = pageNum;
+            params["pageSize"] = pageSize;
+            var ext_data = $.extend(params, {title: "接口文档"});
+            YT.deploy.route("/idocUrl/list", params, "/idoc/listAll.html", ext_data);
         },
 
 
