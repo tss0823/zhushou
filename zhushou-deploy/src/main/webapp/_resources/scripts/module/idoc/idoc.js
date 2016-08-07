@@ -10,7 +10,7 @@
     var common = {
 
         route_callback: function (d, data) {
-            console.log("app list after render call");
+            console.log("idoc bind  after render call");
             //组件初始化之后
             var appList = YT.deploy.data.appList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
