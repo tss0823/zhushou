@@ -80,60 +80,79 @@
         renderInit: function () {
             console.log("index list after render call");
             //组件初始化之后
+
+            //初始化公共数据
+            YT.deploy.index.initData();
+            //end
+            
             YT.deploy.index.activeMenu = $("#enterAppList");
             //注册事件
-            $("#enterAppList").click(function () {
-                YT.deploy.route("/app/list", {}, "/appList.html", {title: "应用列表"});
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
-
-            $("#enterDeployLog").click(function () {
-                YT.deploy.route("/deployLog/list", {}, "/deployLog.html", {title: "发布日志"});
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
-
-            $("#enterAppLog").click(function () {
-                var showAll = $.cookie("app_log_show_all");
-                var dataDisplay = showAll && showAll == "1" ? "table_row" : "none";
-                var ext_data = {title: "应用日志",showAll:showAll,dataDisplay:dataDisplay};
-                YT.deploy.route("/appLog/list", {}, "/log/appLog.html", ext_data);
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
-
-            $("#enterTaskLog").click(function () {
-                var ext_data = {title: "Task日志"};
-                YT.deploy.route("/taskLog/list", {}, "/taskLog/list.html", ext_data);
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
-
-            $("#enterIdoc").click(function () {
-                YT.deploy.route("/idocUrl/list", {}, "/idoc/list.html", {title: "接口列表"});
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
             
-            $("#enterAutoTest").click(function () {
-                YT.deploy.route("/atTemplate/list", {}, "/at/template.html", {title: "模板列表"});
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
+            var authResList = appData.authResList;
+            for(var i = 0; i < authResList.length; i++){
+                var authRes = authResList[i];
+                var actionId = authRes.actionId;
+                $("#"+actionId).click(function () {
+                    var authRes = appData.authMap[$(this).attr("id")];
+                    //cookie 拿 userData
+                    var valueMap = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl);
+                    valueMap = valueMap || {};
+                    //end
+                    // debugger;
+                    $.extend(valueMap,{title: authRes.name,authRes:authRes});
+                    YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,valueMap);
+                    $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+                    $(this).parent("li").addClass("active");
+                    YT.deploy.index.activeMenu = this;
+                });
+            }
+            
 
-            $("#enterSettings").click(function () {
-                console.log("enter settings nothing")
-                $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-                $(this).parent("li").addClass("active");
-                YT.deploy.index.activeMenu = this;
-            });
+            // $("#enterDeployLog").click(function () {
+            //     YT.deploy.route("/deployLog/list", {}, "/deployLog.html", {title: "发布日志"});
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
+            //
+            // $("#enterAppLog").click(function () {
+            //     var showAll = $.cookie("app_log_show_all");
+            //     var dataDisplay = showAll && showAll == "1" ? "table_row" : "none";
+            //     var ext_data = {title: "应用日志",showAll:showAll,dataDisplay:dataDisplay};
+            //     YT.deploy.route("/appLog/list", {}, "/log/appLog.html", ext_data);
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
+            //
+            // $("#enterTaskLog").click(function () {
+            //     var ext_data = {title: "Task日志"};
+            //     YT.deploy.route("/taskLog/list", {}, "/taskLog/list.html", ext_data);
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
+            //
+            // $("#enterIdoc").click(function () {
+            //     YT.deploy.route("/idocUrl/list", {}, "/idoc/list.html", {title: "接口列表"});
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
+            //
+            // $("#enterAutoTest").click(function () {
+            //     YT.deploy.route("/atTemplate/list", {}, "/at/template.html", {title: "模板列表"});
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
+            //
+            // $("#enterSettings").click(function () {
+            //     console.log("enter settings nothing")
+            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
+            //     $(this).parent("li").addClass("active");
+            //     YT.deploy.index.activeMenu = this;
+            // });
 
             $("#logout").click(function () {
                 YT.deploy.util.reqGet("/user/logout", {}, function (d) {
@@ -191,8 +210,6 @@
             });
 
 
-            //============初始化公共数据================
-            YT.deploy.index.initData();
 
             //webSocket
             var hostname = location.hostname;

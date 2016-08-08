@@ -5,10 +5,10 @@ $(document).ready(function () {
     // });
 
 
-    $(document).on("click","#btnClear",function(){
+    $(document).on("click", "#btnClear", function () {
         var jqFormObj = $("form:first");
-        if(jqFormObj == null){
-            jqFormObj  = $(this).attr("form-id");
+        if (jqFormObj == null) {
+            jqFormObj = $(this).attr("form-id");
         }
         $(jqFormObj).find(":text").each(function (index, item) {
             $(item).val("");
@@ -19,6 +19,11 @@ $(document).ready(function () {
         $(jqFormObj).find("select").each(function (index, item) {
             $(item).find("option:first").prop("selected", true);
         });
+        //清空个性数据 //TODO 目前只针对查询
+        var actionId = jqFormObj.attr("actionId");
+        // debugger;
+        var authRes = appData.authMap[actionId];
+        YunTao.deploy.userDataProcess.clear(authRes.tplUrl);
 
     });
 
@@ -31,15 +36,15 @@ $(document).ready(function () {
     // });
 
     // basePath = $("#basePath").val();
-    $(document).on("click","#chkRow",function(){
+    $(document).on("click", "#chkRow", function () {
         var checked = $(this).find(":checkbox").prop("checked");
-        $(this).find(":checkbox").prop("checked",!checked);
+        $(this).find(":checkbox").prop("checked", !checked);
     });
-    
-    $(document).on("click","#chkFormAll",function(){
+
+    $(document).on("click", "#chkFormAll", function () {
         var checked = $(this).prop("checked");
-        $(":checkbox[id='chkForm']").each(function(index,item){
-            $(item).prop("checked",checked);
+        $(":checkbox[id='chkForm']").each(function (index, item) {
+            $(item).prop("checked", checked);
         });
     });
 

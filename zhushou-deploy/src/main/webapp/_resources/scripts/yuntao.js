@@ -22,6 +22,8 @@
     //定义常量
     var constant = {
         NOT_LOGIN: "01",  //未登录
+        
+        C_USER_DATA : "c_user_data",   //用户数据cookie key
     }
 
 
@@ -324,9 +326,63 @@
             routeStack.ext_data["method"] = "nextRoute";
             YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.ext_data);
         },
+        
+        
 
 
     };
+    
+    
+    //用户数据处理程序
+    YT.deploy.userDataProcess = {
+
+        userDataMap : {},   //用户数据
+        
+        setValue : function(nameSpace,key,value,expire){
+            var moduleData = this.userDataMap[nameSpace];  //this == userDataProcess 作用域
+            moduleData = moduleData || {};
+            moduleData[key] = value;
+            this.userDataMap[nameSpace] = moduleData;
+            var userDataString = JSON.stringify(this.userDataMap);
+            $.cookie(YT.deploy.constant.C_USER_DATA,userDataString,{ expires: expire, path: "/" });
+        },
+        
+        getValue : function(nameSpace,key){
+            
+        },
+
+        setValueMap : function(nameSpace,dataMap,expire){
+            if($.isEmptyObject(dataMap)){
+                return;
+            }
+            var moduleData = this.userDataMap[nameSpace];  //this == userDataProcess 作用域
+            moduleData = moduleData || {};
+            // debugger;
+            for(var key in dataMap){
+               moduleData[key] = dataMap[key]; 
+            }
+            this.userDataMap[nameSpace] = moduleData;
+            var userDataString = JSON.stringify(this.userDataMap);
+            $.cookie(YT.deploy.constant.C_USER_DATA,userDataString,{ expires: expire, path: "/" });
+        },
+        
+        getValueMap : function(nameSpace){
+            var userDataString = $.cookie(YT.deploy.constant.C_USER_DATA);
+            // debugger;
+            if(!userDataString){
+                return {};
+            }
+            var userData = JSON.parse(userDataString);
+            return userData[nameSpace];
+        },
+
+        clear : function(nameSpace){
+            this.userDataMap[nameSpace] = {};
+            var userDataString = JSON.stringify(this.userDataMap);
+            $.cookie(YT.deploy.constant.C_USER_DATA,userDataString,{ expires: 7, path: "/" });
+        },
+        
+    }
 
 
 
@@ -405,7 +461,10 @@
 
 
         route: function (url, param, tpl_url, ext_data) {
-            // $this = this;
+            //set userData
+            YT.deploy.userDataProcess.setValueMap(tpl_url,param);
+            //end
+            
             YT.deploy.util.reqGet(url, param, function (d) {
                 var data = d.data;
                 data = data || {};
@@ -415,6 +474,7 @@
                     }
                 }
                 $.extend(data,appData);
+                
                 $.get(tpl_url, function (source) {
                     var render = template.compile(source);
                     var html = render(data);

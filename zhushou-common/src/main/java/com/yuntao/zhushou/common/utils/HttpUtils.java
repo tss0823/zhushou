@@ -148,7 +148,14 @@ public class HttpUtils {
 //        String result = restTemplate.postForObject(reqUrl, formEntity, String.class);
 ////        String result = restTemplate.postForObject(reqUrl, paramMap, String.class, paramMap);
 
-        List<String> lines = reqGet("http://prod002.yuntaohongbao.com:28083/checkServerStatus");
-        System.out.println(StringUtils.join(lines,","));
+//        List<String> lines = reqGet("http://prod002.yuntaohongbao.com:28083/checkServerStatus");
+        List<String> lines = reqGet("http://ip.taobao.com/service/getIpInfo.php?ip=218.109.10.11");
+        String result = StringUtils.join(lines, "");
+        Map map = JsonUtils.json2Object(result, Map.class);
+        Map childMap = (Map) map.get("data");
+        Object provice = childMap.get("region");
+        Object city = childMap.get("city");
+//        country
+        System.out.println(provice+" "+city);
     }
 }

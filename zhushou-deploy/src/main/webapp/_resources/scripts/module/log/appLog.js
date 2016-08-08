@@ -35,12 +35,14 @@
             YT.deploy.util.initSelect(monthArray,"value","text","month",data.month);
             //end
 
+            //授权资源
+            var authRes = data.authRes;
 
             var enums = YT.deploy.data.enums;
 
-            //logModel
-            var logModel = enums.logModel;
-            YT.deploy.util.initEnumSelect(logModel,"model",data.model);
+            // //logModel
+            // var logModel = enums.logModel;
+            // YT.deploy.util.initEnumSelect(logModel,"model",data.model);
 
             //logLevel
             var logLevel = enums.logLevel;
@@ -60,6 +62,9 @@
             YT.deploy.util.initEnumSelect(logQueryType,"textType",data.textType);
 
 
+            //ip city show
+            YT.deploy.appLog.showIpCity();
+            //end
 
             //注册事件
             $("#btnQuery").click(function () {
@@ -82,18 +87,35 @@
             });
 
             //show all
-            $("input[id='chkShowAll']").click(function () {
+            $("input[id='showAll']").click(function () {
                 var checked = $(this).attr("checked");
-                var checkState = checked ? true : false;
-                $(this).attr("checked",!checkState);
+                var checkState = checked ? false : true;
+                $(this).attr("checked",checkState);
                 $("tr[id='trChildItem']").each(function(index,item){
-                    if (!checked) {
+                    if (checkState) {
                         $(item).show();
                     }else{
                         $(item).hide();
                     }
                 });
-                $.cookie("app_log_show_all",(!checkState ? "1" : "0"),{ expires: 7, path: "/" });
+                console.log("checkState="+checkState);
+                // params["showAll"] = params["showAll"] ? true : false;
+
+                var nameSpace = authRes.tplUrl;
+                YT.deploy.userDataProcess.setValue(nameSpace,"showAll",checkState,7);
+            });
+
+            //model
+            $("input[id='model']").click(function () {
+                var checked = $(this).attr("checked");
+                var checkState = checked ? "test" : "prod";
+                $(this).attr("checked",checkState);
+
+                var nameSpace = authRes.tplUrl;
+                YT.deploy.userDataProcess.setValue(nameSpace,"model",checkState,7);
+                //
+                $(".nav-list").find("li").first().find("a[id='"+authRes.actionId+"']").trigger("click");
+                // YT.deploy.appLog.query(1,pageSize);
             });
 
             //parameters
@@ -137,6 +159,7 @@
             YT.deploy.util.paginationInit(d.data, YT.deploy.appLog.query);
 
         },
+
     }
     $.extend(YT.deploy, common);
 
@@ -144,13 +167,18 @@
     YT.deploy.appLog = {
         query: function (pageNum, pageSize) {
             var params = YT.deploy.util.getFormParams("#appLogForm");
-            var checked = $("#chkShowAll").attr("checked");
-            checked = checked ? "1" : "0";
-            params["showAll"] = checked ;
+            //debugger;
+            // var checked = $("#chkShowAll").attr("checked");
+            // checked = checked ? "1" : "0";
+            // params["showAll"] = checked ;
             params["pageNum"] = pageNum;
             params["pageSize"] = pageSize;
-            var dataDisplay = checked == "1" ? "table_row" : "none";
-            var ext_data = $.extend(params, {title: "应用日志",dataDisplay:dataDisplay});
+            // var dataDisplay = checked == "1" ? "table_row" : "none";
+            var actionId = $("form:first").attr("actionId");
+            var authRes = appData.authMap[actionId];
+            // $(".nav-list").find("li").first().find("a[id='"+actionId+"']").trigger("click");
+            var ext_data = $.extend(params, {title: "应用日志"});
+            ext_data = $.extend(ext_data,{authRes:authRes});
             YT.deploy.route("/appLog/list", params, "/log/appLog.html", ext_data);
         },
 
@@ -271,6 +299,25 @@
             });
 
         },
+
+        //展示ip城市
+        showIpCity : function(){
+            var ipCityMap = {};
+            $("table[name='tbChildItem']").each(function(index,item){
+                var $tdClientIp = $(item).find("td[name='showClientIp']");
+                var ip = $tdClientIp.attr("data");
+                if(ipCityMap[ip]){
+                    $tdClientIp.html(ip+" ["+ipCityMap[ip]+"]");
+                    return true;
+                }
+                $.get("/getCityById",{ip:ip},function(d){
+                    console.log("city="+d.data);
+                    $tdClientIp.html(ip+" ["+d.data+"]");
+                },"json");
+            });
+        }
+
+
     }
 
 })(window.YunTao);
