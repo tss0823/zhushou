@@ -98,9 +98,10 @@
                     var valueMap = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl);
                     valueMap = valueMap || {};
                     //end
-                    // debugger;
-                    $.extend(valueMap,{title: authRes.name,authRes:authRes});
-                    YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,valueMap);
+                    debugger;
+                    var ext_data = {title: authRes.name,authRes:authRes};
+                    $.extend(ext_data,valueMap);
+                    YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,ext_data);
                     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
                     $(this).parent("li").addClass("active");
                     YT.deploy.index.activeMenu = this;

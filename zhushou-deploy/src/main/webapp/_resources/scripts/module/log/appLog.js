@@ -108,14 +108,14 @@
             //model
             $("input[id='model']").click(function () {
                 var checked = $(this).attr("checked");
-                var checkState = checked ? "test" : "prod";
-                $(this).attr("checked",checkState);
+                // var checkState = checked ? true : false;
+                $(this).attr("checked",!checked);
 
-                var nameSpace = authRes.tplUrl;
-                YT.deploy.userDataProcess.setValue(nameSpace,"model",checkState,7);
+                // var nameSpace = authRes.tplUrl;
+                // YT.deploy.userDataProcess.setValue(nameSpace,"model",checkState,7);
                 //
-                $(".nav-list").find("li").first().find("a[id='"+authRes.actionId+"']").trigger("click");
-                // YT.deploy.appLog.query(1,pageSize);
+                // $(".nav-list").find("li").first().find("a[id='"+authRes.actionId+"']").trigger("click");
+                YT.deploy.appLog.query(1,$("#pageSize").val());
             });
 
             //parameters
@@ -166,20 +166,25 @@
 
     YT.deploy.appLog = {
         query: function (pageNum, pageSize) {
-            var params = YT.deploy.util.getFormParams("#appLogForm");
-            //debugger;
-            // var checked = $("#chkShowAll").attr("checked");
-            // checked = checked ? "1" : "0";
-            // params["showAll"] = checked ;
-            params["pageNum"] = pageNum;
-            params["pageSize"] = pageSize;
-            // var dataDisplay = checked == "1" ? "table_row" : "none";
-            var actionId = $("form:first").attr("actionId");
-            var authRes = appData.authMap[actionId];
-            // $(".nav-list").find("li").first().find("a[id='"+actionId+"']").trigger("click");
-            var ext_data = $.extend(params, {title: "应用日志"});
-            ext_data = $.extend(ext_data,{authRes:authRes});
-            YT.deploy.route("/appLog/list", params, "/log/appLog.html", ext_data);
+            var checked = $("#model").attr("checked");
+            var checkState = checked ? "prod" : "test";
+            debugger;
+            YT.deploy.goSearchPage("appLogForm",1,pageSize,{model:checkState});
+            // YT.deploy.goSearchPage("appLogForm",pageNum,pageSize);
+            // var params = YT.deploy.util.getFormParams("#appLogForm");
+            // //debugger;
+            // // var checked = $("#chkShowAll").attr("checked");
+            // // checked = checked ? "1" : "0";
+            // // params["showAll"] = checked ;
+            // params["pageNum"] = pageNum;
+            // params["pageSize"] = pageSize;
+            // // var dataDisplay = checked == "1" ? "table_row" : "none";
+            // var actionId = $("form:first").attr("actionId");
+            // var authRes = appData.authMap[actionId];
+            // // $(".nav-list").find("li").first().find("a[id='"+actionId+"']").trigger("click");
+            // var ext_data = $.extend(params, {title: "应用日志"});
+            // ext_data = $.extend(ext_data,{authRes:authRes});
+            // YT.deploy.route("/appLog/list", params, "/log/appLog.html", ext_data);
         },
 
         openParameterDialog:function(id){

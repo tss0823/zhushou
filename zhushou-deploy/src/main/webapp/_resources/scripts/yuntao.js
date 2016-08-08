@@ -357,7 +357,7 @@
             }
             var moduleData = this.userDataMap[nameSpace];  //this == userDataProcess 作用域
             moduleData = moduleData || {};
-            // debugger;
+            debugger;
             for(var key in dataMap){
                moduleData[key] = dataMap[key]; 
             }
@@ -368,7 +368,7 @@
         
         getValueMap : function(nameSpace){
             var userDataString = $.cookie(YT.deploy.constant.C_USER_DATA);
-            // debugger;
+            debugger;
             if(!userDataString){
                 return {};
             }
@@ -461,10 +461,7 @@
 
 
         route: function (url, param, tpl_url, ext_data) {
-            //set userData
-            YT.deploy.userDataProcess.setValueMap(tpl_url,param);
-            //end
-            
+
             YT.deploy.util.reqGet(url, param, function (d) {
                 var data = d.data;
                 data = data || {};
@@ -520,6 +517,28 @@
         goIndexPage: function () {
             $(document.body).removeClass("login-layout");
             YT.deploy.routeIndex("/list.html", appData);
+        },
+        
+        //搜索跳转
+        goSearchPage: function (formId,pageNum,pageSize,ext_data) {
+            var params = YT.deploy.util.getFormParams("#"+formId);
+            params["pageNum"] = pageNum;
+            params["pageSize"] = pageSize;
+            if (ext_data) {
+                for (var key in ext_data) {
+                    params[key] = ext_data[key];
+                }
+            }
+            debugger;
+            var actionId = $("#"+formId).attr("actionId");
+            var authRes = appData.authMap[actionId];
+            var ext_data = $.extend(params, {title: authRes.name});
+            ext_data = $.extend(ext_data,{authRes:authRes});
+            YT.deploy.route(authRes.url, params, authRes.tplUrl, ext_data);
+
+            //set userData
+            YT.deploy.userDataProcess.setValueMap(authRes.tplUrl,params);
+            //end
         },
 
         route_callback: function () {
