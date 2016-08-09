@@ -53,6 +53,15 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("getIdocUrlVoById")
+    @NeedLogin
+    public ResponseObject getIdocUrlVoById(@RequestParam Long id) {
+        IdocUrlVo idocUrlVo = idocUrlService.getIdocUrlVoById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(idocUrlVo);
+        return responseObject;
+    }
+
     @RequestMapping("save")
     @NeedLogin
     public ResponseObject save(IdocDataParam idocDataParam) {
@@ -67,7 +76,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject update(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
-        idocUrlService.save(idocDataParam,user);
+        idocUrlService.update(idocDataParam,user);
         return responseObject;
     }
 

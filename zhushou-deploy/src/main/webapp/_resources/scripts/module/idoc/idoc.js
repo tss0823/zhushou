@@ -32,7 +32,8 @@
             $(document).on("click","a[name='itemArrowUp']",function(){
                 var $thisTr = $(this).parents("tr");
                 var $prevTr = $thisTr.prev();
-                $prevTr.before($thisTr);
+                $thisTr.after($prevTr);
+                // $prevTr.before($thisTr);
             });
 
             //下移
@@ -42,6 +43,7 @@
                 $nextTr.after($thisTr);
             });
 
+            
             //删除
             $(document).on("click","a[name='itemRemove']",function(){
                 if (!confirm("您确要删除吗？")) {
@@ -60,6 +62,7 @@
                 var params = YT.deploy.util.getFormParams("#idocForm");
                 $("#tbReqParam").find("tr[name='dataItem']").each(function (index, item) {
                     var code = $(item).find("input[id='code']").val();
+                    // debugger;
                     if(!code){
                         return true;
                     }
@@ -68,14 +71,27 @@
                     params["paramList[" + index + "].memo"] = $(item).find("input[id='memo']").val();
                     params["paramList[" + index + "].rule"] = $(item).find("input[id='rule']").val();
                 });
-                YT.deploy.util.reqPost("/idocUrl/save", params, function (d) {
-                    if (d.success) {
-                        alert("保存成功");
-                        YT.deploy.idocList.query(1,20);
-                    } else {
-                        alert("保存失败,err=" + d.message);
-                    }
-                });
+                
+                if(params["id"]){  //update
+                    YT.deploy.util.reqPost("/idocUrl/update", params, function (d) {
+                        if (d.success) {
+                            alert("修改成功");
+                            YT.deploy.idocList.query(1,20);
+                        } else {
+                            alert("修改失败,err=" + d.message);
+                        }
+                    });
+                    
+                }else{ //save
+                    YT.deploy.util.reqPost("/idocUrl/save", params, function (d) {
+                        if (d.success) {
+                            alert("保存成功");
+                            YT.deploy.idocList.query(1,20);
+                        } else {
+                            alert("保存失败,err=" + d.message);
+                        }
+                    });
+                }
             });
 
         },

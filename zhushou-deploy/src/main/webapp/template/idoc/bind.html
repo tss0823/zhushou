@@ -10,6 +10,7 @@
     <div class="row">
         <div class="col-xs-12">
             <form class="form-horizontal" role="form" id="idocForm" onsubmit="return false;">
+                <input type="hidden" id="id" name="id" value="{{id}}">
                 <div class="form-group" style="padding-left: 50px">
                     <label>应用：</label>
                     <span>
@@ -26,11 +27,11 @@
                 <div class="form-group" style="padding-left: 50px">
                     <label>名称：</label>
                     <span>
-                        <input type="text" id="name" name="name" placeholder="请输入名称" class="input-xlarge">
+                        <input type="text" id="name" name="name" value="{{name}}" placeholder="请输入名称" class="input-xlarge">
                     </span>
                     <label style="padding-left: 15px;" >版本：</label>
                     <span>
-                        <input type="text" id="version" name="version" placeholder="请输入版本" class="input-xlarge">
+                        <input type="text" id="version" name="version" value="{{version}}" placeholder="请输入版本" class="input-xlarge">
                     </span>
                 </div>
                 <div class="space-4"></div>

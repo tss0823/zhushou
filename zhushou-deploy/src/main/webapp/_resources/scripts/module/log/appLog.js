@@ -169,7 +169,7 @@
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
             debugger;
-            YT.deploy.goSearchPage("appLogForm",1,pageSize,{model:checkState});
+            YT.deploy.goSearchPage("appLogForm",pageNum,pageSize,{model:checkState});
             // YT.deploy.goSearchPage("appLogForm",pageNum,pageSize);
             // var params = YT.deploy.util.getFormParams("#appLogForm");
             // //debugger;
@@ -188,7 +188,9 @@
         },
 
         openParameterDialog:function(id){
-            var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
+            var checked = $("#model").attr("checked");
+            var checkState = checked ? "prod" : "test";
+            var params = {stackId:id,month:$("#month").val(),model:checkState};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
                // debugger;
                 var jsonObj = JSON.parse(d.data.parameters);
@@ -213,7 +215,9 @@
         },
 
         openResponseDialog:function(id){
-            var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
+            var checked = $("#model").attr("checked");
+            var checkState = checked ? "prod" : "test";
+            var params = {stackId:id,month:$("#month").val(),model:checkState};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
                 var param = {title:"返回结果",logText:d.data.resFormatMsg};
                 $.get("/log/msg.html", function (source) {
@@ -230,7 +234,9 @@
         },
 
         openMsgDialog:function(id){
-            var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
+            var checked = $("#model").attr("checked");
+            var checkState = checked ? "prod" : "test";
+            var params = {stackId:id,month:$("#month").val(),model:checkState};
             YT.deploy.util.reqGet("/appLog/selectListByStackId", params, function (d) {
                 var data = d.data;
                 var param = {title:"消息",logText:d.data.logText};
@@ -249,7 +255,8 @@
         },
 
         reqExecute:function(id){
-            var model = $("#model").val();
+            var checked = $("#model").attr("checked");
+            var model = checked ? "prod" : "test";
             if(model == "prod"){
                 if(!confirm("您确认要执行请求吗？")){
                     return;
@@ -268,14 +275,17 @@
         },
         
         bindIdoc:function(id){
-            var model = $("#model").val();
+            var checked = $("#model").attr("checked");
+            var model = checked ? "prod" : "test";
             var params = {stackId:id,month:$("#month").val(),model:model};
             YT.deploy.route("/idocUrl/bind",params,"/idoc/bind.html",{title:"绑定保存"});
         },
 
         //
         openFormatMsgDialog:function(id){
-            var params = {stackId:id,month:$("#month").val(),model:$("#model").val()};
+            var checked = $("#model").attr("checked");
+            var model = checked ? "prod" : "test";
+            var params = {stackId:id,month:$("#month").val(),model:model};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
                 var jsonObjReq = JSON.parse(d.data.reqHeaders);
                 var reqDataList = [];
@@ -316,7 +326,7 @@
                     return true;
                 }
                 $.get("/getCityById",{ip:ip},function(d){
-                    console.log("city="+d.data);
+                    // console.log("city="+d.data);
                     $tdClientIp.html(ip+" ["+d.data+"]");
                 },"json");
             });

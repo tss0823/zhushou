@@ -65,6 +65,11 @@
                 }
             });
 
+            $("a[name='btnEnterEdit']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
+            });
+
             $("a[name='btnDel']").click(function () {
                 if (!confirm("您确认需要删除吗？")) {
                     return;

@@ -18,6 +18,7 @@ import com.yuntao.zhushou.service.inter.IdocParamService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.LogService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,17 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
+    public IdocUrlVo getIdocUrlVoById(Long id) {
+        IdocUrl idocUrl = this.findById(id);
+        IdocUrlVo idocUrlVo = BeanUtils.beanCopy(idocUrl, IdocUrlVo.class);
+
+        //获取参数
+        List<IdocParam> paramList = idocParamService.selectByParentId(idocUrl.getId());
+        idocUrlVo.setParamList(paramList);
+        return idocUrlVo;
+    }
+
+    @Override
     public void save(IdocDataParam idocDataParam,User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
         IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam,IdocUrl.class);
@@ -144,6 +156,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
         if (CollectionUtils.isNotEmpty(paramList)) {
             for (IdocParam idocParam : paramList) {
+                if (StringUtils.isBlank(idocParam.getCode())) {
+                    continue;
+                }
                 idocParam.setParentId(idocUrl.getId());
                 idocParamService.insert(idocParam);
             }
@@ -165,6 +180,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         //再保存
         if (CollectionUtils.isNotEmpty(paramList)) {
             for (IdocParam idocParam : paramList) {
+                if (StringUtils.isBlank(idocParam.getCode())) {
+                    continue;
+                }
                 idocParam.setParentId(idocUrl.getId());
                 idocParamService.insert(idocParam);
             }

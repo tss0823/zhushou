@@ -55,7 +55,7 @@
         <where>
             <include refid="Base_Where"/>
         </where>
-       order by id desc
+       order by id asc
      <if test="pageInfo != null ">
           limit #{pageInfo.offset}, #{pageInfo.pageSize}
     </if>

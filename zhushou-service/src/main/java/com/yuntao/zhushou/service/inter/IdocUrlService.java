@@ -69,6 +69,13 @@ public interface IdocUrlService {
     IdocUrlVo bind(String month,String model,String stackId);
 
     /**
+     * 获取idocVo
+     * @param id
+     * @return
+     */
+    IdocUrlVo getIdocUrlVoById(Long id) ;
+
+    /**
      * 保存
      */
     void save(IdocDataParam idocDataParam,User user);
