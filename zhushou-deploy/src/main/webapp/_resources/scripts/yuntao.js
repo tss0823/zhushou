@@ -335,8 +335,8 @@
 
 
     };
-    
-    
+
+
     //用户数据处理程序
     YT.deploy.userDataProcess = {
 
@@ -560,6 +560,27 @@
     }
 
 
+    //webSocket
+    var hostname = location.hostname;
+    var webSocket = new WebSocket('ws://'+hostname+':9003/indexWebSocket');
+
+    // webSocket.send("发送消息ok");
+
+    webSocket.onerror = function(event) {
+        console.log("error,data="+event.data);
+    };
+
+    webSocket.onopen = function(event) {
+        console.log("open,data="+event.data);
+    };
+
+    webSocket.onmessage = function(event) {
+        YT.deploy.eventProcess.notifyEvent(event.data);
+        console.log("onmessage data="+event.data);
+    };
+    //end
+
+    
     // window.confirm = function(message){
     //     bootbox.confirm(message, function(result) {
     //         return result;

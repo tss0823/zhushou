@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.common.cache.impl;
 
 import com.yuntao.zhushou.common.cache.CacheService;
+import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.SerializeUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,10 +46,11 @@ public class JedisCacheServiceImpl implements CacheService {
     public void set(String key, Object value) {
         ShardedJedis jedis = null;
         try{
+            String newKey = AppConfigUtils.getValue("redis.namespace")+"_"+key;
             jedis = shardedJedisPool.getResource();
             byte[] bs = SerializeUtil.serialize(value);
             int period = 60 * 60 * 5;  //默认过期时间
-            jedis.setex(key.getBytes(),period,bs);
+            jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {
@@ -61,9 +63,10 @@ public class JedisCacheServiceImpl implements CacheService {
     public void set(String key, int period, Object value) {
         ShardedJedis jedis = null;
         try{
+            String newKey = AppConfigUtils.getValue("redis.namespace")+"_"+key;
             jedis = shardedJedisPool.getResource();
             byte[] bs = SerializeUtil.serialize(value);
-            jedis.setex(key.getBytes(),period,bs);
+            jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {
@@ -76,8 +79,9 @@ public class JedisCacheServiceImpl implements CacheService {
     public Object get(String key) {
         ShardedJedis jedis = null;
         try{
+            String newKey = AppConfigUtils.getValue("redis.namespace")+"_"+key;
             jedis = shardedJedisPool.getResource();
-            byte [] bs = jedis.get(key.getBytes());
+            byte [] bs = jedis.get(newKey.getBytes());
             Object value = SerializeUtil.unserialize(bs);
             return value;
         }catch (Exception e){
@@ -91,8 +95,9 @@ public class JedisCacheServiceImpl implements CacheService {
     public void remove(String key) {
         ShardedJedis jedis = null;
         try{
+            String newKey = AppConfigUtils.getValue("redis.namespace")+"_"+key;
             jedis = shardedJedisPool.getResource();
-            jedis.del(key.getBytes());
+            jedis.del(newKey.getBytes());
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {

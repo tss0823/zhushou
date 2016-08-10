@@ -13,10 +13,12 @@
         <result column="log" property="log" jdbcType="VARCHAR" />
         <result column="desc" property="desc" jdbcType="VARCHAR" />
         <result column="codeName" property="codeName" jdbcType="VARCHAR" />
+        <result column="domain" property="domain" jdbcType="VARCHAR" />
+        <result column="port" property="port" jdbcType="INTEGER" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`name`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`
+        `id`,`name`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`
     </sql>
     <sql id="Base_Table_Name">
         app
@@ -78,9 +80,9 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`)
+        (`name`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`)
         values
-        (#{name},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName})
+        (#{name},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port})
     </insert>
 
     <update id="updateById">
@@ -94,6 +96,8 @@
             <if test="log != null and log !=''">`log`=#{log},</if>
             <if test="desc != null and desc !=''">`desc`=#{desc},</if>
             <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
+            <if test="domain != null and domain !=''">`domain`=#{domain},</if>
+            <if test="port != null">`port`=#{port},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}
@@ -109,6 +113,8 @@
             <if test="log != null and log !=''">`log`=#{log},</if>
             <if test="desc != null and desc !=''">`desc`=#{desc},</if>
             <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
+            <if test="domain != null and domain !=''">`domain`=#{domain},</if>
+            <if test="port != null">`port`=#{port},</if>
         </set>
         ,gmtModify = now(6)
         where name = #{name}

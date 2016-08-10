@@ -24,6 +24,10 @@ public class ResponseHolderFilter implements Filter {
         PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
         AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
 
+        //
+
+
+
     }
 
     @Override

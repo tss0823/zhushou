@@ -15,6 +15,7 @@
 
     YT.deploy.index = {
         initData:function(){
+            
 
             //获取系统枚举值
             $.ajax({
@@ -212,25 +213,6 @@
 
 
 
-            //webSocket
-            var hostname = location.hostname;
-            var webSocket = new WebSocket('ws://'+hostname+':9003/indexWebSocket');
-            
-            // webSocket.send("发送消息ok");
-
-            webSocket.onerror = function(event) {
-                console.log("error,data="+event.data);
-            };
-
-            webSocket.onopen = function(event) {
-                console.log("open,data="+event.data);
-            };
-
-            webSocket.onmessage = function(event) {
-                YT.deploy.eventProcess.notifyEvent(event.data);
-                console.log("onmessage data="+event.data);
-            };
-            //end
             
             //注册事件,发布状态
             YT.deploy.eventProcess.addListener("monitor_status",function(msgObj){
@@ -244,6 +226,68 @@
             });
             //end
 
+            //注册服务状态监控事件
+            YT.deploy.eventProcess.addListener("server_status_check", function (msgObj) {
+                var dataObj = JSON.parse(msgObj.data);
+                //app table row
+                $("#tbContentApp").find("tr").each(function (index, item) {
+                    var appName = $(item).find("td:first").attr("appName");
+                    var hostStatusMsg = dataObj[appName];
+                    var errArray = [];
+                    var hostSize = 0;
+                    debugger;
+                    for(var hostName in hostStatusMsg){
+                        var hostStatus = hostStatusMsg[hostName];
+                        if(!hostStatus["success"]){
+                            errArray.push(hostStatus["message"]);
+                        }
+                        hostSize++;
+                    }
+                    var color = "green";
+                    var text = "OK";
+                    if(hostSize == errArray.length){
+                        color = "red"; //all failed
+                        text = "ERROR"
+                    }else if(errArray.length > 0){
+                        color = "WARN";  //警告有错误
+                    }else{
+                        text = "OK";
+                    }
+                    var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+                    $tdServerStatusText.css("color",color);
+                    $tdServerStatusText.html("<strong>"+text+"</strong>");
+                    $tdServerStatusText.attr("title",errArray.join("\r\n"));
+                });
+                //end
+
+                //host table row
+                debugger;
+                $("#tbContentHost").find("tr").each(function (index, item) {
+                    var appName = $("#appName").val();
+                    var hostStatusMsg = dataObj[appName];
+                    debugger;
+                    var color = "green";
+                    var text = "OK";
+                    for(var hostName in hostStatusMsg){
+                        var hostStatus = hostStatusMsg[hostName];
+                        if(!hostStatus["success"]){
+                            text = "ERROR";
+                            color = "red"
+                        }else{
+                            text = "OK";
+                            color = "green";
+                        }
+                        var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+                        if ($tdServerStatusText.length > 0) {
+                            $tdServerStatusText.css("color",color);
+                            $tdServerStatusText.html("<strong>"+text+"</strong>");
+                            $tdServerStatusText.attr("title",hostStatusMsg["message"]);
+                        }
+                    }
+                });
+                //end
+            });
+            //end register event
         },
 
 

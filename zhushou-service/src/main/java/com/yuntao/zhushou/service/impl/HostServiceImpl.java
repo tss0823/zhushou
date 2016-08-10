@@ -3,6 +3,7 @@ package com.yuntao.zhushou.service.impl;
 import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.dal.mapper.HostMapper;
+import com.yuntao.zhushou.model.constant.CacheConstant;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.query.HostQuery;
 import com.yuntao.zhushou.model.web.Pagination;
@@ -56,13 +57,22 @@ public class HostServiceImpl extends AbstService implements HostService {
 
     @Override
     public List<Host> selectListByAppAndModel(Long appId, String model) {
-        return hostMapper.selectListByAppAndModel(appId,model);
+        //get form cache
+        String key = CacheConstant.Host.selectListByAll;
+        List<Host> dataList = (List<Host>) cacheService.get(key);
+        if(CollectionUtils.isNotEmpty(dataList)){
+            return dataList;
+        }
+        dataList = hostMapper.selectListByAppAndModel(appId,model);
+        //set to cache
+        cacheService.set(key,dataList);
+        return dataList;
     }
 
     @Override
     public List<Host> selectListByAll() {
         //get form cache
-        String key = "host_selectListByAll_v2";
+        String key = CacheConstant.Host.selectListByAll;
         List<Host> dataList = (List<Host>) cacheService.get(key);
         if(CollectionUtils.isNotEmpty(dataList)){
             return dataList;

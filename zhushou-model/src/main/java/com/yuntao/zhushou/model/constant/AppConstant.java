@@ -23,6 +23,7 @@ public interface AppConstant {
         String MONITOR_SERVER = "monitor_server";
         String MONITOR_STATUS = "monitor_status";
         String TEST_HTTP_EXCUTE = "test_http_execute";
+        String SERVER_STATUS_CHECK = "server_status_check";
     }
 
     interface ResponseCode{

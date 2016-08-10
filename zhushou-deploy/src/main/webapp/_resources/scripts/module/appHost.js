@@ -84,20 +84,6 @@
                 });
             });
 
-            // debugger;
-            //监控状态
-            var serverCheck = YT.deploy.data.serverCheck;
-            if(serverCheck){
-                var appNameParam = {"member":[28082,5],"trainer":[28083,5]};
-                $("input[id='chkForm']").each(function(index,item){
-                    var ip = $(item).val();
-                    var appName = YT.deploy.appHost.appName;
-                    var port = appNameParam[appName][0];
-                    var checkNum = appNameParam[appName][1];
-                    YT.deploy.appHost.checkServerUrl(ip,port,checkNum);
-                });
-            }
-
             //end
 
             YT.deploy.appHost.refreshBranch(false);
@@ -446,22 +432,6 @@
 
         },
 
-        checkServerUrl : function(ip,port,checkNum){
-            $.get("/checkServerStatus",{"ip":ip,"port":port},function(d){
-                var statusId = "status_";
-                console.log("success="+d.success+",status_id="+statusId);
-                if(d.success){
-                    $("#"+statusId+"[key='"+ip+"']").html("<strong style='color:green'>OK</strong>");
-                }else{
-                    if(checkNum > 0){
-                        checkNum--;
-                        YT.deploy.appHost.checkServerUrl(ip,port,checkNum);
-                    }else{
-                        $("#"+statusId).html("<strong style='color:red' title='"+d.message+"'>ERROR</strong>");
-                    }
-                }
-            });
-        }
     };
 
 

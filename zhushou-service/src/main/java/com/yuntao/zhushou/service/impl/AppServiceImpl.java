@@ -1,8 +1,10 @@
 package com.yuntao.zhushou.service.impl;
 
+import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.dal.mapper.AppMapper;
+import com.yuntao.zhushou.model.constant.CacheConstant;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AppQuery;
@@ -10,6 +12,7 @@ import com.yuntao.zhushou.model.vo.AppVo;
 import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.UserService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,9 @@ public class AppServiceImpl extends AbstService implements AppService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CacheService cacheService;
+
     @Override
     public App findById(Long id) {
         return appMapper.findById(id);
@@ -37,7 +43,7 @@ public class AppServiceImpl extends AbstService implements AppService {
 
     @Override
     public App findByName(String name) {
-        AppQuery query = new AppQuery();;
+        AppQuery query = new AppQuery();
         query.setName(name);
         Map<String,Object> queryMap = BeanUtils.beanToMap(query);
         return appMapper.findByCondition(queryMap);
@@ -79,6 +85,17 @@ public class AppServiceImpl extends AbstService implements AppService {
 
     @Override
     public List<App> selectAllList() {
-        return appMapper.selectList(new HashMap<String, Object>());
+        //get form cache
+        String key = CacheConstant.App.selectAllList;
+        List<App> dataList = (List<App>) cacheService.get(key);
+        if(CollectionUtils.isNotEmpty(dataList)){
+            return dataList;
+        }
+        dataList = appMapper.selectList(new HashMap<String, Object>());
+
+        //set to cache
+        cacheService.set(key,dataList);
+        return dataList;
+
     }
 }

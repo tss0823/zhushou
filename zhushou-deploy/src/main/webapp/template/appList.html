@@ -24,20 +24,22 @@
                 最后操作时间
             </th>
             <th width="25%">操作日志</th>
+            <th width="5%">状态</th>
             <th width="10%">操作</th>
         </tr>
         </thead>
 
-        <tbody id="tbContent">
+        <tbody id="tbContentApp">
         {{each dataList as bean i}}
         <tr class="selected">
-            <td>
+            <td appName="{{bean.name}}">
                 <a href="#">{{bean.name}}</a>
             </td>
             <td>{{bean.desc}}</td>
             <td>{{bean.userName}}</td>
             <td>{{bean.lastTime}}</td>
             <td>{{bean.log}}</td>
+            <td name="serverStatusText">检测中...</td>
 
             <td class="hidden-480">
                 <a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="test" appName="{{bean.name}}" color="green"  ><strong style="color:green">测试</strong></a>

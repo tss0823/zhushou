@@ -64,6 +64,16 @@ public class App implements Serializable {
      */
     private String codeName;
 
+    /**
+     * 域名；user.api.yuntaohongbao.com
+     */
+    private String domain;
+
+    /**
+     * 端口
+     */
+    private Integer port;
+
     public Long getId() {
         return id;
     }
@@ -150,6 +160,22 @@ public class App implements Serializable {
 
     public void setCodeName(String codeName) {
         this.codeName = codeName;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 }
 
