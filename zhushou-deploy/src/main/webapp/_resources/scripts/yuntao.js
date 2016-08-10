@@ -144,6 +144,10 @@
         },
         
         paginationInit: function (data, queryFn) {
+            if ($(".totalCount").length == 0 || !data) {
+                return;
+            }
+
             $(".totalCount").html(data.totalCount);
             $(".pageCount").html(data.pageCount);
             $(".pageNum").html(data.pageNum);

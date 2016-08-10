@@ -3,6 +3,7 @@ package com.yuntao.zhushou.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
+import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.dal.mapper.IdocUrlMapper;
 import com.yuntao.zhushou.model.domain.IdocParam;
@@ -186,6 +187,110 @@ public class IdocUrlServiceImpl implements IdocUrlService {
                 idocParam.setParentId(idocUrl.getId());
                 idocParamService.insert(idocParam);
             }
+        }
+    }
+
+    @Override
+    public void syncNew(String appName) {
+        //delete parent
+        //get parent data List by appName and type
+        IdocUrlQuery query = new IdocUrlQuery();
+        query.setAppName(appName);
+        query.setType(1);
+        List<IdocUrl> idocUrls = this.selectList(query);
+        if (CollectionUtils.isNotEmpty(idocUrls)) {
+            for (IdocUrl idocUrl : idocUrls) {
+                idocUrlMapper.deleteDirectById(idocUrl.getId());
+                //delete child dataList
+                this.idocParamService.deleteByParentId(idocUrl.getId());
+            }
+        }
+        //end
+
+        String url = "http://"+ appName+".api.mynixi.com/data/enumList";
+        List<String> resultList = HttpUtils.reqGet(url);
+        String result = StringUtils.join(resultList, "");
+        Map dataMap = JsonUtils.json2Object(result, Map.class);
+        Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
+        Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
+        for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
+            String key = entry.getKey();
+            String keyStrs [] = key.split("_");
+            String code = keyStrs[0];
+            String text = keyStrs[1];
+            IdocUrl idocUrl = new IdocUrl();
+            idocUrl.setType(1);
+            idocUrl.setName(text);
+            idocUrl.setUrl(code);
+            idocUrl.setAppName(appName);
+            idocUrl.setVersion("1.0.0");
+            this.insert(idocUrl);
+
+            //items
+            List<Map<String, String>> dataList = entry.getValue();
+            for (Map<String, String> stringMap : dataList) {
+
+                Object paramCode = stringMap.get("code");
+                String paramValue = stringMap.get("description");
+                IdocParam idocParam = new IdocParam();
+                idocParam.setCode(paramCode.toString());
+                idocParam.setName(paramValue);
+                idocParam.setParentId(idocUrl.getId());
+                idocParam.setStatus(0);
+                this.idocParamService.insert(idocParam);
+            }
+            //end
+        }
+    }
+
+    @Override
+    public void syncUpdate(String appName, String code) {
+        //get parent data by appName and type and code
+        IdocUrlQuery query = new IdocUrlQuery();
+        query.setAppName(appName);
+        query.setType(1);
+        query.setUrl(code);
+        List<IdocUrl> idocUrls = this.selectList(query);
+        IdocUrl idocUrl = idocUrls.get(0);
+        //delete child data list
+        this.idocParamService.deleteByParentId(idocUrl.getId());
+        //end
+
+        String url = "http://"+ appName+".api.mynixi.com/data/enumList";
+        List<String> resultList = HttpUtils.reqGet(url);
+        String result = StringUtils.join(resultList, "");
+        Map<String,List<Map<String,String>>> enumMap = JsonUtils.json2Object(result, Map.class);
+        Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
+        for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
+            String key = entry.getKey();
+            String keyStrs[] = key.split("_");
+            String parentCode = keyStrs[0];
+            String text = keyStrs[1];
+            if (!parentCode.equals(idocUrl.getUrl())) {
+                continue;
+            }
+            idocUrl.setName(text);
+            idocUrl.setUrl(code);
+            idocUrl.setAppName(appName);
+            idocUrl.setVersion("1.0.0");
+            this.updateById(idocUrl);
+
+            //items
+            List<Map<String, String>> dataList = entry.getValue();
+            for (Map<String, String> stringMap : dataList) {
+                Set<Map.Entry<String, String>> childSet = stringMap.entrySet();
+                for (Map.Entry<String, String> childEntry : childSet) {
+                    String paramCode = childEntry.getKey();
+                    String paramValue = childEntry.getValue();
+                    IdocParam idocParam = new IdocParam();
+                    idocParam.setCode(paramCode);
+                    idocParam.setName(paramValue);
+                    idocParam.setParentId(idocUrl.getId());
+                    idocParam.setStatus(0);
+                    this.idocParamService.insert(idocParam);
+                }
+            }
+            //end
         }
     }
 

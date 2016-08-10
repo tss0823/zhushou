@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.deploy.controller.at;
 
+import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
@@ -38,6 +39,9 @@ public class IdocUrlController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(IdocUrlQuery query) {
+        if (query.getType() == null) {
+            query.setType(0);
+        }
         Pagination<IdocUrlVo> pagination = idocUrlService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);
@@ -85,6 +89,14 @@ public class IdocUrlController extends BaseController {
     public ResponseObject deleteById(Long id) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         idocUrlService.deleteById(id);
+        return responseObject;
+    }
+
+    @RequestMapping("syncNew")
+    @NeedLogin
+    public ResponseObject syncNew(String appName) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        idocUrlService.syncNew(appName);
         return responseObject;
     }
 

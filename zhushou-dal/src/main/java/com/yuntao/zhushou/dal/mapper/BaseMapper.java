@@ -22,5 +22,18 @@ public interface BaseMapper<T> {
 
     int updateById(T domain);
 
+    /**
+     * 逻辑删除
+     * @param id
+     * @return
+     */
     int deleteById(@Param(value = "id") Long id);
+
+    /**
+     * 物理删除
+     * @param id
+     * @return
+     */
+    int deleteDirectById(@Param(value = "id") Long id);
+
 }

@@ -61,7 +61,9 @@ public class IdocUrl implements Serializable {
 		
 	/**  创建用户名称 * */
 	private String createUserName;
-		
+
+
+	private Integer type;
 	
 	public IdocUrl(){
 	}
@@ -164,6 +166,14 @@ public class IdocUrl implements Serializable {
 
 	public void setAppName(String appName) {
 		this.appName = appName;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }
 

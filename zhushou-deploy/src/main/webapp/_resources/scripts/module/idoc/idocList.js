@@ -31,6 +31,15 @@
                 $(this).attr("disabled", "true");
                 YT.deploy.idocList.query(pageNum, pageSize);
             });
+
+            $("#btnQueryEnums").click(function () {
+                debugger;
+                var pageNum = 1; 
+                var pageSize = $("#pageSize").val();
+                // $(this).html("查询中...");
+                // $(this).attr("disabled", "true");
+                YT.deploy.idocList.queryEnums(pageNum, pageSize);
+            });
             
             $("#btnListAll").click(function () {
                 var pageNum = 1;  //查询触发从第一页开始
@@ -85,6 +94,34 @@
                     }
                 });
             });
+
+            //枚举同步创建
+            $("#btnSyncNew").click(function () {
+                if (!confirm("您确认需要同步创建吗？")) {
+                    return;
+                }
+                YT.deploy.util.reqPost("/idocUrl/syncNew", {appName:"user"}, function (d) {
+                    if (d.success) {
+                        alert("同步创建成功");
+                    } else {
+                        alert("同步创建失败,err=" + d.message);
+                    }
+                });
+            });
+            
+            //枚举同步更新
+            $("#btnSyncUpdate").click(function () {
+                if (!confirm("您确认需要同步更新吗？")) {
+                    return;
+                }
+                YT.deploy.util.reqPost("/idocUrl/syncUpdate", {appName:"user"}, function (d) {
+                    if (d.success) {
+                        alert("同步修改成功");
+                    } else {
+                        alert("同步修改失败,err=" + d.message);
+                    }
+                });
+            });
             
         },
     }
@@ -100,13 +137,22 @@
             var ext_data = $.extend(params, {title: "接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
         },
-        
+
         queryExport: function (pageNum, pageSize) {
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = pageNum;
             params["pageSize"] = pageSize;
-            var ext_data = $.extend(params, {title: "接口文档"});
+            var ext_data = $.extend(params, {title: "导出接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/listAll.html", ext_data);
+        },
+        
+        queryEnums: function (pageNum, pageSize) {
+            var params = YT.deploy.util.getFormParams("#idocListForm");
+            params["pageNum"] = pageNum;
+            params["pageSize"] = pageSize;
+            params["type"] = 1;
+            var ext_data = $.extend(params, {title: "枚举接口文档"});
+            YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);
         },
 
 

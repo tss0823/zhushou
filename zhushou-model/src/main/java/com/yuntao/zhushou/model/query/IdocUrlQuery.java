@@ -24,6 +24,8 @@ public class IdocUrlQuery extends  BaseQuery {
     /**  版本 * */
     private String version;
 
+    private Integer type;
+
     public String getUrl() {
         return url;
     }
@@ -62,5 +64,13 @@ public class IdocUrlQuery extends  BaseQuery {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

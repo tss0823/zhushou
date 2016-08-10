@@ -86,4 +86,17 @@ public interface IdocUrlService {
     void update(IdocDataParam idocDataParam,User user);
 
 
+    /**
+     * 同步创建枚举
+     * @param appName
+     */
+    void syncNew(String appName);
+
+
+    /**
+     * 同步更新枚举
+     * @param appName
+     * @param code
+     */
+    void syncUpdate(String appName,String code);
 }

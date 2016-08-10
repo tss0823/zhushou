@@ -19,12 +19,13 @@
      <result  column="memo" property="memo"/>
      <result  column="createUserId" property="createUserId"/>
      <result  column="createUserName" property="createUserName"/>
+      <result  column="type" property="type"/>
 </resultMap>
         
     
  <sql id="Base_Column_List">
     `id`,`url`,`name`,`appName`,`module`,`version`,`resultData`,`status`,
-    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`       
+    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`
     
   </sql>
         
@@ -48,7 +49,8 @@
     <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
     <if test="memo != null and memo != '' ">and  `memo` = #{memo}</if> 
     <if test="createUserId != null and createUserId != '' ">and  `createUserId` = #{createUserId}</if> 
-    <if test="createUserName != null and createUserName != '' ">and  `createUserName` = #{createUserName}</if> 
+    <if test="createUserName != null and createUserName != '' ">and  `createUserName` = #{createUserName}</if>
+      <if test="type != null">and  `type` = #{type}</if>
   </sql>
   
         
@@ -89,12 +91,12 @@
     (
     `url`,`name`,       
     `appName`,`module`,`version`,`resultData`,`status`,`gmtCreate`,`gmtModify`,`delStatus`,
-    `memo`,`createUserId`,`createUserName`
+    `memo`,`createUserId`,`createUserName`,`type`
     ) 
     values
     (
     #{url},#{name},#{appName},#{module},#{version},#{resultData},#{status},now(6),
-    now(6),1,#{memo},#{createUserId},#{createUserName}
+    now(6),1,#{memo},#{createUserId},#{createUserName},#{type}
     )
   </insert>  
     
@@ -111,16 +113,21 @@
        <if test="memo != null and memo !=''">`memo` = #{memo},</if>
        <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>
        <if test="createUserName != null and createUserName !=''">`createUserName` = #{createUserName},</if>
+          <if test="type != null">`type` = #{type},</if>
      </set>
    ,gmtModify = now(6)
    where id = #{id}
-  </update>  
-        
-    
-   <update id="deleteById" parameterType="Long">  
-      update  <include refid="Base_Table_Name" /> set delStatus = 0  where id = #{id}
-   </update>  
-   
+  </update>
+
+
+    <update id="deleteById" parameterType="Long">
+        update  <include refid="Base_Table_Name" /> set delStatus = 0  where id = #{id}
+    </update>
+
+    <delete id="deleteDirectById" parameterType="Long">
+        delete from  <include refid="Base_Table_Name" /> where id = #{id}
+    </delete>
+
      <!-- user definition code start -->
-     <!-- user definition code end -->
+    <!-- user definition code end -->
 </mapper> 
