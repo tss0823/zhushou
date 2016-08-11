@@ -51,13 +51,15 @@ public class CheckServerStatusJob {
         }
         try {
             String model = AppConfigUtils.getValue("profiles.active");
-            if (model.equals(LogModel.TEST.getCode())) {
+            if (!model.equals(LogModel.PROD.getCode())) {
                 return;
             }
             List<App> appList = appService.selectAllList();
             Map<String, Map<String, ResponseObject>> resultMap = new HashMap<>();
             for (App app : appList) {
-                List<Host> hosts = hostService.selectListByAppAndModel(app.getId(), model);
+                List<Host> testHosts = hostService.selectListByAppAndModel(app.getId(), "test");
+                List<Host>  hosts = hostService.selectListByAppAndModel(app.getId(), "prod");
+                hosts.addAll(testHosts);
                 Map<String, ResponseObject> statusMap = new HashMap<>();
                 for (Host host : hosts) {
                     String checkUrl = "http://" + host.getEth0() + ":" + app.getPort() + "/checkServerStatus";
