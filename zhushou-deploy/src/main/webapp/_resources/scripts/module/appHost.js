@@ -8,7 +8,7 @@
     }
 
     $.extend(YT.deploy,{
-        route_callback : function () {
+        route_callback : function (d,data) {
             console.log("appHost list after render call");
             //debugger;
             //组件初始化之后
@@ -88,6 +88,26 @@
 
             YT.deploy.appHost.refreshBranch(false);
 
+            //host table row server check status
+            var statAppObj = appData.serverStatus[appName];
+            $("#tbContentHost").find("tr").each(function (index, item) {
+                // debugger;
+                if(!statAppObj){
+                    return false;
+                }
+                var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+                var hostName = $tdServerStatusText.attr("data");
+                var statHostObj = statAppObj[hostName];
+                if(!statHostObj){
+                    return;
+                }
+
+                //回显ui
+                $tdServerStatusText.css("color",statHostObj.color);
+                $tdServerStatusText.html(statHostObj.text);
+                $tdServerStatusText.attr("title",statHostObj.error);
+            });
+            //end
         },
     });
 

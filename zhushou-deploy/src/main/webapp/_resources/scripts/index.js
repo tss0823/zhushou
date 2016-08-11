@@ -45,6 +45,7 @@
             //     }
             // });
             //end
+            appData.serverStatus = {};  //服务器监控对象
 
             //初始化权限资源
             var authResList = appData.authResList;
@@ -109,52 +110,6 @@
                 });
             }
             
-
-            // $("#enterDeployLog").click(function () {
-            //     YT.deploy.route("/deployLog/list", {}, "/deployLog.html", {title: "发布日志"});
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
-            //
-            // $("#enterAppLog").click(function () {
-            //     var showAll = $.cookie("app_log_show_all");
-            //     var dataDisplay = showAll && showAll == "1" ? "table_row" : "none";
-            //     var ext_data = {title: "应用日志",showAll:showAll,dataDisplay:dataDisplay};
-            //     YT.deploy.route("/appLog/list", {}, "/log/appLog.html", ext_data);
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
-            //
-            // $("#enterTaskLog").click(function () {
-            //     var ext_data = {title: "Task日志"};
-            //     YT.deploy.route("/taskLog/list", {}, "/taskLog/list.html", ext_data);
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
-            //
-            // $("#enterIdoc").click(function () {
-            //     YT.deploy.route("/idocUrl/list", {}, "/idoc/list.html", {title: "接口列表"});
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
-            //
-            // $("#enterAutoTest").click(function () {
-            //     YT.deploy.route("/atTemplate/list", {}, "/at/template.html", {title: "模板列表"});
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
-            //
-            // $("#enterSettings").click(function () {
-            //     console.log("enter settings nothing")
-            //     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
-            //     $(this).parent("li").addClass("active");
-            //     YT.deploy.index.activeMenu = this;
-            // });
 
             $("#logout").click(function () {
                 YT.deploy.util.reqGet("/user/logout", {}, function (d) {
@@ -253,37 +208,51 @@
                     }else{
                         text = "OK";
                     }
+                    var errMsg = errArray.join("\r\n");
+                    //set to appData
+                    var statObj = appData.serverStatus[appName] || {};
+                    statObj["total"] = {color:color,text:text,error:errMsg};
+                    appData.serverStatus[appName] = statObj;
+                    //end
+                    
+                    //回显ui
                     var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
                     $tdServerStatusText.css("color",color);
                     $tdServerStatusText.html("<strong>"+text+"</strong>");
-                    $tdServerStatusText.attr("title",errArray.join("\r\n"));
+                    $tdServerStatusText.attr("title",errMsg);
                 });
                 //end
 
                 //host table row
                 debugger;
+                var appName = $("#appName").val();
+                var hostStatusMsg = dataObj[appName];
                 $("#tbContentHost").find("tr").each(function (index, item) {
-                    var appName = $("#appName").val();
-                    var hostStatusMsg = dataObj[appName];
-                    debugger;
+                    // debugger;
+                    var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+                    var hostName = $tdServerStatusText.attr("data");
+                    var hostStatus = hostStatusMsg[hostName];
                     var color = "green";
                     var text = "OK";
-                    for(var hostName in hostStatusMsg){
-                        var hostStatus = hostStatusMsg[hostName];
-                        if(!hostStatus["success"]){
-                            text = "ERROR";
-                            color = "red"
-                        }else{
-                            text = "OK";
-                            color = "green";
-                        }
-                        var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
-                        if ($tdServerStatusText.length > 0) {
-                            $tdServerStatusText.css("color",color);
-                            $tdServerStatusText.html("<strong>"+text+"</strong>");
-                            $tdServerStatusText.attr("title",hostStatusMsg["message"]);
-                        }
+                    if(!hostStatus["success"]){
+                        text = "ERROR";
+                        color = "red"
+                    }else{
+                        text = "OK";
+                        color = "green";
                     }
+                    var errMsg = hostStatusMsg["message"];
+                    //set to appData
+                    var statObj = appData.serverStatus[appName][hostName] || {};
+                    statObj = {color:color,text:text,error:errMsg};
+                    appData.serverStatus[appName][hostName] = statObj;
+                    //end
+                    
+                    //回显ui
+                    $tdServerStatusText.css("color",color);
+                    $tdServerStatusText.html("<strong>"+text+"</strong>");
+                    $tdServerStatusText.attr("title",errMsg);
+                    
                 });
                 //end
             });

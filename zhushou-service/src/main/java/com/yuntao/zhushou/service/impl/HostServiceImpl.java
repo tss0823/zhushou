@@ -58,7 +58,7 @@ public class HostServiceImpl extends AbstService implements HostService {
     @Override
     public List<Host> selectListByAppAndModel(Long appId, String model) {
         //get form cache
-        String key = CacheConstant.Host.selectListByAll;
+        String key = CacheConstant.Host.selectListByAll+"_"+model+"_"+appId;
         List<Host> dataList = (List<Host>) cacheService.get(key);
         if(CollectionUtils.isNotEmpty(dataList)){
             return dataList;
