@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.dal.mapper.IdocUrlMapper;
+import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.IdocParam;
 import com.yuntao.zhushou.model.domain.IdocUrl;
 import com.yuntao.zhushou.model.domain.User;
@@ -15,6 +16,7 @@ import com.yuntao.zhushou.model.vo.IdocParamVo;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.IdocParamService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.LogService;
@@ -49,6 +51,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
     @Autowired
     private LogService logService;
+
+    @Autowired
+    private AppService appService;
 
     @Override
     public List<IdocUrl> selectList(IdocUrlQuery query) {
@@ -207,7 +212,10 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         }
         //end
 
-        String url = "http://"+ appName+".api.mynixi.com/data/enumList";
+        App app = appService.findByName(appName);
+        String domain = app.getDomain();
+
+        String url = "http://"+ appName+"."+domain+"/data/enumList";
         List<String> resultList = HttpUtils.reqGet(url);
         String result = StringUtils.join(resultList, "");
         Map dataMap = JsonUtils.json2Object(result, Map.class);
