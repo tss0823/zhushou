@@ -26,6 +26,8 @@ public class IdocUrlQuery extends  BaseQuery {
 
     private Integer type;
 
+    private String createUserName;
+
     public String getUrl() {
         return url;
     }
@@ -72,5 +74,13 @@ public class IdocUrlQuery extends  BaseQuery {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
     }
 }

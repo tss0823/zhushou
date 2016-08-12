@@ -71,6 +71,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject save(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
+        idocDataParam.setType(0);
         idocUrlService.save(idocDataParam,user);
         return responseObject;
     }
@@ -80,6 +81,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject update(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
+        idocDataParam.setType(0);
         idocUrlService.update(idocDataParam,user);
         return responseObject;
     }
