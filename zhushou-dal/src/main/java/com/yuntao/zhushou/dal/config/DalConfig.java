@@ -106,6 +106,11 @@ public class DalConfig {
         return newMapperFactoryBean(RoleAuthResMapper.class).getObject();
     }
 
+    @Bean
+    public ReqContentMapper reqContentMapper() throws Exception {
+        return newMapperFactoryBean(ReqContentMapper.class).getObject();
+    }
+
 
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {

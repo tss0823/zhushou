@@ -1,0 +1,201 @@
+<style>
+    .btn-file {
+        padding: 2px 10px;
+        font-size: 11.9px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+    .btn-file input {
+        position: absolute;
+        font-size: 16px;
+        right: 0;
+        top: 0;
+         opacity: 0;
+        width: 50px;
+    }
+
+</style>
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right icon-key "></i>
+                {{title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row" style="margin-left: 20px;">
+        <div style="float: left;width: 450px;border:solid 1px gray">
+
+            <div class="dd dd-draghandle" style="width:100%">
+                <ol class="dd-list" id="activeChildItem">
+                    <li class="dd-item dd2-item" >
+                        <div class="dd-handle dd2-handle">
+                            <i class="red bigger-130">400</i>
+                        </div>
+                        <div class="dd2-content">
+                            http://www.baidu.com/a.jpg
+                            <div class="pull-right action-buttons" id="itemChildRemove">
+                                <a class="red" href="#" >
+                                    <i class="icon-trash bigger-130"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="dd-item dd2-item" >
+                        <div class="dd-handle dd2-handle">
+                            <i class="green bigger-130">200</i>
+                        </div>
+                        <div class="dd2-content">
+                            http://www.baidu.com/a.jpg
+                            <div class="pull-right action-buttons" id="itemChildRemove">
+                                <a class="red" href="#" >
+                                    <i class="icon-trash bigger-130"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="" style="float: left; width:800px;margin-left: 15px; padding-left: 20px; border: solid 1px gray">
+            <form class="form-horizontal" role="form" id="reqContentForm" onsubmit="return false;">
+                <div class="clearfix form-actions" style="margin: 5px 0;padding: 3px 0">
+                    <div class="col-md-offset-1 col-md-12">
+                        <input type="text" id="reqUrl" placeholder="请输入请求地址" class="input-xlarge">
+                        <button class="btn btn-info" id="btnRequest"> <i class="icon-ok bigger-110"></i> 请求 </button>
+                    </div>
+                    <!--<div class="col-md-offset-10 col-md-1">-->
+                    <!--</div>-->
+                </div>
+                <!--<input type="hidden" id="id" name="id" value="{{id}}">-->
+
+                <div id="reqBlock" style="border:solid 1px red">
+                    <div>
+                        <span>请求头列表：</span>
+                        <button class="btn btn-sm btn-yellow" id="btnAddHeader">添加</button>
+                    </div>
+                    <table  id="tbReqHeader" class="table table-striped table-bordered table-hover" style="">
+                        <tr class="selected" name="dataItem" style="display: none">
+                            <td width="7%">
+                                <label>
+                                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                                    <span class="lbl"></span>
+                                </label>
+                                <input type="text" id="headerKey" name="headerKey" style="width:180px" /> =
+                                <input type="text" id="headerValue" name="headerValue" style="width:180px" />
+                            </td>
+                            <td width="3%">
+                                <div class="pull-right action-buttons" >
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                                        <i class="icon-arrow-up bigger-130"></i>
+                                    </a>
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                                        <i class="icon-arrow-down bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                                        <i class="icon-trash bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="resBlock" style="border:solid 1px red">
+                    <div>
+                        <span>请求数据列表：</span>
+                        <button class="btn btn-sm btn-yellow" id="btnAddReqData">添加</button>
+                    </div>
+                    <table  id="tbReqData" class="table table-striped table-bordered table-hover" style="">
+                        <tr class="selected" name="dataItem" style="display: none">
+                            <td width="17%">
+                                <label>
+                                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                                    <span class="lbl"></span>
+                                </label>
+                                <input type="text" id="paramKey" name="paramKey" style="width:180px" />
+                                [<select name="paramType" id="paramType">
+                                   <option value="text">文本</option>
+                                    <option value="file">文件</option>
+                                </select>]
+                                =
+                                <a href="#void" class="btn btn-file" style="display: none"><i></i> 选择
+                                    <input type="file" id="paramValue" name="paramValue" />
+                                </a>
+                                <span id="fileNameText"></span>
+                                <input type="text" id="paramValue" name="paramValue" data="1" style="width:320px" />
+                            </td>
+                            <td width="3%">
+                                <div class="pull-right action-buttons" >
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                                        <i class="icon-arrow-up bigger-130"></i>
+                                    </a>
+                                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                                        <i class="icon-arrow-down bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                                        <i class="icon-trash bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="clearfix form-actions" style="float: none"> </div>
+
+
+                <!--<div class="clearfix form-actions" style="float: none">-->
+                    <!--<div class="col-md-offset-3 col-md-9">-->
+                        <!--<button class="btn btn-info" id="btnSave"> <i class="icon-ok bigger-110"></i> 保存 </button>-->
+                        <!--&nbsp; &nbsp; &nbsp;-->
+                        <!--<button class="btn" type="reset"> <i class="icon-undo bigger-110"></i> 取消 </button>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            </form>
+
+        </div>
+        <div style="float:none"></div>
+    </div>
+</div><!-- /.page-content -->
+<div>
+    <!--<form id="testForm"  method="post" >-->
+        <!--<input type="text" id="pageNum" name="pageNum" value="11">-->
+        <!--<input type="text" id="pageSize" name="pageSize" value="21">-->
+        <!--<input type="file" id="myFile" name="myFile" >-->
+        <!--<input type="button"  value="测试" onclick="testAjax()">-->
+
+    <!--</form>-->
+</div>
+<script src="/_resources/scripts/module/req/reqContent.js?ver={{ver}}"></script>
+<script>
+    function testAjax(){
+        var formData = new FormData($("#testForm")[0]);
+        debugger;
+        $.ajax({
+            url:'/reqContent/save',
+            type: 'POST',
+//            data:{pageNum:5,pageSize:100},
+            data:formData,
+            headers:{'myHead':'value1'},
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success:function(data,status,xhr){
+                debugger;
+            },
+            error:function(xhr,status,err){
+                debugger;
+            },
+
+
+        });
+        alert(111);
+
+    }
+</script>

@@ -100,7 +100,7 @@
                     var valueMap = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl);
                     valueMap = valueMap || {};
                     //end
-                    debugger;
+                    // debugger;
                     var ext_data = {title: authRes.name,authRes:authRes};
                     $.extend(ext_data,valueMap);
                     YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,ext_data);
@@ -128,45 +128,6 @@
                 YT.deploy.routeStackProcess.refresh();
             });
 
-            //事件触发
-            var preKeyCode = null;
-            $(document).keydown(function (e) {
-                console.log("keyCode=" + e.keyCode);
-                if (preKeyCode == 18 && e.keyCode == 13) {
-                    $("button[enter='true']").trigger("click");
-                    return false;
-                }
-
-                if (preKeyCode == 17 && e.keyCode == 82) { //ctrl + r
-                    console.log("presskey ctrl + r");
-                    YT.deploy.routeStackProcess.refresh();
-                    return false;  //屏蔽系统event
-                }
-                if (preKeyCode == 18 && e.keyCode == 72) { //alt + h
-                    console.log("presskey alt + h");
-                    YT.deploy.routeStackProcess.home();
-                    return false;  //屏蔽系统event
-                }
-                if (preKeyCode == 18 && e.keyCode == 37) { //alt + left
-                    console.log("presskey alt+left");
-                    YT.deploy.routeStackProcess.prevRoute();
-                    return false;
-                }
-                if (preKeyCode == 18 && e.keyCode == 39) { //alt + right
-                    console.log("presskey alt + right");
-                    YT.deploy.routeStackProcess.nextRoute();
-                    return false;
-                }
-                if (e.keyCode == 27) { //Esc
-                    console.log("presskey Esc");
-                    $(".bootbox-close-button").trigger("click");
-                    return false;
-                }
-                preKeyCode = e.keyCode;
-
-            });
-
-
 
             
             //注册事件,发布状态
@@ -190,7 +151,7 @@
                     var hostStatusMsg = dataObj[appName];
                     var errArray = [];
                     var hostSize = 0;
-                    debugger;
+                    // debugger;
                     for(var hostName in hostStatusMsg){
                         var hostStatus = hostStatusMsg[hostName];
                         if(!hostStatus["success"]){
@@ -224,7 +185,7 @@
                 //end
 
                 //host table row
-                debugger;
+                // debugger;
                 var appName = $("#appName").val();
                 var hostStatusMsg = dataObj[appName];
                 $("#tbContentHost").find("tr").each(function (index, item) {

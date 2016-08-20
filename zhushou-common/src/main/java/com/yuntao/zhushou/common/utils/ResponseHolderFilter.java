@@ -33,19 +33,19 @@ public class ResponseHolderFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        log.info("brefore request ...");
+//        log.info("brefore request ...");
         try {
             ResponseHolder.set(response);
             chain.doFilter(request, response);
         } finally {
             ResponseHolder.clear();
-            log.info("reponse clear1 ...");
+//            log.info("reponse clear1 ...");
         }
     }
 
     @Override
     public void destroy() {
-        log.error("reponse clear2 ...");
+//        log.error("reponse clear2 ...");
         ResponseHolder.clear();
     }
 

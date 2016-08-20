@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.common.http;
 
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -48,9 +49,11 @@ public class HttpNewUtils {
         httpPost.setConfig(requestConfig);
         //处理headers
         Map<String, String> headers = requestRes.getHeaders();
-        Set<Map.Entry<String, String>> entrySet = headers.entrySet();
-        for (Map.Entry<String, String> entry : entrySet) {
-            httpPost.setHeader(entry.getKey(),entry.getValue());
+        if (MapUtils.isNotEmpty(headers)) {
+            Set<Map.Entry<String, String>> entrySet = headers.entrySet();
+            for (Map.Entry<String, String> entry : entrySet) {
+                httpPost.setHeader(entry.getKey(),entry.getValue());
+            }
         }
         Map<String, String> params = requestRes.getParams();
         try{

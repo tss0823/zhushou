@@ -33,7 +33,7 @@
             });
 
             $("#btnQueryEnums").click(function () {
-                debugger;
+                //debugger;
                 var pageNum = 1; 
                 var pageSize = $("#pageSize").val();
                 // $(this).html("查询中...");
@@ -88,7 +88,7 @@
                 YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
                     if (d.success) {
                         alert("删除成功");
-                        YT.deploy.route("/idocUrl/list", params, "/log/idoc.html", {});
+                        YT.deploy.route("/idocUrl/list", {}, "/log/idoc.html", {});
                     } else {
                         alert("删除失败,err=" + d.message);
                     }

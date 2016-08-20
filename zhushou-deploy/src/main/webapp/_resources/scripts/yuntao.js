@@ -361,7 +361,7 @@
             }
             var moduleData = this.userDataMap[nameSpace];  //this == userDataProcess 作用域
             moduleData = moduleData || {};
-            debugger;
+            // debugger;
             for(var key in dataMap){
                moduleData[key] = dataMap[key]; 
             }
@@ -372,7 +372,7 @@
         
         getValueMap : function(nameSpace){
             var userDataString = $.cookie(YT.deploy.constant.C_USER_DATA);
-            debugger;
+            // debugger;
             if(!userDataString){
                 return {};
             }
@@ -533,7 +533,7 @@
                     params[key] = ext_data[key];
                 }
             }
-            debugger;
+            // debugger;
             var actionId = $("#"+formId).attr("actionId");
             var authRes = appData.authMap[actionId];
             var ext_data = $.extend(params, {title: authRes.name});
@@ -560,26 +560,76 @@
     }
 
 
+    //事件触发
+    var preKeyCode = null;
+    $(document).keydown(function (e) {
+        console.log("keyCode=" + e.keyCode);
+        if (preKeyCode == 18 && e.keyCode == 13) {
+            $("button[enter='true']").trigger("click");
+            return false;
+        }
+
+        if (preKeyCode == 17 && e.keyCode == 82) { //ctrl + r
+            console.log("presskey ctrl + r");
+            YT.deploy.routeStackProcess.refresh();
+            return false;  //屏蔽系统event
+        }
+        if (preKeyCode == 18 && e.keyCode == 72) { //alt + h
+            console.log("presskey alt + h");
+            YT.deploy.routeStackProcess.home();
+            return false;  //屏蔽系统event
+        }
+        if (preKeyCode == 18 && e.keyCode == 37) { //alt + left
+            console.log("presskey alt+left");
+            YT.deploy.routeStackProcess.prevRoute();
+            return false;
+        }
+        if (preKeyCode == 18 && e.keyCode == 39) { //alt + right
+            console.log("presskey alt + right");
+            YT.deploy.routeStackProcess.nextRoute();
+            return false;
+        }
+        if (e.keyCode == 27) { //Esc
+            console.log("presskey Esc");
+            $(".bootbox-close-button").trigger("click");
+            return false;
+        }
+        preKeyCode = e.keyCode;
+
+    });
+    //end
+
+
     //webSocket
-    var hostname = location.hostname;
-    var webSocket = new WebSocket('ws://'+hostname+':9003/indexWebSocket');
+    YT.deploy.WebSocket = {
 
-    // webSocket.send("发送消息ok");
+        init : function(){
+            var hostname = location.hostname;
+            var webSocket = new WebSocket('ws://'+hostname+':9003/indexWebSocket');
+            // webSocket.send("发送消息ok");
 
-    webSocket.onerror = function(event) {
-        console.log("error,data="+event.data);
-    };
+            webSocket.onerror = function(event) {
+                console.error("error,data="+event.data);
+            };
 
-    webSocket.onopen = function(event) {
-        console.log("open,data="+event.data);
-    };
+            webSocket.onopen = function(event) {
+                console.log("open,data="+event.data);
+            };
 
-    webSocket.onmessage = function(event) {
-        YT.deploy.eventProcess.notifyEvent(event.data);
-        console.log("onmessage data="+event.data);
+            webSocket.onmessage = function(event) {
+                YT.deploy.eventProcess.notifyEvent(event.data);
+                console.log("onmessage data="+event.data);
+            };
+            webSocket.onclose = function(event) {
+                console.error("onclose data="+event.data);
+                //重新连接
+                setTimeout(this.init(), 1000);
+            };
+        },
     };
     //end
 
+    YT.deploy.WebSocket.init();   //初始化socket
     
     // window.confirm = function(message){
     //     bootbox.confirm(message, function(result) {

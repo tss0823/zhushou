@@ -26,6 +26,7 @@
         <typeAlias alias="Role" type="com.yuntao.zhushou.model.domain.Role"/>
         <typeAlias alias="AuthRes" type="com.yuntao.zhushou.model.domain.AuthRes"/>
         <typeAlias alias="RoleAuthRes" type="com.yuntao.zhushou.model.domain.RoleAuthRes"/>
+        <typeAlias alias="ReqContent" type="com.yuntao.zhushou.model.domain.ReqContent"/>
     </typeAliases>
 
     <mappers>
@@ -44,6 +45,7 @@
         <mapper resource="mapper/RoleMapper.xml"/>
         <mapper resource="mapper/AuthResMapper.xml"/>
         <mapper resource="mapper/RoleAuthResMapper.xml"/>
+        <mapper resource="mapper/ReqContentMapper.xml"/>
     </mappers>
 
 </configuration>
