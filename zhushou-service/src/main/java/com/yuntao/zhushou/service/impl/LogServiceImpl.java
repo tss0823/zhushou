@@ -95,7 +95,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         if(CollectionUtils.isNotEmpty(dataList)){
             for(LogWebVo logWebVo : dataList){
                 if(StringUtils.equals(logWebVo.getLevel(), LogLevel.BIZ_ERROR.getCode())){
-                    Map<String,Object> map  = JsonUtils.json2Object(logWebVo.getResponse(), Map.class);
+                    Map<String,Object> map  = JsonUtils.json2Object(logWebVo.getResponse(), HashMap.class);
                     Object errMsg = map.get("message");
                     if(errMsg != null){
                         logWebVo.setErrMsg(errMsg.toString());

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class JsonUtils {
     private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
 
     public static <T> T json2Object(String json, Class<T> clazz) {
         if (StringUtils.isBlank(json)) {
@@ -22,6 +23,11 @@ public class JsonUtils {
             obj = objectMapper.readValue(json, clazz);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            bisLog.info("jsonToObj error,class="+clazz+",json="+json);
+            try {
+                obj = clazz.newInstance();
+            } catch (Exception e1) {
+            }
         }
         return obj;
     }
@@ -36,6 +42,11 @@ public class JsonUtils {
             obj = objectMapper.readValue(json, new ObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, clazz));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            bisLog.info("jsonToList error,class="+clazz+",json="+json);
+            try {
+                obj = new ArrayList<>();
+            } catch (Exception e1) {
+            }
         }
         return obj;
     }

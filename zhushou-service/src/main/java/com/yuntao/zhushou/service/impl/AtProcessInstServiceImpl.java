@@ -124,7 +124,7 @@ public class AtProcessInstServiceImpl implements AtProcessInstService {
 
             //headers
             String headerRow = activeVo.getHeaderRow();
-            Map<String, String> headers = JsonUtils.json2Object(headerRow, Map.class);
+            Map<String, String> headers = JsonUtils.json2Object(headerRow, HashMap.class);
             //处理cooke 防止 重复提交
             String cookie = headers.get("cookie");
             StringBuilder sb = new StringBuilder();

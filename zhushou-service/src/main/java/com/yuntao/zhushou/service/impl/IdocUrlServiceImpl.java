@@ -121,7 +121,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         IdocUrlVo idocUrlVo = new IdocUrlVo();
         idocUrlVo.setUrl(logWebVo.getUrl());
         String parameters = logWebVo.getParameters();
-        Map<String,String> paramMap = JsonUtils.json2Object(parameters, Map.class);
+        Map<String,String> paramMap = JsonUtils.json2Object(parameters, HashMap.class);
         Set<Map.Entry<String, String>> entrySet = paramMap.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
             IdocParamVo idocParamVo = new IdocParamVo();
@@ -218,7 +218,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         String url = "http://"+ appName+"."+domain+"/data/enumList";
         List<String> resultList = HttpUtils.reqGet(url);
         String result = StringUtils.join(resultList, "");
-        Map dataMap = JsonUtils.json2Object(result, Map.class);
+        Map dataMap = JsonUtils.json2Object(result, HashMap.class);
         Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
@@ -267,7 +267,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         String url = "http://"+ appName+".api.mynixi.com/data/enumList";
         List<String> resultList = HttpUtils.reqGet(url);
         String result = StringUtils.join(resultList, "");
-        Map<String,List<Map<String,String>>> enumMap = JsonUtils.json2Object(result, Map.class);
+        Map<String,List<Map<String,String>>> enumMap = JsonUtils.json2Object(result, HashMap.class);
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
             String key = entry.getKey();

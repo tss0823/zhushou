@@ -163,9 +163,9 @@ public class AppLogController extends BaseController {
 
         String url = logVo.getReqUrl();
         String reqHeads = logVo.getReqHeaders();
-        Map<String, String> headers = JsonUtils.json2Object(reqHeads,Map.class);
+        Map<String, String> headers = JsonUtils.json2Object(reqHeads,HashMap.class);
         String parameters = logVo.getParameters();
-        Map<String, String> params = JsonUtils.json2Object(parameters,Map.class);
+        Map<String, String> params = JsonUtils.json2Object(parameters,HashMap.class);
         //处理cooke 防止 重复提交
         String cookie = null;
         if (StringUtils.isNotEmpty(reqCookie)) {

@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by shengshan.tang on 2015/12/16 at 23:45
@@ -75,7 +72,7 @@ public class CommonController extends BaseController {
         List<String> lines = HttpUtils.reqGet("http://ip.taobao.com/service/getIpInfo.php?ip="+ip);
         String result = StringUtils.join(lines,"");
         responseObject.setMessage(result);
-        Map map = JsonUtils.json2Object(result, Map.class);
+        Map map = JsonUtils.json2Object(result, HashMap.class);
         Object code = map.get("code");
         if(code == null || code.toString().equals("1")){
             responseObject.setData("无");

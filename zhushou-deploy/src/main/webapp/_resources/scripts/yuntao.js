@@ -39,7 +39,7 @@
                     callback(d);
                     return true;
                 } else {
-                    alert(d.message);
+                    alert("rqGet failed! error="+d.message);
                     if (d.code == YT.deploy.constant.NOT_LOGIN) {
                         YT.deploy.goLoginPage();
                     }
@@ -53,7 +53,7 @@
                 if (d.success) {
                     callback(d);
                 } else {
-                    alert(d.message);
+                    alert("reqPost failed! error="+d.message);
                     if (d.code == YT.deploy.constant.NOT_LOGIN) {
                         YT.deploy.goLoginPage();
                     }
