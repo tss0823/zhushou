@@ -161,11 +161,9 @@
                     }
                     var color = "green";
                     var text = "OK";
-                    if(hostSize == errArray.length){
+                    if(errArray.length > 0){
                         color = "red"; //all failed
                         text = "ERROR"
-                    }else if(errArray.length > 0){
-                        color = "WARN";  //警告有错误
                     }else{
                         text = "OK";
                     }
@@ -204,7 +202,13 @@
                     }
                     var errMsg = hostStatusMsg["message"];
                     //set to appData
-                    var statObj = appData.serverStatus[appName][hostName] || {};
+
+                    var statObj = {};
+                    if(appData.serverStatus[appName] ){
+                        statObj = appData.serverStatus[appName][hostName] ;
+                    }else{
+                        appData.serverStatus[appName] = {};
+                    }
                     statObj = {color:color,text:text,error:errMsg};
                     appData.serverStatus[appName][hostName] = statObj;
                     //end
