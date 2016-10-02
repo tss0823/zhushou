@@ -2,10 +2,6 @@ package com.yuntao.zhushou.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -18,11 +14,11 @@ public class ResponseHolderFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         log.info("res filter init...");
-        ServletContext sc = filterConfig.getServletContext();
-        WebApplicationContext beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
+//        ServletContext sc = filterConfig.getServletContext();
+//        WebApplicationContext beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
         //初始化config-xx.properties系统配置
-        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
-        AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
+//        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
+//        AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
 
         //
 

@@ -46,7 +46,7 @@ public class ApplicationConfig {
     @Bean(name = "propertyPlaceholderConfigurer")
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerDev() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("config-dev.properties"));
+        ppc.setLocation(new ClassPathResource("env/config-dev.properties"));
         LOG.info("env/config-dev.properties loaded");
         return ppc;
     }
@@ -55,7 +55,7 @@ public class ApplicationConfig {
     @Bean(name = "propertyPlaceholderConfigurer")
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerTest() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("config-test.properties"));
+        ppc.setLocation(new ClassPathResource("env/config-test.properties"));
         LOG.info("env/config-test.properties loaded");
         return ppc;
     }
@@ -64,7 +64,7 @@ public class ApplicationConfig {
     @Bean(name = "propertyPlaceholderConfigurer")
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerProd() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("config-prod.properties"));
+        ppc.setLocation(new ClassPathResource("env/config-prod.properties"));
         LOG.info("env/config-prod.properties loaded");
         return ppc;
     }

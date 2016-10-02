@@ -86,7 +86,7 @@ public class AppServiceImpl extends AbstService implements AppService {
     @Override
     public List<App> selectAllList() {
         //get form cache
-        String key = CacheConstant.App.selectAllList;
+        String key = CacheConstant.App.selectAllList ;
         List<App> dataList = (List<App>) cacheService.get(key);
         if(CollectionUtils.isNotEmpty(dataList)){
             return dataList;
