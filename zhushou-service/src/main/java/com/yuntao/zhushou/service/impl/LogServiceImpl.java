@@ -8,13 +8,11 @@ import com.yuntao.zhushou.model.query.LogTextQuery;
 import com.yuntao.zhushou.model.vo.LogVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.model.web.Pagination;
-import com.yuntao.zhushou.model.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.LogService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -22,7 +20,6 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.index.mapper.object.ObjectMapper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -52,11 +49,9 @@ public class LogServiceImpl extends AbstService implements LogService {
     private Client client;
 
 
-    @Value("${es.host}")
-    private String multiHost;
+    @Value("${es.info}")
+    private String esInfo;
 
-    @Value("${es.port}")
-    private int port;
 
     private String index = "stack_log";
 
@@ -71,8 +66,10 @@ public class LogServiceImpl extends AbstService implements LogService {
         InetSocketTransportAddress inetSocketTransportAddress = null;
         List<InetSocketTransportAddress> adressList = new ArrayList<>();
         try {
-            String hosts [] = multiHost.split(",");
-            for(String host : hosts){
+            String esInfos [] = esInfo.split(",");
+            for(String esInfo : esInfos){
+                String host = esInfo.split(":")[0];
+                Integer port = Integer.valueOf(esInfo.split(":")[1]);
                 inetSocketTransportAddress = new InetSocketTransportAddress(InetAddress.getByName(host), port);
                 adressList.add(inetSocketTransportAddress);
             }

@@ -43,11 +43,9 @@ public class TaskLogServiceImpl implements TaskLogService {
     private Client client;
 
 
-    @Value("${es.host}")
-    private String multiHost;
+    @Value("${es.info}")
+    private String esInfo;
 
-    @Value("${es.port}")
-    private int port;
 
     private String index = "task_log";
 
@@ -56,8 +54,10 @@ public class TaskLogServiceImpl implements TaskLogService {
         InetSocketTransportAddress inetSocketTransportAddress = null;
         List<InetSocketTransportAddress> adressList = new ArrayList<>();
         try {
-            String hosts [] = multiHost.split(",");
-            for(String host : hosts){
+            String esInfos [] = esInfo.split(",");
+            for(String esInfo : esInfos){
+                String host = esInfo.split(":")[0];
+                Integer port = Integer.valueOf(esInfo.split(":")[1]);
                 inetSocketTransportAddress = new InetSocketTransportAddress(InetAddress.getByName(host), port);
                 adressList.add(inetSocketTransportAddress);
             }
