@@ -21,14 +21,14 @@
      <result  column="status" property="status"/>
      <result  column="gmtCreate" property="gmtCreate"/>
      <result  column="gmtModify" property="gmtModify"/>
-     <result  column="delState" property="delState"/>
+     <result  column="delStatus" property="delStatus"/>
 </resultMap>
         
     
  <sql id="Base_Column_List">
     `id`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,       
     `userId`,`userName`,`model`,`appName`,`name`,`status`,`gmtCreate`,`gmtModify`,       
-    `delState`       
+    `delStatus`       
     
   </sql>
         
@@ -56,7 +56,7 @@
     <if test="status != null and status != '' ">and  `status` = #{status}</if> 
     <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
     <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
-    <if test="delState != null and delState != '' ">and  `delState` = #{delState}</if> 
+    <if test="delStatus != null and delStatus != '' ">and  `delStatus` = #{delStatus}</if> 
   </sql>
   
         
@@ -72,8 +72,8 @@
             <include refid="Base_Where"/>
         </where>
        order by id desc
-     <if test="pageInfo != null ">
-          limit #{pageInfo.offset}, #{pageInfo.pageSize}
+     <if test="pagination != null ">
+          limit #{pagination.startRow}, #{pagination.pageSize}
     </if>
     </select>
     
@@ -97,12 +97,12 @@
     (
     `url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,       
     `userId`,`userName`,`model`,`appName`,`name`,`status`,`gmtCreate`,`gmtModify`,       
-    `delState`
+    `delStatus`
     ) 
     values
     (
     #{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{reqMethod},#{httpStatus},#{userId},       
-    #{userName},#{model},#{appName},#{name},#{status},now(6),now(6),#{delState}
+    #{userName},#{model},#{appName},#{name},#{status},now(6),now(6),1
     )
   </insert>  
     
@@ -122,7 +122,7 @@
        <if test="appName != null and appName !=''">`appName` = #{appName},</if>
        <if test="name != null and name !=''">`name` = #{name},</if>
        <if test="status != null and status !=''">`status` = #{status},</if>
-       <if test="delState != null and delState !=''">`delState` = #{delState},</if>
+       <if test="delStatus != null and delStatus !=''">`delStatus` = #{delStatus},</if>
      </set>
    ,gmtModify = now(6)
    where id = #{id}

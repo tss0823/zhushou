@@ -18,7 +18,7 @@ public class TaskLogVo implements Serializable {
 
     private String message;  //消息
 
-    private String errMsg;  //错误消息
+    private String desc;  //详细消息
 
     private String time;  //开始执行时间
 
@@ -37,6 +37,10 @@ public class TaskLogVo implements Serializable {
     private boolean master;   //是否主体
 
     private String id; //生成的id ,es 生成id
+
+    private String lastTime;
+
+    private String status;
 
     public String getAppName() {
         return appName;
@@ -78,14 +82,6 @@ public class TaskLogVo implements Serializable {
         this.message = message;
     }
 
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
-
     public String getTime() {
         return time;
     }
@@ -118,7 +114,7 @@ public class TaskLogVo implements Serializable {
         this.ip = ip;
     }
 
-    public boolean isSuccess() {
+    public Boolean isSuccess() {
         return success;
     }
 
@@ -156,5 +152,33 @@ public class TaskLogVo implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(String lastTime) {
+        this.lastTime = lastTime;
+    }
+
+    public boolean getSuccess() {
+        return success;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

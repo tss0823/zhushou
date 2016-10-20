@@ -11,7 +11,7 @@ import java.util.List;
 
 public class JsonUtils {
     private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
-    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    private final static Logger bisLog = LoggerFactory.getLogger("bis");
 
     public static <T> T json2Object(String json, Class<T> clazz) {
         if (StringUtils.isBlank(json)) {

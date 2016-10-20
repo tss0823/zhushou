@@ -66,7 +66,7 @@ public interface AtTemplateService {
      * @param templateVo
      * @return
      */
-    void save(AtTemplateVo templateVo,List<String> logIds);
+    void save(AtTemplateVo templateVo, List<String> logIds);
 
     /**
      * 获取模板对象

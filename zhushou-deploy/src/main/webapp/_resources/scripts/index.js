@@ -100,7 +100,7 @@
                     var valueMap = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl);
                     valueMap = valueMap || {};
                     //end
-                    // debugger;
+                    debugger;
                     var ext_data = {title: authRes.name,authRes:authRes};
                     $.extend(ext_data,valueMap);
                     YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,ext_data);

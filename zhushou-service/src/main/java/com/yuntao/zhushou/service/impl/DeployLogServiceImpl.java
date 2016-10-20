@@ -61,6 +61,7 @@ public class DeployLogServiceImpl extends AbstService implements DeployLogServic
         for(DeployLog deployLog : dataList){
             DeployLogVo deployLogVo = BeanUtils.beanCopy(deployLog,DeployLogVo.class);
             deployLogVo.setLastTime(DateUtil.getRangeTime(deployLogVo.getGmtCreate()));
+            deployLogVo.setTime(DateUtil.getFmt(deployLogVo.getGmtCreate().getTime(),"yyyy-MM-dd HH:mm:ss"));
             newDataList.add(deployLogVo);
         }
         return newPageInfo;

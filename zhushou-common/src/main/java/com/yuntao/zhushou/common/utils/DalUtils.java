@@ -14,13 +14,13 @@ public class DalUtils {
             .getLogger("bis");
 
     public static String getTableProfix() {
-        return com.yuntao.zhushou.common.utils.DateUtil.getFmt(new Date().getTime(), "yyMMdd");
+        return DateUtil.getFmt(new Date().getTime(), "yyMMdd");
     }
 
     public static String getYesterdayTableProfix() {
         Date yesterday = DateUtils.addDays(
                 new Date(), -1);
-        return com.yuntao.zhushou.common.utils.DateUtil.getFmt(yesterday.getTime(), "yyMMdd");
+        return DateUtil.getFmt(yesterday.getTime(), "yyMMdd");
     }
 
     public static String getNewTableProfix() {

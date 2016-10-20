@@ -623,7 +623,7 @@
             webSocket.onclose = function(event) {
                 console.error("onclose data="+event.data);
                 //重新连接
-                setTimeout(this.init(), 1000);
+                setTimeout(YT.deploy.WebSocket.init(), 1000);
             };
         },
     };

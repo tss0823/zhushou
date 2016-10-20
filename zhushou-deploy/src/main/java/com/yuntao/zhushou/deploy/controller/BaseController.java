@@ -5,7 +5,9 @@ import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.constant.AppConstant;
 import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.UserService;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,6 +22,8 @@ public class BaseController {
 
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(BaseController.class);
 
+    @Autowired
+    protected UserService userService;
 
     @ExceptionHandler
     @ResponseBody

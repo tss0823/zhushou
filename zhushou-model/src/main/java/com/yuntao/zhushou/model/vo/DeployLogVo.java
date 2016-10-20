@@ -10,6 +10,8 @@ public class DeployLogVo extends DeployLog {
 
     private String lastTime;
 
+    private String time;
+
     private String logText;
 
     public String getLastTime() {
@@ -26,5 +28,13 @@ public class DeployLogVo extends DeployLog {
 
     public void setLogText(String logText) {
         this.logText = logText;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

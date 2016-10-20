@@ -66,7 +66,7 @@ public interface IdocUrlService {
     /**
      * 绑定
      */
-    IdocUrlVo bind(String month,String model,String stackId);
+    IdocUrlVo bind(String month, String model, String stackId);
 
     /**
      * 获取idocVo
@@ -78,12 +78,12 @@ public interface IdocUrlService {
     /**
      * 保存
      */
-    void save(IdocDataParam idocDataParam,User user);
+    void save(IdocDataParam idocDataParam, User user);
 
     /**
      *修改
      */
-    void update(IdocDataParam idocDataParam,User user);
+    void update(IdocDataParam idocDataParam, User user);
 
 
     /**
@@ -98,5 +98,5 @@ public interface IdocUrlService {
      * @param appName
      * @param code
      */
-    void syncUpdate(String appName,String code);
+    void syncUpdate(String appName, String code);
 }

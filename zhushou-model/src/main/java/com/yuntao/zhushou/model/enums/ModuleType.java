@@ -12,15 +12,17 @@ public enum ModuleType {
 
     stats("stats", "统计"),  //
 
-    proxy("proxy", "代理商"),
+    course("course", "课程"),
 
-    biz("biz", "用户"),
+    category("category", "素材"),
+
+    solution("solution", "方案"),
 
     trade("trade", "交易"),
 
     pay("pay", "支付"),
 
-    search("search", "搜索"),
+//    search("search", "搜索"),
 
 
     ;

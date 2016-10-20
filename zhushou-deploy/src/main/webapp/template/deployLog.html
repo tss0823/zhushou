@@ -44,7 +44,12 @@
             <td>{{bean.model}}</td>
             <td>{{bean.content}}</td>
             <td>{{bean.userName}}</td>
-            <td>{{bean.lastTime}}</td>
+            <td>
+                <div>
+                    {{bean.time}}
+                    [{{bean.lastTime}}]
+                </div>
+            </td>
 
             <td class="hidden-480">
                 <a href="javascript:void(0)" id="enterView" data="{{bean.id}}" ><strong style="color:green">详情</strong></a>

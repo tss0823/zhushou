@@ -1,14 +1,3 @@
-/**
- *
- * Created by shan on 2016/4/7.
- */
-function jcallback(param) {
-    debugger;
-}
-function callbackparam(param) {
-    debugger;
-}
-
 (function (YT) {
     if (!YT.deploy.reqContent) {
         YT.deploy.reqContent = {};
@@ -17,12 +6,23 @@ function callbackparam(param) {
     var common = {
 
         route_callback: function (d, data) {
+            debugger;
             console.log("reqContent bind  after render call");
             //组件初始化之后
+
+            //初始化右侧栏
+            var reqContentInitData = YT.deploy.data.reqContentInitData;
+            YT.deploy.reqContent.initLeftPanel(reqContentInitData);
+            //end
+
             var appList = YT.deploy.data.appList;
+
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
             var enums = YT.deploy.data.enums;
+
+            var dataList = data.dataList;
+            $.extend(YT.deploy.data,{reqContentData:dataList});
 
             //moduleType
             YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
@@ -52,14 +52,14 @@ function callbackparam(param) {
 
 
             //添加header
-            $("button[id='btnAddHeader']").click(function () {
+            $(document).on("click","button[id='btnAddHeader']",function () {
                 var $tr = $("#tbReqHeader").find("tr[name='dataItem']").first().clone();
                 $tr.show();
                 $("#tbReqHeader").append($tr);
             });
 
             //添加reqData
-            $("button[id='btnAddReqData']").click(function () {
+            $(document).on("click","button[id='btnAddReqData']",function () {
                 var $tr = $("#tbReqData").find("tr[name='dataItem']").first().clone();
                 $tr.show();
                 $("#tbReqData").append($tr);
@@ -94,8 +94,22 @@ function callbackparam(param) {
                 $(this).parents("tr").remove();
             });
 
+            //左侧点击
+            $(document).on("click","a[name='itemUrl']",function(){
+               var dataId = $(this).attr("data");
+                var dataList = YT.deploy.data.reqContentData;
+                for(var key in dataList){
+                    var data = dataList[key];
+                    if(data.id = dataId){
+                        YT.deploy.reqContent.initLeftPanel(data);
+                        debugger;
+                        break;
+                    }
+                }
+            });
 
-            $("button[id='btnRequest']").click(function () {
+            //请求
+            $(document).on("click","button[id='btnRequest']",function () {
 
                 // var params = YT.deploy.util.getFormParams("#reqContentForm");
 
@@ -110,6 +124,7 @@ function callbackparam(param) {
                         return true;
                     }
                     var value = $(item).find("input[id='headerValue']").val();
+                    formData.append("headerList[0]."+code, value);
                     var dataMap = {key:code,value:value};
                     headerList.push(dataMap);
                 });
@@ -119,6 +134,7 @@ function callbackparam(param) {
                 // var reqDatas = {};
                 var formData = new FormData();
                 var dataList = [];
+                var itemIndex = 0;
                 $("#tbReqData").find("tr[name='dataItem']").each(function (index, item) {
                     var code = $(item).find("input[id='paramKey']").val();
                     // debugger;
@@ -130,17 +146,21 @@ function callbackparam(param) {
                     var value = null;
                     if ($paramValue.attr("type") == "file") {  //文件
                         value = $paramValue.prop("files")[0];
-                        formData.append(code, value);
                     } else {
                         value = $paramValue.val();
-                        formData.append(code, value);
                     }
+                    formData.append("dataList["+itemIndex+"].key",code);
+                    formData.append("dataList["+itemIndex+"].value",value);
+                    itemIndex++;
                     var dataMap = {key:code,value:value};
                     dataList.push(dataMap);
                 });
                 //end
 
 
+                formData.append("url",reqUrl);
+                // formData.append("headerList",headerList);
+                // formData.append("dataList",dataList);
                 var data = {url:reqUrl,headerList:headerList,dataList:dataList};
                 debugger;
                 // jQuery.ajaxSettings.traditional = true;
@@ -156,7 +176,19 @@ function callbackparam(param) {
                     contentType: false,
                     processData: false,
                     success: function (data, status, xhr) {
-                        debugger;
+                        var d = data.data;
+                        $.get("/req/resBlock.html", function (source) {
+                            var render = template.compile(source);
+                            var resHeaderList = [];
+                            for(var key in d.resHeaderList){
+                                var val = d.resHeaderList[key];
+                                resHeaderList.push({key:key,value:val});
+                            }
+                            d.resHeaderList = resHeaderList;
+                            var html = render(d);
+                            $("#resBlock").html(html);
+                        });
+                        // debugger;
                     },
                     error: function (xhr, status, err) {
                         debugger;
@@ -164,42 +196,6 @@ function callbackparam(param) {
 
                 });
 
-                $.extend({
-                });
-
-                $("#tbReqParam").find("tr[name='dataItem']").each(function (index, item) {
-                    var code = $(item).find("input[id='code']").val();
-                    // debugger;
-                    if (!code) {
-                        return true;
-                    }
-                    params["paramList[" + index + "].code"] = code;
-                    params["paramList[" + index + "].name"] = $(item).find("input[id='name']").val();
-                    params["paramList[" + index + "].memo"] = $(item).find("input[id='memo']").val();
-                    params["paramList[" + index + "].rule"] = $(item).find("input[id='rule']").val();
-                });
-
-
-                // if(params["id"]){  //update
-                //     YT.deploy.util.reqPost("/idocUrl/update", params, function (d) {
-                //         if (d.success) {
-                //             alert("修改成功");
-                //             YT.deploy.idocList.query(1,20);
-                //         } else {
-                //             alert("修改失败,err=" + d.message);
-                //         }
-                //     });
-                //
-                // }else{ //save
-                //     YT.deploy.util.reqPost("/idocUrl/save", params, function (d) {
-                //         if (d.success) {
-                //             alert("保存成功");
-                //             YT.deploy.idocList.query(1,20);
-                //         } else {
-                //             alert("保存失败,err=" + d.message);
-                //         }
-                //     });
-                // }
             });
 
         },
@@ -211,6 +207,54 @@ function callbackparam(param) {
 
         success_register: function (param) {
             debugger;
+        },
+
+
+        initLeftPanel:function(data){
+            debugger;
+            var d = data || {};
+            var reqHeaderList = [];
+            if(d.reqHeader){
+                var jsonObjReq = JSON.parse(d.reqHeader);
+                for(var key in jsonObjReq){
+                    var val = jsonObjReq[key];
+                    reqHeaderList.push({key:key,value:val});
+                }
+            }
+            d.reqHeaderList = reqHeaderList;
+
+            var reqDataList = [];
+            if(d.reqData){
+                var jsonObjReq = JSON.parse(d.reqData);
+                for(var key in jsonObjReq){
+                    var val = jsonObjReq[key];
+                    reqDataList.push({key:key,value:val});
+                }
+            }
+            d.reqDataList = reqDataList;
+
+            $.get("/req/reqBlock.html", function (source) {
+                var render = template.compile(source);
+                var html = render(d);
+                $("#reqBlock").html(html);
+            });
+            
+
+            if(d.resHeader){
+                var resHeaderList = [];
+                var jsonObjReq = JSON.parse(d.resHeader);
+                for(var key in jsonObjReq){
+                    var val = jsonObjReq[key];
+                    resHeaderList.push({key:key,value:val});
+                }
+                d.resHeaderList = resHeaderList;
+
+                $.get("/req/resBlock.html", function (source) {
+                    var render = template.compile(source);
+                    var html = render(d);
+                    $("#resBlock").html(html);
+                });
+            }
         }
     }
 

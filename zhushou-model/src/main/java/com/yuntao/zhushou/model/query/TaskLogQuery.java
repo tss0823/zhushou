@@ -11,6 +11,10 @@ public class TaskLogQuery extends BaseQuery {
 
     private String module;
 
+    private String message;
+
+    private String desc;
+
     private String batchNo;
 
     private Boolean success;
@@ -31,6 +35,11 @@ public class TaskLogQuery extends BaseQuery {
 
     private String ip;
 
+    private String batchNoType = "match";
+
+    private String messageType = "match";
+
+    private String descType = "match";
 
     public void setModel(String model) {
         this.model = model;
@@ -134,5 +143,45 @@ public class TaskLogQuery extends BaseQuery {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getBatchNoType() {
+        return batchNoType;
+    }
+
+    public void setBatchNoType(String batchNoType) {
+        this.batchNoType = batchNoType;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getDescType() {
+        return descType;
+    }
+
+    public void setDescType(String descType) {
+        this.descType = descType;
     }
 }

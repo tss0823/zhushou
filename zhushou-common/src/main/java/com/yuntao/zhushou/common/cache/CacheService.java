@@ -5,9 +5,9 @@ package com.yuntao.zhushou.common.cache;
  */
 public interface CacheService {
 
-    void set(String key,Object value);
+    void set(String key, Object value);
 
-    void set(String key,int period, Object value);
+    void set(String key, int period, Object value);
 
     Object get(String key);
 

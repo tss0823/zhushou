@@ -37,5 +37,10 @@ public interface AppConstant {
         String APP_LOG_SHOW_ALL = "app_log_show_all";
     }
 
+    interface Aliyun{
+        String KEY = "LTAINYZHsqPLGKju";
+        String SECRET = "9UMnWw0eXXaZgaJuOiNoJYGXHAwv0y";
+    }
+
 
 }

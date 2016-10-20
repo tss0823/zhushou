@@ -15,13 +15,13 @@ public interface LogService {
 
     Pagination<LogWebVo> selectByPage(LogQuery query, LogTextQuery logTextQuery);
 
-    List<LogWebVo> selectListByStackId(String month,String model, String stackId);
+    List<LogWebVo> selectListByStackId(String month, String model, String stackId);
 
-    LogWebVo findMasterByStackId(String month,String model,String stackId);
+    LogWebVo findMasterByStackId(String month, String model, String stackId);
 
     Pagination<LogWebVo> selectList(LogQuery query, LogTextQuery logTextQuery);
 
     void delHisDataTask();
 
-    void deleteHisData(String month,String model);
+    void deleteHisData(String month, String model);
 }

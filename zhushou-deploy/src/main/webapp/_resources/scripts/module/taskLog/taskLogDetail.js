@@ -3,8 +3,8 @@
  * Created by shan on 2016/4/7.
  */
 (function (YT) {
-    if (!YT.deploy.taskLog) {
-        YT.deploy.taskLog = {};
+    if (!YT.deploy.taskLogDetail) {
+        YT.deploy.taskLogDetail = {};
     }
 
     var common = {
@@ -12,28 +12,7 @@
         route_callback: function (d,data) {
             console.log("app list after render call");
             //组件初始化之后
-            var appList = appData.appList;
-            YT.deploy.util.initSelect(appList,"name","name","appName",data.appName);
 
-            //month select init
-            var nowDate = new Date();
-            var year = nowDate.getFullYear();
-            var month = nowDate.getMonth() + 1;
-            var monthArray = [];
-            var monthStr = month < 10 ? "0"+month : month;
-            monthArray.push({value:year+"."+monthStr,text:year+"年"+monthStr+"月"});
-            var monthCount = 6;
-            for(var i = 0; i < monthCount; i++){
-                month--;
-                if(month == 0){
-                    month = 12;
-                    year--;
-                }
-                monthStr = month < 10 ? "0"+month : month;
-                monthArray.push({value:year+"."+monthStr,text:year+"年"+monthStr+"月"});
-            }
-            YT.deploy.util.initSelect(monthArray,"value","text","month",data.month);
-            
             $("#startTime").datetimepicker({
                 showSecond: true,
                 // showMillisec: true,
@@ -72,7 +51,7 @@
                 var pageSize = $("#pageSize").val();
                 $(this).html("查询中...");
                 $(this).attr("disabled","true");
-                YT.deploy.taskLog.query(pageNum, pageSize);
+                YT.deploy.taskLogDetail.query(pageNum, pageSize);
             });
 
             $("a[id='enterDetail']").each(function (index, item) {
@@ -102,7 +81,7 @@
                 // YT.deploy.userDataProcess.setValue(nameSpace,"model",checkState,7);
                 //
                 // $(".nav-list").find("li").first().find("a[id='"+authRes.actionId+"']").trigger("click");
-                YT.deploy.taskLog.query(1,$("#pageSize").val());
+                YT.deploy.taskLogDetail.query(1,$("#pageSize").val());
             });
             
             $("button[id='btnMore']").click(function(){
@@ -117,19 +96,19 @@
 
 
             //分页信息init
-            YT.deploy.util.paginationInit(d.data, YT.deploy.taskLog.query);
+            YT.deploy.util.paginationInit(d.data, YT.deploy.taskLogDetail.query);
 
         },
     }
     $.extend(YT.deploy, common);
 
 
-    YT.deploy.taskLog = {
+    YT.deploy.taskLogDetail = {
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
             // debugger;
-            YT.deploy.goSearchPage("taskLogForm",pageNum,pageSize,{model:checkState});
+            YT.deploy.goSearchPage("taskLogDetailListForm",pageNum,pageSize,{model:checkState});
         },
 
     }

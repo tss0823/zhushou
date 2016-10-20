@@ -9,4 +9,14 @@ package com.yuntao.zhushou.model.query;
  */
 public class ReqContentQuery extends  BaseQuery {
 
+
+    private String model;
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
 }

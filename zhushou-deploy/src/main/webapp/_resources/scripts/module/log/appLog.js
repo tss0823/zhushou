@@ -39,6 +39,17 @@
             var authRes = data.authRes;
 
             var enums = YT.deploy.data.enums;
+            
+            $("#startTime").datetimepicker({
+                showSecond: true,
+                // showMillisec: true,
+                // timeFormat: 'hh:mm:ss:l'
+            }) ;
+            $("#endTime").datetimepicker({
+                showSecond: true,
+                // showMillisec: true,
+                // timeFormat: 'hh:mm:ss:l'
+            }) ;
 
             // //logModel
             // var logModel = enums.logModel;
@@ -146,6 +157,12 @@
             $("a[id='btnReqExecute']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.appLog.reqExecute(id);
+            });
+
+            //to req url
+            $("a[id='btnToReqExecute']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.appLog.toReqExecute(id);
             });
 
             //bind idoc
@@ -271,6 +288,33 @@
                     alert("执行失败,err="+d.message);
                 }
             });
+
+        },
+
+        toReqExecute:function(id){
+            var checked = $("#model").attr("checked");
+            var model = checked ? "prod" : "test";
+            if(model == "prod"){
+                if(!confirm("您确认要跳转执行请求吗？")){
+                    return;
+                }
+            }
+
+            var params = {stackId:id,month:$("#month").val(),model:model};
+            YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
+                var data = d.data;
+                data = data || {};
+                
+                //渲染左侧栏
+                var newData = {url:data.reqUrl,reqHeader:data.reqHeaders,reqData:data.parameters,resHeader:data.resHeaders,resData:data.response};
+                $.extend(YT.deploy.data,{reqContentInitData:newData});
+                
+                $(".nav-list").find("li > a[id='enterReqContent']").first().trigger("click");
+
+                // YT.deploy.reqContent.initLeftPanel(newData);
+            });
+
+
 
         },
         

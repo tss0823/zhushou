@@ -8,11 +8,13 @@ import com.yuntao.zhushou.model.query.LogTextQuery;
 import com.yuntao.zhushou.model.vo.LogVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.model.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.LogService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -20,6 +22,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.index.mapper.object.ObjectMapper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -93,9 +96,11 @@ public class LogServiceImpl extends AbstService implements LogService {
             for(LogWebVo logWebVo : dataList){
                 if(StringUtils.equals(logWebVo.getLevel(), LogLevel.BIZ_ERROR.getCode())){
                     Map<String,Object> map  = JsonUtils.json2Object(logWebVo.getResponse(), HashMap.class);
-                    Object errMsg = map.get("message");
-                    if(errMsg != null){
-                        logWebVo.setErrMsg(errMsg.toString());
+                    if(map != null){
+                        Object errMsg = map.get("message");
+                        if(errMsg != null){
+                            logWebVo.setErrMsg(errMsg.toString());
+                        }
                     }
                 }
             }
@@ -173,7 +178,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         }
         if (StringUtils.isNotEmpty(query.getStartTime())) {
             try {
-                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm:ss");
+                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm");
                 queryBuilder.must(QueryBuilders.rangeQuery("timeLong").gte(startTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);
@@ -181,7 +186,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         }
         if (StringUtils.isNotEmpty(query.getEndTime())) {
             try {
-                Date endTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm:ss");
+                Date endTime = DateUtils.parseDate(query.getEndTime(), "yyyy-MM-dd HH:mm");
                 queryBuilder.must(QueryBuilders.rangeQuery("timeLong").lte(endTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);

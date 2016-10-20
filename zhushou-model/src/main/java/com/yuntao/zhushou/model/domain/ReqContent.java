@@ -69,7 +69,7 @@ public class ReqContent implements Serializable {
 	private Date gmtModify;
 		
 	/**  删除状态（0：已删除；1：未删除） * */
-	private Boolean delState;
+	private Boolean delStatus;
 		
 	
 	public ReqContent(){
@@ -187,16 +187,13 @@ public class ReqContent implements Serializable {
 	public Date getGmtModify() {
 		return this.gmtModify;
 	}
-	public void setDelState(Boolean value) {
-		this.delState = value;
+
+	public Boolean getDelStatus() {
+		return delStatus;
 	}
-	
-	public Boolean getDelState() {
-		return this.delState;
+
+	public void setDelStatus(Boolean delStatus) {
+		this.delStatus = delStatus;
 	}
-	
-
-
-
 }
 

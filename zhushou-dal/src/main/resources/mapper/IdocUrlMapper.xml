@@ -66,8 +66,8 @@
             <include refid="Base_Where"/>
         </where>
        order by id desc
-     <if test="pageInfo != null ">
-          limit #{pageInfo.offset}, #{pageInfo.pageSize}
+     <if test="pagination != null ">
+          limit #{pagination.startRow}, #{pagination.pageSize}
     </if>
     </select>
     

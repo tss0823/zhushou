@@ -3,6 +3,7 @@ package com.yuntao.zhushou.service.impl;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
+import com.yuntao.zhushou.common.utils.QueryBuilderUtils;
 import com.yuntao.zhushou.model.query.TaskLogQuery;
 import com.yuntao.zhushou.model.vo.TaskLogVo;
 import com.yuntao.zhushou.model.web.Pagination;
@@ -46,7 +47,6 @@ public class TaskLogServiceImpl implements TaskLogService {
     @Value("${es.info}")
     private String esInfo;
 
-
     private String index = "task_log";
 
     @PostConstruct
@@ -72,7 +72,6 @@ public class TaskLogServiceImpl implements TaskLogService {
         client = transportClient;
     }
 
-
     public Pagination<TaskLogVo> selectByPage(TaskLogQuery query) {
         query.setPage(true);
         query.setMaster(true);
@@ -96,7 +95,7 @@ public class TaskLogServiceImpl implements TaskLogService {
     }
 
     @Override
-    public List<TaskLogVo> selectListByBatchNo(String month, String model, String batchNo) {
+    public Pagination<TaskLogVo> selectListByBatchNo(String month, String model, String batchNo) {
         TaskLogQuery query = new TaskLogQuery();
         query.setMonth(month);
         query.setModel(model);
@@ -104,7 +103,7 @@ public class TaskLogServiceImpl implements TaskLogService {
         query.setPage(true);
         query.setPageSize(1000);  //足够大,不然出现不能查询全部数据
         Pagination<TaskLogVo> pagination = selectList(query);
-        return pagination.getDataList();
+        return pagination;
     }
 
 
@@ -127,6 +126,7 @@ public class TaskLogServiceImpl implements TaskLogService {
         if(query.isMaster()){
             queryBuilder.must(QueryBuilders.matchPhraseQuery("master",true));
         }
+
         if (StringUtils.isNotEmpty(query.getId())) {
             queryBuilder.must(QueryBuilders.matchPhraseQuery("id",query.getId()));
         }
@@ -136,15 +136,12 @@ public class TaskLogServiceImpl implements TaskLogService {
         if (StringUtils.isNotEmpty(query.getModule())) {
             queryBuilder.must(QueryBuilders.matchPhraseQuery("module",query.getModule()));
         }
-        if (StringUtils.isNotEmpty(query.getBatchNo())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("batchNo",query.getBatchNo()));
-        }
         if(query.getSuccess() != null){
             queryBuilder.must(QueryBuilders.matchPhraseQuery("success",query.getSuccess()));
         }
         if (StringUtils.isNotEmpty(query.getStartTime())) {
             try {
-                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm:ss");
+                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm");
                 queryBuilder.must(QueryBuilders.rangeQuery("startTimeLong").gte(startTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);
@@ -152,16 +149,16 @@ public class TaskLogServiceImpl implements TaskLogService {
         }
         if (StringUtils.isNotEmpty(query.getEndTime())) {
             try {
-                Date endTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm:ss");
+                Date endTime = DateUtils.parseDate(query.getEndTime(), "yyyy-MM-dd HH:mm");
                 queryBuilder.must(QueryBuilders.rangeQuery("startTimeLong").lte(endTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
         }
         //search text
-//        QueryBuilderUtils.buildQuery(queryBuilder, "mobile", logTextQuery.getMobileType(), logTextQuery.getMobile());
-//        QueryBuilderUtils.buildQuery(queryBuilder, "url", logTextQuery.getUrlType(), logTextQuery.getUrl());
-//        QueryBuilderUtils.buildQuery(queryBuilder, "userAgent", logTextQuery.getUserAgentType(), logTextQuery.getUserAgent());
+        QueryBuilderUtils.buildQuery(queryBuilder, "batchNo", query.getBatchNoType(), query.getBatchNo());
+        QueryBuilderUtils.buildQuery(queryBuilder, "message", query.getMessageType(), query.getMessage());
+        QueryBuilderUtils.buildQuery(queryBuilder, "desc", query.getDescType(), query.getDesc());
 
         searchRequestBuilder.setQuery(queryBuilder);
 //        SortBuilder sortBuilder = SortBuilders.fieldSort("timeLong").order(SortOrder.DESC);
@@ -190,7 +187,8 @@ public class TaskLogServiceImpl implements TaskLogService {
 //                    hbLogBean.setIndex(searchHit.getIndex());
                     taskLogVo.setId(searchHit.getId());
 
-//                    hbLogBean.setLastTime(DateUtil.getRangeTime(DateUtil.getDate(hbLogBean.getTime(), "yyyy-MM-dd HH:mm:ss")));
+                    taskLogVo.setLastTime(DateUtil.getRangeTime(DateUtil.getDate(taskLogVo.getTime(), "yyyy-MM-dd HH:mm:ss")));
+                    taskLogVo.setStatus(taskLogVo.getSuccess() ? "成功":"失败");
 //                    LogWebVo logWebVo = BeanUtils.beanCopy(hbLogBean,LogWebVo.class);
                     dataList.add(taskLogVo);
                 }

@@ -50,6 +50,7 @@ public class DataController extends  BaseController {
         responseObject.put("paramRuleType",AtParamterRuleType.values());
         responseObject.put("paramDataType",AtParamterDataType.values());
         responseObject.put("moduleType",ModuleType.values());
+        responseObject.put("logStatus",LogStatus.values());
         return responseObject;
     }
 

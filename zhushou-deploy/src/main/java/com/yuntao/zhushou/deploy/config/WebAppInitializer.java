@@ -34,7 +34,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{com.yuntao.zhushou.deploy.config.WebMvcConfig.class};
+        return new Class<?>[]{WebMvcConfig.class};
     }
 
     @Override

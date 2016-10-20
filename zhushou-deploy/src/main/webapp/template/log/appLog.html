@@ -69,6 +69,16 @@
                     <select id="textType" name="textType">
                     </select>
                     <input type="text" id="text" name="text" value="{{text}}" class="input-group-lg"/>
+                </small>
+            </h1>
+            <h1 style="text-align: right;margin-top: 5px">
+                <small>
+                    时间：
+                    <input type="text" id="startTime" name="startTime" value="{{startTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
+                    --
+                    <input type="text" id="endTime" name="endTime" value="{{endTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
                     &nbsp;
                     <button class="btn btn-white" id="btnQuery" enter="true">查询</button>&nbsp;&nbsp;
                     <button class="btn btn-white" id="btnClear" >清空</button>
@@ -145,7 +155,8 @@
                         <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnFormatMsg">格式化消息</a> </li>
                         <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnMsg">所有消息</a> </li>
                         <li class="divider"></li>
-                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnReqExecute">请求URL</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnReqExecute">请求URL [直接执行]</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnToReqExecute">转请求URL [跳转再执行]</a> </li>
                         <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnBindIdoc">绑定接口</a> </li>
                     </ul>
                 </div>

@@ -1,0 +1,154 @@
+<div class="clearfix form-actions" style="margin: 5px 0;padding: 3px 0">
+    <div class="col-md-offset-1 col-md-12">
+        <input type="text" id="reqUrl" placeholder="请输入请求地址" value="{{url}}"  style="width:550px">
+        <button class="btn btn-info" id="btnRequest"> <i class="icon-ok bigger-110"></i> 请求 </button>
+    </div>
+    <!--<div class="col-md-offset-10 col-md-1">-->
+    <!--</div>-->
+</div>
+
+<div id="reqBlock_header" >
+    <div>
+        <div class="page-header">
+            <h1>
+                <small>
+                    <i class="icon-double-angle-right icon-key "></i>
+                    请求头列表
+                </small>
+            </h1>
+        </div>
+        <button class="btn btn-sm btn-yellow" id="btnAddHeader">添加</button>
+    </div>
+    <table  id="tbReqHeader" class="table table-striped table-bordered table-hover" style="">
+        <tr class="selected" name="dataItem" style="display: none">
+            <td width="7%">
+                <label>
+                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                    <span class="lbl"></span>
+                </label>
+                <input type="text" id="headerKey" name="headerKey"  style="width:180px" /> =
+                <input type="text" id="headerValue" name="headerValue"  style="width:180px" />
+            </td>
+            <td width="3%">
+                <div class="pull-right action-buttons" >
+                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                        <i class="icon-arrow-up bigger-130"></i>
+                    </a>
+                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                        <i class="icon-arrow-down bigger-130"></i>
+                    </a>
+                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                        <i class="icon-trash bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{each reqHeaderList as bean i}}
+        <tr class="selected" name="dataItem">
+            <td width="7%">
+                <label>
+                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                    <span class="lbl"></span>
+                </label>
+                <input type="text" id="headerKey" name="headerKey" value="{{bean.key}}" style="width:180px" /> =
+                <input type="text" id="headerValue" name="headerValue" value="{{bean.value}}" style="width:180px" />
+            </td>
+            <td width="3%">
+                <div class="pull-right action-buttons" >
+                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                        <i class="icon-arrow-up bigger-130"></i>
+                    </a>
+                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                        <i class="icon-arrow-down bigger-130"></i>
+                    </a>
+                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                        <i class="icon-trash bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
+
+<div id="reqBlock_data" >
+    <div>
+        <div class="page-header">
+            <h1>
+                <small>
+                    <i class="icon-double-angle-right icon-key "></i>
+                    请求数据
+                </small>
+            </h1>
+        </div>
+        <button class="btn btn-sm btn-yellow" id="btnAddReqData">添加</button>
+    </div>
+    <table  id="tbReqData" class="table table-striped table-bordered table-hover" style="">
+        <tr class="selected" name="dataItem" style="display: none">
+            <td width="17%">
+                <label>
+                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                    <span class="lbl"></span>
+                </label>
+                <input type="text" id="paramKey" name="paramKey"  style="width:180px" />
+                [<select name="paramType" id="paramType">
+                <option value="text">文本</option>
+                <option value="file">文件</option>
+            </select>]
+                =
+                <a href="#void" class="btn btn-file" style="display: none"><i></i> 选择
+                    <input type="file" id="paramValue" name="paramValue" />
+                </a>
+                <span id="fileNameText"></span>
+                <input type="text" id="paramValue" name="paramValue"  data="1" style="width:320px" />
+            </td>
+            <td width="3%">
+                <div class="pull-right action-buttons" >
+                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                        <i class="icon-arrow-up bigger-130"></i>
+                    </a>
+                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                        <i class="icon-arrow-down bigger-130"></i>
+                    </a>
+                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                        <i class="icon-trash bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{each reqDataList as bean i}}
+        <tr class="selected" name="dataItem" >
+            <td width="17%">
+                <label>
+                    <input id="chkForm" type="checkbox" class="ace" checked="true"  />
+                    <span class="lbl"></span>
+                </label>
+                <input type="text" id="paramKey" name="paramKey" value="{{bean.key}}" style="width:180px" />
+                [<select name="paramType" id="paramType">
+                <option value="text">文本</option>
+                <option value="file">文件</option>
+            </select>]
+                =
+                <a href="#void" class="btn btn-file" style="display: none"><i></i> 选择
+                    <input type="file" id="paramValue" name="paramValue" />
+                </a>
+                <span id="fileNameText"></span>
+                <input type="text" id="paramValue" name="paramValue" value="{{bean.value}}" data="1" style="width:320px" />
+            </td>
+            <td width="3%">
+                <div class="pull-right action-buttons" >
+                    <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                        <i class="icon-arrow-up bigger-130"></i>
+                    </a>
+                    <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                        <i class="icon-arrow-down bigger-130"></i>
+                    </a>
+                    <a class="red" href="javascript:void(0)" name="itemRemove">
+                        <i class="icon-trash bigger-130"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+</div>

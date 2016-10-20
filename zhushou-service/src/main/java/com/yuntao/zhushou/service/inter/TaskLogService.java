@@ -16,7 +16,7 @@ public interface TaskLogService {
 
     Pagination<TaskLogVo> selectByPage(TaskLogQuery taskLogQuery);
 
-    List<TaskLogVo> selectListByBatchNo(String month, String model, String batchNo);
+    Pagination<TaskLogVo> selectListByBatchNo(String month, String model, String batchNo);
 
     TaskLogVo findById(String month, String model, String id);
 
