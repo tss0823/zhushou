@@ -52,6 +52,9 @@ public class HttpNewUtils {
         if (MapUtils.isNotEmpty(headers)) {
             Set<Map.Entry<String, String>> entrySet = headers.entrySet();
             for (Map.Entry<String, String> entry : entrySet) {
+                if(entry.getKey().equals("content-length")){
+                    continue;
+                }
                 httpPost.setHeader(entry.getKey(),entry.getValue());
             }
         }

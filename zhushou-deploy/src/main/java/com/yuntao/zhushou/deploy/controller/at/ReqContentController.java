@@ -8,6 +8,7 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
+import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.ReqContent;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.DataMap;
@@ -16,6 +17,7 @@ import com.yuntao.zhushou.model.query.ReqContentQuery;
 import com.yuntao.zhushou.model.vo.ReqContentVo;
 import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ReqContentService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class ReqContentController extends BaseController {
 
     @Autowired
     private ReqContentService reqContentService;
+
+    @Autowired
+    private AppService appService;
 
     @RequestMapping("list")
     @NeedLogin
@@ -97,6 +102,17 @@ public class ReqContentController extends BaseController {
             }
         }
         requestRes.setParams(paramMap);
+        //url 处理
+        String appName = param.getAppName();
+        App app = appService.findByName(appName);
+        String domain = app.getDomain();
+        String model = param.getModel();  //model 之后处理 TODO
+        String urlPrefix = appName;
+        if(urlPrefix.equals("member")){  //特殊处理
+            urlPrefix = "user";
+        }
+        String url = "http://"+urlPrefix+"."+domain+param.getUrl();
+        requestRes.setUrl(url);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
 
         //store to db

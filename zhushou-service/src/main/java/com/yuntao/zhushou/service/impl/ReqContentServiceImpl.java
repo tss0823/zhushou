@@ -45,22 +45,22 @@ public class ReqContentServiceImpl implements ReqContentService {
     public Pagination<ReqContentVo> selectPage(ReqContentQuery query) {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = reqContentMapper.selectListCount(queryMap);
-        if (totalCount == 0) {
-            return null;
-        }
-        Pagination<ReqContent> pagination = new Pagination<>(totalCount,
+        Pagination<ReqContentVo> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
+        if (totalCount == 0) {
+            return pagination;
+        }
         queryMap.put("pagination",pagination);
         List<ReqContent> dataList = reqContentMapper.selectList(queryMap);
-        Pagination<ReqContentVo> newPageInfo = new Pagination<>(pagination);
+//        Pagination<ReqContentVo> newPageInfo = new Pagination<>(pagination);
         List<ReqContentVo> newDataList = new ArrayList<>(dataList.size());
-        newPageInfo.setDataList(newDataList);
-        pagination.setDataList(dataList);
+        pagination.setDataList(newDataList);
+//        pagination.setDataList(dataList);
         for(ReqContent reqContent : dataList){
             ReqContentVo reqContentVo = BeanUtils.beanCopy(reqContent,ReqContentVo.class);
             newDataList.add(reqContentVo);
         }
-        return newPageInfo;
+        return pagination;
 
     }
 

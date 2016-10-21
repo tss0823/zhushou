@@ -79,6 +79,37 @@
                 YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
             });
 
+            $("a[name='btnHttpReq']").click(function () {
+                var id = $(this).attr("data");
+
+                var params = {id:id};
+                YT.deploy.util.reqGet("/idocUrl/getIdocUrlVoById", params, function (d) {
+                    var data = d.data;
+                    data = data || {};
+
+                    //渲染左侧栏
+                    debugger;
+                    var paramList = data.paramList;
+                    var paramObj = {};
+                    if(paramList){
+                        for(var key in paramList){
+                            var param = paramList[key];
+                            var key = param.code;
+                            var value = param.memo;
+                            paramObj[""+key] = value;
+                        }
+                    }
+                    var newData = {url:data.url,reqHeader:null,reqData:JSON.stringify(paramObj),resHeader:null,resData:data.resultData};
+                    $.extend(YT.deploy.data,{reqContentInitData:newData});
+
+                    $(".nav-list").find("li > a[id='enterReqContent']").first().trigger("click");
+
+                    // YT.deploy.reqContent.initLeftPanel(newData);
+                });
+
+                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
+            });
+
             $("a[name='btnDel']").click(function () {
                 if (!confirm("您确认需要删除吗？")) {
                     return;

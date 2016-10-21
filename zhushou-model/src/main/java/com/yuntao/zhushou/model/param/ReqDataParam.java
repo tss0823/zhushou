@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.model.param;
 
+import com.yuntao.zhushou.model.domain.ReqContent;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -7,22 +8,12 @@ import java.util.List;
 /**
  * Created by shan on 2016/8/17.
  */
-public class ReqDataParam {
-
-    private String url;
+public class ReqDataParam extends ReqContent {
 
     private List<DataMap> headerList;
 
     private List<DataMap> dataList;
 
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public List<DataMap> getHeaderList() {
         return headerList;

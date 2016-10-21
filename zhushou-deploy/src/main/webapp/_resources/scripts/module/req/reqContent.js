@@ -11,22 +11,29 @@
             //组件初始化之后
 
             //初始化右侧栏
+            //ajax同步
+            $.ajaxSetup({ async: false });
             var reqContentInitData = YT.deploy.data.reqContentInitData;
             YT.deploy.reqContent.initLeftPanel(reqContentInitData);
+            $.ajaxSetup({ async: true });
             //end
 
             var appList = YT.deploy.data.appList;
-
-            YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
+            debugger;
+            YT.deploy.util.initSelect(appList,"name","name","appName",reqContentInitData.appName);
 
             var enums = YT.deploy.data.enums;
 
             var dataList = data.dataList;
             $.extend(YT.deploy.data,{reqContentData:dataList});
 
-            //moduleType
-            YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
+            //modelType
+            YT.deploy.util.initEnumSelect(enums.logModel, "model", reqContentInitData.model);
 
+            //
+
+
+            $(document).off("change", "#paramType");
             $(document).on("change", "#paramType", function () {
                 var type = $(this).val();
                 // debugger;
@@ -44,6 +51,7 @@
             });
 
             //文件选择
+            $(document).off("change", ":file[id='paramValue']");
             $(document).on("change", ":file[id='paramValue']", function () {
                 // debugger;
                 var file = $(this).prop("files")[0];
@@ -52,6 +60,7 @@
 
 
             //添加header
+            $(document).off("click", "button[id='btnAddHeader']");
             $(document).on("click","button[id='btnAddHeader']",function () {
                 var $tr = $("#tbReqHeader").find("tr[name='dataItem']").first().clone();
                 $tr.show();
@@ -59,6 +68,7 @@
             });
 
             //添加reqData
+            $(document).off("click", "button[id='btnAddReqData']");
             $(document).on("click","button[id='btnAddReqData']",function () {
                 var $tr = $("#tbReqData").find("tr[name='dataItem']").first().clone();
                 $tr.show();
@@ -66,6 +76,7 @@
             });
 
             //上移
+            $(document).off("click", "a[name='itemArrowUp']");
             $(document).on("click", "a[name='itemArrowUp']", function () {
                 var $thisTr = $(this).parents("tr");
                 var $prevTr = $thisTr.prev();
@@ -74,6 +85,7 @@
             });
 
             //下移
+            $(document).off("click", "a[name='itemArrowDown']");
             $(document).on("click", "a[name='itemArrowDown']", function () {
                 var $thisTr = $(this).parents("tr");
                 var $nextTr = $thisTr.next();
@@ -82,6 +94,7 @@
 
 
             //删除
+            $(document).off("click", "a[name='itemRemove']");
             $(document).on("click", "a[name='itemRemove']", function () {
                 // debugger;
                 // if (!confirm("您确要删除吗？")) {
@@ -95,12 +108,13 @@
             });
 
             //左侧点击
+            $(document).off("click", "a[name='itemUrl']");
             $(document).on("click","a[name='itemUrl']",function(){
                var dataId = $(this).attr("data");
                 var dataList = YT.deploy.data.reqContentData;
                 for(var key in dataList){
                     var data = dataList[key];
-                    if(data.id = dataId){
+                    if(data.id == dataId){
                         YT.deploy.reqContent.initLeftPanel(data);
                         debugger;
                         break;
@@ -109,6 +123,7 @@
             });
 
             //请求
+            $(document).off("click", "button[id='btnRequest']");
             $(document).on("click","button[id='btnRequest']",function () {
 
                 // var params = YT.deploy.util.getFormParams("#reqContentForm");
@@ -117,6 +132,7 @@
                 //get headers
                 var headers = {};
                 var headerList = [];
+                var formData = new FormData();
                 $("#tbReqHeader").find("tr[name='dataItem']").each(function (index, item) {
                     var code = $(item).find("input[id='headerKey']").val();
                     // debugger;
@@ -124,7 +140,10 @@
                         return true;
                     }
                     var value = $(item).find("input[id='headerValue']").val();
-                    formData.append("headerList[0]."+code, value);
+                    // debugger;
+                    formData.append("headerList["+(index-1)+"].key",code);
+                    formData.append("headerList["+(index-1)+"].value",value);
+                    // formData.append("headerList[0]."+code, value);
                     var dataMap = {key:code,value:value};
                     headerList.push(dataMap);
                 });
@@ -132,7 +151,6 @@
 
                 //get reqParam
                 // var reqDatas = {};
-                var formData = new FormData();
                 var dataList = [];
                 var itemIndex = 0;
                 $("#tbReqData").find("tr[name='dataItem']").each(function (index, item) {
@@ -159,6 +177,8 @@
 
 
                 formData.append("url",reqUrl);
+                formData.append("appName",$("#appName").val());
+                formData.append("model",$("#model").val());
                 // formData.append("headerList",headerList);
                 // formData.append("dataList",dataList);
                 var data = {url:reqUrl,headerList:headerList,dataList:dataList};
@@ -248,13 +268,12 @@
                     resHeaderList.push({key:key,value:val});
                 }
                 d.resHeaderList = resHeaderList;
-
-                $.get("/req/resBlock.html", function (source) {
-                    var render = template.compile(source);
-                    var html = render(d);
-                    $("#resBlock").html(html);
-                });
             }
+            $.get("/req/resBlock.html", function (source) {
+                var render = template.compile(source);
+                var html = render(d);
+                $("#resBlock").html(html);
+            });
         }
     }
 

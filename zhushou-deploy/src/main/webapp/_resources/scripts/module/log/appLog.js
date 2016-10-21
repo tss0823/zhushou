@@ -306,7 +306,8 @@
                 data = data || {};
                 
                 //渲染左侧栏
-                var newData = {url:data.reqUrl,reqHeader:data.reqHeaders,reqData:data.parameters,resHeader:data.resHeaders,resData:data.response};
+                var newData = {url:data.url,appName:data.appName,model:data.type,reqHeader:data.reqHeaders,
+                    reqData:data.parameters,resHeader:data.resHeaders,resData:data.response};
                 $.extend(YT.deploy.data,{reqContentInitData:newData});
                 
                 $(".nav-list").find("li > a[id='enterReqContent']").first().trigger("click");
