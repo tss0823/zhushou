@@ -572,7 +572,7 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
-                <log.dir>${user.home}/logs/zhushou</log.dir>
+                <log.dir>/u01/logs/app/zhushou</log.dir>
                 <libScope>compile</libScope>
             </properties>
         </profile>
@@ -581,7 +581,7 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
-                <log.dir>${user.home}/logs/zhushou</log.dir>
+                <log.dir>/u01/logs/app/zhushou</log.dir>
                 <libScope>compile</libScope>
             </properties>
         </profile>
