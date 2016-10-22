@@ -26,27 +26,24 @@
             //注册事件
             $("#btnQuery").click(function () {
                 var pageNum = 1;  //查询触发从第一页开始
-                var pageSize = $("#pageSize").val();
                 $(this).html("查询中...");
                 $(this).attr("disabled", "true");
-                YT.deploy.idocList.query(pageNum, pageSize);
+                YT.deploy.idocList.query(pageNum);
             });
 
             $("#btnQueryEnums").click(function () {
                 //debugger;
                 var pageNum = 1; 
-                var pageSize = $("#pageSize").val();
                 // $(this).html("查询中...");
                 // $(this).attr("disabled", "true");
-                YT.deploy.idocList.queryEnums(pageNum, pageSize);
+                YT.deploy.idocList.queryEnums(pageNum);
             });
             
             $("#btnListAll").click(function () {
                 var pageNum = 1;  //查询触发从第一页开始
-                var pageSize = $("#pageSize").val();
                 $(this).html("查询中...");
                 $(this).attr("disabled", "true");
-                YT.deploy.idocList.queryExport(pageNum, pageSize);
+                YT.deploy.idocList.queryExport(pageNum);
             });
 
             //分页信息init
@@ -164,26 +161,26 @@
 
 
     YT.deploy.idocList = {
-        query: function (pageNum, pageSize) {
+        query: function (pageNum) {
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = pageNum;
-            params["pageSize"] = pageSize;
+            var pageSize = $("#pageSize").val();
             var ext_data = $.extend(params, {title: "接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
         },
 
-        queryExport: function (pageNum, pageSize) {
+        queryExport: function (pageNum) {
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = pageNum;
-            params["pageSize"] = pageSize;
+            var pageSize = $("#pageSize").val();
             var ext_data = $.extend(params, {title: "导出接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/listAll.html", ext_data);
         },
         
-        queryEnums: function (pageNum, pageSize) {
+        queryEnums: function (pageNum) {
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = pageNum;
-            params["pageSize"] = pageSize;
+            var pageSize = $("#pageSize").val();
             params["type"] = 1;
             var ext_data = $.extend(params, {title: "枚举接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);

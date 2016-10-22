@@ -51,6 +51,8 @@
     <if test="createUserId != null and createUserId != '' ">and  `createUserId` = #{createUserId}</if> 
     <if test="createUserName != null and createUserName != '' ">and  `createUserName` = #{createUserName}</if>
       <if test="type != null">and  `type` = #{type}</if>
+      <if test="nameLike != null and nameLike != '' ">and `name` like concat('%',#{nameLike},'%') </if>
+      <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%') </if>
   </sql>
   
         

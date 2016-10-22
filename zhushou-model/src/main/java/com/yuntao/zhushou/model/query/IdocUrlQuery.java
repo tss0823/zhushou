@@ -15,6 +15,12 @@ public class IdocUrlQuery extends  BaseQuery {
     /**  名称 * */
     private String name;
 
+    /**  URL * */
+    private String urlLike;
+
+    /**  名称 * */
+    private String nameLike;
+
     /**  应用 * */
     private String appName;
 
@@ -82,5 +88,21 @@ public class IdocUrlQuery extends  BaseQuery {
 
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName;
+    }
+
+    public String getUrlLike() {
+        return urlLike;
+    }
+
+    public void setUrlLike(String urlLike) {
+        this.urlLike = urlLike;
+    }
+
+    public String getNameLike() {
+        return nameLike;
+    }
+
+    public void setNameLike(String nameLike) {
+        this.nameLike = nameLike;
     }
 }

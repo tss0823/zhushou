@@ -76,7 +76,7 @@
                     YT.deploy.util.reqPost("/idocUrl/update", params, function (d) {
                         if (d.success) {
                             alert("修改成功");
-                            YT.deploy.idocList.query(1,20);
+                            YT.deploy.idocList.query(1);
                         } else {
                             alert("修改失败,err=" + d.message);
                         }
@@ -86,7 +86,7 @@
                     YT.deploy.util.reqPost("/idocUrl/save", params, function (d) {
                         if (d.success) {
                             alert("保存成功");
-                            YT.deploy.idocList.query(1,20);
+                            YT.deploy.idocList.query(1);
                         } else {
                             alert("保存失败,err=" + d.message);
                         }
