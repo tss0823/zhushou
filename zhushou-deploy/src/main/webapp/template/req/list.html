@@ -28,6 +28,20 @@
     <div class="row" style="margin-left: 20px;">
         <div style="float: left;width: 450px;border:solid 1px gray">
 
+            <div class="clearfix form-actions" style="margin: 5px 0;padding: 3px 0">
+                <div class="col-md-offset-1 col-md-12">
+                    应用：
+                    <select id="appName" name="appName">
+                        <option value=""></option>
+                    </select>
+
+                    <input type="text" id="urlLike" value="{{urlLike}}"  style="width:150px">
+                    <button class="btn btn-info" id="btnQuery"> <i class="icon-ok bigger-110"></i> 查询 </button>
+                </div>
+                <!--<div class="col-md-offset-10 col-md-1">-->
+                <!--</div>-->
+            </div>
+
             <div class="dd dd-draghandle" style="width:100%">
                 <ol class="dd-list" id="activeChildItem">
                     {{each dataList as bean i}}

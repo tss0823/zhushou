@@ -50,6 +50,7 @@ public class ReqContentController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(ReqContentQuery query) {
+        query.setPageSize(30);  //固定30条
         Pagination<ReqContentVo> pagination = reqContentService.selectPage(query);
         if(CollectionUtils.isNotEmpty(pagination.getDataList())){
             for (ReqContentVo reqContentVo : pagination.getDataList()) {
