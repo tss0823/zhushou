@@ -123,8 +123,8 @@ public class ReqContentController extends BaseController {
         reqContent.setUrl(param.getUrl());
         reqContent.setHttpStatus(responseRes.getStatus());
         reqContent.setName(param.getUrl());
-//        reqContent.setAppName();
-//        reqContent.setModel();
+        reqContent.setAppName(appName);
+        reqContent.setModel(model);
         reqContent.setReqHeader(JsonUtils.object2Json(requestRes.getHeaders()));
         reqContent.setReqData(JsonUtils.object2Json(requestRes.getParams()));
         reqContent.setResHeader(JsonUtils.object2Json(responseRes.getHeaders()));

@@ -99,7 +99,8 @@
                             paramObj[""+key] = value;
                         }
                     }
-                    var newData = {url:data.url,reqHeader:null,reqData:JSON.stringify(paramObj),resHeader:null,resData:data.resultData};
+                    var newData = {url:data.url,appName:data.appName,model:"test",reqHeader:null,reqData:JSON.stringify(paramObj),
+                        resHeader:null,resData:data.resultData};
                     $.extend(YT.deploy.data,{reqContentInitData:newData});
 
                     $(".nav-list").find("li > a[id='enterReqContent']").first().trigger("click");
