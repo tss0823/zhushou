@@ -99,7 +99,9 @@
                             paramObj[""+key] = value;
                         }
                     }
-                    var newData = {url:data.url,appName:data.appName,model:"test",reqHeader:null,reqData:JSON.stringify(paramObj),
+                    var reqHeaderObj = {Cookie:document.cookie};
+                    var newData = {url:data.url,appName:data.appName,model:"test",reqHeader:JSON.stringify(reqHeaderObj),
+                        reqData:JSON.stringify(paramObj),
                         resHeader:null,resData:data.resultData};
                     $.extend(YT.deploy.data,{reqContentInitData:newData});
 

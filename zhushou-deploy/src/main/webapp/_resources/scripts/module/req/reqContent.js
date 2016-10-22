@@ -18,17 +18,11 @@
             $.ajaxSetup({ async: true });
             //end
 
-            var appList = YT.deploy.data.appList;
-            debugger;
-            YT.deploy.util.initSelect(appList,"name","name","appName",reqContentInitData.appName);
 
-            var enums = YT.deploy.data.enums;
 
             var dataList = data.dataList;
             $.extend(YT.deploy.data,{reqContentData:dataList});
 
-            //modelType
-            YT.deploy.util.initEnumSelect(enums.logModel, "model", reqContentInitData.model);
 
             //
 
@@ -116,7 +110,7 @@
                     var data = dataList[key];
                     if(data.id == dataId){
                         YT.deploy.reqContent.initLeftPanel(data);
-                        debugger;
+                        // debugger;
                         break;
                     }
                 }
@@ -257,6 +251,14 @@
                 var render = template.compile(source);
                 var html = render(d);
                 $("#reqBlock").html(html);
+
+                var appList = YT.deploy.data.appList;
+                YT.deploy.util.initSelect(appList,"name","name","appName",data.appName);
+
+                var enums = YT.deploy.data.enums;
+
+                //modelType
+                YT.deploy.util.initEnumSelect(enums.logModel, "model", data.model);
             });
             
 
