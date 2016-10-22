@@ -97,13 +97,14 @@
                 $("#"+actionId).click(function () {
                     var authRes = appData.authMap[$(this).attr("id")];
                     //cookie 拿 userData
-                    var valueMap = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl);
-                    valueMap = valueMap || {};
+                    var queryParams = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_queryData");
+                    queryParams = queryParams || {};
                     //end
                     debugger;
-                    var ext_data = {title: authRes.name,authRes:authRes};
-                    $.extend(ext_data,valueMap);
-                    YT.deploy.route(authRes.url, valueMap, authRes.tplUrl,ext_data);
+                    var extData = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_extData");
+                    // extData = {title: authRes.name,authRes:authRes};
+                    extData = $.extend(extData,{title: authRes.name,authRes:authRes});
+                    YT.deploy.route(authRes.url, queryParams, authRes.tplUrl,extData);
                     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
                     $(this).parent("li").addClass("active");
                     YT.deploy.index.activeMenu = this;

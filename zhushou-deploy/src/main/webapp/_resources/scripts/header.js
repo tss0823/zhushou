@@ -23,7 +23,7 @@ $(document).ready(function () {
         var actionId = jqFormObj.attr("actionId");
         // debugger;
         var authRes = appData.authMap[actionId];
-        YunTao.deploy.userDataProcess.clear(authRes.tplUrl);
+        YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");
 
     });
 

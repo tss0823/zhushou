@@ -228,23 +228,23 @@
             url: null,
             param: null,
             tlp_url: null,
-            ext_data: null, //
+            extData: null, //
         },
 
         rsArray: [],  //路由桟数组
 
-        doRoute: function (url, param, tpl_url, ext_data) {
+        doRoute: function (url, param, tpl_url, extData) {
             var rsArray = YT.deploy.routeStackProcess.rsArray;
             var key = url + YT.deploy.util.paramToString(param);
-            key += tpl_url + YT.deploy.util.paramToString(ext_data);
+            key += tpl_url + YT.deploy.util.paramToString(extData);
             console.log("key="+key);
-            var routeMethod = ext_data["method"];
+            var routeMethod = extData["method"];
             if(routeMethod){
                 if(routeMethod == "prevRoute" || routeMethod == "nextRoute"){
                     for(var i = 0; i < rsArray.length; i++){
                         var routeStatck = rsArray[i];
                         var compareKey = routeStatck.url + YT.deploy.util.paramToString(param);
-                        compareKey += routeStatck.tpl_url + YT.deploy.util.paramToString(ext_data);
+                        compareKey += routeStatck.tpl_url + YT.deploy.util.paramToString(extData);
                         if(key == compareKey){  //exists return
                             YT.deploy.routeStackProcess.currentIndex = i;
                             return;
@@ -258,7 +258,7 @@
 
             }
             //other route
-            var routeStatck = {url: url, param: param, tpl_url: tpl_url, ext_data: ext_data};
+            var routeStatck = {url: url, param: param, tpl_url: tpl_url, extData: extData};
             rsArray.length = YT.deploy.routeStackProcess.currentIndex + 1;
             rsArray.push(routeStatck);
             if(rsArray.length > 50){
@@ -283,8 +283,8 @@
                 return;
             }
             var routeStack = rsArray[currentIndex];
-            routeStack.ext_data["method"] = "refresh";
-            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.ext_data);
+            routeStack.extData["method"] = "refresh";
+            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.extData);
 
         },
 
@@ -296,8 +296,8 @@
             }
             var currentIndex = 0
             var routeStack = rsArray[currentIndex];
-            routeStack.ext_data["method"] = "home";
-            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.ext_data);
+            routeStack.extData["method"] = "home";
+            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.extData);
 
         },
 
@@ -310,8 +310,8 @@
             }
             currentIndex--;
             var routeStack = rsArray[currentIndex];
-            routeStack.ext_data["method"] = "prevRoute";
-            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.ext_data);
+            routeStack.extData["method"] = "prevRoute";
+            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.extData);
         },
 
         //下一个路由
@@ -327,8 +327,8 @@
             }
             currentIndex++;
             var routeStack = rsArray[currentIndex];
-            routeStack.ext_data["method"] = "nextRoute";
-            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.ext_data);
+            routeStack.extData["method"] = "nextRoute";
+            YT.deploy.route(routeStack.url,routeStack.param,routeStack.tpl_url,routeStack.extData);
         },
         
         
@@ -464,24 +464,24 @@
 
 
 
-        route: function (url, param, tpl_url, ext_data) {
-
+        route: function (url, param, tpl_url, extData) {
             YT.deploy.util.reqGet(url, param, function (d) {
                 var data = d.data;
                 data = data || {};
-                if (ext_data) {
-                    for (var key in ext_data) {
-                        data[key] = ext_data[key];
+                if (extData) {
+                    for (var key in extData) {
+                        data[key] = extData[key];
                     }
                 }
                 $.extend(data,appData);
-                
+                $.extend(data,param);
+
                 $.get(tpl_url, function (source) {
                     var render = template.compile(source);
                     var html = render(data);
                     $(".page-content").html(html);
                     YT.deploy.route_callback(d,data);
-                    YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, ext_data);
+                    YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, extData);
 
                 });
             });
@@ -503,10 +503,10 @@
         },
 
         //请求 index.html 进行路由 
-        routeIndex: function (tpl_url, ext_data) {
+        routeIndex: function (tpl_url, extData) {
             $.get(tpl_url, function (source) {
                 var render = template.compile(source);
-                var html = render(ext_data);
+                var html = render(extData);
                 $("#indexBlock").html(html);
             });
         },
@@ -524,25 +524,30 @@
         },
         
         //搜索跳转
-        goSearchPage: function (formId,pageNum,pageSize,ext_data) {
-            var params = YT.deploy.util.getFormParams("#"+formId);
-            params["pageNum"] = pageNum;
-            params["pageSize"] = pageSize;
-            if (ext_data) {
-                for (var key in ext_data) {
-                    params[key] = ext_data[key];
+        goSearchPage: function (formId,pageNum,pageSize,extData) {
+            var queryParams = YT.deploy.util.getFormParams("#"+formId);
+            queryParams["pageNum"] = pageNum;
+            queryParams["pageSize"] = pageSize;
+
+            var actionId = $("#"+formId).attr("actionId");
+            var authRes = appData.authMap[actionId];
+            //set userData with queryParams
+            YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_queryData",queryParams);
+            
+            if (extData) {
+                for (var key in extData) {
+                    queryParams[key] = extData[key];
                 }
             }
             // debugger;
-            var actionId = $("#"+formId).attr("actionId");
-            var authRes = appData.authMap[actionId];
-            var ext_data = $.extend(params, {title: authRes.name});
-            ext_data = $.extend(ext_data,{authRes:authRes});
-            YT.deploy.route(authRes.url, params, authRes.tplUrl, ext_data);
+            // var extData = $.extend(params, {title: authRes.name});
+            var extData = {title: authRes.name};
+            extData = $.extend(extData,{authRes:authRes});
+            //set userData with extData
+            YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_extData",extData);
+            
+            YT.deploy.route(authRes.url, queryParams, authRes.tplUrl, extData);
 
-            //set userData
-            YT.deploy.userDataProcess.setValueMap(authRes.tplUrl,params);
-            //end
         },
 
         route_callback: function () {

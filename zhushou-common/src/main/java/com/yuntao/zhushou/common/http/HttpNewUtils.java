@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.common.http;
 
+import com.yuntao.zhushou.common.utils.ExceptionUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -96,7 +97,8 @@ public class HttpNewUtils {
             responseRes.setHeaders(headerMap);
 
         }catch (Exception e){
-            throw new RuntimeException("http execute failed!",e);
+            responseRes.setResult(ExceptionUtils.getPrintStackTrace(e).getBytes());
+//            throw new RuntimeException("http execute failed!",e);
         }
         return responseRes;
     }
