@@ -222,6 +222,10 @@
                 contentType: false,
                 processData: false,
                 success: function (data, status, xhr) {
+                    if(!data.success){
+                        alert("执行失败,error="+data.message);
+                        return;
+                    }
                     var d = data.data;
                     $.get("/req/resBlock.html", function (source) {
                         var render = template.compile(source);

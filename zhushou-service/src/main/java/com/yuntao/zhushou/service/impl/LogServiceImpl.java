@@ -115,7 +115,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         query.setModel(model);
         query.setStackId(stackId);
         query.setPage(true);
-        query.setPageSize(1000);  //足够大,不然出现不能查询全部数据
+        query.setPageSize(5000);  //足够大,不然出现不能查询全部数据
         Pagination<LogWebVo> pagination = selectList(query,new LogTextQuery());
         return pagination.getDataList();
     }
