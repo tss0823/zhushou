@@ -3,6 +3,8 @@
 module=$1
 module_dir="deploy"
 
+sh install.sh
+
 cd /u01/deploy/project/tomcat_zhushou
 ./tomcat.sh stop
 sleep 5
