@@ -6,11 +6,11 @@ package com.yuntao.zhushou.model.constant;
 public interface CacheConstant {
 
     interface App{
-        String selectAllList = "selectAllList";
+        String selectAllList = "selectAllList_v2";
     }
 
     interface Host{
-        String selectListByAll = "selectListByAll";
+        String selectListByAll = "selectListByAll_v2";
     }
 
 

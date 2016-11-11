@@ -132,7 +132,7 @@
             //http执行请求
             $(document).off("click", "button[id='btnRequest']");
             $(document).on("click", "button[id='btnRequest']", function () {
-                $(this).html("查询中...");
+                // $(this).html("查询中...");
                 // $(this).attr("disabled", true);
                 YT.deploy.reqContent.httpRequest();
                 // $(this).attr("disabled", false);
