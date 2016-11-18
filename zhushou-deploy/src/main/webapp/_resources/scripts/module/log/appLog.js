@@ -13,6 +13,7 @@
             console.log("app list after render call");
             //组件初始化之后
             var appList = YT.deploy.data.appList;
+            var docList = YT.deploy.data.docList;
             YT.deploy.util.initSelect(appList,"name","name","appName",data.appName);
 
             //month select init
@@ -33,6 +34,21 @@
                 monthArray.push({value:year+"."+monthStr,text:year+"年"+monthStr+"月"});
             }
             YT.deploy.util.initSelect(monthArray,"value","text","month",data.month);
+            //end
+
+            //doc select init
+            var branchValArray = [];
+            for(var i = 0; i < docList.length; i++){
+                var doc = docList[i];
+                branchValArray.push("<option value='"+doc.url+"'>");
+                branchValArray.push(doc.name);
+                branchValArray.push("</option>");
+            }
+            $("#branch").append(branchValArray.join(""));
+            $('#branch').chosen();
+            $('#branch').change(function(){
+                $("#url").val($(this).val());
+            });
             //end
 
             //授权资源
@@ -75,6 +91,10 @@
 
             //ip city show
             YT.deploy.appLog.showIpCity();
+            //end
+
+            //init doc name
+            YT.deploy.appLog.showDocName(docList);
             //end
 
             //注册事件
@@ -374,6 +394,20 @@
                     // console.log("city="+d.data);
                     $tdClientIp.html(ip+" ["+d.data+"]");
                 },"json");
+            });
+        },
+
+        //展示文档名称
+        showDocName : function(docList){
+            $("#tbContent").find("tr").each(function(index,item){
+                var url = $(item).find("div[name='url']").text();
+                for(var i = 0; i < docList.length; i++){
+                    var doc = docList[i];
+                    if(doc.url == url){
+                        $(item).find("div[name='docName']").html(doc.name);
+                        break;
+                    }
+                }
             });
         }
 

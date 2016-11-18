@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.utils.UrlUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.App;
@@ -107,12 +108,8 @@ public class ReqContentController extends BaseController {
         String appName = param.getAppName();
         App app = appService.findByName(appName);
         String domain = app.getDomain();
-        String model = param.getModel();  //model 之后处理 TODO
-        String urlPrefix = appName;
-        if(urlPrefix.equals("member")){  //特殊处理
-            urlPrefix = "user";
-        }
-        String url = "http://"+urlPrefix+"."+domain+param.getUrl();
+        String model = param.getModel();  //model
+        String url = UrlUtils.getUrl(appName, model, domain, param.getUrl());
         requestRes.setUrl(url);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
 

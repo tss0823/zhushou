@@ -43,6 +43,12 @@ public class HttpNewUtils {
 
 //    static Map<Res,byte []> contentMap = new ConcurrentHashMap();
 
+    public static ResponseRes get(String url){
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl(url);
+        return execute(requestRes);
+    }
+
     public static ResponseRes execute(RequestRes requestRes)  {
         ResponseRes responseRes = new ResponseRes();
         String url = requestRes.getUrl();

@@ -1,10 +1,9 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yuntao.zhushou.common.utils.BeanUtils;
-import com.yuntao.zhushou.common.utils.DateUtil;
-import com.yuntao.zhushou.common.utils.HttpUtils;
-import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.http.HttpNewUtils;
+import com.yuntao.zhushou.common.http.ResponseRes;
+import com.yuntao.zhushou.common.utils.*;
 import com.yuntao.zhushou.dal.mapper.IdocUrlMapper;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.IdocParam;
@@ -213,12 +212,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         //end
 
         App app = appService.findByName(appName);
-        String domain = app.getDomain();
-
-        String url = "http://"+ appName+"."+domain+"/data/enumList";
-        List<String> resultList = HttpUtils.reqGet(url);
-        String result = StringUtils.join(resultList, "");
-        Map dataMap = JsonUtils.json2Object(result, HashMap.class);
+        String url = UrlUtils.getUrl(appName, "prod",app.getDomain(), "/data/enumList");
+        ResponseRes responseRes = HttpNewUtils.get(url);
+        HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);
         Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
@@ -264,10 +260,12 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         this.idocParamService.deleteByParentId(idocUrl.getId());
         //end
 
-        String url = "http://"+ appName+".api.mynixi.com/data/enumList";
-        List<String> resultList = HttpUtils.reqGet(url);
-        String result = StringUtils.join(resultList, "");
-        Map<String,List<Map<String,String>>> enumMap = JsonUtils.json2Object(result, HashMap.class);
+
+        App app = appService.findByName(appName);
+        String url = UrlUtils.getUrl(appName, "prod",app.getDomain(), "/data/enumList");
+        ResponseRes responseRes = HttpNewUtils.get(url);
+        HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);
+        Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
             String key = entry.getKey();

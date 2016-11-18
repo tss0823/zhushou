@@ -4,9 +4,11 @@ import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.enums.*;
+import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ConfigService;
+import com.yuntao.zhushou.service.inter.IdocUrlService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -29,7 +31,8 @@ public class DataController extends  BaseController {
     private ConfigService configService;
 
     @Autowired
-    private PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer;
+    private IdocUrlService idocUrlService;
+
 
     @RequestMapping("appConfigData")
     public ResponseObject appConfigData() {
@@ -57,6 +60,7 @@ public class DataController extends  BaseController {
     public ResponseObject appDataList() {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.put("appList",appService.selectAllList());
+        responseObject.put("docList",idocUrlService.selectList(new IdocUrlQuery()));
         List<Config> configList = configService.selectList();
         if (CollectionUtils.isNotEmpty(configList)) {
             for (Config config : configList) {
