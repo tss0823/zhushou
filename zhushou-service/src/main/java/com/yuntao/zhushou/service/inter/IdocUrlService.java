@@ -96,7 +96,7 @@ public interface IdocUrlService {
     /**
      * 同步更新枚举
      * @param appName
-     * @param code
+     * @param id
      */
-    void syncUpdate(String appName, String code);
+    void syncUpdate(String appName, Long id);
 }

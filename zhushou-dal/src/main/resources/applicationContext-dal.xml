@@ -38,16 +38,7 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="*" read-only="false" rollback-for="Throwable" propagation="REQUIRED"
-                       isolation="REPEATABLE_READ"/>
-        </tx:attributes>
-    </tx:advice>
-
-    <aop:config>
-        <aop:pointcut id="servicePointcut" expression="execution(* com.yuntao.zhushou.service..*Impl.*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="servicePointcut"/>
-    </aop:config>
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 
 </beans>

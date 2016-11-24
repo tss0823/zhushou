@@ -131,7 +131,7 @@
                 if (!confirm("您确认需要同步创建吗？")) {
                     return;
                 }
-                YT.deploy.util.reqPost("/idocUrl/syncNew", {appName:"user"}, function (d) {
+                YT.deploy.util.reqPbtnSyncUpdateost("/idocUrl/syncNew", {appName:"member"}, function (d) {
                     if (d.success) {
                         alert("同步创建成功");
                     } else {
@@ -141,19 +141,22 @@
             });
             
             //枚举同步更新
-            $("#btnSyncUpdate").click(function () {
-                if (!confirm("您确认需要同步更新吗？")) {
-                    return;
-                }
-                YT.deploy.util.reqPost("/idocUrl/syncUpdate", {appName:"user"}, function (d) {
-                    if (d.success) {
-                        alert("同步修改成功");
-                    } else {
-                        alert("同步修改失败,err=" + d.message);
+            $("a[name='btnSyncUpdate']").each(function(index,item){
+                $(item).click(function(){
+                    if (!confirm("您确认需要同步更新吗？")) {
+                        return;
                     }
+                    var id = $(this).attr("data");
+                    YT.deploy.util.reqPost("/idocUrl/syncUpdate", {appName:"user",id:id}, function (d) {
+                        if (d.success) {
+                            alert("同步修改成功");
+                        } else {
+                            alert("同步修改失败,err=" + d.message);
+                        }
+                    });
                 });
             });
-            
+
         },
     }
     

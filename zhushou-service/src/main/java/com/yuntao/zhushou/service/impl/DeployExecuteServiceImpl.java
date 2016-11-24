@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -209,6 +210,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
 
     }
 
+    @Transactional
     private void saveLog(User user, String appName, String model, String method, List<String> ipList) {
         //insert log
         List<Host> hostList = hostService.selectListByAll();

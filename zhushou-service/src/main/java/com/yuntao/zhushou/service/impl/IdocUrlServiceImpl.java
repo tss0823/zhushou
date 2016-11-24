@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -152,6 +153,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
+    @Transactional
     public void save(IdocDataParam idocDataParam,User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
         IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam,IdocUrl.class);
@@ -172,6 +174,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
+    @Transactional
     public void update(IdocDataParam idocDataParam, User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
         IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam,IdocUrl.class);
@@ -195,6 +198,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
+    @Transactional
     public void syncNew(String appName) {
         //delete parent
         //get parent data List by appName and type
@@ -248,14 +252,10 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
-    public void syncUpdate(String appName, String code) {
+    @Transactional
+    public void syncUpdate(String appName, Long id) {
         //get parent data by appName and type and code
-        IdocUrlQuery query = new IdocUrlQuery();
-        query.setAppName(appName);
-        query.setType(1);
-        query.setUrl(code);
-        List<IdocUrl> idocUrls = this.selectList(query);
-        IdocUrl idocUrl = idocUrls.get(0);
+        IdocUrl idocUrl = this.findById(id);
         //delete child data list
         this.idocParamService.deleteByParentId(idocUrl.getId());
         //end
@@ -276,8 +276,8 @@ public class IdocUrlServiceImpl implements IdocUrlService {
                 continue;
             }
             idocUrl.setName(text);
-            idocUrl.setUrl(code);
-            idocUrl.setAppName(appName);
+//            idocUrl.setUrl(idocUrl.getUrl());
+//            idocUrl.setAppName(appName);
             idocUrl.setVersion("1.0.0");
             this.updateById(idocUrl);
 

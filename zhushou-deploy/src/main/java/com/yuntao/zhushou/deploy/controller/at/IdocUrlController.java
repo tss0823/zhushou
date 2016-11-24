@@ -102,6 +102,14 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("syncUpdate")
+    @NeedLogin
+    public ResponseObject syncUpdate(@RequestParam String appName,@RequestParam Long id) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        idocUrlService.syncUpdate(appName,id);
+        return responseObject;
+    }
+
 
 
 }
