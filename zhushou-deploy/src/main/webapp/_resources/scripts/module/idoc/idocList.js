@@ -38,12 +38,14 @@
                 // $(this).attr("disabled", "true");
                 YT.deploy.idocList.queryEnums(pageNum);
             });
-            
+
             $("#btnListAll").click(function () {
                 var pageNum = 1;  //查询触发从第一页开始
-                $(this).html("查询中...");
-                $(this).attr("disabled", "true");
+                // $(this).html("查询中...");
+                // $(this).attr("disabled", "true");
                 YT.deploy.idocList.queryExport(pageNum);
+
+
             });
 
             //分页信息init
@@ -147,7 +149,7 @@
                         return;
                     }
                     var id = $(this).attr("data");
-                    YT.deploy.util.reqPost("/idocUrl/syncUpdate", {appName:"user",id:id}, function (d) {
+                    YT.deploy.util.reqPost("/idocUrl/syncUpdate", {appName:"member",id:id}, function (d) {
                         if (d.success) {
                             alert("同步修改成功");
                         } else {
@@ -172,14 +174,14 @@
             YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
         },
 
-        queryExport: function (pageNum) {
-            var params = YT.deploy.util.getFormParams("#idocListForm");
-            params["pageNum"] = pageNum;
-            var pageSize = $("#pageSize").val();
-            var ext_data = $.extend(params, {title: "导出接口文档"});
-            YT.deploy.route("/idocUrl/list", params, "/idoc/listAll.html", ext_data);
+        docPrint: function () {
+            $("#printDiv").find("#btnPrint").remove();
+            var printData = $("#printDiv").html();
+            $(window.document.body).html(printData);
+            // window.document.body.innerHTML = printData;   //把 html 里的数据 复制给 body 的 html 数据 ，相当于重置了 整个页面的 内容
+            window.print(); // 开始打印
         },
-        
+
         queryEnums: function (pageNum) {
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = pageNum;
@@ -189,6 +191,37 @@
             YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);
         },
 
+        queryExport:function(){
+            var params = YT.deploy.util.getFormParams("#idocListForm");
+            params["pageNum"] = 1;
+            params["pageSize"] = 10000; //无穷大
+            // var ext_data = $.extend(params, {title: "接口文档"});
+            YT.deploy.util.reqGet("/idocUrl/list", params, function (d) {
+                // debugger;
+                // var jsonObj = JSON.parse(d.data.parameters);
+                // var dataList = [];
+                // for(var key in jsonObj){
+                //     var val = jsonObj[key];
+                //     dataList.push({key:key,value:val});
+                // }
+                var param = {title:"接口文档",dataList:d.data.dataList.reverse()};
+                $.get("/idoc/listAll.html", function (source) {
+                    var render = template.compile(source);
+                    var html = render(param);
+                    bootbox.dialog({
+                        message: html,
+                        width:"800px",
+                    });
+                    $(".modal-dialog").prop("style","width:100%;height:100%")
+
+                    $("#btnPrint").unbind("click");
+                    $("#btnPrint").click(function () {
+                        YT.deploy.idocList.docPrint();
+                    });
+                });
+            });
+
+        },
 
     }
 

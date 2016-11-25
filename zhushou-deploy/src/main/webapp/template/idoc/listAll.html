@@ -1,121 +1,123 @@
-<div>
+<div id="printDiv">
     <div class="page-header">
         <h1>
             <small>
-                <i class="icon-double-angle-right"></i>
-                接口文档列表
+                <i class="icon-hand-right"></i>
+                接口文档
             </small>
         </h1>
         <h1 style="text-align: right">
             <small>
-                <form id="idocListForm" onsubmit="return false">
-                    应用：
-                    <select id="appName" name="appName">
-                        <option value=""></option>
-                    </select>
-                    &nbsp;
-                    模块：
-                    <select id="module" name="module">
-                        <option value=""></option>
-                    </select>
-                    &nbsp;
-                    名称：
-                    <input type="text" id="name" name="name" value="{{name}}" class="input-sm"/>
-                    &nbsp;
-                    URL：
-                    <input type="text" id="url" name="url" value="{{url}}" class="input-xlarge"/>
-                    &nbsp;
-                    负责人：
-                    <input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />
-                    <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
-                </form>
+                <!--<form id="idocListForm" onsubmit="return false">-->
+                    <!--应用：-->
+                    <!--<select id="appName" name="appName">-->
+                        <!--<option value=""></option>-->
+                    <!--</select>-->
+                    <!--&nbsp;-->
+                    <!--模块：-->
+                    <!--<select id="module" name="module">-->
+                        <!--<option value=""></option>-->
+                    <!--</select>-->
+                    <!--&nbsp;-->
+                    <!--名称：-->
+                    <!--<input type="text" id="name" name="name" value="{{name}}" class="input-sm"/>-->
+                    <!--&nbsp;-->
+                    <!--URL：-->
+                    <!--<input type="text" id="url" name="url" value="{{url}}" class="input-xlarge"/>-->
+                    <!--&nbsp;-->
+                    <!--负责人：-->
+                    <!--<input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />-->
+                    <button class="btn btn-success" id="btnPrint"> <i class="icon-search align-top bigger-125"></i> 打印 </button>&nbsp;&nbsp;&nbsp;
+                <!--</form>-->
             </small>
         </h1>
     </div><!-- /.page-header -->
-    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th width="5%">应用</th>
-            <th width="7%">模块</th>
-            <th width="10%">名称</th>
-            <th width="16%">URL</th>
-            <th width="6%">负责人</th>
-        </tr>
-        </thead>
+        <!--<thead>-->
+        <!--</thead>-->
 
-        <tbody id="tbContent">
         {{each dataList as bean i}}
-        <tr class="selected">
-            <td>
-                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.appName}}</a>
-            </td>
-            <td>{{bean.module}}</td>
-            <td>{{bean.name}}</td>
-            <td>{{bean.url}}</td>
-            <td>{{bean.createUserName}}</td>
-        </tr>
-        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
-            <td colspan="7">
-                <div id="tabs">
-                    <ul>
-                        <li> <a href="#tabs-1">请求参数列表</a> </li>
-                    </ul>
+        <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+            <tr style="background:grey">
+                <th width="3%">序号</th>
+                <th width="5%">应用</th>
+                <th width="7%">模块</th>
+                <th width="10%">名称</th>
+                <th width="16%">URL</th>
+                <!--<th width="6%">负责人</th>-->
+            </tr>
+            <tbody id="tbContent">
+            <tr class="selected">
+                <td>{{i+1}}</td>
+                <td>
+                    <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.appName}}</a>
+                </td>
+                <td>{{bean.module}}</td>
+                <td>{{bean.name}}</td>
+                <td>{{bean.url}}</td>
+                <!--<td>{{bean.createUserName}}</td>-->
+            </tr>
+            <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
+                <td colspan="6">
+                    <div id="tabs">
+                        <ul>
+                            <li> <a href="#tabs-1">请求参数列表</a> </li>
+                        </ul>
 
-                    <div id="tabs-1">
-                        <table class="table table-striped table-bordered table-hover" style="width:50%">
-                            <tr>
-                                <td width="6%">编码</td>
-                                <td width="8%">名称</td>
-                                <td width="10%">示例</td>
-                                <td width="6%">规则</td>
-                            </tr>
-                            <tbody>
-                            {{each bean.paramList as paramBean i}}
-                            <tr class="selected" name="dataItem">
-                                <td> {{paramBean.code}}</td>
-                                <td> {{paramBean.name}}</td>
-                                <td> {{paramBean.memo}}</td>
-                                <td> {{paramBean.rule}}</td>
-                            </tr>
-                            {{/each}}
-                            </tbody>
-                        </table>
+                        <div id="tabs-1">
+                            <table class="table table-striped table-bordered table-hover" style="width:80%">
+                                <tr>
+                                    <td width="6%">编码</td>
+                                    <td width="8%">名称</td>
+                                    <td width="10%">示例</td>
+                                    <td width="6%">规则</td>
+                                </tr>
+                                <tbody>
+                                {{each bean.paramList as paramBean i}}
+                                <tr class="selected" name="dataItem">
+                                    <td> {{paramBean.code}}</td>
+                                    <td> {{paramBean.name}}</td>
+                                    <td> {{paramBean.memo}}</td>
+                                    <td> {{paramBean.rule}}</td>
+                                </tr>
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
-            <td colspan="7">
-                <div id="tabs">
-                    <ul>
-                        <li> <a href="#tabs-2">返回数据结果</a> </li>
-                    </ul>
-                    <div id="tabs-2">
-                       <pre>{{bean.resultData}}</pre>
+                </td>
+            </tr>
+            <tr  name="trChildItem" data="trChildItem_{{bean.id}}" >
+                <td colspan="6">
+                    <div id="tabs">
+                        <ul>
+                            <li> <a href="#tabs-2">返回数据结果</a> </li>
+                        </ul>
+                        <div>
+                            <pre>{{bean.resultData}}</pre>
+                        </div>
                     </div>
-                </div>
 
-            </td>
-        </tr>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         {{/each}}
-        </tbody>
-    </table>
 
     <!--page start-->
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="dataTables_info" id="sample-table-2_info">
-                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong class="pageCount"></strong>】页
-                当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="dataTables_paginate paging_bootstrap">
-                <ul class="pagination">
-                </ul>
-            </div>
-        </div>
-    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-sm-6">-->
+            <!--<div class="dataTables_info" id="sample-table-2_info">-->
+                <!--总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong class="pageCount"></strong>】页-->
+                <!--当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-sm-6">-->
+            <!--<div class="dataTables_paginate paging_bootstrap">-->
+                <!--<ul class="pagination">-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <!--page end-->
 
 </div><!-- /.page-content -->

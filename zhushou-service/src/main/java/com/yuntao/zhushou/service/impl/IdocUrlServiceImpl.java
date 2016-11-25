@@ -284,17 +284,14 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             //items
             List<Map<String, String>> dataList = entry.getValue();
             for (Map<String, String> stringMap : dataList) {
-                Set<Map.Entry<String, String>> childSet = stringMap.entrySet();
-                for (Map.Entry<String, String> childEntry : childSet) {
-                    String paramCode = childEntry.getKey();
-                    String paramValue = childEntry.getValue();
-                    IdocParam idocParam = new IdocParam();
-                    idocParam.setCode(paramCode);
-                    idocParam.setName(paramValue);
-                    idocParam.setParentId(idocUrl.getId());
-                    idocParam.setStatus(0);
-                    this.idocParamService.insert(idocParam);
-                }
+                Object paramCode = stringMap.get("code");
+                String paramValue = stringMap.get("description");
+                IdocParam idocParam = new IdocParam();
+                idocParam.setCode(paramCode.toString());
+                idocParam.setName(paramValue);
+                idocParam.setParentId(idocUrl.getId());
+                idocParam.setStatus(0);
+                this.idocParamService.insert(idocParam);
             }
             //end
         }

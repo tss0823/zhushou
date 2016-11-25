@@ -60,6 +60,8 @@ public class DataController extends  BaseController {
     public ResponseObject appDataList() {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.put("appList",appService.selectAllList());
+        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setType(0);
         responseObject.put("docList",idocUrlService.selectList(new IdocUrlQuery()));
         List<Config> configList = configService.selectList();
         if (CollectionUtils.isNotEmpty(configList)) {

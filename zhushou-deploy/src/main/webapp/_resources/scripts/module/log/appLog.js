@@ -42,10 +42,15 @@
                 var doc = docList[i];
                 branchValArray.push("<option value='"+doc.url+"'>");
                 branchValArray.push(doc.name);
+                branchValArray.push("\n");
+                branchValArray.push(doc.url);
                 branchValArray.push("</option>");
             }
             $("#branch").append(branchValArray.join(""));
-            $('#branch').chosen();
+            $('#branch').chosen({
+                search_contains: true,
+                // disable_search_threshold: 10
+            });
             $('#branch').change(function(){
                 $("#url").val($(this).val());
             });
