@@ -111,6 +111,11 @@ public class DalConfig {
         return newMapperFactoryBean(ReqContentMapper.class).getObject();
     }
 
+    @Bean
+    public ProxyContentMapper proxyContentMapper() throws Exception {
+        return newMapperFactoryBean(ProxyContentMapper.class).getObject();
+    }
+
 
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {
