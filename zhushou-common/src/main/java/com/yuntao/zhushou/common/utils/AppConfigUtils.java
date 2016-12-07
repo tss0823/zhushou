@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.common.utils;
 
+import com.yuntao.zhushou.common.CustomizedPropertyConfigurer;
 import org.springframework.core.env.PropertySources;
 
 import java.util.Properties;
@@ -14,6 +15,6 @@ public class AppConfigUtils {
 
     }
     public static String getValue(String name){
-        return properties.getProperty(name);
+        return CustomizedPropertyConfigurer.getContextProperty(name);
     }
 }

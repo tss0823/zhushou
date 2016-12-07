@@ -18,11 +18,11 @@ public class ResponseHolderFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         log.info("res filter init...");
-        ServletContext sc = filterConfig.getServletContext();
-        WebApplicationContext beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
-        //初始化config-xx.properties系统配置
-        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
-        AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
+//        ServletContext sc = filterConfig.getServletContext();
+//        WebApplicationContext beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
+//        //初始化config-xx.properties系统配置
+//        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
+//        AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
 
         //
 
