@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.common.utils;
 
+import com.yuntao.zhushou.model.domain.ProxyContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -20,11 +21,13 @@ public class ResponseHolderFilter implements Filter {
         log.info("res filter init...");
 //        ServletContext sc = filterConfig.getServletContext();
 //        WebApplicationContext beanFactory = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
+//        ProxyContentService propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
 //        //初始化config-xx.properties系统配置
 //        PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer = (PropertySourcesPlaceholderConfigurer) beanFactory.getBean("propertyPlaceholderConfigurer");
 //        AppConfigUtils.init(propertyPlaceholderConfigurer.getAppliedPropertySources());
 
         //
+        //代理服务启动
 
 
 

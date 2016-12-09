@@ -464,6 +464,14 @@
         </dependency>
         <!--aliyun end-->
 
+
+        <!--netty http proxy-->
+        <dependency>
+            <groupId>org.littleshoot</groupId>
+            <artifactId>littleproxy</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
