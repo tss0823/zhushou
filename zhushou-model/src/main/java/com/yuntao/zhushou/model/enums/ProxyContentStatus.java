@@ -22,7 +22,10 @@ public enum ProxyContentStatus {
         this.description = description;
     }
 
-    public static ProxyContentStatus getByCode(int code) {
+    public static ProxyContentStatus getByCode(Integer code) {
+        if(code == null){
+            return null;
+        }
         for (ProxyContentStatus s : ProxyContentStatus.values()) {
             if (s.getCode() == code) {
                 return s;

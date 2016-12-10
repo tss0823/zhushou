@@ -221,9 +221,14 @@ public class HttpProxyServerSupport extends AbstService {
             while (true){
                 ProxyContent proxyContent = proxyContentQueue.poll();
                 if(proxyContent == null)   {  //没有消息，歇一会儿
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
+                    if(dataList.size() == 0){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                        }
+                    }else{
+                        proxyContentService.insertBatch(dataList);
+                        dataList.clear();
                     }
                     continue;
                 }
