@@ -45,15 +45,12 @@
         <thead>
         <tr>
             <th width="7%">客服端</th>
-            <th width="5%">请求URL</th>
+            <th width="15%">请求URL</th>
             <th width="4%">Method</th>
-            <th width="10%">返回状态</th>
-            <th width="16%">执行状态</th>
-            <th width="6%">最后执行时间</th>
-            <th width="7%">
-                <i class="icon-time "></i>
-                操作时间
-            </th>
+            <th width="6%">返回状态</th>
+            <th width="6%">执行状态</th>
+            <th width="7%"> <i class="icon-time "></i> 请求时间 </th>
+            <th width="7%"> <i class="icon-time "></i> 返回时间 </th>
             <th width="8%">操作</th>
         </tr>
         </thead>
@@ -65,11 +62,11 @@
                 <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.clientIp}}:{{bean.port}}</a>
             </td>
             <td>{{bean.domain}}{{bean.urlPath}}</td>
-            <td>{{bean.name}}</td>
             <td>{{bean.reqMethod}}</td>
             <td>{{bean.httpStatus}}</td>
             <td>{{bean.statusText}}</td>
-            <td>{{bean.lastTime}}</td>
+            <td>{{bean.lastReqTime}}[{{bean.gmtRequest}}]</td>
+            <td>{{bean.lastResTime}}[{{bean.gmtResponse}}]</td>
 
             <td class="hidden-480">
                 <!--{{if authMap.enterIdoc.child.btnEnterEdit }}-->

@@ -77,6 +77,9 @@ public class HttpProxyServerSupport extends AbstService {
                                     public HttpResponse clientToProxyRequest(HttpObject httpObject) {
                                         // TODO: implement your filtering here
                                         System.err.println("clientToProxyRequest httpObject=" + httpObject);
+                                        if(proxyContent.getGmtRequest() == null){
+                                            proxyContent.setGmtRequest(new Date());
+                                        }
                                         if (httpObject instanceof DefaultHttpRequest) {
                                             DefaultHttpRequest defaultHttpRequest = (DefaultHttpRequest) httpObject;
                                             String uri = defaultHttpRequest.getUri();
@@ -114,6 +117,9 @@ public class HttpProxyServerSupport extends AbstService {
                                     public HttpObject serverToProxyResponse(HttpObject httpObject) {
                                         // TODO: implement your filtering here
                                         System.err.println("serverToProxyResponse httpObject=" + httpObject);
+                                        if(proxyContent.getGmtResponse() == null){
+                                            proxyContent.setGmtResponse(new Date());
+                                        }
                                         if (httpObject instanceof DefaultHttpResponse) {
                                             //
                                             DefaultHttpResponse defaultHttpResponse = (DefaultHttpResponse) httpObject;

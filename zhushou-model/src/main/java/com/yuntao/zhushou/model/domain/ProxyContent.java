@@ -60,10 +60,10 @@ public class ProxyContent implements Serializable {
 	private Integer status;
 
 	/**  创建时间 * */
-	private Date gmtCreate;
+	private Date gmtRequest;
 
 	/**  修改时间 * */
-	private Date gmtModify;
+	private Date gmtResponse;
 
 	/**  删除状态（0：已删除；1：未删除） * */
 	private Boolean delStatus;
@@ -160,20 +160,20 @@ public class ProxyContent implements Serializable {
 		this.status = status;
 	}
 
-	public Date getGmtCreate() {
-		return gmtCreate;
+	public Date getGmtRequest() {
+		return gmtRequest;
 	}
 
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
+	public void setGmtRequest(Date gmtRequest) {
+		this.gmtRequest = gmtRequest;
 	}
 
-	public Date getGmtModify() {
-		return gmtModify;
+	public Date getGmtResponse() {
+		return gmtResponse;
 	}
 
-	public void setGmtModify(Date gmtModify) {
-		this.gmtModify = gmtModify;
+	public void setGmtResponse(Date gmtResponse) {
+		this.gmtResponse = gmtResponse;
 	}
 
 	public Boolean getDelStatus() {

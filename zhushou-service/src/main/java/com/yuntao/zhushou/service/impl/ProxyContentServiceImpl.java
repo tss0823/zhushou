@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.dal.mapper.ProxyContentMapper;
 import com.yuntao.zhushou.model.domain.ProxyContent;
 import com.yuntao.zhushou.model.enums.ProxyContentStatus;
@@ -9,8 +10,6 @@ import com.yuntao.zhushou.model.vo.ProxyContentVo;
 import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +55,9 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
             if(proxyContentStatus != null){
                 reqContentVo.setStatusText(proxyContentStatus.getDescription());
             }
+            reqContentVo.setLastReqTime(DateUtil.getRangeTime(reqContentVo.getGmtRequest()));
+            reqContentVo.setLastResTime(DateUtil.getRangeTime(reqContentVo.getGmtResponse()));
+
             newDataList.add(reqContentVo);
         }
         return pagination;
