@@ -61,5 +61,10 @@ public interface ProxyContentService {
     int deleteById(Long id);
 
 
+    /**
+     * 批量新增
+     * @param dataList
+     */
+    void insertBatch(List<ProxyContent> dataList);
 
 }

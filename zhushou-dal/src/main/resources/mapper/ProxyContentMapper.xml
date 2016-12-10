@@ -128,5 +128,20 @@
     </update>
 
     <!-- user definition code start -->
+    <insert id="insertBatch">
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+        `port`,`clientIp`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
+        `status`,`gmtCreate`,`gmtModify`, `delStatus`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.port},#{item.clientIp},#{item.url},#{item.reqHeader},#{item.reqData},#{item.resHeader},#{item.resData},
+            #{item.reqMethod},#{item.httpStatus}, #{item.status},now(6),now(6),1
+            )
+        </foreach>
+    </insert>
     <!-- user definition code end -->
 </mapper> 
