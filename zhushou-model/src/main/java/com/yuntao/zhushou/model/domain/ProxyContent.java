@@ -42,13 +42,19 @@ public class ProxyContent implements Serializable {
 	private String reqHeader;
 
 	/**  请求数据 * */
-	private String reqData;
+	private byte [] reqData;
 
 	/**  返回头 * */
 	private String resHeader;
 
 	/**  返回数据 * */
-	private String resData;
+	private byte [] resData;
+
+	/**  返回数据格式 * */
+	private String resContentType;
+
+	/**  返回数据长度 * */
+	private Integer resLength;
 
 	/**  请求方法 * */
 	private String reqMethod;
@@ -112,11 +118,11 @@ public class ProxyContent implements Serializable {
 		this.reqHeader = reqHeader;
 	}
 
-	public String getReqData() {
+	public byte [] getReqData() {
 		return reqData;
 	}
 
-	public void setReqData(String reqData) {
+	public void setReqData(byte [] reqData) {
 		this.reqData = reqData;
 	}
 
@@ -128,11 +134,11 @@ public class ProxyContent implements Serializable {
 		this.resHeader = resHeader;
 	}
 
-	public String getResData() {
+	public byte [] getResData() {
 		return resData;
 	}
 
-	public void setResData(String resData) {
+	public void setResData(byte [] resData) {
 		this.resData = resData;
 	}
 
@@ -198,5 +204,21 @@ public class ProxyContent implements Serializable {
 
 	public void setPathUrl(String pathUrl) {
 		this.pathUrl = pathUrl;
+	}
+
+	public String getResContentType() {
+		return resContentType;
+	}
+
+	public void setResContentType(String resContentType) {
+		this.resContentType = resContentType;
+	}
+
+	public Integer getResLength() {
+		return resLength;
+	}
+
+	public void setResLength(Integer resLength) {
+		this.resLength = resLength;
 	}
 }

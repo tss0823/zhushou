@@ -25,6 +25,10 @@ public class ProxyContentVo extends ProxyContent {
 
     private List<DataMap> resHeaderList = new ArrayList<>();
 
+    private String reqDataText;
+
+    private String resDataText;
+
     public String getStatusText() {
         return statusText;
     }
@@ -63,5 +67,21 @@ public class ProxyContentVo extends ProxyContent {
 
     public void setResHeaderList(List<DataMap> resHeaderList) {
         this.resHeaderList = resHeaderList;
+    }
+
+    public String getReqDataText() {
+        return reqDataText;
+    }
+
+    public void setReqDataText(String reqDataText) {
+        this.reqDataText = reqDataText;
+    }
+
+    public String getResDataText() {
+        return resDataText;
+    }
+
+    public void setResDataText(String resDataText) {
+        this.resDataText = resDataText;
     }
 }

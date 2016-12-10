@@ -12,9 +12,11 @@
         <result column="pathUrl" property="pathUrl"/>
         <result column="url" property="url"/>
         <result column="reqHeader" property="reqHeader"/>
-        <result column="reqData" property="reqData"/>
+        <result column="reqData" property="reqData" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
         <result column="resHeader" property="resHeader"/>
-        <result column="resData" property="resData"/>
+        <result column="resData" property="resData" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+        <result column="resContentType" property="resContentType"/>
+        <result column="resLength" property="resLength"/>
         <result column="reqMethod" property="reqMethod"/>
         <result column="httpStatus" property="httpStatus"/>
         <result column="status" property="status"/>
@@ -25,8 +27,8 @@
 
 
     <sql id="Base_Column_List">
-    `id`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
-    `status`,`gmtRequest`,`gmtResponse`, `delStatus`
+    `id`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+    `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
     
   </sql>
 
@@ -45,7 +47,9 @@
         <if test="port != null">and `port` = #{port}</if>
         <if test="clientIp != null and clientIp != '' ">and `clientIp` = #{clientIp}</if>
         <if test="reqMethod != null and reqMethod != '' ">and `reqMethod` = #{reqMethod}</if>
-        <if test="httpStatus != null and httpStatus != '' ">and `httpStatus` = #{httpStatus}</if>
+        <if test="httpStatus != null">and `httpStatus` = #{httpStatus}</if>
+        <if test="resContentType != null and resContentType != '' ">and `resContentType` = #{resContentType}</if>
+        <if test="resLength != null">and `resLength` = #{resLength}</if>
         <if test="status != null">and `status` = #{status}</if>
         <if test="gmtRequest != null and gmtRequest != '' ">and `gmtRequest` = #{gmtRequest}</if>
         <if test="gmtResponse != null and gmtResponse != '' ">and `gmtResponse` = #{gmtResponse}</if>
@@ -94,13 +98,13 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
-        `status`,`gmtRequest`,`gmtResponse`, `delStatus`
+        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+        `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
         )
         values
         (
-        #{port},#{clientIp},#{domain},#{pathUrl},#{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{reqMethod},#{httpStatus},
-        #{status},#{gmtRequest},#{gmtResponse},1
+        #{port},#{clientIp},#{domain},#{pathUrl},#{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{resContentType},#{resLength},
+        #{reqMethod},#{httpStatus}, #{status},#{gmtRequest},#{gmtResponse},1
         )
     </insert>
 
@@ -137,14 +141,15 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
-        `status`,`gmtRequest`,`gmtResponse`, `delStatus`
+        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+        `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-            #{item.port},#{item.clientIp},#{item.domain},#{item.pathUrl},#{item.url},#{item.reqHeader},#{item.reqData},#{item.resHeader},#{item.resData},
-            #{item.reqMethod},#{item.httpStatus}, #{item.status},#{item.gmtRequest},#{item.gmtResponse},1
+            #{item.port},#{item.clientIp},#{item.domain},#{item.pathUrl},#{item.url},#{item.reqHeader},#{item.reqData, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+            #{item.resHeader}, #{item.resData, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{item.resContentType},
+            #{item.resLength}, #{item.reqMethod},#{item.httpStatus}, #{item.status},#{item.gmtRequest}, #{item.gmtResponse},1
             )
         </foreach>
     </insert>

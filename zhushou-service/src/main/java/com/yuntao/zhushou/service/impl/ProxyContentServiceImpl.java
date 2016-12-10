@@ -13,10 +13,12 @@ import com.yuntao.zhushou.model.vo.ProxyContentVo;
 import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 
@@ -61,12 +63,24 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
             }
             reqContentVo.setLastReqTime(DateUtil.getRangeTime(reqContentVo.getGmtRequest()));
             reqContentVo.setLastResTime(DateUtil.getRangeTime(reqContentVo.getGmtResponse()));
+
+            //reqDataText
+            byte[] reqData = reqContentVo.getReqData();
+            reqContentVo.setReqDataText(new String(reqData));
+
+            //end
+
             //json 格式化
-            ObjectMapper mapper = new ObjectMapper();
             try {
-                Object json = mapper.readValue(reqContentVo.getResData(), Object.class);
-                String text = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-                reqContentVo.setResData(text);
+                byte[] resData = reqContentVo.getResData();
+                if(StringUtils.indexOf(reqContentVo.getResContentType(),"json") != -1){
+                    ObjectMapper mapper = new ObjectMapper();
+                        Object json = mapper.readValue(new String(resData), Object.class);
+                        String text = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+                        reqContentVo.setResDataText(text);
+                }else{
+                    reqContentVo.setReqDataText(new String(resData));
+                }
             } catch (IOException e) {
             }
             //end

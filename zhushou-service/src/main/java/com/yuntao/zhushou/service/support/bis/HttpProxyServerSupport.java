@@ -126,7 +126,10 @@ public class HttpProxyServerSupport extends AbstService {
                                             int httpCode = defaultHttpResponse.getStatus().code();
                                             proxyContent.setHttpStatus(httpCode);
 
+
                                             HttpHeaders headers = defaultHttpResponse.headers();
+                                            String contentType = headers.get("Content-Type");
+                                            proxyContent.setResContentType(contentType);
                                             Iterator<Map.Entry<String, String>> iterator = headers.iterator();
                                             Map<String, String> headerMap = new HashMap<>();
                                             while (iterator.hasNext()) {
@@ -198,15 +201,16 @@ public class HttpProxyServerSupport extends AbstService {
         //reqData
         if(reqByteArrayBuffer.length() > 0){
             byte[] buffer = reqByteArrayBuffer.buffer();
-            String content = new String(buffer);
-            proxyContent.setReqData(content);
+//            String content = new String(buffer);
+            proxyContent.setReqData(buffer);
         }
 
         //resData
         if(resByteArrayBuffer.length() > 0){
             byte[] buffer = resByteArrayBuffer.buffer();
-            String content = new String(buffer);
-            proxyContent.setResData(content);
+//            String content = new String(buffer);
+            proxyContent.setResData(buffer);
+            proxyContent.setResLength(buffer.length);
         }
         proxyContent.setStatus(status);
 
