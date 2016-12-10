@@ -66,22 +66,30 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
 
             //reqDataText
             byte[] reqData = reqContentVo.getReqData();
-            reqContentVo.setReqDataText(new String(reqData));
-
+            if(reqData != null){
+                try{
+                    reqContentVo.setReqDataText(new String(reqData,"utf-8"));
+                }catch (Exception e){
+                }
+            }
             //end
 
-            //json 格式化
-            try {
-                byte[] resData = reqContentVo.getResData();
-                if(StringUtils.indexOf(reqContentVo.getResContentType(),"json") != -1){
-                    ObjectMapper mapper = new ObjectMapper();
+
+            //resDataText
+            byte[] resData = reqContentVo.getResData();
+            if (resData != null) {
+                try {
+                    if(StringUtils.indexOf(reqContentVo.getResContentType(),"json") != -1){
+                        //json 格式化
+                        ObjectMapper mapper = new ObjectMapper();
                         Object json = mapper.readValue(new String(resData), Object.class);
                         String text = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
                         reqContentVo.setResDataText(text);
-                }else{
-                    reqContentVo.setReqDataText(new String(resData));
+                    }else{
+                        reqContentVo.setReqDataText(new String(resData,"utf-8"));
+                    }
+                } catch (IOException e) {
                 }
-            } catch (IOException e) {
             }
             //end
 

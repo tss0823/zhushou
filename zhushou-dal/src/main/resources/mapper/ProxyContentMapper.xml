@@ -12,9 +12,9 @@
         <result column="pathUrl" property="pathUrl"/>
         <result column="url" property="url"/>
         <result column="reqHeader" property="reqHeader"/>
-        <result column="reqData" property="reqData" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+        <result column="reqData" property="reqData" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
         <result column="resHeader" property="resHeader"/>
-        <result column="resData" property="resData" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+        <result column="resData" property="resData" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
         <result column="resContentType" property="resContentType"/>
         <result column="resLength" property="resLength"/>
         <result column="reqMethod" property="reqMethod"/>
