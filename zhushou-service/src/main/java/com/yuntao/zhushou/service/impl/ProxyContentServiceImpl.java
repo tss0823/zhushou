@@ -1,10 +1,13 @@
 package com.yuntao.zhushou.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
+import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.dal.mapper.ProxyContentMapper;
 import com.yuntao.zhushou.model.domain.ProxyContent;
 import com.yuntao.zhushou.model.enums.ProxyContentStatus;
+import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.query.ProxyContentQuery;
 import com.yuntao.zhushou.model.vo.ProxyContentVo;
 import com.yuntao.zhushou.model.web.Pagination;
@@ -13,6 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -57,6 +61,37 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
             }
             reqContentVo.setLastReqTime(DateUtil.getRangeTime(reqContentVo.getGmtRequest()));
             reqContentVo.setLastResTime(DateUtil.getRangeTime(reqContentVo.getGmtResponse()));
+            //json 格式化
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                Object json = mapper.readValue(reqContentVo.getResData(), Object.class);
+                String text = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+                reqContentVo.setResData(text);
+            } catch (IOException e) {
+            }
+            //end
+
+            //header
+            String reqHeader = reqContentVo.getReqHeader();
+            Map<String,String> map = JsonUtils.json2Object(reqHeader, HashMap.class);
+            Set<Map.Entry<String, String>> entries = map.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                DataMap dataMap = new DataMap();
+                dataMap.setKey(entry.getKey());
+                dataMap.setValue(entry.getValue());
+                reqContentVo.getReqHeaderList().add(dataMap);
+            }
+
+            String resHeader = reqContentVo.getResHeader();
+            map = JsonUtils.json2Object(resHeader, HashMap.class);
+            entries = map.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                DataMap dataMap = new DataMap();
+                dataMap.setKey(entry.getKey());
+                dataMap.setValue(entry.getValue());
+                reqContentVo.getResHeaderList().add(dataMap);
+            }
+            //end
 
             newDataList.add(reqContentVo);
         }

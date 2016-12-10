@@ -12,7 +12,7 @@
                     域名：
                     <input type="text" id="domain" name="domain" value="{{domain}}" class="input-sm"/>
                     &nbsp;
-                    pahtUrl：
+                    路径：
                     <input type="text" id="pathUrl" name="pathUrl" value="{{pathUrl}}" class="input-xlarge"/>
                     &nbsp;
                     <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
             <td>
                 <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.clientIp}}:{{bean.port}}</a>
             </td>
-            <td>{{bean.domain}}{{bean.urlPath}}</td>
+            <td>{{bean.domain}}{{bean.pathUrl}}</td>
             <td>{{bean.reqMethod}}</td>
             <td>{{bean.httpStatus}}</td>
             <td>{{bean.statusText}}</td>
@@ -64,23 +64,21 @@
                     <ul>
                         <li> <a href="#tabs-1">请求Header</a> </li>
                         <li> <a href="#tabs-2">请求Data</a> </li>
+                        <li> <a href="#tabs-3">返回Header</a> </li>
+                        <li> <a href="#tabs-4">返回Data</a> </li>
                     </ul>
 
                     <div id="tabs-1">
                         <table class="table table-striped table-bordered table-hover" style="width:80%">
                             <tr>
                                 <td width="6%">编码</td>
-                                <td width="8%">名称</td>
-                                <td width="10%">示例</td>
-                                <td width="6%">规则</td>
+                                <td width="8%">值</td>
                             </tr>
                             <tbody>
-                            {{each bean.paramList as paramBean i}}
+                            {{each bean.reqHeaderList as paramBean i}}
                             <tr class="selected" name="dataItem">
-                                <td> {{paramBean.code}}</td>
-                                <td> {{paramBean.name}}</td>
-                                <td> {{paramBean.memo}}</td>
-                                <td> {{paramBean.rule}}</td>
+                                <td> {{paramBean.key}}</td>
+                                <td> {{paramBean.value}}</td>
                             </tr>
                             {{/each}}
                             </tbody>
@@ -88,7 +86,28 @@
                     </div>
 
                     <div id="tabs-2">
-                       <pre>{{bean.resultData}}</pre>
+                        <pre>{{bean.reqData}}</pre>
+                    </div>
+
+                    <div id="tabs-3">
+                        <table class="table table-striped table-bordered table-hover" style="width:80%">
+                            <tr>
+                                <td width="6%">编码</td>
+                                <td width="8%">值</td>
+                            </tr>
+                            <tbody>
+                            {{each bean.resHeaderList as paramBean i}}
+                            <tr class="selected" name="dataItem">
+                                <td> {{paramBean.key}}</td>
+                                <td> {{paramBean.value}}</td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="tabs-4">
+                       <pre>{{bean.resData}}</pre>
                     </div>
 
                 </div>

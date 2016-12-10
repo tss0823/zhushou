@@ -1,6 +1,10 @@
 package com.yuntao.zhushou.model.vo;
 
 import com.yuntao.zhushou.model.domain.ProxyContent;
+import com.yuntao.zhushou.model.param.DataMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 请求内容
@@ -16,6 +20,10 @@ public class ProxyContentVo extends ProxyContent {
     private String lastReqTime;
 
     private String lastResTime;
+
+    private List<DataMap> reqHeaderList = new ArrayList<>();
+
+    private List<DataMap> resHeaderList = new ArrayList<>();
 
     public String getStatusText() {
         return statusText;
@@ -39,5 +47,21 @@ public class ProxyContentVo extends ProxyContent {
 
     public void setLastResTime(String lastResTime) {
         this.lastResTime = lastResTime;
+    }
+
+    public List<DataMap> getReqHeaderList() {
+        return reqHeaderList;
+    }
+
+    public void setReqHeaderList(List<DataMap> reqHeaderList) {
+        this.reqHeaderList = reqHeaderList;
+    }
+
+    public List<DataMap> getResHeaderList() {
+        return resHeaderList;
+    }
+
+    public void setResHeaderList(List<DataMap> resHeaderList) {
+        this.resHeaderList = resHeaderList;
     }
 }
