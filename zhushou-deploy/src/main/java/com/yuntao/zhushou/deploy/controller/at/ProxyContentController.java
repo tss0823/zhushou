@@ -36,7 +36,7 @@ import java.util.Map;
  * Created by shan on 2016/5/5.
  */
 @RestController
-@RequestMapping("proxyContent")
+@RequestMapping("proxy")
 public class ProxyContentController extends BaseController {
 
 
@@ -49,23 +49,23 @@ public class ProxyContentController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(ProxyContentQuery query) {
-        query.setPageSize(30);  //固定30条
+//        query.setPageSize(30);  //固定30条
         Pagination<ProxyContentVo> pagination = reqContentService.selectPage(query);
-        if(CollectionUtils.isNotEmpty(pagination.getDataList())){
-            for (ProxyContentVo reqContentVo : pagination.getDataList()) {
-                String resData = reqContentVo.getResData();
-                //json 格式化
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    Object json = mapper.readValue(resData, Object.class);
-                    resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-                } catch (IOException e) {
-                }
-                reqContentVo.setResData(resData);
-                //end
-
-            }
-        }
+//        if(CollectionUtils.isNotEmpty(pagination.getDataList())){
+//            for (ProxyContentVo reqContentVo : pagination.getDataList()) {
+//                String resData = reqContentVo.getResData();
+//                //json 格式化
+//                ObjectMapper mapper = new ObjectMapper();
+//                try {
+//                    Object json = mapper.readValue(resData, Object.class);
+//                    resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+//                } catch (IOException e) {
+//                }
+//                reqContentVo.setResData(resData);
+//                //end
+//
+//            }
+//        }
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);
         return responseObject;
@@ -79,67 +79,6 @@ public class ProxyContentController extends BaseController {
 //        responseObject.setData(reqContent);
 //        return responseObject;
 //    }
-
-    @RequestMapping("execute")
-    @NeedLogin
-    public ResponseObject execute(@ModelAttribute ReqDataParam param) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        RequestRes requestRes = new RequestRes();
-        requestRes.setUrl(param.getUrl());
-        List<DataMap> headerList = param.getHeaderList();
-        Map<String,String> headerMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(headerList)) {
-            for (DataMap dataMap : headerList) {
-                headerMap.put(dataMap.getKey(),dataMap.getValue());
-            }
-        }
-        requestRes.setHeaders(headerMap);
-        List<DataMap> dataList = param.getDataList();
-        Map<String,String> paramMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(dataList)) {
-            for (DataMap dataMap : dataList) {
-                paramMap.put(dataMap.getKey(),dataMap.getValue());
-            }
-        }
-        requestRes.setParams(paramMap);
-        //url 处理
-        String appName = param.getAppName();
-        App app = appService.findByName(appName);
-        String domain = app.getDomain();
-        String model = param.getModel();  //model
-        String url = UrlUtils.getUrl(appName, model, domain, param.getUrl());
-        requestRes.setUrl(url);
-        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-
-        //store to db
-        User user = userService.getCurrentUser();
-        ProxyContent reqContent = new ProxyContent();
-        reqContent.setUrl(param.getUrl());
-        reqContent.setHttpStatus(responseRes.getStatus());
-        reqContent.setReqHeader(JsonUtils.object2Json(requestRes.getHeaders()));
-        reqContent.setReqData(JsonUtils.object2Json(requestRes.getParams()));
-        reqContent.setResHeader(JsonUtils.object2Json(responseRes.getHeaders()));
-        reqContent.setResData(new String(responseRes.getResult()));
-        reqContent.setStatus(1);
-        reqContentService.insert(reqContent);
-        //end
-
-
-
-        responseObject.put("resHeaderList",responseRes.getHeaders());
-        String resData = new String(responseRes.getResult());
-        //json 格式化
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Object json = mapper.readValue(resData, Object.class);
-            resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-        } catch (IOException e) {
-        }
-        //end
-        responseObject.put("resData",resData);
-        responseObject.put("status",responseRes.getStatus());
-        return responseObject;
-    }
 
 
 

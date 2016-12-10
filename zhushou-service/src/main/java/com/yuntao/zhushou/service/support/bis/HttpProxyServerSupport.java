@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -79,6 +81,12 @@ public class HttpProxyServerSupport extends AbstService {
                                             DefaultHttpRequest defaultHttpRequest = (DefaultHttpRequest) httpObject;
                                             String uri = defaultHttpRequest.getUri();
                                             proxyContent.setUrl(uri);
+                                            try {
+                                                URL oURL = new URL(uri);
+                                                proxyContent.setDomain(oURL.getAuthority());
+                                                proxyContent.setPathUrl(oURL.getPath());
+                                            } catch (MalformedURLException e) {
+                                            }
                                             proxyContent.setReqMethod(defaultHttpRequest.getMethod().name());
                                             HttpHeaders headers = defaultHttpRequest.headers();
                                             Iterator<Map.Entry<String, String>> iterator = headers.iterator();
@@ -205,7 +213,7 @@ public class HttpProxyServerSupport extends AbstService {
         int maxSize = 200;
         try{
             while (true){
-                ProxyContent proxyContent = proxyContentQueue.peek();
+                ProxyContent proxyContent = proxyContentQueue.poll();
                 if(proxyContent == null)   {  //没有消息，歇一会儿
                     try {
                         Thread.sleep(1000);

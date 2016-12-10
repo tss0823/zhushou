@@ -29,6 +29,12 @@ public class ProxyContent implements Serializable {
 	/**  clientIp * */
 	private String clientIp;
 
+	/**  domain * */
+	private String domain;
+
+	/**  path URL * */
+	private String pathUrl;
+
 	/**  URL * */
 	private String url;
 
@@ -177,5 +183,20 @@ public class ProxyContent implements Serializable {
 	public void setDelStatus(Boolean delStatus) {
 		this.delStatus = delStatus;
 	}
-}
 
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getPathUrl() {
+		return pathUrl;
+	}
+
+	public void setPathUrl(String pathUrl) {
+		this.pathUrl = pathUrl;
+	}
+}

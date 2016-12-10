@@ -2,6 +2,8 @@ package com.yuntao.zhushou.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URL;
+
 /**
  * Created by tangshengshan on 16-11-18.
  */
@@ -20,5 +22,15 @@ public class UrlUtils {
             url = url + queryUrl;
         }
         return url;
+    }
+
+    public static String getDomain(URL url) {
+        StringBuilder sb = new StringBuilder(url.getProtocol());
+        sb.append("://");
+        sb.append(url.getAuthority());
+        if (sb.lastIndexOf("/") != sb.length()) {
+            sb.append("/");
+        }
+        return sb.toString();
     }
 }

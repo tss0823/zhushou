@@ -3,6 +3,7 @@ package com.yuntao.zhushou.service.impl;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.dal.mapper.ProxyContentMapper;
 import com.yuntao.zhushou.model.domain.ProxyContent;
+import com.yuntao.zhushou.model.enums.ProxyContentStatus;
 import com.yuntao.zhushou.model.query.ProxyContentQuery;
 import com.yuntao.zhushou.model.vo.ProxyContentVo;
 import com.yuntao.zhushou.model.web.Pagination;
@@ -47,12 +48,14 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
         }
         queryMap.put("pagination",pagination);
         List<ProxyContent> dataList = proxyContentMapper.selectList(queryMap);
-//        Pagination<ProxyContentVo> newPageInfo = new Pagination<>(pagination);
         List<ProxyContentVo> newDataList = new ArrayList<>(dataList.size());
         pagination.setDataList(newDataList);
-//        pagination.setDataList(dataList);
         for(ProxyContent reqContent : dataList){
             ProxyContentVo reqContentVo = BeanUtils.beanCopy(reqContent,ProxyContentVo.class);
+            ProxyContentStatus proxyContentStatus = ProxyContentStatus.getByCode(reqContentVo.getStatus());
+            if(proxyContentStatus != null){
+                reqContentVo.setStatusText(proxyContentStatus.getDescription());
+            }
             newDataList.add(reqContentVo);
         }
         return pagination;
