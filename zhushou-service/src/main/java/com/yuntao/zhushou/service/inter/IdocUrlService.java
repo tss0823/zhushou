@@ -69,6 +69,11 @@ public interface IdocUrlService {
     IdocUrlVo bind(String month, String model, String stackId);
 
     /**
+     * 提交json格式文档
+     */
+    void submitDoc(String jsonDoc,User user);
+
+    /**
      * 获取idocVo
      * @param id
      * @return

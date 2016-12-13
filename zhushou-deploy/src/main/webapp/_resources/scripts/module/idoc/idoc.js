@@ -94,6 +94,23 @@
                 }
             });
 
+
+            $("button[id='btnSubDocSave']").click(function () {
+                var params = {jsonDoc:$("#jsonDoc").val()};
+                YT.deploy.util.reqPost("/idocUrl/submitDoc", params, function (d) {
+                    if (d.success) {
+                        alert("提交成功");
+                        YT.deploy.idocList.query(1);
+                    } else {
+                        alert("提交失败,err=" + d.message);
+                    }
+                });
+
+            });
+
+
+
+
         },
     }
     $.extend(YT.deploy, common);

@@ -12,6 +12,7 @@
      <result  column="module" property="module"/>
      <result  column="version" property="version"/>
      <result  column="resultData" property="resultData"/>
+      <result  column="resultCommentData" property="resultCommentData"/>
      <result  column="status" property="status"/>
      <result  column="gmtCreate" property="gmtCreate"/>
      <result  column="gmtModify" property="gmtModify"/>
@@ -24,7 +25,7 @@
         
     
  <sql id="Base_Column_List">
-    `id`,`url`,`name`,`appName`,`module`,`version`,`resultData`,`status`,
+    `id`,`url`,`name`,`appName`,`module`,`version`,`resultCommentData`,`resultData`,`status`,
     `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`
     
   </sql>
@@ -92,12 +93,12 @@
     insert into  <include refid="Base_Table_Name" />
     (
     `url`,`name`,       
-    `appName`,`module`,`version`,`resultData`,`status`,`gmtCreate`,`gmtModify`,`delStatus`,
+    `appName`,`module`,`version`,`resultData`,`resultCommentData`,`status`,`gmtCreate`,`gmtModify`,`delStatus`,
     `memo`,`createUserId`,`createUserName`,`type`
     ) 
     values
     (
-    #{url},#{name},#{appName},#{module},#{version},#{resultData},#{status},now(6),
+    #{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultCommentData},#{status},now(6),
     now(6),1,#{memo},#{createUserId},#{createUserName},#{type}
     )
   </insert>  
@@ -111,6 +112,7 @@
        <if test="module != null and module !=''">`module` = #{module},</if>
        <if test="version != null and version !=''">`version` = #{version},</if>
        <if test="resultData != null and resultData !=''">`resultData` = #{resultData},</if>
+       <if test="resultCommentData != null and resultCommentData !=''">`resultCommentData` = #{resultCommentData},</if>
        <if test="status != null and status !=''">`status` = #{status},</if>
        <if test="memo != null and memo !=''">`memo` = #{memo},</if>
        <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>

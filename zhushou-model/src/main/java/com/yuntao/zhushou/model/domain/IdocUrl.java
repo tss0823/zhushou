@@ -37,9 +37,12 @@ public class IdocUrl implements Serializable {
 		
 	/**  版本 * */
 	private String version;
-		
+
 	/**  返回数据 * */
 	private String resultData;
+
+	/**  返回注解数据 * */
+	private String resultCommentData;
 		
 	/**  状态 * */
 	private Integer status;
@@ -174,6 +177,14 @@ public class IdocUrl implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getResultCommentData() {
+		return resultCommentData;
+	}
+
+	public void setResultCommentData(String resultCommentData) {
+		this.resultCommentData = resultCommentData;
 	}
 }
 

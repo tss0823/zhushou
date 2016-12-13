@@ -57,6 +57,16 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("submitDoc")
+    @NeedLogin
+    public ResponseObject submitDoc(@RequestParam String jsonDoc) {
+        User user = userService.getCurrentUser();
+        idocUrlService.submitDoc(jsonDoc,user);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData("ok");
+        return responseObject;
+    }
+
     @RequestMapping("getIdocUrlVoById")
     @NeedLogin
     public ResponseObject getIdocUrlVoById(@RequestParam Long id) {

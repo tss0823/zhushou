@@ -16,6 +16,7 @@ public class ResponseObject implements Serializable {
 
     private String level = AppConstant.ResponseLevel.INFO;  //info,warn,error
     private String type = AppConstant.ResponseType.NORMAL;  //
+    private String bizType = AppConstant.ResponseType.NORMAL;  //
 
     private String code = AppConstant.ResponseCode.NORMAL;   //系统定义code
 
@@ -80,5 +81,13 @@ public class ResponseObject implements Serializable {
         Map<String,Object> map =  (Map<String, Object>) this.data;
         map.put(key, value);
         return map;
+    }
+
+    public String getBizType() {
+        return bizType;
+    }
+
+    public void setBizType(String bizType) {
+        this.bizType = bizType;
     }
 }

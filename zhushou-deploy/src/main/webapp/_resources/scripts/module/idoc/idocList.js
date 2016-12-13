@@ -48,12 +48,43 @@
 
             });
 
+            //json
+            $("div[id='tabs-2']").each(function(){
+                // $parent = $(this);
+                var $jsonResData = $(this).find("#jsonResData");
+                try{
+                    var json = $jsonResData.text();
+                    $jsonResData.JSONView(json);
+                    // with options
+                    $jsonResData.JSONView(json, { collapsed: true });
+
+                    $(this).find("#btnExpand").click(function(){
+                        $jsonResData.JSONView('expand');
+                    });
+                    $(this).find("#btnCollapse").click(function(){
+                        $jsonResData.JSONView('collapse');
+                    });
+                    $(this).find("#btnToggle").click(function(){
+                        $jsonResData.JSONView('toggle');
+                    });
+                }catch (e){
+                }
+            });
+            // $("div[id='jsonResData']").each(function(){
+            // });
+            //end
+
             //分页信息init
             YT.deploy.util.paginationInit(d.data, YT.deploy.idocList.query);
-            
+
             //创建接口
             $("#btnNewTemplate").click(function () {
                 YT.deploy.routeTpl("/idoc/bind.html",{title:"接口新建"});
+            });
+
+            //提交接口
+            $("#btnSubmitDoc").click(function () {
+                YT.deploy.routeTpl("/idoc/subDoc.html",{title:"接口提交"});
             });
 
             //tab
@@ -121,7 +152,7 @@
                 YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
                     if (d.success) {
                         alert("删除成功");
-                        YT.deploy.route("/idocUrl/list", {}, "/log/idoc.html", {});
+                        YT.deploy.route("/idocUrl/list", {}, "/idocUrl/list.html", {});
                     } else {
                         alert("删除失败,err=" + d.message);
                     }

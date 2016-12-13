@@ -14,11 +14,12 @@ import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.model.web.*;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.IdocParamService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.LogService;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -139,6 +140,50 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         } catch (IOException e) {
         }
         return idocUrlVo;
+    }
+
+    @Override
+    public void submitDoc(String jsonDoc,User user) {
+        ResponseObject responseObject = JsonUtils.json2Object(jsonDoc, ResponseObject.class);
+        Object data = responseObject.getData();
+        String dataJson = JsonUtils.object2Json(data);
+        DocObject docObject = JsonUtils.json2Object(dataJson, DocObject.class);
+
+        IdocUrl idocUrl = new IdocUrl();
+        idocUrl.setAppName(docObject.getAppName());
+        idocUrl.setModule(docObject.getModule());
+        idocUrl.setType(0);
+        idocUrl.setName(docObject.getComment());
+        idocUrl.setUrl(docObject.getUrl());
+        idocUrl.setCreateUserId(user.getId());
+        idocUrl.setCreateUserName(user.getNickName());
+        idocUrl.setStatus(0);
+        idocUrl.setVersion(docObject.getVer());
+        Object returnObj = docObject.getReturnObj();
+        String returnObjJson = JsonUtils.object2Json(returnObj);
+
+
+
+        idocUrl.setResultData(returnObjJson);
+//        idocUrl.setResultCommentData(returnObjJson);
+        this.insert(idocUrl);
+
+        //param
+        LinkedHashMap<String,Object> paramHashMap = (LinkedHashMap) docObject.getParamObj();
+        Set<Map.Entry<String, Object>> entries = paramHashMap.entrySet();
+        for (Map.Entry<String, Object> entry : entries) {
+            Object value = entry.getValue();
+            String json = JsonUtils.object2Json(value);
+            DocReqFieldObject docReqFieldObject = JsonUtils.json2Object(json,DocReqFieldObject.class);
+            IdocParam idocParam = new IdocParam();
+            idocParam.setCode(docReqFieldObject.getCode());
+            idocParam.setMemo(docReqFieldObject.getValue());
+            idocParam.setName(docReqFieldObject.getComment());
+            idocParam.setRule(docReqFieldObject.getValidateText());
+            idocParam.setParentId(idocUrl.getId());
+            idocParamService.insert(idocParam);
+        }
+
     }
 
     @Override
