@@ -152,7 +152,7 @@
                 YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
                     if (d.success) {
                         alert("删除成功");
-                        YT.deploy.route("/idocUrl/list", {}, "/idocUrl/list.html", {});
+                        YT.deploy.route("/idocUrl/list", {}, "/idoc/list.html", {});
                     } else {
                         alert("删除失败,err=" + d.message);
                     }
