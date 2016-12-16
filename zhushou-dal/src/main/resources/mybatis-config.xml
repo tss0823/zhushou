@@ -28,6 +28,7 @@
         <typeAlias alias="RoleAuthRes" type="com.yuntao.zhushou.model.domain.RoleAuthRes"/>
         <typeAlias alias="ReqContent" type="com.yuntao.zhushou.model.domain.ReqContent"/>
         <typeAlias alias="ProxyContent" type="com.yuntao.zhushou.model.domain.ProxyContent"/>
+        <typeAlias alias="ShowRes" type="com.yuntao.zhushou.model.domain.ShowRes"/>
     </typeAliases>
 
     <mappers>
@@ -48,6 +49,7 @@
         <mapper resource="mapper/RoleAuthResMapper.xml"/>
         <mapper resource="mapper/ReqContentMapper.xml"/>
         <mapper resource="mapper/ProxyContentMapper.xml"/>
+        <mapper resource="mapper/ShowResMapper.xml"/>
     </mappers>
 
 </configuration>

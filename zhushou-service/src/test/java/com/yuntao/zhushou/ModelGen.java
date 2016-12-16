@@ -31,7 +31,7 @@ public class ModelGen {
 
     public static void main(String[] args) {
         try {
-            List<String> list = FileUtils.readLines(new File("c:/test.txt"), "utf-8");
+            List<String> list = FileUtils.readLines(new File("/home/tangshengshan/test.txt"), "utf-8");
 //            genBean(list);
 //            genResultXml(list);
             columnGen(list);
