@@ -4,6 +4,7 @@ import com.yuntao.zhushou.dal.mapper.*;
 import com.yuntao.zhushou.dal.mybatis.IdTypeHandler;
 import com.yuntao.zhushou.model.domain.AuthRes;
 import com.yuntao.zhushou.model.domain.Role;
+import com.yuntao.zhushou.model.domain.ShowRes;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -114,6 +115,11 @@ public class DalConfig {
     @Bean
     public ProxyContentMapper proxyContentMapper() throws Exception {
         return newMapperFactoryBean(ProxyContentMapper.class).getObject();
+    }
+
+    @Bean
+    public ShowResMapper showResMapper() throws Exception {
+        return newMapperFactoryBean(ShowResMapper.class).getObject();
     }
 
 

@@ -9,16 +9,18 @@ import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.utils.UrlUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.App;
-import com.yuntao.zhushou.model.domain.ReqContent;
+import com.yuntao.zhushou.model.domain.ShowRes;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.DataMap;
+import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.param.ReqDataParam;
-import com.yuntao.zhushou.model.query.ReqContentQuery;
-import com.yuntao.zhushou.model.vo.ReqContentVo;
+import com.yuntao.zhushou.model.query.ShowResQuery;
+import com.yuntao.zhushou.model.vo.ShowResVo;
 import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.model.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
-import com.yuntao.zhushou.service.inter.ReqContentService;
+import com.yuntao.zhushou.service.inter.ShowResService;
+import com.yuntao.zhushou.service.inter.ShowResService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,31 +42,15 @@ public class ShowResController extends BaseController {
 
 
     @Autowired
-    private ReqContentService reqContentService;
+    private ShowResService showResService;
 
     @Autowired
     private AppService appService;
 
     @RequestMapping("list")
     @NeedLogin
-    public ResponseObject list(ReqContentQuery query) {
-        query.setPageSize(30);  //固定30条
-        Pagination<ReqContentVo> pagination = reqContentService.selectPage(query);
-        if(CollectionUtils.isNotEmpty(pagination.getDataList())){
-            for (ReqContentVo reqContentVo : pagination.getDataList()) {
-                String resData = reqContentVo.getResData();
-                //json 格式化
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    Object json = mapper.readValue(resData, Object.class);
-                    resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-                } catch (IOException e) {
-                }
-                reqContentVo.setResData(resData);
-                //end
-
-            }
-        }
+    public ResponseObject list(ShowResQuery query) {
+        Pagination<ShowResVo> pagination = showResService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);
         return responseObject;
@@ -73,77 +59,37 @@ public class ShowResController extends BaseController {
 //    @RequestMapping("getDataById")
 //    @NeedLogin
 //    public ResponseObject getDataById(@RequestParam Long id) {
-//        ReqContent reqContent = reqContentService.findById(id);
+//        ShowRes showRes = showResService.findById(id);
 //        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-//        responseObject.setData(reqContent);
+//        responseObject.setData(showRes);
 //        return responseObject;
 //    }
 
-    @RequestMapping("execute")
+    @RequestMapping("save")
     @NeedLogin
-    public ResponseObject execute(@ModelAttribute ReqDataParam param) {
+    public ResponseObject save(ShowRes showRes) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        RequestRes requestRes = new RequestRes();
-        requestRes.setUrl(param.getUrl());
-        List<DataMap> headerList = param.getHeaderList();
-        Map<String,String> headerMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(headerList)) {
-            for (DataMap dataMap : headerList) {
-                headerMap.put(dataMap.getKey(),dataMap.getValue());
-            }
-        }
-        requestRes.setHeaders(headerMap);
-        List<DataMap> dataList = param.getDataList();
-        Map<String,String> paramMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(dataList)) {
-            for (DataMap dataMap : dataList) {
-                paramMap.put(dataMap.getKey(),dataMap.getValue());
-            }
-        }
-        requestRes.setParams(paramMap);
-        //url 处理
-        String appName = param.getAppName();
-        App app = appService.findByName(appName);
-        String domain = app.getDomain();
-        String model = param.getModel();  //model
-        String url = UrlUtils.getUrl(appName, model, domain, param.getUrl());
-        requestRes.setUrl(url);
-        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-
-        //store to db
-        User user = userService.getCurrentUser();
-        ReqContent reqContent = new ReqContent();
-        reqContent.setUserId(user.getId());
-        reqContent.setUserName(user.getNickName());
-        reqContent.setUrl(param.getUrl());
-        reqContent.setHttpStatus(responseRes.getStatus());
-        reqContent.setName(param.getUrl());
-        reqContent.setAppName(appName);
-        reqContent.setModel(model);
-        reqContent.setReqHeader(JsonUtils.object2Json(requestRes.getHeaders()));
-        reqContent.setReqData(JsonUtils.object2Json(requestRes.getParams()));
-        reqContent.setResHeader(JsonUtils.object2Json(responseRes.getHeaders()));
-        reqContent.setResData(new String(responseRes.getResult()));
-        reqContent.setStatus(1);
-        reqContentService.insert(reqContent);
-        //end
-
-
-
-        responseObject.put("resHeaderList",responseRes.getHeaders());
-        String resData = new String(responseRes.getResult());
-        //json 格式化
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Object json = mapper.readValue(resData, Object.class);
-            resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-        } catch (IOException e) {
-        }
-        //end
-        responseObject.put("resData",resData);
-        responseObject.put("status",responseRes.getStatus());
+//        User user = userService.getCurrentUser();
+        showResService.insert(showRes);
         return responseObject;
     }
+
+    @RequestMapping("update")
+    @NeedLogin
+    public ResponseObject update(ShowRes showRes) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        showResService.updateById(showRes);
+        return responseObject;
+    }
+
+    @RequestMapping("deleteById")
+    @NeedLogin
+    public ResponseObject deleteById(Long id) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        showResService.deleteById(id);
+        return responseObject;
+    }
+
 
 
 

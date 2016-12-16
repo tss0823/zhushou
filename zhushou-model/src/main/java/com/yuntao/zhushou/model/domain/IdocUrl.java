@@ -66,7 +66,15 @@ public class IdocUrl implements Serializable {
 	private String createUserName;
 
 
+	/**
+	 * 类型 0 文档; 1 枚举
+	 */
 	private Integer type;
+
+	/**
+	 * 资源id
+	 */
+	private Long showResId;
 	
 	public IdocUrl(){
 	}
@@ -186,5 +194,12 @@ public class IdocUrl implements Serializable {
 	public void setResultCommentData(String resultCommentData) {
 		this.resultCommentData = resultCommentData;
 	}
-}
 
+	public Long getShowResId() {
+		return showResId;
+	}
+
+	public void setShowResId(Long showResId) {
+		this.showResId = showResId;
+	}
+}

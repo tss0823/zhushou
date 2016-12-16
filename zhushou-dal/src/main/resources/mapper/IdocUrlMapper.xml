@@ -21,12 +21,13 @@
      <result  column="createUserId" property="createUserId"/>
      <result  column="createUserName" property="createUserName"/>
       <result  column="type" property="type"/>
+      <result  column="showResId" property="showResId"/>
 </resultMap>
         
     
  <sql id="Base_Column_List">
     `id`,`url`,`name`,`appName`,`module`,`version`,`resultCommentData`,`resultData`,`status`,
-    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`
+    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`,`showResId`
     
   </sql>
         
@@ -52,6 +53,7 @@
     <if test="createUserId != null and createUserId != '' ">and  `createUserId` = #{createUserId}</if> 
     <if test="createUserName != null and createUserName != '' ">and  `createUserName` = #{createUserName}</if>
       <if test="type != null">and  `type` = #{type}</if>
+      <if test="showResId != null">and  `showResId` = #{showResId}</if>
       <if test="nameLike != null and nameLike != '' ">and `name` like concat('%',#{nameLike},'%') </if>
       <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%') </if>
   </sql>
@@ -94,12 +96,12 @@
     (
     `url`,`name`,       
     `appName`,`module`,`version`,`resultData`,`resultCommentData`,`status`,`gmtCreate`,`gmtModify`,`delStatus`,
-    `memo`,`createUserId`,`createUserName`,`type`
+    `memo`,`createUserId`,`createUserName`,`type`,`showResId`
     ) 
     values
     (
     #{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultCommentData},#{status},now(6),
-    now(6),1,#{memo},#{createUserId},#{createUserName},#{type}
+    now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId}
     )
   </insert>  
     
@@ -118,6 +120,7 @@
        <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>
        <if test="createUserName != null and createUserName !=''">`createUserName` = #{createUserName},</if>
           <if test="type != null">`type` = #{type},</if>
+          <if test="showResId != null">`showResId` = #{showResId},</if>
      </set>
    ,gmtModify = now(6)
    where id = #{id}
