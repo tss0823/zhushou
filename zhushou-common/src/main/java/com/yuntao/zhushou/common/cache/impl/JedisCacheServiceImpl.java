@@ -23,12 +23,17 @@ public class JedisCacheServiceImpl implements CacheService {
     @Value("${redis.port}")
     private int port;
 
+    @Value("${redis.pwd}")
+    private String pwd;
+
     private ShardedJedisPool shardedJedisPool;
 
     @PostConstruct
     public void init() {
         List<JedisShardInfo> shards = new ArrayList<>();
-        shards.add(new JedisShardInfo(host, port));
+        JedisShardInfo jedisShardInfo = new JedisShardInfo(host, port);
+        jedisShardInfo.setPassword(pwd);
+        shards.add(jedisShardInfo);
         JedisPoolConfig config = new JedisPoolConfig();
         //控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；
         //如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。
