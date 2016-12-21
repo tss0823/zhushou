@@ -87,6 +87,11 @@
                 YT.deploy.routeTpl("/idoc/subDoc.html",{title:"接口提交"});
             });
 
+            //提交枚举
+            $("#btnSubmitEnum").click(function () {
+                YT.deploy.routeTpl("/idoc/subEnum.html",{title:"枚举提交"});
+            });
+
             //tab
             $( "div[id='tabs']" ).tabs();
 

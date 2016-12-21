@@ -108,6 +108,19 @@
 
             });
 
+            $("button[id='btnSubEnumSave']").click(function () {
+                var params = {appName:"member",jsonEnum:$("#jsonEnum").val()};
+                YT.deploy.util.reqPost("/idocUrl/submitEnum", params, function (d) {
+                    if (d.success) {
+                        alert("提交成功");
+                        YT.deploy.idocList.query(1);
+                    } else {
+                        alert("提交失败,err=" + d.message);
+                    }
+                });
+
+            });
+
 
 
 

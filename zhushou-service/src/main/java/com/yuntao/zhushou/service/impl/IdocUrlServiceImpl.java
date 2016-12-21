@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.*;
@@ -34,15 +35,14 @@ import java.util.*;
 
 /**
  * 接口主体服务实现类
- * 
- * @author admin
  *
+ * @author admin
  * @2016-07-30 20
  */
 @Service("idocUrlService")
 public class IdocUrlServiceImpl implements IdocUrlService {
 
-    private final  Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IdocUrlMapper idocUrlMapper;
@@ -71,14 +71,14 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         }
         Pagination<IdocUrl> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
-        queryMap.put("pagination",pagination);
+        queryMap.put("pagination", pagination);
         List<IdocUrl> dataList = idocUrlMapper.selectList(queryMap);
         Pagination<IdocUrlVo> newPageInfo = new Pagination<>(pagination);
         List<IdocUrlVo> newDataList = new ArrayList<>(dataList.size());
         newPageInfo.setDataList(newDataList);
         pagination.setDataList(dataList);
-        for(IdocUrl idocUrl : dataList){
-            IdocUrlVo idocUrlVo = BeanUtils.beanCopy(idocUrl,IdocUrlVo.class);
+        for (IdocUrl idocUrl : dataList) {
+            IdocUrlVo idocUrlVo = BeanUtils.beanCopy(idocUrl, IdocUrlVo.class);
             //获取参数
             List<IdocParam> paramList = idocParamService.selectByParentId(idocUrl.getId());
             idocUrlVo.setParamList(paramList);
@@ -95,6 +95,41 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     @Override
     public IdocUrl findById(Long id) {
         return idocUrlMapper.findById(id);
+    }
+
+    @Override
+    public IdocUrl findDocByUrlAndVer(String appName, String url, String ver) {
+        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setAppName(appName);
+        idocUrlQuery.setType(0);
+        idocUrlQuery.setUrl(url);
+        idocUrlQuery.setVersion(ver);
+        List<IdocUrl> dataList = this.selectList(idocUrlQuery);
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            if (dataList.size() == 1) {
+                return dataList.get(0);
+            } else {
+                throw new BizException("too many datas");
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IdocUrl findEnumByUrl(String appName, String url) {
+        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setAppName(appName);
+        idocUrlQuery.setType(0);
+        idocUrlQuery.setUrl(url);
+        List<IdocUrl> dataList = this.selectList(idocUrlQuery);
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            if (dataList.size() == 1) {
+                return dataList.get(0);
+            } else {
+                throw new BizException("too many datas");
+            }
+        }
+        return null;
     }
 
 
@@ -117,12 +152,12 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
-    public IdocUrlVo bind(String month,String model, String stackId) {
+    public IdocUrlVo bind(String month, String model, String stackId) {
         LogWebVo logWebVo = logService.findMasterByStackId(month, model, stackId);
         IdocUrlVo idocUrlVo = new IdocUrlVo();
         idocUrlVo.setUrl(logWebVo.getUrl());
         String parameters = logWebVo.getParameters();
-        Map<String,String> paramMap = JsonUtils.json2Object(parameters, HashMap.class);
+        Map<String, String> paramMap = JsonUtils.json2Object(parameters, HashMap.class);
         Set<Map.Entry<String, String>> entrySet = paramMap.entrySet();
         for (Map.Entry<String, String> entry : entrySet) {
             IdocParamVo idocParamVo = new IdocParamVo();
@@ -143,7 +178,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
-    public void submitDoc(String jsonDoc,User user) {
+    public void submitDoc(String jsonDoc, User user) {
         ResponseObject responseObject = JsonUtils.json2Object(jsonDoc, ResponseObject.class);
         Object data = responseObject.getData();
         String dataJson = JsonUtils.object2Json(data);
@@ -163,18 +198,17 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         String returnObjJson = JsonUtils.object2Json(returnObj);
 
 
-
         idocUrl.setResultData(returnObjJson);
 //        idocUrl.setResultCommentData(returnObjJson);
         this.insert(idocUrl);
 
         //param
-        LinkedHashMap<String,Object> paramHashMap = (LinkedHashMap) docObject.getParamObj();
+        LinkedHashMap<String, Object> paramHashMap = (LinkedHashMap) docObject.getParamObj();
         Set<Map.Entry<String, Object>> entries = paramHashMap.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
             Object value = entry.getValue();
             String json = JsonUtils.object2Json(value);
-            DocReqFieldObject docReqFieldObject = JsonUtils.json2Object(json,DocReqFieldObject.class);
+            DocReqFieldObject docReqFieldObject = JsonUtils.json2Object(json, DocReqFieldObject.class);
             IdocParam idocParam = new IdocParam();
             idocParam.setCode(docReqFieldObject.getCode());
             idocParam.setMemo(docReqFieldObject.getValue());
@@ -199,9 +233,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
     @Override
     @Transactional
-    public void save(IdocDataParam idocDataParam,User user) {
+    public void save(IdocDataParam idocDataParam, User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
-        IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam,IdocUrl.class);
+        IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam, IdocUrl.class);
         idocUrl.setCreateUserId(user.getId());
         idocUrl.setCreateUserName(user.getNickName());
         this.insert(idocUrl);
@@ -222,7 +256,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     @Transactional
     public void update(IdocDataParam idocDataParam, User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
-        IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam,IdocUrl.class);
+        IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam, IdocUrl.class);
         idocUrl.setCreateUserId(user.getId());
         idocUrl.setCreateUserName(user.getNickName());
         this.updateById(idocUrl);
@@ -261,14 +295,14 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         //end
 
         App app = appService.findByName(appName);
-        String url = UrlUtils.getUrl(appName, "prod",app.getDomain(), "/data/enumList");
+        String url = UrlUtils.getUrl(appName, "prod", app.getDomain(), "/data/enumList");
         ResponseRes responseRes = HttpNewUtils.get(url);
         HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);
-        Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
+        Map<String, List<Map<String, String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
             String key = entry.getKey();
-            String keyStrs [] = key.split("_");
+            String keyStrs[] = key.split("_");
             String code = keyStrs[0];
             String text = keyStrs[1];
             IdocUrl idocUrl = new IdocUrl();
@@ -307,10 +341,10 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
 
         App app = appService.findByName(appName);
-        String url = UrlUtils.getUrl(appName, "prod",app.getDomain(), "/data/enumList");
+        String url = UrlUtils.getUrl(appName, "prod", app.getDomain(), "/data/enumList");
         ResponseRes responseRes = HttpNewUtils.get(url);
         HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);
-        Map<String,List<Map<String,String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
+        Map<String, List<Map<String, String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
         Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
         for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
             String key = entry.getKey();
@@ -325,6 +359,52 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 //            idocUrl.setAppName(appName);
             idocUrl.setVersion("1.0.0");
             this.updateById(idocUrl);
+
+            //items
+            List<Map<String, String>> dataList = entry.getValue();
+            for (Map<String, String> stringMap : dataList) {
+                Object paramCode = stringMap.get("code");
+                String paramValue = stringMap.get("description");
+                IdocParam idocParam = new IdocParam();
+                idocParam.setCode(paramCode.toString());
+                idocParam.setName(paramValue);
+                idocParam.setParentId(idocUrl.getId());
+                idocParam.setStatus(0);
+                this.idocParamService.insert(idocParam);
+            }
+            //end
+        }
+    }
+
+    @Override
+    public void submitEnum(String appName, String emunJson) {
+//        App app = appService.findByName(appName);
+        HashMap dataMap = JsonUtils.json2Object(emunJson, HashMap.class);
+        Map<String, List<Map<String, String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
+        Set<Map.Entry<String, List<Map<String, String>>>> entries = enumMap.entrySet();
+        for (Map.Entry<String, List<Map<String, String>>> entry : entries) {
+            String key = entry.getKey();
+            String keyStrs[] = key.split("_");
+            String url = keyStrs[0];
+            IdocUrl idocUrl = this.findEnumByUrl(appName, url);
+
+            String text = keyStrs[1];
+            if (idocUrl != null) {
+
+                //delete child data list
+                this.idocParamService.deleteByParentId(idocUrl.getId());
+
+                idocUrl.setName(text);
+                this.updateById(idocUrl);
+            } else {
+                idocUrl = new IdocUrl();
+                idocUrl.setType(1);
+                idocUrl.setAppName(appName);
+                idocUrl.setVersion("1.0.0");
+                idocUrl.setUrl(url);
+                idocUrl.setName(text);
+                this.insert(idocUrl);
+            }
 
             //items
             List<Map<String, String>> dataList = entry.getValue();

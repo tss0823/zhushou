@@ -43,6 +43,17 @@ public interface IdocUrlService {
     IdocUrl findById(Long id);
 
     /**
+     * 根据url and verion获得对象
+     * @param url
+     * @param ver
+     * @return
+     */
+    IdocUrl findDocByUrlAndVer(String appName,String url,String ver);
+
+    IdocUrl findEnumByUrl(String appName,String url);
+
+
+    /**
      * 新增
      * @param idocUrl
      * @return
@@ -104,4 +115,10 @@ public interface IdocUrlService {
      * @param id
      */
     void syncUpdate(String appName, Long id);
+
+    /**
+     * 提交或修改枚举
+     * @param appName
+     */
+    void submitEnum(String appName,String emunJson);
 }

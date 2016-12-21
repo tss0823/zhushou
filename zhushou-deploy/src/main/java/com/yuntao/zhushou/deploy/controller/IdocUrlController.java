@@ -120,6 +120,14 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("submitEnum")
+    @NeedLogin
+    public ResponseObject submitEnum(@RequestParam String appName,@RequestParam String jsonEnum) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        idocUrlService.submitEnum(appName,jsonEnum);
+        return responseObject;
+    }
+
 
 
 }
