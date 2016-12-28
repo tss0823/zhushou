@@ -22,6 +22,11 @@ public class ReqContent implements Serializable {
 	
 	/**  Id * */
 	private Long id;
+
+	/**
+	 * 企业id
+	 */
+	private Long companyId;
 		
 	/**  URL * */
 	private String url;
@@ -195,5 +200,12 @@ public class ReqContent implements Serializable {
 	public void setDelStatus(Boolean delStatus) {
 		this.delStatus = delStatus;
 	}
-}
 
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
+	}
+}

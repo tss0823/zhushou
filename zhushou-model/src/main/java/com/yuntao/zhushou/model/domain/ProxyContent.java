@@ -23,6 +23,11 @@ public class ProxyContent implements Serializable {
 	/**  Id * */
 	private Long id;
 
+	/**
+	 * 企业id
+	 */
+	private Long companyId;
+
 	/**  port * */
 	private Integer port;
 
@@ -220,5 +225,13 @@ public class ProxyContent implements Serializable {
 
 	public void setResLength(Integer resLength) {
 		this.resLength = resLength;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

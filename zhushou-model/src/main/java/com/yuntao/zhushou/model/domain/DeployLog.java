@@ -16,6 +16,11 @@ public class DeployLog implements Serializable {
     private Long id;
 
     /**
+     * 企业id
+     */
+    private Long companyId;
+
+    /**
      * 内容
      */
     private String content;
@@ -145,5 +150,13 @@ public class DeployLog implements Serializable {
 
     public void setBackVer(String backVer) {
         this.backVer = backVer;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 }

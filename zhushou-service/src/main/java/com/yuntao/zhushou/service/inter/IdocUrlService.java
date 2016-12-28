@@ -120,5 +120,5 @@ public interface IdocUrlService {
      * 提交或修改枚举
      * @param appName
      */
-    void submitEnum(String appName,String emunJson);
+    void submitEnum(Long companyId,String appName,String emunJson);
 }

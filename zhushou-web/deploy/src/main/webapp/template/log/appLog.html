@@ -1,0 +1,217 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{title}}
+            </small>
+        </h1>
+        <form id="appLogForm" onsubmit="return false" actionId="{{authRes.actionId}}">
+        <h1 style="text-align: right;padding-top: 5px">
+                <small>
+                    <label class="pull-left inline">
+                        <small class="muted">展示所有:</small>
+                        <input id="showAll" name="showAll" {{if showAll }} checked {{/if}} type="checkbox" class="ace ace-switch ace-switch-5">
+                        <span class="lbl"></span>
+                    </label>
+                    <label class="pull-left inline">
+                        <small class="muted">正式:</small>
+                        <input id="model" name="model" {{if model == "prod" }} checked {{/if}} type="checkbox" class="ace ace-switch ace-switch-5">
+                        <span class="lbl"></span>
+                    </label>
+                    <!--<select id="model" name="model">-->
+                    <!--</select>-->
+                    &nbsp;
+                    月份：
+                    <select id="month" name="month">
+                    </select>
+                    &nbsp;
+                    应用：
+                    <select id="appName" name="appName">
+                        <option value=""></option>
+                    </select>
+                    &nbsp;
+                    手机账号：
+                    <input type="text" id="mobile" name="mobile" value="{{mobile}}" class="input-sm"/>
+                    &nbsp;
+                    用户ID：
+                    <input type="text" id="userId" name="userId" value="{{userId}}" class="input-small"/>
+                    &nbsp;
+                    级别：
+                    <select id="level" name="level">
+                        <option value=""></option>
+                    </select>
+                    &nbsp;
+                    状态：
+                    <input type="text" id="status" name="status" value="{{status}}" class="input-small"/>
+                    &nbsp;
+                    <!--客户端IP：-->
+                    <!--<input type="text" id="clientIp" name="clientIp" value="{{clientIp}}" class="input-sm"/>-->
+                </small>
+            </h1>
+            <h1 style="text-align: right;margin-top: 5px">
+                <small>
+                    URL：
+                    <select id="urlType" name="urlType">
+                    </select>
+                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="branch" data-placeholder="请选择接口名称">
+                        <option value=""></option>
+                    </select>
+                    <input type="text" id="url" name="url" value="{{url}}" class="input-sm" style="width:380px"/>
+                    &nbsp;
+
+                    文本：
+                    <select id="textCat" name="textCat">
+                    </select>
+                    <select id="textType" name="textType">
+                    </select>
+                    <input type="text" id="text" name="text" value="{{text}}" class="input-group-lg" style="width:380px"/>
+                </small>
+            </h1>
+            <h1 style="text-align: right;margin-top: 5px">
+                <small>
+                    客户端：
+                    <select id="userAgentType" name="userAgentType">
+                    </select>
+                    <input type="text" id="userAgent" name="userAgent" value="{{userAgent}}" class="input-sm" style="width: 380px"/>
+                    &nbsp;
+
+                    时间：
+                    <input type="text" id="startTime" name="startTime" value="{{startTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
+                    --
+                    <input type="text" id="endTime" name="endTime" value="{{endTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
+                    &nbsp;
+                    <button class="btn btn-white" id="btnQuery" enter="true">查询</button>&nbsp;&nbsp;
+                    <button class="btn btn-white" id="btnClear" >清空</button>
+                </small>
+        </h1>
+        </form>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th width="4%">应用</th>
+            <!--<th>IP</th>-->
+            <th width="14%"> <i class="icon-time "></i> 时间 </th>
+            <th width="4%">用户ID</th>
+            <th width="10%">账号</th>
+            <th width="20%">请求URL</th>
+            <!--<th>客户端</th>-->
+            <!--<th>客户端IP</th>-->
+            <th width="4%">状态</th>
+            <th width="10%">级别</th>
+            <!--<th>耗时</th>-->
+            <th width="5%" colspan="2"> 操作 </th>
+        </tr>
+        </thead>
+
+        <tbody id="tbContent">
+        {{each dataList as bean i}}
+        <tr class="selected">
+            <td>
+                <a href="#">{{bean.appName}}</a>
+            </td>
+            <!--<td>{{bean.ip}}</td>-->
+            <!--<td>{{bean.lastTime}}</td>-->
+            <td>
+                <div>
+                    {{bean.time}}
+                    [{{bean.lastTime}}]
+                </div>
+                <!--<div> {{bean.lastTime}} </div>-->
+            </td>
+            <td>{{bean.userId}}</td>
+            <td>
+                <div>{{bean.mobile}}</div>
+                <div>{{bean.name}}</div>
+            </td>
+            <td>
+                <div name="url">{{bean.url}}</div>
+                <div name="docName"></div>
+            </td>
+            <!--<td>{{bean.userAgent}}</td>-->
+            <!--<td>{{bean.clientIp}}</td>-->
+            <td>{{bean.status}}</td>
+            <td>
+                {{if bean.level == "BIZ_ERROR" }}
+                <div><strong style="color:red">{{bean.level}}</strong></div>
+                <div><strong style="color:red">{{bean.errMsg}}</strong></div>
+                {{/if}}
+                {{if bean.level == "SYS_ERROR" }}
+                <div><strong style="color:red">{{bean.level}}</strong></div>
+                {{/if}}
+                {{if bean.level == "INFO" }}
+                <div><strong style="color:green">{{bean.level}}</strong></div>
+                {{/if}}
+            </td>
+            <!--<td>{{bean.takeTime}}</td>-->
+
+            <td>
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-default  btn-sm dropdown-toggle">
+                        选择执行
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-info pull-right">
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnParameter">请求参数</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnResponse">返回结果</a> </li>
+                        <!--<li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnSql">SQL</a> </li>-->
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnFormatMsg">格式化消息</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnMsg">所有消息</a> </li>
+                        <li class="divider"></li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnReqExecute">请求URL [直接执行]</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnToReqExecute">转请求URL [跳转再执行]</a> </li>
+                        <li> <a href="javascript:void(0)" data="{{bean.stackId}}" id="btnBindIdoc">绑定接口</a> </li>
+                    </ul>
+                </div>
+            </td>
+            <td> <button class="btn btn-xs btn-default" data="{{bean.stackId}}" id="btnMore">更多</button> </td>
+        </tr>
+        <tr id="trChildItem" name="trChildItem_{{bean.stackId}}" style="display:{{if !showAll }}none{{/if}}">
+            <td colspan="9">
+                <table class="table table-striped table-bordered table-hover" name="tbChildItem">
+                    <tr>
+                        <td style="text-align: right">服务端IP：</td>
+                        <td>{{bean.ip}}</td>
+                        <td style="text-align: right">客户端IP：</td>
+                        <td name="showClientIp" data="{{bean.clientIp}}">{{bean.clientIp}}</td>
+                        <td style="text-align: right">开始时间：</td>
+                        <td>{{bean.startTime}}</td>
+                        <td style="text-align: right">结束时间：</td>
+                        <td>{{bean.endTime}}</td>
+                        <td style="text-align: right">耗时(ms)：</td>
+                        <td>{{bean.takeTime}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right">客户端：</td>
+                        <td colspan="9">{{bean.userAgent}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <!--page start-->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="sample-table-2_info">
+                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong
+                    class="pageCount"></strong>】页
+                当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_bootstrap">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--page end-->
+
+</div><!-- /.page-content -->
+<script src="/_resources/scripts/module/log/appLog.js?ver={{ver}}"></script>

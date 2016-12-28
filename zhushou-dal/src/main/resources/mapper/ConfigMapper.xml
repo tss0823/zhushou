@@ -4,19 +4,23 @@
 
     <resultMap id="BaseResultMap" type="Config">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="value" property="value" jdbcType="VARCHAR"/>
         <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`name`,`value`
+        `id`,`type`,`companyId`,`name`,`value`
     </sql>
     <sql id="Base_Table_Name">
         config
     </sql>
     <sql id="Base_Where">
         delStatus = 1
+        <if test="type != null">and `type`=#{type}</if>
+        <if test="companyId != null">and `companyId`=#{companyId}</if>
         <if test="name != null and name !=''">and `name`=#{name}</if>
         <if test="value != null and value !=''">and `value`=#{value}</if>
 
@@ -71,15 +75,17 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`value`,`delStatus`)
+        (`type`,`companyId`,`name`,`value`,`delStatus`)
         values
-        (#{name},#{value},1)
+        (#{type},#{companyId},#{name},#{value},1)
     </insert>
 
     <update id="updateById">
         update
         <include refid="Base_Table_Name"/>
         <set>
+            <if test="type != null">`type`=#{type},</if>
+            <if test="companyId != null">`companyId`=#{companyId},</if>
             <if test="name != null and name !=''">`name`=#{name},</if>
             <if test="value != null and value !=''">`value`=#{value},</if>
         </set>

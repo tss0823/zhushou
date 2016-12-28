@@ -36,6 +36,11 @@ public class DalConfig {
     }
 
     @Bean
+    public CompanyMapper companyMapper() throws Exception {
+        return newMapperFactoryBean(CompanyMapper.class).getObject();
+    }
+
+    @Bean
     public UserMapper userMapper() throws Exception {
         return newMapperFactoryBean(UserMapper.class).getObject();
     }

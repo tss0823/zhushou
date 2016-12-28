@@ -29,7 +29,10 @@ public enum AtParamterRuleType {
         this.description = description;
     }
 
-    public static AtParamterRuleType getByCode(int code) {
+    public static AtParamterRuleType getByCode(Integer code) {
+        if(code == null){
+            return null;
+        }
         for (AtParamterRuleType s : AtParamterRuleType.values()) {
             if (s.getCode() == code) {
                 return s;

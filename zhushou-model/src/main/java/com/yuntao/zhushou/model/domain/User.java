@@ -16,6 +16,11 @@ public class User implements Serializable {
     private Long id;
 
     /**
+     * 企业id
+     */
+    private Long companyId;
+
+    /**
      * 账号
      */
     private String accountNo;
@@ -178,5 +183,13 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 }

@@ -1,7 +1,10 @@
 package com.yuntao.zhushou.service.impl;
 
+import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.dal.mapper.ConfigMapper;
 import com.yuntao.zhushou.model.domain.Config;
+import com.yuntao.zhushou.model.enums.ConfigType;
+import com.yuntao.zhushou.model.query.ConfigQuery;
 import com.yuntao.zhushou.service.inter.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +44,22 @@ public class ConfigServiceImpl extends AbstService implements ConfigService {
     @Override
     public List<Config> selectList() {
         return configMapper.selectList(new HashMap());
+    }
+
+    @Override
+    public List<Config> selectPubList() {
+        ConfigQuery configQuery = new ConfigQuery();
+        configQuery.setType(ConfigType.pub.getCode());
+        Map<String, Object> queryMap = BeanUtils.beanToMap(configQuery);
+        return configMapper.selectList(queryMap);
+    }
+
+    @Override
+    public List<Config> selectPriList(Long companyId) {
+        ConfigQuery configQuery = new ConfigQuery();
+        configQuery.setType(ConfigType.pri.getCode());
+        configQuery.setCompanyId(companyId);
+        Map<String, Object> queryMap = BeanUtils.beanToMap(configQuery);
+        return configMapper.selectList(queryMap);
     }
 }

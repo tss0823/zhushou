@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuntao.zhushou.dal.mapper.CompanyMapper">
+
+    <resultMap id="BaseResultMap" type="App">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP" />
+        <result column="delStatus" property="delStatus" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="desc" property="desc" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`name`,`gmtCreate`,`gmtModify`,`type`,`status`,`desc`
+    </sql>
+    <sql id="Base_Table_Name">
+        app
+    </sql>
+    <sql id="Base_Where">
+        delStatus = 1
+        <if test="id != null">and id = #{id}</if>
+        <if test="name != null and name != ''">and name = #{name}</if>
+        <if test="type != null">and type = #{type}</if>
+        <if test="status != null">and status = #{status}</if>
+
+    </sql>
+
+    <select id="findById" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        where id = #{id}
+    </select>
+
+    <select id="findByCondition" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id asc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        <selectKey resultType="long" keyProperty="id">
+            SELECT
+            LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (`name`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`desc`)
+        values
+        (#{name},now(6),now(6),1,#{type},#{status},#{desc})
+    </insert>
+
+    <update id="updateById">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            <if test="name != null and name !=''">`name`=#{name},</if>
+            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
+            <if test="type != null and type !=''">`type`=#{type},</if>
+            <if test="status != null and status !=''">`status`=#{status},</if>
+            <if test="desc != null and desc !=''">`desc`=#{desc},</if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="updateByName">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
+            <if test="type != null and type !=''">`type`=#{type},</if>
+            <if test="status != null and status !=''">`status`=#{status},</if>
+            <if test="log != null and log !=''">`log`=#{log},</if>
+            <if test="desc != null and desc !=''">`desc`=#{desc},</if>
+            <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
+            <if test="domain != null and domain !=''">`domain`=#{domain},</if>
+            <if test="port != null">`port`=#{port},</if>
+        </set>
+        ,gmtModify = now(6)
+        where name = #{name}
+    </update>
+
+    <update id="deleteById">
+        update <include refid="Base_Table_Name"/> set delStatus = 0,gmtModify = now(6) where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            gmtModify=now(),
+            <if test="newStatus != null">`status`=#{newStatus},</if>
+        </set>
+
+        where id = #{id} and status = #{oldStatus}
+    </update>
+
+</mapper>

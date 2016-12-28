@@ -13,6 +13,17 @@ public class Config implements Serializable {
     private Long id;
 
     /**
+     * 企业id
+     */
+    private Long companyId;
+
+
+    /**
+     * 类型(0 私有;1 共有)
+     */
+    private Integer type;
+
+    /**
      * 名称
      */
     private String name;
@@ -57,5 +68,21 @@ public class Config implements Serializable {
 
     public void setDelStatus(Integer delStatus) {
         this.delStatus = delStatus;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

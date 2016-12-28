@@ -36,6 +36,9 @@ public enum ModuleType {
     }
 
     public static ModuleType getByCode(String code) {
+        if(code == null){
+            return null;
+        }
         for (ModuleType s : ModuleType.values()) {
             if (s.getCode() == code) {
                 return s;

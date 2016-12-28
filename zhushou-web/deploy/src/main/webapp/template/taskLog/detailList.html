@@ -1,0 +1,119 @@
+<style>
+    .txtareaCss {
+        width: 100%; /*自动适应父布局宽度*/
+        overflow: auto;
+        word-break: break-all;
+        margin-top: 15px;
+        width: 98%;
+        height: 450px;
+        background: black;
+        color: #f0f0f0;
+    }
+</style>
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{title}}<strong style="color:red">{{msTitle}}</strong>
+            </small>
+        </h1>
+        <form id="taskLogDetailListForm" onsubmit="return false">
+            <h1 style="text-align: right;padding-top: 5px">
+                <small>
+                    状态：
+                    <input type="text" id="status" name="status" value="{{status}}" class="input-small"/>
+                    &nbsp;
+                    &nbsp;
+                    消息：
+                    <select id="messageType" name="messageType">
+                    </select>
+                    <input type="text" id="message" name="message" value="{{message}}" class="input-sm"/>
+                    &nbsp;
+                    &nbsp;
+                    详细消息：
+                    <select id="descType" name="descType">
+                    </select>
+                    <input type="text" id="desc" name="desc" value="{{desc}}" class="input-sm"/>
+                </small>
+            </h1>
+            <h1 style="text-align: right;padding-top: 5px">
+                <small>
+                    时间：
+                    <input type="text" id="startTime" name="startTime" value="{{startTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
+                    --
+                    <input type="text" id="endTime" name="endTime" value="{{endTime}}" class="input-sm"/>
+                    <i class="icon-calendar"></i>
+                    &nbsp;
+                    &nbsp;
+                    <button class="btn btn-white" id="btnQuery" enter="true">查询</button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-white" id="btnClear">清空</button>
+                </small>
+            </h1>
+        </form>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover" style="width:98%">
+        <thead>
+        <tr>
+            <th width="5%">IP</th>
+            <th width="7%"><i class="icon-time "></i> 时间</th>
+            <th width="4%">批次号</th>
+            <th width="18%">消息</th>
+            <th width="4%">状态</th>
+            <th width="4%">耗时</th>
+            <th width="5%" colspan="2"> 操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbContent">
+        {{each dataList as bean i}}
+        <tr class="selected">
+            <td>{{bean.ip}}</td>
+            <td>
+                <div>
+                    {{bean.time}}
+                    [{{bean.lastTime}}]
+                </div>
+            </td>
+            <td>{{bean.batchNo}}</td>
+            <td>{{bean.message}}</td>
+            <td>{{bean.status}}</td>
+            <td>{{bean.takeTime}}</td>
+            <td>
+                <button class="btn btn-xs btn-default" data="{{bean.id}}" id="btnMore">详细</button>
+            </td>
+        </tr>
+        <tr id="trChildItem" name="trChildItem_{{bean.id}}" style="display: none">
+            <td colspan="7" style="width:98%">
+                <div>
+                    <pre> {{bean.desc}} </pre>
+                    <!--<textarea class="txtareaCss" readonly="true" npropertychange="this.style.posHeight=this.scrollHeight ">{{bean.desc}}</textarea>-->
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <!--page start-->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="sample-table-2_info">
+                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong
+                    class="pageCount"></strong>】页
+                当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_bootstrap">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--page end-->
+
+</div><!-- /.page-content -->
+<script src="/_resources/scripts/module/taskLog/taskLogDetail.js?ver={{ver}}"></script>

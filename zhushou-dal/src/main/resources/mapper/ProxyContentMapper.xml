@@ -6,6 +6,7 @@
 
     <resultMap type="ProxyContent" id="BaseResultMap">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT" />
         <result column="port" property="port"/>
         <result column="clientIp" property="clientIp"/>
         <result column="domain" property="domain"/>
@@ -27,7 +28,7 @@
 
 
     <sql id="Base_Column_List">
-    `id`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+    `id`,`companyId`,``port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
     `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
     
   </sql>
@@ -41,6 +42,7 @@
     <sql id="Base_Where">
         delStatus = 1
         <if test="id != null and id != '' ">and `id` = #{id}</if>
+        <if test="companyId != null">and companyId = #{companyId}</if>
         <if test="domain != null and domain != '' ">and `domain` = #{domain}</if>
         <if test="pathUrl != null and pathUrl != '' ">and `pathUrl` = #{pathUrl}</if>
         <if test="url != null and url != '' ">and `url` = #{url}</if>
@@ -98,12 +100,12 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+        `companyId`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
         `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
         )
         values
         (
-        #{port},#{clientIp},#{domain},#{pathUrl},#{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{resContentType},#{resLength},
+        #{companyId},#{port},#{clientIp},#{domain},#{pathUrl},#{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{resContentType},#{resLength},
         #{reqMethod},#{httpStatus}, #{status},#{gmtRequest},#{gmtResponse},1
         )
     </insert>
@@ -112,6 +114,7 @@
         update
         <include refid="Base_Table_Name"/>
         <set>
+            <if test="companyId != null">`companyId`=#{companyId},</if>
             <if test="port != null">`port` = #{port},</if>
             <if test="clientIp != null and clientIp !=''">`clientIp` = #{clientIp},</if>
             <if test="domain != null and domain !=''">`domain` = #{domain},</if>
@@ -141,13 +144,13 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+        `companyId`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
         `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
         )
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (
-            #{item.port},#{item.clientIp},#{item.domain},#{item.pathUrl},#{item.url},#{item.reqHeader},#{item.reqData, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+            #{item.companyId},#{item.port},#{item.clientIp},#{item.domain},#{item.pathUrl},#{item.url},#{item.reqHeader},#{item.reqData, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
             #{item.resHeader}, #{item.resData, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler},#{item.resContentType},
             #{item.resLength}, #{item.reqMethod},#{item.httpStatus}, #{item.status},#{item.gmtRequest}, #{item.gmtResponse},1
             )

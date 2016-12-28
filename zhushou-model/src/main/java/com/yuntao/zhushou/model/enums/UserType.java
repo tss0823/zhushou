@@ -27,7 +27,10 @@ public enum UserType {
         this.description = description;
     }
 
-    public static UserType getByCode(int code) {
+    public static UserType getByCode(Integer code) {
+        if(code == null){
+            return null;
+        }
         for (UserType s : UserType.values()) {
             if (s.getCode() == code) {
                 return s;

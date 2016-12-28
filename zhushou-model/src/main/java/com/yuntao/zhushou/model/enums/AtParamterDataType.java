@@ -22,6 +22,9 @@ public enum AtParamterDataType {
     }
 
     public static AtParamterDataType getByCode(String code) {
+        if(code == null){
+            return null;
+        }
         for (AtParamterDataType s : AtParamterDataType.values()) {
             if (s.getCode() == code) {
                 return s;

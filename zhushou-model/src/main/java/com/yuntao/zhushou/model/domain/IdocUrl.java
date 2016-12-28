@@ -22,6 +22,11 @@ public class IdocUrl implements Serializable {
 	
 	/**  ID * */
 	private Long id;
+
+	/**
+	 * 企业id
+	 */
+	private Long companyId;
 		
 	/**  URL * */
 	private String url;
@@ -201,5 +206,13 @@ public class IdocUrl implements Serializable {
 
 	public void setShowResId(Long showResId) {
 		this.showResId = showResId;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

@@ -17,6 +17,10 @@ public class BaseQuery implements Serializable {
 
     private Pagination pagination;
 
+    private Long userId;
+
+    private Long companyId;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -39,5 +43,21 @@ public class BaseQuery implements Serializable {
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 }

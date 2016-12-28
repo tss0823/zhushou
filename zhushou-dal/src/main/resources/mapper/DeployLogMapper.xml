@@ -3,38 +3,40 @@
 <mapper namespace="com.yuntao.zhushou.dal.mapper.DeployLogMapper">
 
     <resultMap id="BaseResultMap" type="DeployLog">
-        <id column="id" property="id" jdbcType="BIGINT" />
-        <result column="appName" property="appName" jdbcType="VARCHAR" />
-        <result column="model" property="model" jdbcType="VARCHAR" />
-        <result column="content" property="content" jdbcType="VARCHAR" />
-        <result column="userId" property="userId" jdbcType="BIGINT" />
-        <result column="userName" property="userName" jdbcType="VARCHAR" />
-        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP" />
-        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP" />
-        <result column="delStatus" property="delStatus" jdbcType="INTEGER" />
-        <result column="backVer" property="backVer" jdbcType="VARCHAR" />
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT"/>
+        <result column="appName" property="appName" jdbcType="VARCHAR"/>
+        <result column="model" property="model" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="BIGINT"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP"/>
+        <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
+        <result column="backVer" property="backVer" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="BaseResultDetailMap" type="DeployLogVo">
-        <id column="id" property="id" jdbcType="BIGINT" />
-        <result column="appName" property="appName" jdbcType="VARCHAR" />
-        <result column="model" property="model" jdbcType="VARCHAR" />
-        <result column="content" property="content" jdbcType="VARCHAR" />
-        <result column="userId" property="userId" jdbcType="BIGINT" />
-        <result column="userName" property="userName" jdbcType="VARCHAR" />
-        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP" />
-        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP" />
-        <result column="delStatus" property="delStatus" jdbcType="INTEGER" />
-        <result column="backVer" property="backVer" jdbcType="VARCHAR" />
-        <result column="log" property="log" jdbcType="BLOB" />
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="appName" property="appName" jdbcType="BIGINT"/>
+        <result column="appName" property="appName" jdbcType="VARCHAR"/>
+        <result column="model" property="model" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="BIGINT"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP"/>
+        <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
+        <result column="backVer" property="backVer" jdbcType="VARCHAR"/>
+        <result column="log" property="log" jdbcType="BLOB"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`
+        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`
     </sql>
 
     <sql id="Log_Column_list">
-        `id`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`
+        `id`,`companyId`,``appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`
     </sql>
 
     <sql id="Base_Table_Name">
@@ -43,12 +45,13 @@
     <sql id="Base_Where">
         delStatus = 1
         <if test="id != null">and id = #{id}</if>
+        <if test="companyId != null">and companyId = #{companyId}</if>
         <if test="appName != null and appName != ''">and appName = #{appName}</if>
         <if test="model != null and model != ''">and model = #{model}</if>
         <if test="userName != null and userName != ''">and userName = #{userName}</if>
         <if test="type != null">and type = #{type}</if>
         <if test="status != null">and status = #{status}</if>
-        <if test="backVerLike != null and backVerLike != ''">and  `backVer` like concat('%',#{backVerLike},'%') </if>
+        <if test="backVerLike != null and backVerLike != ''">and `backVer` like concat('%',#{backVerLike},'%')</if>
     </sql>
 
     <select id="findById" parameterType="Long" resultMap="BaseResultMap">
@@ -110,19 +113,20 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`)
+        (`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`)
         values
-        (#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer})
+        (#{companyId},#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer})
     </insert>
 
     <update id="updateById">
         update
         <include refid="Base_Table_Name"/>
         <set>
-        <if test="content != null and content !=''">`content`=#{content},</if>
-        <if test="userId != null and userId !=''">`userId`=#{userId},</if>
-        <if test="userName != null and userName !=''">`userName`=#{userName},</if>
-        <if test="log != null and log !=''">`log`=#{log},</if>
+            <if test="companyId != null">`companyId`=#{companyId},</if>
+            <if test="content != null and content !=''">`content`=#{content},</if>
+            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
+            <if test="userName != null and userName !=''">`userName`=#{userName},</if>
+            <if test="log != null and log !=''">`log`=#{log},</if>
         </set>
         where id = #{id}
     </update>
@@ -133,7 +137,6 @@
         set delStatus = 0
         where id = #{id}
     </update>
-
 
 
 </mapper>

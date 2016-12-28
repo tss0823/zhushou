@@ -16,6 +16,11 @@ public class Host implements Serializable {
     private Long id;
 
     /**
+     * 企业id
+     */
+    private Long companyId;
+
+    /**
      * 名称
      */
     private String name;
@@ -125,5 +130,13 @@ public class Host implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 }

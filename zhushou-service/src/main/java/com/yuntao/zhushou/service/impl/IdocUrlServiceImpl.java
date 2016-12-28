@@ -185,6 +185,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         DocObject docObject = JsonUtils.json2Object(dataJson, DocObject.class);
 
         IdocUrl idocUrl = new IdocUrl();
+        idocUrl.setCompanyId(user.getCompanyId());
         idocUrl.setAppName(docObject.getAppName());
         idocUrl.setModule(docObject.getModule());
         idocUrl.setType(0);
@@ -236,6 +237,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     public void save(IdocDataParam idocDataParam, User user) {
         List<IdocParam> paramList = idocDataParam.getParamList();
         IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam, IdocUrl.class);
+        idocUrl.setCompanyId(user.getCompanyId());
         idocUrl.setCreateUserId(user.getId());
         idocUrl.setCreateUserName(user.getNickName());
         this.insert(idocUrl);
@@ -377,7 +379,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
-    public void submitEnum(String appName, String emunJson) {
+    public void submitEnum(Long companyId,String appName, String emunJson) {
 //        App app = appService.findByName(appName);
         HashMap dataMap = JsonUtils.json2Object(emunJson, HashMap.class);
         Map<String, List<Map<String, String>>> enumMap = (Map<String, List<Map<String, String>>>) dataMap.get("data");
@@ -398,6 +400,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
                 this.updateById(idocUrl);
             } else {
                 idocUrl = new IdocUrl();
+                idocUrl.setCompanyId(companyId);
                 idocUrl.setType(1);
                 idocUrl.setAppName(appName);
                 idocUrl.setVersion("1.0.0");

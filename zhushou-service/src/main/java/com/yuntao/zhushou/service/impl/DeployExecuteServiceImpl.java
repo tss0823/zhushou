@@ -228,6 +228,7 @@ public class DeployExecuteServiceImpl extends AbstService implements DeployExecu
 
         String content = user.getNickName() + "【" + method + "】了节点【 " + StringUtils.join(hostNameList, ",") + " 】";
         DeployLog deployLog = new DeployLog();
+        deployLog.setCompanyId(user.getCompanyId());
         deployLog.setAppName(appName);
         deployLog.setModel(model);
         deployLog.setContent(content);

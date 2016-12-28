@@ -12,6 +12,7 @@
         <typeAlias alias="Config" type="com.yuntao.zhushou.model.domain.Config"/>
         <typeAlias alias="User" type="com.yuntao.zhushou.model.domain.User"/>
         <typeAlias alias="App" type="com.yuntao.zhushou.model.domain.App"/>
+        <typeAlias alias="Company" type="com.yuntao.zhushou.model.domain.Company"/>
         <typeAlias alias="Host" type="com.yuntao.zhushou.model.domain.Host"/>
         <typeAlias alias="DeployLog" type="com.yuntao.zhushou.model.domain.DeployLog"/>
         <typeAlias alias="DeployLogVo" type="com.yuntao.zhushou.model.vo.DeployLogVo"/>
@@ -35,6 +36,7 @@
         <mapper resource="mapper/ConfigMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/AppMapper.xml"/>
+        <mapper resource="mapper/CompanyMapper.xml"/>
         <mapper resource="mapper/HostMapper.xml"/>
         <mapper resource="mapper/DeployLogMapper.xml"/>
         <mapper resource="mapper/AtTemplateMapper.xml"/>

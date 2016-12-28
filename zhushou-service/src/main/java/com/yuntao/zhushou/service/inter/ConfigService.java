@@ -16,4 +16,8 @@ public interface ConfigService {
     Config getByName(String name);
 
     List<Config> selectList();
+
+    List<Config> selectPubList();
+
+    List<Config> selectPriList(Long companyId);
 }

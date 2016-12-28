@@ -25,7 +25,10 @@ public enum UserStatus {
         this.description = description;
     }
 
-    public static UserStatus getByCode(int code) {
+    public static UserStatus getByCode(Integer code) {
+        if(code == null){
+            return null;
+        }
         for (UserStatus s : UserStatus.values()) {
             if (s.getCode() == code) {
                 return s;

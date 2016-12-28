@@ -1,140 +1,153 @@
-<?xml version="1.0" encoding="UTF-8" ?>  
-<!DOCTYPE mapper  
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.yuntao.zhushou.dal.mapper.IdocUrlMapper">  
-   
-  <resultMap type="IdocUrl" id="BaseResultMap">
-     <id column="id" property="id" jdbcType="BIGINT" />
-       <result  column="url" property="url"/>
-     <result  column="name" property="name"/>
-     <result  column="appName" property="appName"/>
-     <result  column="module" property="module"/>
-     <result  column="version" property="version"/>
-     <result  column="resultData" property="resultData"/>
-      <result  column="resultCommentData" property="resultCommentData"/>
-     <result  column="status" property="status"/>
-     <result  column="gmtCreate" property="gmtCreate"/>
-     <result  column="gmtModify" property="gmtModify"/>
-     <result  column="delStatus" property="delStatus"/>
-     <result  column="memo" property="memo"/>
-     <result  column="createUserId" property="createUserId"/>
-     <result  column="createUserName" property="createUserName"/>
-      <result  column="type" property="type"/>
-      <result  column="showResId" property="showResId"/>
-</resultMap>
-        
-    
- <sql id="Base_Column_List">
-    `id`,`url`,`name`,`appName`,`module`,`version`,`resultCommentData`,`resultData`,`status`,
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuntao.zhushou.dal.mapper.IdocUrlMapper">
+
+    <resultMap type="IdocUrl" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT" />
+        <result column="url" property="url"/>
+        <result column="name" property="name"/>
+        <result column="appName" property="appName"/>
+        <result column="module" property="module"/>
+        <result column="version" property="version"/>
+        <result column="resultData" property="resultData"/>
+        <result column="resultCommentData" property="resultCommentData"/>
+        <result column="status" property="status"/>
+        <result column="gmtCreate" property="gmtCreate"/>
+        <result column="gmtModify" property="gmtModify"/>
+        <result column="delStatus" property="delStatus"/>
+        <result column="memo" property="memo"/>
+        <result column="createUserId" property="createUserId"/>
+        <result column="createUserName" property="createUserName"/>
+        <result column="type" property="type"/>
+        <result column="showResId" property="showResId"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    `id`,`companyId`,`url`,`name`,`appName`,`module`,`version`,`resultCommentData`,`resultData`,`status`,
     `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`,`showResId`
     
   </sql>
-        
-    
-  <sql id="Base_Table_Name">
+
+
+    <sql id="Base_Table_Name">
       idocUrl
   </sql>
-        
-    
-  <sql id="Base_Where">
-    delStatus = 1
-    <if test="id != null and id != '' ">and  `id` = #{id}</if> 
-    <if test="url != null and url != '' ">and  `url` = #{url}</if> 
-    <if test="name != null and name != '' ">and  `name` = #{name}</if> 
-    <if test="appName != null and appName != '' ">and  `appName` = #{appName}</if>
-    <if test="module != null and module != '' ">and  `module` = #{module}</if> 
-    <if test="version != null and version != '' ">and  `version` = #{version}</if> 
-    <if test="resultData != null and resultData != '' ">and  `resultData` = #{resultData}</if> 
-    <if test="status != null and status != '' ">and  `status` = #{status}</if> 
-    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
-    <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
-    <if test="memo != null and memo != '' ">and  `memo` = #{memo}</if> 
-    <if test="createUserId != null and createUserId != '' ">and  `createUserId` = #{createUserId}</if> 
-    <if test="createUserName != null and createUserName != '' ">and  `createUserName` = #{createUserName}</if>
-      <if test="type != null">and  `type` = #{type}</if>
-      <if test="showResId != null">and  `showResId` = #{showResId}</if>
-      <if test="nameLike != null and nameLike != '' ">and `name` like concat('%',#{nameLike},'%') </if>
-      <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%') </if>
-  </sql>
-  
-        
-    
-  <select id="findById" resultMap="BaseResultMap">
-     select <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" /> WHERE id = #{id}
-  </select>
-        
-    
-  <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" />
+
+
+    <sql id="Base_Where">
+        delStatus = 1
+        <if test="id != null">and `id` = #{id}</if>
+        <if test="companyId != null">and companyId = #{companyId}</if>
+        <if test="url != null and url != '' ">and `url` = #{url}</if>
+        <if test="name != null and name != '' ">and `name` = #{name}</if>
+        <if test="appName != null and appName != '' ">and `appName` = #{appName}</if>
+        <if test="module != null and module != '' ">and `module` = #{module}</if>
+        <if test="version != null and version != '' ">and `version` = #{version}</if>
+        <if test="resultData != null and resultData != '' ">and `resultData` = #{resultData}</if>
+        <if test="status != null and status != '' ">and `status` = #{status}</if>
+        <if test="gmtCreate != null and gmtCreate != '' ">and `gmtCreate` = #{gmtCreate}</if>
+        <if test="gmtModify != null and gmtModify != '' ">and `gmtModify` = #{gmtModify}</if>
+        <if test="memo != null and memo != '' ">and `memo` = #{memo}</if>
+        <if test="createUserId != null and createUserId != '' ">and `createUserId` = #{createUserId}</if>
+        <if test="createUserName != null and createUserName != '' ">and `createUserName` = #{createUserName}</if>
+        <if test="type != null">and `type` = #{type}</if>
+        <if test="showResId != null">and `showResId` = #{showResId}</if>
+        <if test="nameLike != null and nameLike != '' ">and `name` like concat('%',#{nameLike},'%')</if>
+        <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%')</if>
+    </sql>
+
+
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        WHERE id = #{id}
+    </select>
+
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
         <where>
             <include refid="Base_Where"/>
         </where>
-       order by id desc
-     <if test="pagination != null ">
-          limit #{pagination.startRow}, #{pagination.pageSize}
-    </if>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
     </select>
-    
-        
-    
-  <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
-      SELECT count(*) from <include refid="Base_Table_Name" />
-      <where>
-          <include refid="Base_Where"/>
-      </where>
-  </select>
- 
-        
-    
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="IdocUrl">
-      <selectKey resultType="long" keyProperty="id">
-          SELECT
-          LAST_INSERT_ID() AS id
-      </selectKey>
-    insert into  <include refid="Base_Table_Name" />
-    (
-    `url`,`name`,       
-    `appName`,`module`,`version`,`resultData`,`resultCommentData`,`status`,`gmtCreate`,`gmtModify`,`delStatus`,
-    `memo`,`createUserId`,`createUserName`,`type`,`showResId`
-    ) 
-    values
-    (
-    #{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultCommentData},#{status},now(6),
-    now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId}
-    )
-  </insert>  
-    
-  <update id="updateById">  
-    update <include refid="Base_Table_Name" />
-      <set>
-           <if test="url != null and url !=''">`url` = #{url},</if>
-       <if test="name != null and name !=''">`name` = #{name},</if>
-       <if test="appName != null and appName !=''">`appName` = #{appName},</if>
-       <if test="module != null and module !=''">`module` = #{module},</if>
-       <if test="version != null and version !=''">`version` = #{version},</if>
-       <if test="resultData != null and resultData !=''">`resultData` = #{resultData},</if>
-       <if test="resultCommentData != null and resultCommentData !=''">`resultCommentData` = #{resultCommentData},</if>
-       <if test="status != null and status !=''">`status` = #{status},</if>
-       <if test="memo != null and memo !=''">`memo` = #{memo},</if>
-       <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>
-       <if test="createUserName != null and createUserName !=''">`createUserName` = #{createUserName},</if>
-          <if test="type != null">`type` = #{type},</if>
-          <if test="showResId != null">`showResId` = #{showResId},</if>
-     </set>
-   ,gmtModify = now(6)
-   where id = #{id}
-  </update>
+
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="IdocUrl">
+        <selectKey resultType="long" keyProperty="id">
+            SELECT
+            LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+        `companyId`,`url`,`name`, `appName`,`module`,`version`,`resultData`,`resultCommentData`,`status`,
+        `gmtCreate`,`gmtModify`,`delStatus`, `memo`,`createUserId`,`createUserName`,`type`,`showResId`
+        )
+        values
+        (
+        #{companyId},#{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultCommentData},#{status},
+        now(6), now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId}
+        )
+    </insert>
+
+    <update id="updateById">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            <if test="companyId != null">`companyId`=#{companyId},</if>
+            <if test="url != null and url !=''">`url` = #{url},</if>
+            <if test="name != null and name !=''">`name` = #{name},</if>
+            <if test="appName != null and appName !=''">`appName` = #{appName},</if>
+            <if test="module != null and module !=''">`module` = #{module},</if>
+            <if test="version != null and version !=''">`version` = #{version},</if>
+            <if test="resultData != null and resultData !=''">`resultData` = #{resultData},</if>
+            <if test="resultCommentData != null and resultCommentData !=''">`resultCommentData` = #{resultCommentData}, </if>
+            <if test="status != null and status !=''">`status` = #{status},</if>
+            <if test="memo != null and memo !=''">`memo` = #{memo},</if>
+            <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>
+            <if test="createUserName != null and createUserName !=''">`createUserName` = #{createUserName},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="showResId != null">`showResId` = #{showResId},</if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
 
 
     <update id="deleteById" parameterType="Long">
-        update  <include refid="Base_Table_Name" /> set delStatus = 0  where id = #{id}
+        update
+        <include refid="Base_Table_Name"/>
+        set delStatus = 0 ,gmtModify = now(6) where id = #{id}
     </update>
 
     <delete id="deleteDirectById" parameterType="Long">
-        delete from  <include refid="Base_Table_Name" /> where id = #{id}
+        delete from
+        <include refid="Base_Table_Name"/>
+        where id = #{id}
     </delete>
 
-     <!-- user definition code start -->
+    <!-- user definition code start -->
     <!-- user definition code end -->
 </mapper> 

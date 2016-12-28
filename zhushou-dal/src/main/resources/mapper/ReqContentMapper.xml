@@ -6,6 +6,7 @@
 
     <resultMap type="ReqContent" id="BaseResultMap">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT" />
         <result column="url" property="url"/>
         <result column="reqHeader" property="reqHeader"/>
         <result column="reqData" property="reqData"/>
@@ -26,7 +27,7 @@
 
 
     <sql id="Base_Column_List">
-    `id`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,       
+    `id`,`companyId`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
     `userId`,`userName`,`model`,`appName`,`name`,`status`,`gmtCreate`,`gmtModify`,       
     `delStatus`       
     
@@ -41,6 +42,7 @@
     <sql id="Base_Where">
         delStatus = 1
         <if test="id != null and id != '' ">and `id` = #{id}</if>
+        <if test="companyId != null">and companyId = #{companyId}</if>
         <if test="url != null and url != '' ">and `url` = #{url}</if>
         <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%') </if>
         <if test="reqHeader != null and reqHeader != '' ">and `reqHeader` = #{reqHeader}</if>
@@ -102,13 +104,13 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
+        `companyId`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`reqMethod`,`httpStatus`,
         `userId`,`userName`,`model`,`appName`,`name`,`status`,`gmtCreate`,`gmtModify`,
         `delStatus`
         )
         values
         (
-        #{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{reqMethod},#{httpStatus},#{userId},
+        #{companyId},#{url},#{reqHeader},#{reqData},#{resHeader},#{resData},#{reqMethod},#{httpStatus},#{userId},
         #{userName},#{model},#{appName},#{name},#{status},now(6),now(6),1
         )
     </insert>
@@ -117,6 +119,7 @@
         update
         <include refid="Base_Table_Name"/>
         <set>
+            <if test="companyId != null">`companyId`=#{companyId},</if>
             <if test="url != null and url !=''">`url` = #{url},</if>
             <if test="reqHeader != null and reqHeader !=''">`reqHeader` = #{reqHeader},</if>
             <if test="reqData != null and reqData !=''">`reqData` = #{reqData},</if>

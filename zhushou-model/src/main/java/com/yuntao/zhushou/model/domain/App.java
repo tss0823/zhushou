@@ -15,6 +15,11 @@ public class App implements Serializable {
     private Long id;
 
     /**
+     * 企业id
+     */
+    private Long companyId;
+
+    /**
      * 名称
      */
     private String name;
@@ -177,5 +182,12 @@ public class App implements Serializable {
     public void setPort(Integer port) {
         this.port = port;
     }
-}
 
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+}
