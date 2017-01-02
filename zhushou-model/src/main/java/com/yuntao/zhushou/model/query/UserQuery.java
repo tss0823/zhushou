@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * Created by shengshan.tang on 2015/11/27 at 14:13
  */

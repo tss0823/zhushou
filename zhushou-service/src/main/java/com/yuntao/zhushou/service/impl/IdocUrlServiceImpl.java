@@ -1,6 +1,10 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuntao.zhushou.common.web.DocObject;
+import com.yuntao.zhushou.common.web.DocReqFieldObject;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.ResponseRes;
@@ -15,12 +19,10 @@ import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
-import com.yuntao.zhushou.model.web.*;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.IdocParamService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.LogService;
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -280,7 +282,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
     @Override
     @Transactional
-    public void syncNew(String appName) {
+    public void syncNew(Long companyId,String appName) {
         //delete parent
         //get parent data List by appName and type
         IdocUrlQuery query = new IdocUrlQuery();
@@ -296,7 +298,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         }
         //end
 
-        App app = appService.findByName(appName);
+        App app = appService.findByName(companyId, appName);
         String url = UrlUtils.getUrl(appName, "prod", app.getDomain(), "/data/enumList");
         ResponseRes responseRes = HttpNewUtils.get(url);
         HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);
@@ -334,7 +336,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
     @Override
     @Transactional
-    public void syncUpdate(String appName, Long id) {
+    public void syncUpdate(Long companyId,String appName, Long id) {
         //get parent data by appName and type and code
         IdocUrl idocUrl = this.findById(id);
         //delete child data list
@@ -342,7 +344,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         //end
 
 
-        App app = appService.findByName(appName);
+        App app = appService.findByName(companyId, appName);
         String url = UrlUtils.getUrl(appName, "prod", app.getDomain(), "/data/enumList");
         ResponseRes responseRes = HttpNewUtils.get(url);
         HashMap dataMap = JsonUtils.json2Object(new String(responseRes.getResult()), HashMap.class);

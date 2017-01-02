@@ -1,20 +1,28 @@
 package com.yuntao.zhushou.deploy.controller;
 
-import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.http.HttpNewUtils;
+import com.yuntao.zhushou.common.http.RequestRes;
+import com.yuntao.zhushou.common.http.ResponseRes;
+import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
-import com.yuntao.zhushou.model.web.ResponseObject;
-import com.yuntao.zhushou.service.inter.DeployExecuteService;
+import com.yuntao.zhushou.service.inter.AppService;
+import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.UserService;
 import com.yuntao.zhushou.service.support.YTWebSocketServer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
@@ -22,41 +30,37 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DeployController extends BaseController {
 
     @Autowired
-    private DeployExecuteService deployExecuteService;
+    private CompanyService companyService;
 
+    @Autowired
+    private AppService appService;
 
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private YTWebSocketServer ytWebSocketServer;
-
-    private volatile String execModel = "prod";  //模式
-    private volatile String execMessage = "nothing";  //操作
-    private volatile boolean compileResult = true;
-
-    private AtomicBoolean execRun = new AtomicBoolean(false);
-
-    @RequestMapping("getExecMsg")
-    @NeedLogin
-    public ResponseObject getExecMsg() {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        int maxIndex = 5;
-        StringBuilder sb = new StringBuilder();
-        while(maxIndex > 0 && !deployExecuteService.execMsgList.isEmpty()){
-            sb.append(deployExecuteService.execMsgList.poll()+"\r\n");
-        }
-        responseObject.setData(sb.toString());
-        return responseObject;
-    }
 
     @RequestMapping("branchList")
     @NeedLogin
     public ResponseObject branchList(@RequestParam String appName) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        List<String> branchList = deployExecuteService.branchList(appName);
-        responseObject.setData(branchList);
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
+
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/branchList");
+        Map<String,String> params = new HashMap<>();
+        params.put("codeName",app.getCodeName());
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 
@@ -64,32 +68,27 @@ public class DeployController extends BaseController {
     @RequestMapping("complie")
     @NeedLogin
     public ResponseObject complie(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execModel = model;
-        execMessage = user.getNickName()+"正在执行["+branch+"]["+execModel+"]编译操作，请稍候";
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.complie(user,appName,branch,model);
-                    compileResult = true;
-                }catch (Exception e){
-                    compileResult = false;
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/complie");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("codeName",app.getCodeName());
+        params.put("branch",branch);
+        params.put("model",model);
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 
@@ -103,41 +102,34 @@ public class DeployController extends BaseController {
      */
     @RequestMapping("deploy")
     @NeedLogin
-    public ResponseObject deploy(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!StringUtils.equals(execModel,model)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage("发布模式不对，当前模式["+execModel+"],期待模式["+model+"],请先编译");
-            return responseObject;
-        }
-        if(!compileResult){
-            responseObject.setSuccess(false);
-            responseObject.setMessage("编译打包失败，请先编译好再发布");
-            return responseObject;
-        }
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execMessage = user.getNickName()+"正在执行["+appName+"]["+execModel+"]发布操作，请稍候";
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
+    public ResponseObject deploy(final @RequestParam String appName,final @RequestParam String model,
+                                 final @RequestParam("ipList[]") List<String> ipList) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.deploy(user,appName,model,ipList);
-                }catch (Exception e){
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deploy");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("codeName",app.getCodeName());
+        params.put("model",model);
+        for (String ip : ipList) {
+            params.put("ipList[]",ip);
+        }
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
+
     }
 
     /**
@@ -150,128 +142,121 @@ public class DeployController extends BaseController {
      */
     @RequestMapping("deployStatic")
     @NeedLogin
-    public ResponseObject deployStatic(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!StringUtils.equals(execModel,model)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage("发布模式不对，当前模式["+execModel+"],期待模式["+model+"],请先编译");
-            return responseObject;
-        }
-        if(!compileResult){
-            responseObject.setSuccess(false);
-            responseObject.setMessage("编译打包失败，请先编译好再发布");
-            return responseObject;
-        }
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execMessage = user.getNickName()+"正在执行["+appName+"]["+execModel+"]静态发布操作，请稍候";
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
+    public ResponseObject deployStatic(final @RequestParam String appName,final @RequestParam String model,
+                                       final @RequestParam("ipList[]") List<String> ipList) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.deployStatic(user,appName,model,ipList);
-                }catch (Exception e){
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deployStatic");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("codeName",app.getCodeName());
+        params.put("model",model);
+        for (String ip : ipList) {
+            params.put("ipList[]",ip);
+        }
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 
     @RequestMapping("stop")
     @NeedLogin
     public ResponseObject stop(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execMessage = user.getNickName()+"正在执行["+appName+"]["+execModel+"]下线操作，请稍候";
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.stop(user,appName,model,ipList);
-                }catch (Exception e){
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/stop");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("model",model);
+        for (String ip : ipList) {
+            params.put("ipList[]",ip);
+        }
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 
     @RequestMapping("restart")
     @NeedLogin
     public ResponseObject restart(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execMessage = user.getNickName()+"正在执行["+appName+"]["+execModel+"]重启操作，请稍候";
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.restart(user,appName,model,ipList);
-                }catch (Exception e){
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/restart");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("model",model);
+        for (String ip : ipList) {
+            params.put("ipList[]",ip);
+        }
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 
     @RequestMapping("rollback")
     @NeedLogin
-    public ResponseObject rollback(final @RequestParam String appName,final @RequestParam String model,
-                                   final @RequestParam String backVer,final @RequestParam("ipList[]") List<String> ipList) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        if(!execRun.compareAndSet(false,true)){
-            responseObject.setSuccess(false);
-            responseObject.setMessage(execMessage);
-            return responseObject;
-        }
-        final User user = userService.getCurrentUser();
-        execMessage = user.getNickName()+"正在执行["+appName+"]["+execModel+"]回滚操作，请稍候";
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,execMessage);
+    public ResponseObject rollback(final @RequestParam String appName,final @RequestParam String model, final @RequestParam String backVer,
+                                   final @RequestParam("ipList[]") List<String> ipList) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    deployExecuteService.rollback(user,appName,model,backVer,ipList);
-                }catch (Exception e){
-                    throw e;
-                }finally {
-                    execRun.set(false);  //完成，恢复初始状态
-                    ytWebSocketServer.sendMessage(AppConstant.ResponseType.MONITOR_STATUS,"空闲");
-                }
-            }
-        }).start();
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/rollback");
+        Map<String,String> params = new HashMap<>();
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("model",model);
+        params.put("backVer",backVer);
+        for (String ip : ipList) {
+            params.put("ipList[]",ip);
+        }
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
 

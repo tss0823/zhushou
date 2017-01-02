@@ -1,18 +1,18 @@
 package com.yuntao.zhushou.client.controller;
 
 import com.yuntao.zhushou.common.utils.HttpUtils;
-import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.model.web.ResponseObject;
-import com.yuntao.zhushou.service.inter.UserService;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shengshan.tang on 2015/12/16 at 23:45
@@ -34,8 +34,8 @@ public class CommonController extends BaseController {
         cacheMap = Collections.synchronizedMap(cacheMap);
     }
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
 
     @RequestMapping("/")
@@ -58,45 +58,5 @@ public class CommonController extends BaseController {
 
     }
 
-    @RequestMapping("getCityById")
-    @ResponseBody
-    public ResponseObject getCityByIp(@RequestParam String ip) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        Object value = cacheMap.get(ip);
-        if(value != null){
-            responseObject.setData(value);
-            return responseObject;
-        }
-
-        List<String> lines = HttpUtils.reqGet("http://ip.taobao.com/service/getIpInfo.php?ip="+ip);
-        String result = StringUtils.join(lines,"");
-        responseObject.setMessage(result);
-        Map map = JsonUtils.json2Object(result, HashMap.class);
-        Object code = map.get("code");
-        if(code == null || code.toString().equals("1")){
-            responseObject.setData("无");
-            cacheMap.put(ip,"无");
-            return responseObject;
-        }
-        Map childMap = (Map) map.get("data");
-        Object province = childMap.get("region");
-        Object city = childMap.get("city");
-        if (province == null || province.toString().equals("")) {
-            Object country = childMap.get("country");
-            responseObject.setData(country);
-            cacheMap.put(ip,country);
-            return responseObject;
-        }
-        String address = province + "" +city;
-        cacheMap.put(ip,address);
-        responseObject.setData(address);
-        return responseObject;
-
-    }
-
-    @RequestMapping("favicon.ico")
-    String favicon() {
-        return "forward:/_resources/images/favicon.ico";
-    }
 
 }

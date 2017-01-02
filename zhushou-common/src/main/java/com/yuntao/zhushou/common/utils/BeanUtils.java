@@ -6,6 +6,8 @@ package com.yuntao.zhushou.common.utils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,5 +176,41 @@ public class BeanUtils {
             log.error("bean to queryMap failed! ", e);
             return null;
         }
+    }
+
+    /**
+     * bean 转换 String
+     *
+     * cache  查询的时候用到
+     * @param bean
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static String beanToString(Object bean) {
+        try {
+            Map<String,Object> map = PropertyUtils.describe(bean);
+            if(MapUtils.isNotEmpty(map)){
+                StringBuilder sb = new StringBuilder();
+                Set<Map.Entry<String,Object>> set = map.entrySet();
+                for(Map.Entry<String,Object> entry : set){
+                    String key = entry.getKey();
+                    if(StringUtils.equals(key,"class")){
+                        continue;
+                    }
+                    Object value = entry.getValue();
+                    if(value == null || StringUtils.isEmpty(value.toString())){
+                        continue;
+                    }
+                    sb.append(key);
+                    sb.append("_");
+                    sb.append(value);
+                    sb.append("_");
+                }
+                return sb.toString();
+            }
+        } catch (Exception e) {
+            log.error("bean to str failed! ", e);
+        }
+        return null;
     }
 }

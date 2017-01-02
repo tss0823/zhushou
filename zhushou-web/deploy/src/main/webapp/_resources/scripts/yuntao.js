@@ -423,7 +423,7 @@
         //推送端触发
         notifyEvent : function(message){
             var msgObj = JSON.parse(message);
-            var type = msgObj.type;
+            var type = msgObj.bizType;
             var listenerList = YT.deploy.eventProcess.listener;
             for(var i = 0; i < listenerList.length; i++){
                 var myEvent = listenerList[i];
@@ -610,7 +610,7 @@
 
         init : function(){
             var hostname = location.hostname;
-            var webSocket = new WebSocket('ws://'+hostname+':9003/indexWebSocket');
+            var webSocket = new WebSocket('ws://'+hostname+':9101/index.index?platform=user&token='+$.cookie("sid"));
             // webSocket.send("发送消息ok");
 
             webSocket.onerror = function(event) {

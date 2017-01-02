@@ -3,7 +3,7 @@ package com.yuntao.zhushou.service.inter;
 import com.yuntao.zhushou.model.domain.ShowRes;
 import com.yuntao.zhushou.model.query.ShowResQuery;
 import com.yuntao.zhushou.model.vo.ShowResVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 
 import java.util.List;
 

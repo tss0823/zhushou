@@ -1,11 +1,11 @@
 package com.yuntao.zhushou.model.query;
 
-import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.yuntao.zhushou.common.web.BaseQuery;
 
 /**
  * Created by shan on 2016/3/27.
  */
-public class AppQuery  extends BaseQuery{
+public class AppQuery  extends BaseQuery {
 
     private Long id;
 

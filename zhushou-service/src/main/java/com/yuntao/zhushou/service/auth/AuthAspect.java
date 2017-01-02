@@ -1,9 +1,8 @@
 package com.yuntao.zhushou.service.auth;
 
 import com.yuntao.zhushou.common.exception.AuthException;
-import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;

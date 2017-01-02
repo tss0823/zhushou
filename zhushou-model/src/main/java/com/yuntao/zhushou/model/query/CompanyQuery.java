@@ -1,13 +1,17 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * Created by shan on 2016/3/27.
  */
-public class CompanyQuery extends BaseQuery{
+public class CompanyQuery extends BaseQuery {
 
     private Long id;
 
     private String name;
+
+    private String key;
 
     public Long getId() {
         return id;
@@ -23,5 +27,13 @@ public class CompanyQuery extends BaseQuery{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

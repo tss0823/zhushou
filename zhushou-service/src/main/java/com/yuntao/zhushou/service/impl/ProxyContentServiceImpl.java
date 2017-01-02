@@ -10,7 +10,7 @@ import com.yuntao.zhushou.model.enums.ProxyContentStatus;
 import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.query.ProxyContentQuery;
 import com.yuntao.zhushou.model.vo.ProxyContentVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 

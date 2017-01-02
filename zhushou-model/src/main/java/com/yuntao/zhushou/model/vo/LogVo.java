@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class LogVo implements Serializable {
 
-    private Long companyId;
+    private String key;
 
     private String stackId;
 
@@ -297,11 +297,11 @@ public class LogVo implements Serializable {
         this.id = id;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public String getKey() {
+        return key;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setKey(String key) {
+        this.key = key;
     }
 }

@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * 模板参数
  * 
@@ -7,7 +9,7 @@ package com.yuntao.zhushou.model.query;
  *
  * @2016-07-21 15
  */
-public class AtParameterQuery extends  BaseQuery {
+public class AtParameterQuery extends BaseQuery {
 
     private Long activeId;
 

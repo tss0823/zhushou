@@ -3,6 +3,7 @@ package com.yuntao.zhushou.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
@@ -10,7 +11,7 @@ import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.dal.mapper.AtProcessInstMapper;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.model.domain.AtProcessInst;
 import com.yuntao.zhushou.model.enums.AtParamterRuleType;
 import com.yuntao.zhushou.model.query.AtProcessInstQuery;
@@ -18,7 +19,7 @@ import com.yuntao.zhushou.model.vo.AtActiveVo;
 import com.yuntao.zhushou.model.vo.AtParameterVo;
 import com.yuntao.zhushou.model.vo.AtProcessInstVo;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.AtProcessInstService;
 import com.yuntao.zhushou.service.inter.AtTemplateService;
 import com.yuntao.zhushou.service.support.YTWebSocketServer;
@@ -51,8 +52,8 @@ public class AtProcessInstServiceImpl implements AtProcessInstService {
     @Autowired
     private AtTemplateService atTemplateService;
 
-    @Autowired
-    private YTWebSocketServer ytWebSocketServer;
+//    @Autowired
+    private YTWebSocketServer YTWebSocketServer;
 
     @Override
     public List<AtProcessInst> selectList(AtProcessInstQuery query) {
@@ -217,7 +218,7 @@ public class AtProcessInstServiceImpl implements AtProcessInstService {
             lastResponseRes = HttpNewUtils.execute(requestRes);
             //执行结束，推送消息
             String sendMsg = "url="+requestRes.getUrl()+",status="+lastResponseRes.getStatus();
-            ytWebSocketServer.sendMessage(AppConstant.ResponseType.TEST_HTTP_EXCUTE,sendMsg);
+            YTWebSocketServer.sendMessage(MsgConstant.ResponseBizType.TEST_HTTP_EXCUTE,sendMsg);
 
         }
     }

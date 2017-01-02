@@ -1,12 +1,11 @@
 package com.yuntao.zhushou.service.inter;
 
-import com.yuntao.zhushou.model.domain.IdocParam;
 import com.yuntao.zhushou.model.domain.IdocUrl;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import java.util.List;
 
 
@@ -106,7 +105,7 @@ public interface IdocUrlService {
      * 同步创建枚举
      * @param appName
      */
-    void syncNew(String appName);
+    void syncNew(Long compnayId,String appName);
 
 
     /**
@@ -114,7 +113,7 @@ public interface IdocUrlService {
      * @param appName
      * @param id
      */
-    void syncUpdate(String appName, Long id);
+    void syncUpdate(Long companyId,String appName, Long id);
 
     /**
      * 提交或修改枚举

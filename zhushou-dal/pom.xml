@@ -23,11 +23,6 @@
     <dependencies>
         <dependency>
             <groupId>com.yuntao.zhushou</groupId>
-            <artifactId>zhushou-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yuntao.zhushou</groupId>
             <artifactId>zhushou-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

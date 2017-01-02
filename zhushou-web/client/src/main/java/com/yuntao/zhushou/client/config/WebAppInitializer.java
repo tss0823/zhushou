@@ -1,8 +1,5 @@
 package com.yuntao.zhushou.client.config;
 
-import com.yuntao.zhushou.dal.config.ApplicationConfig;
-import com.yuntao.zhushou.dal.config.DalConfig;
-import com.yuntao.zhushou.service.config.ServiceConfig;
 import com.yuntao.zhushou.common.utils.ResponseHolderFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +26,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{ApplicationConfig.class, DalConfig.class, ServiceConfig.class};
+        return new Class<?>[]{};
     }
 
     @Override

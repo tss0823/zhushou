@@ -106,22 +106,10 @@
         where id = #{id}
     </update>
 
-    <update id="updateByName">
+    <update id="updateLog">
         update
         <include refid="Base_Table_Name"/>
-        <set>
-            <if test="companyId != null">`companyId`=#{companyId},</if>
-            <if test="userId != null">`userId`=#{userId},</if>
-            <if test="type != null and type !=''">`type`=#{type},</if>
-            <if test="status != null and status !=''">`status`=#{status},</if>
-            <if test="log != null and log !=''">`log`=#{log},</if>
-            <if test="desc != null and desc !=''">`desc`=#{desc},</if>
-            <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
-            <if test="domain != null and domain !=''">`domain`=#{domain},</if>
-            <if test="port != null">`port`=#{port},</if>
-        </set>
-        ,gmtModify = now(6)
-        where name = #{name}
+        set log = #{log} ,gmtModify = now(6) where companyId = #{companyId} and name = #{name}
     </update>
 
     <update id="deleteById">

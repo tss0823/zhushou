@@ -1,17 +1,20 @@
 package com.yuntao.zhushou.service.job;
 
+import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.common.constant.AppConstant;
+import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.enums.LogModel;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.HostService;
 import com.yuntao.zhushou.service.support.YTWebSocketServer;
+import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +42,11 @@ public class CheckServerStatusJob {
     private HostService hostService;
 
     @Autowired
-    private YTWebSocketServer ytWebSocketServer;
+    private DZMessageHelperServer dzMessageHelperServer;
 
     private AtomicBoolean execRun = new AtomicBoolean(false);
 
-    @Scheduled(cron = "*/5 * * * * ?")
+//    @Scheduled(cron = "*/5 * * * * ?")
 //    @Profile("prod")
     public void check() {
         if (!execRun.compareAndSet(false, true)) {
@@ -82,10 +85,15 @@ public class CheckServerStatusJob {
             String result = JsonUtils.object2Json(resultMap);
 
             //推送到前端
-            ytWebSocketServer.sendMessage(AppConstant.ResponseType.SERVER_STATUS_CHECK, result);
+            MsgResponseObject msgResponseObject = new MsgResponseObject();
+            msgResponseObject.setType(MsgConstant.ReqResType.USER);
+            msgResponseObject.setBizType(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK);
+            msgResponseObject.setData(result);
+            dzMessageHelperServer.offerSendMsg(msgResponseObject);
+//            YTWebSocketServer.sendMessage(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK, result);
         } catch (Exception e) {
             log.error("checkServerError", e);
-            ytWebSocketServer.sendMessage(AppConstant.ResponseType.SERVER_STATUS_CHECK, "error,message=" + e.getMessage());
+//            YTWebSocketServer.sendMessage(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK, "error,message=" + e.getMessage());
         } finally {
             execRun.set(false);
         }

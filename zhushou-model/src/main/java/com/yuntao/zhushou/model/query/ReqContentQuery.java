@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * 请求内容
  * 
@@ -7,7 +9,7 @@ package com.yuntao.zhushou.model.query;
  *
  * @2016-08-13 21
  */
-public class ReqContentQuery extends  BaseQuery {
+public class ReqContentQuery extends BaseQuery {
 
 
     private String model;

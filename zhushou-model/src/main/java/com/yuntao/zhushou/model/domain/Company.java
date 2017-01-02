@@ -19,6 +19,11 @@ public class Company implements Serializable {
      */
     private String name;
 
+    /**
+     * key
+     */
+    private String key;
+
 
     /**
      * 创建时间
@@ -39,6 +44,16 @@ public class Company implements Serializable {
      * 类型
      */
     private Integer type;
+
+    /**
+     * ip地址
+     */
+    private String ip;
+
+    /**
+     * 端口
+     */
+    private Integer port;
 
     /**
      * 状态
@@ -115,5 +130,28 @@ public class Company implements Serializable {
     public void setDesc(String desc) {
         this.desc = desc;
     }
-}
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+}

@@ -3,27 +3,21 @@ package com.yuntao.zhushou.deploy.controller.at;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.AtActive;
 import com.yuntao.zhushou.model.domain.AtParameter;
-import com.yuntao.zhushou.model.domain.AtTemplate;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
-import com.yuntao.zhushou.model.web.Pagination;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AtTemplateService;
-import com.yuntao.zhushou.service.inter.LogService;
 import com.yuntao.zhushou.service.inter.UserService;
-import org.omg.PortableInterceptor.ACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**

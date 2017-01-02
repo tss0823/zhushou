@@ -5,7 +5,7 @@ import com.yuntao.zhushou.dal.mapper.ShowResMapper;
 import com.yuntao.zhushou.model.domain.ShowRes;
 import com.yuntao.zhushou.model.query.ShowResQuery;
 import com.yuntao.zhushou.model.vo.ShowResVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.ShowResService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

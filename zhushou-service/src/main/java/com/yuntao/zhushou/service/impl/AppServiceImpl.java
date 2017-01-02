@@ -4,12 +4,12 @@ import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.dal.mapper.AppMapper;
-import com.yuntao.zhushou.model.constant.CacheConstant;
+import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.vo.AppVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,16 +42,17 @@ public class AppServiceImpl extends AbstService implements AppService {
     }
 
     @Override
-    public App findByName(String name) {
+    public App findByName(Long companyId, String name) {
         AppQuery query = new AppQuery();
+        query.setCompanyId(companyId);
         query.setName(name);
         Map<String,Object> queryMap = BeanUtils.beanToMap(query);
         return appMapper.findByCondition(queryMap);
     }
 
     @Override
-    public int updateByName(App app) {
-        return appMapper.updateByName(app);
+    public int updateLog(Long companyId,String appName,String log) {
+        return appMapper.updateLog(companyId,appName,log);
     }
 
     @Override

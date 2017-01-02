@@ -1,25 +1,19 @@
 package com.yuntao.zhushou.deploy.controller;
 
-import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.IdocParam;
-import com.yuntao.zhushou.model.domain.IdocUrl;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
-import com.yuntao.zhushou.model.web.Pagination;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 
 /**
@@ -109,16 +103,18 @@ public class IdocUrlController extends BaseController {
     @RequestMapping("syncNew")
     @NeedLogin
     public ResponseObject syncNew(String appName) {
+        User user = userService.getCurrentUser();
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        idocUrlService.syncNew(appName);
+        idocUrlService.syncNew(user.getCompanyId(),appName);
         return responseObject;
     }
 
     @RequestMapping("syncUpdate")
     @NeedLogin
     public ResponseObject syncUpdate(@RequestParam String appName,@RequestParam Long id) {
+        User user = userService.getCurrentUser();
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        idocUrlService.syncUpdate(appName,id);
+        idocUrlService.syncUpdate(user.getCompanyId(),appName,id);
         return responseObject;
     }
 

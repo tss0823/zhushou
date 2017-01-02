@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * 角色
  * 
@@ -7,6 +9,6 @@ package com.yuntao.zhushou.model.query;
  *
  * @2016-08-07 11
  */
-public class RoleQuery extends  BaseQuery {
+public class RoleQuery extends BaseQuery {
 
 }

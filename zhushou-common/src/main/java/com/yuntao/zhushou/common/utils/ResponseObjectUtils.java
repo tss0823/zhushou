@@ -1,6 +1,6 @@
 package com.yuntao.zhushou.common.utils;
 
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 
 /**
  * Created by shan on 2016/3/25.

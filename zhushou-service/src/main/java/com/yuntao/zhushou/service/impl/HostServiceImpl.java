@@ -1,12 +1,12 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.cache.CacheService;
+import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.HostMapper;
-import com.yuntao.zhushou.model.constant.CacheConstant;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.query.HostQuery;
-import com.yuntao.zhushou.model.web.Pagination;
 import com.yuntao.zhushou.service.inter.HostService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,6 @@ public class HostServiceImpl extends AbstService implements HostService {
         return hostMapper.findById(id);
     }
 
-    @Override
-    public Host findByName(String name) {
-        HostQuery query = new HostQuery();;
-        query.setName(name);
-        Map<String,Object> queryMap = BeanUtils.beanToMap(query);
-        return hostMapper.findByCondition(queryMap);
-    }
 
     @Override
     public Pagination<Host> selectPage(HostQuery query) {
@@ -70,9 +63,10 @@ public class HostServiceImpl extends AbstService implements HostService {
     }
 
     @Override
-    public List<Host> selectListByAll() {
+    public List<Host> selectList(HostQuery query) {
         //get form cache
-        String key = CacheConstant.Host.selectListByAll;
+        String queryString = BeanUtils.beanToString(query);
+        String key = CacheConstant.Host.selectListByAll+"_"+queryString;
         List<Host> dataList = (List<Host>) cacheService.get(key);
         if(CollectionUtils.isNotEmpty(dataList)){
             return dataList;
@@ -82,4 +76,5 @@ public class HostServiceImpl extends AbstService implements HostService {
         cacheService.set(key,dataList);
         return dataList;
     }
+
 }

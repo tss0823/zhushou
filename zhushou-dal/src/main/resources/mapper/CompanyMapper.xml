@@ -2,8 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuntao.zhushou.dal.mapper.CompanyMapper">
 
-    <resultMap id="BaseResultMap" type="App">
+    <resultMap id="BaseResultMap" type="Company">
+        <result column="key" property="key" jdbcType="VARCHAR" />
         <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="port" property="port" jdbcType="INTEGER" />
         <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP" />
         <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP" />
         <result column="delStatus" property="delStatus" jdbcType="INTEGER" />
@@ -13,16 +16,19 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`name`,`gmtCreate`,`gmtModify`,`type`,`status`,`desc`
+        `id`,`key`,`name`,`ip`,`port`,`gmtCreate`,`gmtModify`,`type`,`status`,`desc`
     </sql>
     <sql id="Base_Table_Name">
-        app
+        company
     </sql>
     <sql id="Base_Where">
         delStatus = 1
         <if test="id != null">and id = #{id}</if>
-        <if test="name != null and name != ''">and name = #{name}</if>
-        <if test="type != null">and type = #{type}</if>
+        <if test="key != null and key != ''">and `key` = #{key}</if>
+        <if test="name != null and name != ''">and `name` = #{name}</if>
+        <if test="ip != null and ip != ''">and ip = #{ip}</if>
+        <if test="port != null">and port = #{port}</if>
+        <if test="type != null">and `type` = #{type}</if>
         <if test="status != null">and status = #{status}</if>
 
     </sql>
@@ -75,17 +81,19 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`desc`)
+        (`key`,`name`,`ip`,`port`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`desc`)
         values
-        (#{name},now(6),now(6),1,#{type},#{status},#{desc})
+        (#{key},#{name},#{ip},#{port},now(6),now(6),1,#{type},#{status},#{desc})
     </insert>
 
     <update id="updateById">
         update
         <include refid="Base_Table_Name"/>
         <set>
+            <if test="key != null and key !=''">`key`=#{key},</if>
             <if test="name != null and name !=''">`name`=#{name},</if>
-            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
+            <if test="ip != null and ip !=''">`ip`=#{ip},</if>
+            <if test="port != null">`port`=#{port},</if>
             <if test="type != null and type !=''">`type`=#{type},</if>
             <if test="status != null and status !=''">`status`=#{status},</if>
             <if test="desc != null and desc !=''">`desc`=#{desc},</if>
@@ -98,14 +106,13 @@
         update
         <include refid="Base_Table_Name"/>
         <set>
-            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
-            <if test="type != null and type !=''">`type`=#{type},</if>
-            <if test="status != null and status !=''">`status`=#{status},</if>
-            <if test="log != null and log !=''">`log`=#{log},</if>
-            <if test="desc != null and desc !=''">`desc`=#{desc},</if>
-            <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
-            <if test="domain != null and domain !=''">`domain`=#{domain},</if>
+            <if test="key != null and key !=''">`key`=#{key},</if>
+            <if test="name != null and name !=''">`name`=#{name},</if>
+            <if test="ip != null and ip !=''">`ip`=#{ip},</if>
             <if test="port != null">`port`=#{port},</if>
+            <if test="type != null">`type`=#{type},</if>
+            <if test="status != null and status !=''">`status`=#{status},</if>
+            <if test="desc != null and desc !=''">`desc`=#{desc},</if>
         </set>
         ,gmtModify = now(6)
         where name = #{name}

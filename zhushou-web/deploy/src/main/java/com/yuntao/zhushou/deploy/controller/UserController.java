@@ -2,12 +2,11 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.dal.annotation.NotNeedLogin;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.UserStatus;
 import com.yuntao.zhushou.model.enums.UserType;
 import com.yuntao.zhushou.model.vo.AuthResVo;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AuthResService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

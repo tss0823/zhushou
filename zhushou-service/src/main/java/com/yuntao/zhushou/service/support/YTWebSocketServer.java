@@ -2,7 +2,7 @@ package com.yuntao.zhushou.service.support;
 
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -12,12 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
+//@Component
 public class YTWebSocketServer extends WebSocketServer implements InitializingBean {
 
 

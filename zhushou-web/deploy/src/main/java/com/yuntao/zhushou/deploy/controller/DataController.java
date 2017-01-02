@@ -5,13 +5,12 @@ import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.enums.*;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ConfigService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

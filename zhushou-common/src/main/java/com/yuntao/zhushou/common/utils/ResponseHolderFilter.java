@@ -1,12 +1,7 @@
 package com.yuntao.zhushou.common.utils;
 
-import com.yuntao.zhushou.model.domain.ProxyContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import java.io.IOException;

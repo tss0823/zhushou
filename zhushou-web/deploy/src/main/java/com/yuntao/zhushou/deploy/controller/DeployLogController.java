@@ -2,24 +2,16 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.domain.App;
-import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.DeployLogQuery;
-import com.yuntao.zhushou.model.query.HostQuery;
 import com.yuntao.zhushou.model.vo.DeployLogVo;
-import com.yuntao.zhushou.model.web.Pagination;
-import com.yuntao.zhushou.model.web.ResponseObject;
-import com.yuntao.zhushou.service.inter.AppService;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.DeployLogService;
-import com.yuntao.zhushou.service.inter.HostService;
-import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("deployLog")

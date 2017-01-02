@@ -8,7 +8,6 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.utils.UrlUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.ReqContent;
 import com.yuntao.zhushou.model.domain.User;
@@ -16,17 +15,15 @@ import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.param.ReqDataParam;
 import com.yuntao.zhushou.model.query.ReqContentQuery;
 import com.yuntao.zhushou.model.vo.ReqContentVo;
-import com.yuntao.zhushou.model.web.Pagination;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ReqContentService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -107,8 +104,9 @@ public class ReqContentController extends BaseController {
         }
         requestRes.setParams(paramMap);
         //url 处理
+        Long companyId = param.getCompanyId();
         String appName = param.getAppName();
-        App app = appService.findByName(appName);
+        App app = appService.findByName(companyId, appName);
         String domain = app.getDomain();
         String model = param.getModel();  //model
         String url = UrlUtils.getUrl(appName, model, domain, param.getUrl());

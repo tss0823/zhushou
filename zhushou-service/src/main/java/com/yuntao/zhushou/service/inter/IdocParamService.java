@@ -3,7 +3,7 @@ package com.yuntao.zhushou.service.inter;
 import com.yuntao.zhushou.model.domain.IdocParam;
 import com.yuntao.zhushou.model.query.IdocParamQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 import java.util.List;
 
 

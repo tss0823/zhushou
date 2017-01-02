@@ -1,9 +1,11 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * Created by shan on 2016/3/27.
  */
-public class DeployLogQuery extends BaseQuery{
+public class DeployLogQuery extends BaseQuery {
 
     private String appName;
 

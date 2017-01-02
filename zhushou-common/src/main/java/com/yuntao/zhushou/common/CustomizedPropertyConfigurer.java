@@ -46,7 +46,8 @@ public class CustomizedPropertyConfigurer extends PropertyPlaceholderConfigurer 
 
 
     private void loadFromFile() {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("env/config-" + ctxPropertiesMap.get("spring.profiles.active") + ".properties");
+        String filePath = "env/config-" + ctxPropertiesMap.get("spring.profiles.active") + ".properties";
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(filePath);
         Properties p = new Properties();
         try {
             p.load(inputStream);
@@ -56,7 +57,7 @@ public class CustomizedPropertyConfigurer extends PropertyPlaceholderConfigurer 
                 putProp(name, value);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.warn("not found "+filePath);
         }
     }
 

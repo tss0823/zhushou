@@ -7,7 +7,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.slb.model.v20140515.AddBackendServersRequest;
 import com.aliyuncs.slb.model.v20140515.RemoveBackendServersRequest;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.common.constant.AppConstant;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

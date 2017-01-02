@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * 接口主体
  * 
@@ -7,7 +9,7 @@ package com.yuntao.zhushou.model.query;
  *
  * @2016-07-30 20
  */
-public class IdocUrlQuery extends  BaseQuery {
+public class IdocUrlQuery extends BaseQuery {
 
     /**  URL * */
     private String url;

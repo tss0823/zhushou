@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.yuntao.zhushou</groupId>
-            <artifactId>zhushou-service</artifactId>
+            <artifactId>zhushou-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

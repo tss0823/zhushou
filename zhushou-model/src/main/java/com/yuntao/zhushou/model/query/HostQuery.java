@@ -1,9 +1,11 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * Created by shan on 2016/3/27.
  */
-public class HostQuery extends BaseQuery{
+public class HostQuery extends BaseQuery {
 
     private Long id;
 

@@ -74,7 +74,7 @@ public class HttpNewUtils {
                 for (Map.Entry<String, String> paramEntry : paramEntrySet) {
                     nvps.add(new BasicNameValuePair(paramEntry.getKey(), paramEntry.getValue()));
                 }
-                httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+                httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
             }
             CloseableHttpResponse response = httpclient.execute(httpPost);
             int status = response.getStatusLine().getStatusCode();

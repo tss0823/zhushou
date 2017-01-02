@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.model.query;
 
+import com.yuntao.zhushou.common.web.BaseQuery;
+
 /**
  * 代理内容
  * 
@@ -7,7 +9,7 @@ package com.yuntao.zhushou.model.query;
  *
  * @2016-08-13 21
  */
-public class ProxyContentQuery extends  BaseQuery {
+public class ProxyContentQuery extends BaseQuery {
 
 
     private String clientIp;

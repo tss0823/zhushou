@@ -1,13 +1,8 @@
 package com.yuntao.zhushou.service.inter;
 
-import com.yuntao.zhushou.model.query.LogQuery;
-import com.yuntao.zhushou.model.query.LogTextQuery;
 import com.yuntao.zhushou.model.query.TaskLogQuery;
-import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.model.vo.TaskLogVo;
-import com.yuntao.zhushou.model.web.Pagination;
-
-import java.util.List;
+import com.yuntao.zhushou.common.web.Pagination;
 
 /**
  * Created by shan on 2016/5/5.

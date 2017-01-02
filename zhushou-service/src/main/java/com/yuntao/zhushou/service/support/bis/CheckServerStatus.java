@@ -1,14 +1,15 @@
 package com.yuntao.zhushou.service.support.bis;
 
+import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.model.constant.AppConstant;
+import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.enums.LogModel;
-import com.yuntao.zhushou.model.web.ResponseObject;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.HostService;
 import com.yuntao.zhushou.service.support.YTWebSocketServer;
@@ -16,10 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +76,6 @@ public class CheckServerStatus {
         String result = JsonUtils.object2Json(resultMap);
 
         //推送到前端
-        ytWebSocketServer.sendMessage(AppConstant.ResponseType.SERVER_STATUS_CHECK,result);
+        ytWebSocketServer.sendMessage(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK,result);
     }
 }

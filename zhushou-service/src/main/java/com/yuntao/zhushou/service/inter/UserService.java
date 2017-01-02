@@ -3,7 +3,7 @@ package com.yuntao.zhushou.service.inter;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.UserQuery;
 import com.yuntao.zhushou.model.vo.UserVo;
-import com.yuntao.zhushou.model.web.Pagination;
+import com.yuntao.zhushou.common.web.Pagination;
 
 public interface UserService {
 
