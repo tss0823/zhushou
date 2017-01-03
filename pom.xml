@@ -12,7 +12,7 @@
 
 
     <modules>
-        <module>zhushou-deploy</module>
+        <module>zhushou-web</module>
         <module>zhushou-service</module>
         <module>zhushou-model</module>
         <module>zhushou-dal</module>
