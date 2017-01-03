@@ -9,5 +9,7 @@ public interface HostMapper extends BaseMapper<Host> {
 
     List<Host> selectListByAppAndModel(@Param("appId") Long appId, @Param("model") String model);
 
+    List<Host> selectListByAppId(@Param("appId") Long appId);
+
 
 }

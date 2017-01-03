@@ -63,6 +63,20 @@ public class HostServiceImpl extends AbstService implements HostService {
     }
 
     @Override
+    public List<Host> selectListByAppId(Long appId) {
+        //get form cache
+        String key = CacheConstant.Host.selectListByAll+"_"+appId;
+        List<Host> dataList = (List<Host>) cacheService.get(key);
+        if(CollectionUtils.isNotEmpty(dataList)){
+            return dataList;
+        }
+        dataList = hostMapper.selectListByAppId(appId);
+        //set to cache
+        cacheService.set(key,dataList);
+        return dataList;
+    }
+
+    @Override
     public List<Host> selectList(HostQuery query) {
         //get form cache
         String queryString = BeanUtils.beanToString(query);

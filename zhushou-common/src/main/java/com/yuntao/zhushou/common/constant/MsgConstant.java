@@ -15,6 +15,7 @@ public interface MsgConstant {
         String EVENT_START = "event_start";
         String EVENT_END = "event_end";
         String UPDATE_ADDRESS = "update_address";  //core 提给 deploy http ip and port
+        String SERVER_STATUS_CHECK = "server_status_check";  //服务器节点状态检查
     }
 
     interface ReqUserBizType{  //client User请求业务类型

@@ -162,9 +162,12 @@
                     }
                     var color = "green";
                     var text = "OK";
-                    if(errArray.length > 0){
+                    if(errArray.length == hostStatusMsg.length){
                         color = "red"; //all failed
-                        text = "ERROR"
+                        text = "ERROR";
+                    }else if(errArray.length > 0){
+                        color = "black";
+                        text = "ERROR";
                     }else{
                         text = "OK";
                     }

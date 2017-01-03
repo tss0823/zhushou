@@ -254,6 +254,9 @@ public class DZMessageHelperServer  {
             return;
         }
 
+        //接收消息拦截处理
+        wsMessageService.receiveHandler(requestObject);
+
         //add to queue
         if (StringUtils.equals(requestObject.getType(), MsgConstant.ReqResType.CORE)) {  //内核
             //如果单独给平台的,则自己消化
@@ -264,9 +267,10 @@ public class DZMessageHelperServer  {
                 company.setIp(reqMsg.split(":")[0]);
                 company.setPort(Integer.valueOf(reqMsg.split(":")[1]));
                 companyService.updateById(company);
-            }else{
-                //如果是退给用户的,放到队列中,准备推送给用户端
-                String listKey = CacheConstant.Msg.readyMsgList + "_" + SystemUtils.getIp();
+
+            //其他消息（event ,shell,server_check）
+            } else{
+//                String listKey = CacheConstant.Msg.readyMsgList + "_" + SystemUtils.getIp();
                 MsgResponseObject responseObject = new MsgResponseObject();
                 responseObject.setType(MsgConstant.ReqResType.USER);  //发送给用户端
                 responseObject.setBizType(requestObject.getBizType());
@@ -274,9 +278,9 @@ public class DZMessageHelperServer  {
                 responseObject.setKey(fTWebSocket.getCpKey());
                 responseObject.setUserId(fTWebSocket.getUserId());
                 responseObject.setData(requestObject.getMessage());
-                String resMsg = JsonUtils.object2Json(responseObject);
-                queueService.add(listKey, resMsg);
-
+                this.offerSendMsg(responseObject);
+//                String resMsg = JsonUtils.object2Json(responseObject);
+//                queueService.add(listKey, resMsg);
             }
 
         } else if (StringUtils.equals(requestObject.getType(), MsgConstant.ReqResType.USER)) { //用户

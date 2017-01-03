@@ -122,4 +122,9 @@
         and t2.delStatus = 1
     </select>
 
+    <select id="selectListByAppId" parameterType="Map" resultMap="BaseResultMap">
+        select t2.id,t2.name,t2.eth0,t2.eth1 from apphost t1,host t2 where t1.appId = #{appId}
+         and t1.hostId = t2.id and t2.delStatus = 1
+    </select>
+
 </mapper>

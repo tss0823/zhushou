@@ -123,6 +123,31 @@ public class HttpUtils {
             IOUtils.closeQuietly(response);
         }
         return null;
+    }
+
+    public static List<String> reqGet(String url,int soTimeout,int conTimeout){
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setSocketTimeout(soTimeout)
+                .setConnectTimeout(conTimeout)
+                .build();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpget = new HttpGet(url);
+        httpget.setConfig(requestConfig);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclient.execute(httpget);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                InputStream is = entity.getContent();
+                List<String> lines = IOUtils.readLines(is);
+                return lines;
+            }
+        } catch (Exception e) {
+            throw new BizException("remote http request error!,"+e.getMessage(),e);
+        } finally {
+            IOUtils.closeQuietly(response);
+        }
+        return null;
 
     }
 

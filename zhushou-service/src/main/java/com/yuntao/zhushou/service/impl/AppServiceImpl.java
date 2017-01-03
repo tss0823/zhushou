@@ -99,4 +99,17 @@ public class AppServiceImpl extends AbstService implements AppService {
         return dataList;
 
     }
+
+    @Override
+    public List<App> selectList(AppQuery query) {
+        Map<String, Object> queryMap = BeanUtils.beanToMap(query);
+        return appMapper.selectList(queryMap);
+    }
+
+    @Override
+    public List<App> selectByCompanyId(Long companyId) {
+        AppQuery appQuery = new AppQuery();
+        appQuery.setCompanyId(companyId);
+        return selectList(appQuery);
+    }
 }

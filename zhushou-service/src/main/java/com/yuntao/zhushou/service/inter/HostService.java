@@ -14,6 +14,8 @@ public interface HostService {
 
     List<Host> selectListByAppAndModel(Long appId, String model);
 
+    List<Host> selectListByAppId(Long appId);
+
     List<Host> selectList(HostQuery query);
 
 

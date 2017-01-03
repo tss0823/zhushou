@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.service.inter;
 
+import com.yuntao.zhushou.common.web.MsgRequestObject;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.App;
@@ -14,7 +15,7 @@ public interface WsMsgHandlerService {
      * 接收消息处理
      * @param responseObject
      */
-    void receiveHandler(MsgResponseObject responseObject);
+    void receiveHandler(MsgRequestObject requestObject);
 
     void sendHandler(MsgResponseObject responseObject);
 

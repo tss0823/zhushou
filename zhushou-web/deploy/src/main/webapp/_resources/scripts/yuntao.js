@@ -610,7 +610,7 @@
 
         init : function(){
             var hostname = location.hostname;
-            var webSocket = new WebSocket('ws://'+hostname+':9101/index.index?platform=user&token='+$.cookie("sid"));
+            var webSocket = new WebSocket('ws://'+hostname+':9003/index.index?platform=user&token='+$.cookie("sid"));
             // webSocket.send("发送消息ok");
 
             webSocket.onerror = function(event) {

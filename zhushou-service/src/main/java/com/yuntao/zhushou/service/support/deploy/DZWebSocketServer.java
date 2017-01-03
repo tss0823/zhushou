@@ -27,7 +27,7 @@ public class DZWebSocketServer extends WebSocketServer  {
     private DZMessageHelperServer ftMessageHelperServer;
 
     @Autowired
-    public DZWebSocketServer(@Value("${webSocket.deploy.port}") int port) {
+    public DZWebSocketServer(@Value("${webSocket.port}") int port) {
         super(new InetSocketAddress(port));
     }
 

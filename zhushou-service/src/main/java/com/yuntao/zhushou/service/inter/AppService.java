@@ -19,6 +19,10 @@ public interface AppService {
 
     List<App> selectAllList();
 
+    List<App> selectList(AppQuery query);
+
+    List<App> selectByCompanyId(Long companyId);
+
 
 
 }

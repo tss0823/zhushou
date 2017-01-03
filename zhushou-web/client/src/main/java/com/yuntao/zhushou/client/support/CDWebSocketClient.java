@@ -52,7 +52,8 @@ public class CDWebSocketClient  extends WebSocketClient {
     @Override
     public void onMessage(String message) {
 //        System.out.println("received message: " + message);
-        bisLog.info("收到消息,暂时不做处理,"+message);
+        bisLog.info("收到消息"+message);
+        cdWebSocketMsgHandler.onMessage(message);
     }
 
     @Override
