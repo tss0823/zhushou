@@ -9,6 +9,7 @@ import java.util.List;
 public class ShellExecObject implements Serializable{
 
     private String appName;
+    private Long userId;
     private String model;
     String method;
     List<String> ipList;
@@ -53,5 +54,13 @@ public class ShellExecObject implements Serializable{
 
     public void setIpList(List<String> ipList) {
         this.ipList = ipList;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

@@ -275,7 +275,9 @@ public class DZMessageHelperServer  {
 
                 //清空 checkserver job exec status
                 AtomicBoolean atomicBoolean = checkServerStatusJob.execMap.get(company.getKey());
-                atomicBoolean.set(false);  //执行完毕
+                if(atomicBoolean != null){
+                    atomicBoolean.set(false);  //执行完毕
+                }
                 //end
 
 

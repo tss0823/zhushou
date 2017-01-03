@@ -117,6 +117,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deploy");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("codeName",app.getCodeName());
@@ -157,6 +158,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deployStatic");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("codeName",app.getCodeName());
@@ -187,6 +189,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/stop");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("model",model);
@@ -216,6 +219,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/restart");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("model",model);
@@ -246,6 +250,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/rollback");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("model",model);

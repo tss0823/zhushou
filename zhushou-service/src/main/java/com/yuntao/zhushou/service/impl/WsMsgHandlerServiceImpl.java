@@ -122,9 +122,9 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
             }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.EVENT_END)){  //事件结束
                 //存储日志
                 Object data = responseObject.getData();
-                String dataStr = JsonUtils.object2Json(data);
-                ShellExecObject shellExecObj = JsonUtils.json2Object(dataStr,ShellExecObject.class);
-                saveLog(responseObject.getUserId(),shellExecObj.getAppName(),shellExecObj.getModel(),shellExecObj.getMethod(),shellExecObj.getIpList());
+//                String dataStr = JsonUtils.object2Json(data);
+                ShellExecObject shellExecObj = JsonUtils.json2Object(data.toString(),ShellExecObject.class);
+                saveLog(shellExecObj.getUserId(),shellExecObj.getAppName(),shellExecObj.getModel(),shellExecObj.getMethod(),shellExecObj.getIpList());
 
             }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.SHELL)){  //脚本日志
                 deployLogQueue.offer(responseObject.getData().toString());

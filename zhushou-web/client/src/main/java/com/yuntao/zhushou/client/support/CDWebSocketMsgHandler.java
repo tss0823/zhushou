@@ -148,9 +148,13 @@ public class CDWebSocketMsgHandler implements InitializingBean {
                                 isFirstConn = false;
                             }
                         }
-                        Thread.sleep(5000);
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
                     }
                 }
             }

@@ -69,8 +69,9 @@ public class DeployController extends BaseController {
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.SHELL,msg);
     }
 
-    private void offerExecMsg(String appName,String model,String method,List<String> ipList) {
+    private void offerExecMsg(Long userId,String appName,String model,String method,List<String> ipList) {
         ShellExecObject shellExecObject = new ShellExecObject(appName, model, method, ipList);
+        shellExecObject.setUserId(userId);
         String message = JsonUtils.object2Json(shellExecObject);
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_END,message);
     }
@@ -239,7 +240,7 @@ public class DeployController extends BaseController {
      */
     @RequestMapping("deploy")
 //    @NeedLogin
-    public ResponseObject deploy(@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String codeName,
+    public ResponseObject deploy(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String codeName,
                                  final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!StringUtils.equals(execModel,model)){
@@ -271,7 +272,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"发布",ipList);
+                    offerExecMsg(userId,appName,model,"发布",ipList);
                 }
             }
         }).start();
@@ -287,7 +288,7 @@ public class DeployController extends BaseController {
      * @return
      */
     @RequestMapping("deployStatic")
-    public ResponseObject deployStatic(@RequestParam String nickname, final @RequestParam String appName, final @RequestParam String codeName,
+    public ResponseObject deployStatic(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName, final @RequestParam String codeName,
                                        final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!StringUtils.equals(execModel,model)){
@@ -319,7 +320,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"静态发布",ipList);
+                    offerExecMsg(userId,appName,model,"静态发布",ipList);
                 }
             }
         }).start();
@@ -327,7 +328,7 @@ public class DeployController extends BaseController {
     }
 
     @RequestMapping("stop")
-    public ResponseObject stop(String nickname,final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject stop(final @RequestParam Long userId,String nickname,final @RequestParam String appName,final @RequestParam String model,
                                final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -350,7 +351,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"下线",ipList);
+                    offerExecMsg(userId,appName,model,"下线",ipList);
                 }
             }
         }).start();
@@ -358,7 +359,7 @@ public class DeployController extends BaseController {
     }
 
     @RequestMapping("start")
-    public ResponseObject start(@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject start(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
                                 final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -380,7 +381,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"上线",ipList);
+                    offerExecMsg(userId,appName,model,"上线",ipList);
                 }
             }
         }).start();
@@ -388,7 +389,7 @@ public class DeployController extends BaseController {
     }
 
     @RequestMapping("restart")
-    public ResponseObject restart(@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject restart(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
                                   final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -410,7 +411,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"重启",ipList);
+                    offerExecMsg(userId,appName,model,"重启",ipList);
                 }
             }
         }).start();
@@ -418,7 +419,7 @@ public class DeployController extends BaseController {
     }
 
     @RequestMapping("rollback")
-    public ResponseObject rollback(@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject rollback(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
                                    final @RequestParam String backVer, final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -440,7 +441,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(appName,model,"回滚",ipList);
+                    offerExecMsg(userId,appName,model,"回滚",ipList);
                 }
             }
         }).start();
