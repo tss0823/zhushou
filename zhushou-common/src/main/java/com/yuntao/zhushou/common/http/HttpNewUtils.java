@@ -76,6 +76,7 @@ public class HttpNewUtils {
                 }
                 httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
             }
+            log.info("执行 http "+requestRes.getUrl());
             CloseableHttpResponse response = httpclient.execute(httpPost);
             int status = response.getStatusLine().getStatusCode();
             responseRes.setStatus(status);

@@ -13,6 +13,7 @@ import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.WsMsgHandlerService;
+import com.yuntao.zhushou.service.job.CheckServerStatusJob;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by shan on 2016/8/19.
@@ -55,6 +57,9 @@ public class DZMessageHelperServer  {
 
     @Autowired
     private WsMsgHandlerService wsMessageService;
+
+    @Autowired
+    private CheckServerStatusJob checkServerStatusJob;
 
 
 //    @Autowired
@@ -267,6 +272,12 @@ public class DZMessageHelperServer  {
                 company.setIp(reqMsg.split(":")[0]);
                 company.setPort(Integer.valueOf(reqMsg.split(":")[1]));
                 companyService.updateById(company);
+
+                //清空 checkserver job exec status
+                AtomicBoolean atomicBoolean = checkServerStatusJob.execMap.get(company.getKey());
+                atomicBoolean.set(false);  //执行完毕
+                //end
+
 
             //其他消息（event ,shell,server_check）
             } else{
@@ -519,7 +530,7 @@ public class DZMessageHelperServer  {
             }).start();
 
             //记录服务器一条主日志
-            this.writeSystemMsg("客户端ws已启动", "");
+            this.writeSystemMsg("服务端ws已启动", "");
 
 
             //end

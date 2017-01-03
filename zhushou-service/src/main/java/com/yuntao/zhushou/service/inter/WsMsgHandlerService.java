@@ -13,10 +13,14 @@ public interface WsMsgHandlerService {
 
     /**
      * 接收消息处理
-     * @param responseObject
+     * @param requestObject
      */
     void receiveHandler(MsgRequestObject requestObject);
 
+    /**
+     * 发送消息处理
+     * @param responseObject
+     */
     void sendHandler(MsgResponseObject responseObject);
 
 
