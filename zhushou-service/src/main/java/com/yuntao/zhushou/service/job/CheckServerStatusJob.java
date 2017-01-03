@@ -71,9 +71,9 @@ public class CheckServerStatusJob {
 
         try {
             String model = AppConfigUtils.getValue("profiles.active");
-//            if (!model.equals(LogModel.PROD.getCode())) {
-//                return;
-//            }
+            if (!model.equals(LogModel.PROD.getCode())) {
+                return;
+            }
 //            List<App> appList = appService.selectAllList();
 //            Map<String, Map<String, ResponseObject>> resultMap = new HashMap<>();
             //list all company
@@ -110,7 +110,7 @@ public class CheckServerStatusJob {
                     for (Host host : hostList) {
                         HostObject hostObject = new HostObject();
                         hostObject.setName(host.getName());
-                        hostObject.setHost(host.getEth1());
+                        hostObject.setHost(host.getEth0());
                         hostObjectList.add(hostObject);
                     }
                 }
