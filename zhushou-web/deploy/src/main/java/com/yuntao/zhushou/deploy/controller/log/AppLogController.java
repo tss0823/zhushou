@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.utils.*;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
+import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.LogQuery;
 import com.yuntao.zhushou.model.query.LogTextQuery;
@@ -12,6 +13,7 @@ import com.yuntao.zhushou.model.vo.LogVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.LogService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +37,15 @@ public class AppLogController extends BaseController {
     @Autowired
     private LogService logService;
 
+    @Autowired
+    private CompanyService companyService;
+
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject dataList(LogQuery query, LogTextQuery logTextQuery) {
         User user = userService.getCurrentUser();
-        query.setCompanyId(user.getCompanyId());
+        Company company = companyService.findById(user.getCompanyId());
+        query.setKey(company.getKey());
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
 
 //        String cookieKey = AppConstant.AppLog.APP_LOG_SHOW_ALL;
@@ -141,17 +147,17 @@ public class AppLogController extends BaseController {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         LogVo logVo = logService.findMasterByStackId(month,model, stackId);
         LogWebVo logWebVo = BeanUtils.beanCopy(logVo, LogWebVo.class);
-        String response = logWebVo.getResponse();
+//        String response = logWebVo.getResponse();
 
-        //json 格式化
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Object json = mapper.readValue(response, Object.class);
-            response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-            logWebVo.setResFormatMsg(response);
-        } catch (IOException e) {
-        }
-        //end
+////        json 格式化
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Object json = mapper.readValue(response, Object.class);
+//            response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+//            logWebVo.setResFormatMsg(response);
+//        } catch (IOException e) {
+//        }
+////        end
         responseObject.setData(logWebVo);
         return responseObject;
     }

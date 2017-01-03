@@ -153,6 +153,9 @@ public class LogServiceImpl extends AbstService implements LogService {
         if(query.isMaster()){
             queryBuilder.must(QueryBuilders.matchPhraseQuery("master",true));
         }
+        if (StringUtils.isNotEmpty(query.getKey())) {
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("key",query.getKey()));
+        }
         if (StringUtils.isNotEmpty(query.getStackId())) {
             queryBuilder.must(QueryBuilders.matchPhraseQuery("stackId",query.getStackId()));
         }

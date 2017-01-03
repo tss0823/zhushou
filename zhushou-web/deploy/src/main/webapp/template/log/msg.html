@@ -8,7 +8,22 @@
         </h1>
     </div><!-- /.page-header -->
     <div>
-        <textarea  style="margin-top:15px;width:98%;height:450px;background: black;color:#f0f0f0"  readonly="true" >{{logText}}</textarea>
+        <div>
+            <button class="btn btn-sm" id="btnExpand">展开</button>
+            <button class="btn btn-sm" id="btnCollapse">收缩</button>
+            <button class="btn btn-sm" id="btnToggle">切换</button>
+            <button class="btn btn-sm" id="btnCopy"  data-clipboard-target="#formatLogText" >复制</button>
+
+        </div>
+        <div>
+            <pre id="logText" >{{logText}}</pre>
+            <!--<pre style="display: none" id="formatLogText" >{{formatLogText}}</pre>-->
+            <!--<input id="formatLogText" value="https://github.com/zenorocha/clipboard.js.git">-->
+        </div>
+        <textarea id="formatLogText" style="width:1px;height:1px" readonly="true" >{{formatLogText}}</textarea>
     </div>
 
 </div><!-- /.page-content -->
+<link rel="stylesheet" href="/_resources/scripts/json/jquery.jsonview.min.css"/>
+<script src="/_resources/scripts/clipboard.min.js" ></script>
+<script src="/_resources/scripts/json/jquery.jsonview.min.js" ></script>

@@ -22,6 +22,8 @@ public class BaseQuery implements Serializable {
 
     private Long companyId;
 
+    private String key;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -60,5 +62,13 @@ public class BaseQuery implements Serializable {
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

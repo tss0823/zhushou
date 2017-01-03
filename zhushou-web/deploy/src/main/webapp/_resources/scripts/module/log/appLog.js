@@ -261,7 +261,10 @@
             var checkState = checked ? "prod" : "test";
             var params = {stackId:id,month:$("#month").val(),model:checkState};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
-                var param = {title:"返回结果",logText:d.data.resFormatMsg};
+                var jsonLog = d.data.response;
+                var jsonObj = JSON.parse(jsonLog);
+                var formatJsonLog = JSON.stringify(jsonObj, null, 4);
+                var param = {title:"返回结果",logText:jsonLog,formatLogText:formatJsonLog};
                 $.get("/log/msg.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
@@ -270,6 +273,32 @@
                         width:"800px",
                     });
                     $(".modal-dialog").prop("style","width:70%;height:85%")
+
+                    // var json = data.resFormatMsg;
+                    // $("#logText").JSONView(jsonLog);
+                    // with options
+                    $("#logText").JSONView(jsonLog, { collapsed: true });
+
+                    new Clipboard("#btnCopy");
+                    // new Clipboard("#btnCopy", {
+                    //     // text: function(trigger) {
+                    //     //     var logText = $("#formatLogText").text();
+                    //     //     alert(logText);
+                    //     //     return logText;
+                    //     //     // return trigger.getAttribute('aria-label');
+                    //     // }
+                    // });
+
+
+                    $(document).find("#btnExpand").click(function(){
+                        $("#logText").JSONView('expand');
+                    });
+                    $(document).find("#btnCollapse").click(function(){
+                        $("#logText").JSONView('collapse');
+                    });
+                    $(document).find("#btnToggle").click(function(){
+                        $("#logText").JSONView('toggle');
+                    });
 
                 });
             });
