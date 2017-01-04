@@ -3,11 +3,13 @@ package com.yuntao.zhushou.deploy.controller.taskLog;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
+import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.TaskLogQuery;
 import com.yuntao.zhushou.model.vo.TaskLogVo;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.TaskLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,15 @@ public class TaskLogController extends BaseController {
     @Autowired
     private TaskLogService taskLogService;
 
+    @Autowired
+    private CompanyService companyService;
+
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject dataList(TaskLogQuery query) {
         User user = userService.getCurrentUser();
-        query.setCompanyId(user.getCompanyId());
+        Company company = companyService.findById(user.getCompanyId());
+        query.setKey(company.getKey());
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
 
         if (StringUtils.isEmpty(query.getModel())) {

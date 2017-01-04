@@ -6,7 +6,7 @@
                     <div class="center">
                         <h1>
                             <i class="icon-leaf green"></i>
-                            <span class="white">{{projectName}}</span>
+                            <span class="white">{{logoName}}</span>
                         </h1>
                         <!--<h4 class="blue">&copy; {{company}}</h4>-->
                     </div>
@@ -91,6 +91,13 @@ $(document).ready(function(){
                 //跳转到应用列表
                 appData["user"] = d.data.user;
                 appData["authResList"] = d.data.authResList;
+                var configData = d.data.configData;
+                if(configData){
+                    for(var key in configData){
+                        debugger;
+                        appData[key] = configData[key];
+                    }
+                }
                 YunTao.deploy.goIndexPage();
             }else{
                 alert("登陆失败 原因："+ d.message);

@@ -76,11 +76,11 @@ public class TaskLogServiceImpl implements TaskLogService {
         query.setPage(true);
         query.setMaster(true);
         Pagination<TaskLogVo> pagination = selectList(query);
-        List<TaskLogVo> dataList = pagination.getDataList();
-        if(CollectionUtils.isNotEmpty(dataList)){
-            for(TaskLogVo taskLogVo : dataList){
-            }
-        }
+//        List<TaskLogVo> dataList = pagination.getDataList();
+//        if(CollectionUtils.isNotEmpty(dataList)){
+//            for(TaskLogVo taskLogVo : dataList){
+//            }
+//        }
         return pagination;
     }
 
@@ -129,6 +129,9 @@ public class TaskLogServiceImpl implements TaskLogService {
 
         if (StringUtils.isNotEmpty(query.getId())) {
             queryBuilder.must(QueryBuilders.matchPhraseQuery("id",query.getId()));
+        }
+        if (StringUtils.isNotEmpty(query.getKey())) {
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("key",query.getKey()));
         }
         if (StringUtils.isNotEmpty(query.getAppName())) {
             queryBuilder.must(QueryBuilders.matchPhraseQuery("appName",query.getAppName()));

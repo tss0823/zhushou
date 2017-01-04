@@ -447,6 +447,13 @@
                     if (d.success) {
                         appData["user"] = d.data.user;
                         appData["authResList"] = d.data.authResList;
+                        var configData = d.data.configData;
+                        if(configData){
+                            for(var key in configData){
+                                debugger;
+                                appData[key] = configData[key];
+                            }
+                        }
                         isLogin = true;
                     } else {
                         alert(d.message);
