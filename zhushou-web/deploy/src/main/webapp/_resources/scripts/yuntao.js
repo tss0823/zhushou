@@ -612,10 +612,12 @@
     //end
 
 
+
     //webSocket
     YT.deploy.WebSocket = {
 
         webSocket : null,
+        errMaxTry : 5,
         init : function(){
             // var webSocket = YT.deploy.WebSocket.webSocket;
             var hostname = location.hostname;
@@ -638,10 +640,10 @@
             this.webSocket.onclose = function(event) {
                 console.error("onclose data="+event.data);
                 //重新连接
-                // setTimeout(YT.deploy.WebSocket.init(), 1000);
+                setTimeout(YT.deploy.WebSocket.init(), 1000);
             };
 
-            setInterval(YT.deploy.WebSocket.checkStatus,5000);  //每5秒钟检查一次
+            // setInterval(YT.deploy.WebSocket.checkStatus,5000);  //每5秒钟检查一次
         },
 
         checkStatus : function(){
