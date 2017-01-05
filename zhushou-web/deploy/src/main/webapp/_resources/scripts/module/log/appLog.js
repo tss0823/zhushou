@@ -210,7 +210,7 @@
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
-            debugger;
+            // debugger;
             YT.deploy.goSearchPage("appLogForm",pageNum,pageSize,{model:checkState});
             // YT.deploy.goSearchPage("appLogForm",pageNum,pageSize);
             // var params = YT.deploy.util.getFormParams("#appLogForm");

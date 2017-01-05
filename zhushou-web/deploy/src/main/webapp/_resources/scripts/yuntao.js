@@ -450,7 +450,7 @@
                         var configData = d.data.configData;
                         if(configData){
                             for(var key in configData){
-                                debugger;
+                                // debugger;
                                 appData[key] = configData[key];
                             }
                         }
@@ -615,29 +615,46 @@
     //webSocket
     YT.deploy.WebSocket = {
 
+        webSocket : null,
         init : function(){
+            // var webSocket = YT.deploy.WebSocket.webSocket;
             var hostname = location.hostname;
-            var webSocket = new WebSocket('ws://'+hostname+':9003/index.index?platform=user&token='+$.cookie("sid"));
+            this.webSocket = new WebSocket('ws://'+hostname+':9003/index.index?platform=user&token='+$.cookie("sid"));
             // webSocket.send("发送消息ok");
 
-            webSocket.onerror = function(event) {
+            this.webSocket.onerror = function(event) {
                 console.error("error,data="+event.data);
             };
 
-            webSocket.onopen = function(event) {
+            this.webSocket.onopen = function(event) {
                 console.log("open,data="+event.data);
             };
 
-            webSocket.onmessage = function(event) {
+            this.webSocket.onmessage = function(event) {
                 YT.deploy.eventProcess.notifyEvent(event.data);
                 console.log("onmessage data="+event.data);
             };
-            webSocket.onclose = function(event) {
+
+            this.webSocket.onclose = function(event) {
                 console.error("onclose data="+event.data);
                 //重新连接
-                setTimeout(YT.deploy.WebSocket.init(), 1000);
+                // setTimeout(YT.deploy.WebSocket.init(), 1000);
             };
+
+            setInterval(YT.deploy.WebSocket.checkStatus,5000);  //每5秒钟检查一次
         },
+
+        checkStatus : function(){
+            var webSocket = YT.deploy.WebSocket.webSocket;
+            try{
+                if(webSocket.readyState == 0 || webSocket.readyState == 3){
+                    YT.deploy.WebSocket.init(); //重连
+                }
+            }catch(e){
+               console.log("ws重连出错 errMsg="+e.message+",lineNum="+e.lineNumber);
+            }
+
+        }
     };
     //end
 

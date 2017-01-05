@@ -31,8 +31,8 @@ public class ProxyContentController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(ProxyContentQuery query) {
-        User user = userService.getCurrentUser();
-        query.setCompanyId(user.getCompanyId());
+//        User user = userService.getCurrentUser();
+//        query.setCompanyId(user.getCompanyId());
 //        query.setPageSize(30);  //固定30条
         Pagination<ProxyContentVo> pagination = reqContentService.selectPage(query);
 //        if(CollectionUtils.isNotEmpty(pagination.getDataList())){

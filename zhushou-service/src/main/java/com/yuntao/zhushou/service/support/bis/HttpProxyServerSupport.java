@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -54,7 +55,8 @@ public class HttpProxyServerSupport extends AbstService {
     private void serverStart() {
         HttpProxyServer server =
                 DefaultHttpProxyServer.bootstrap()
-                        .withPort(8888)
+                        .withAddress(new InetSocketAddress("0.0.0.0",8888))
+//                        .withPort(8888)
                         .withFiltersSource(new HttpFiltersSourceAdapter() {
 
                             //                            @Override

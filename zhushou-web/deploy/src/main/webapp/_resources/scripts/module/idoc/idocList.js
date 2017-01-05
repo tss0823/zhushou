@@ -123,7 +123,7 @@
                     data = data || {};
 
                     //渲染左侧栏
-                    debugger;
+                    // debugger;
                     var paramList = data.paramList;
                     var paramObj = {};
                     if(paramList){
