@@ -6,7 +6,7 @@
 
     <resultMap type="ProxyContent" id="BaseResultMap">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="companyId" property="companyId" jdbcType="BIGINT" />
+        <result column="companyId" property="companyId" />
         <result column="port" property="port"/>
         <result column="clientIp" property="clientIp"/>
         <result column="domain" property="domain"/>
@@ -28,7 +28,7 @@
 
 
     <sql id="Base_Column_List">
-    `id`,`companyId`,``port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
+    `id`,`companyId`,`port`,`clientIp`,`domain`,`pathUrl`,`url`,`reqHeader`,`reqData`,`resHeader`,`resData`,`resContentType`,`resLength`,
     `reqMethod`,`httpStatus`, `status`,`gmtRequest`,`gmtResponse`, `delStatus`
     
   </sql>
