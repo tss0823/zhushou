@@ -116,6 +116,23 @@
 //        if (!isLogin) {
 //            return;
 //        }
+
+        var userId = appData["user"].id;
+        $.ajax({
+            url: "/data/appUserDataList",
+            data:{userId:userId},
+            async: false,
+            success: function (d) {
+                var data = d.data;
+                for(var key in data){
+                    appData[key] = data[key];
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(textStatus);
+            }
+        });
+
         YunTao.deploy.index.renderInit();
         $(".nav-list").find("li").first().find("a").first().trigger("click");
 

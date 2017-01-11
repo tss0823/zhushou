@@ -13,6 +13,7 @@ import com.yuntao.zhushou.service.inter.IdocUrlService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -59,10 +60,6 @@ public class DataController extends  BaseController {
     @RequestMapping("appDataList")
     public ResponseObject appDataList() {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.put("appList",appService.selectAllList());
-        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
-        idocUrlQuery.setType(0);
-        responseObject.put("docList",idocUrlService.selectList(new IdocUrlQuery()));
         List<Config> configList = configService.selectPubList();
         if (CollectionUtils.isNotEmpty(configList)) {
             for (Config config : configList) {
@@ -76,13 +73,16 @@ public class DataController extends  BaseController {
     }
 
     @RequestMapping("appUserDataList")
-    public ResponseObject appUserDataList(Long userId) {
+    public ResponseObject appUserDataList(@RequestParam  Long userId) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.findById(userId);
-        responseObject.put("appList",appService.selectByCompanyId(user.getCompanyId());
+
+        responseObject.put("appList",appService.selectByCompanyId(user.getCompanyId()));
+
         IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
         idocUrlQuery.setType(0);
-        responseObject.put("docList",idocUrlService.selectList(new IdocUrlQuery()));
+        idocUrlQuery.setCompanyId(user.getCompanyId());
+        responseObject.put("docList",idocUrlService.selectList(idocUrlQuery));
         return responseObject;
     }
 }
