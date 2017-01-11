@@ -3,6 +3,7 @@ package com.yuntao.zhushou.deploy.controller;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.model.domain.Config;
+import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.*;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.common.web.ResponseObject;
@@ -71,6 +72,17 @@ public class DataController extends  BaseController {
         //
         String serverCheck = AppConfigUtils.getValue("server.check");
         responseObject.put("serverCheck",Boolean.valueOf(serverCheck));
+        return responseObject;
+    }
+
+    @RequestMapping("appUserDataList")
+    public ResponseObject appUserDataList(Long userId) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        User user = userService.findById(userId);
+        responseObject.put("appList",appService.selectByCompanyId(user.getCompanyId());
+        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setType(0);
+        responseObject.put("docList",idocUrlService.selectList(new IdocUrlQuery()));
         return responseObject;
     }
 }

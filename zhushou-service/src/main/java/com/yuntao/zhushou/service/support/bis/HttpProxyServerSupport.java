@@ -39,7 +39,7 @@ public class HttpProxyServerSupport extends AbstService {
     private ProxyContentService proxyContentService;
 
 
-    @PostConstruct
+//    @PostConstruct
     private void init() {
         serverStart();
 
