@@ -23,6 +23,10 @@ public class CDWebSocketClient  extends WebSocketClient {
     @Autowired
     private CDWebSocketMsgHandler cdWebSocketMsgHandler;
 
+    public void setCdWebSocketMsgHandler(CDWebSocketMsgHandler cdWebSocketMsgHandler) {
+        this.cdWebSocketMsgHandler = cdWebSocketMsgHandler;
+    }
+
     public CDWebSocketClient(URI serverUri, Draft draft, Map<String,String> headers) {
         super(serverUri, draft,headers,0);
     }

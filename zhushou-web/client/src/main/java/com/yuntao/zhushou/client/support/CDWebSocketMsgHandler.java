@@ -143,21 +143,22 @@ public class CDWebSocketMsgHandler implements InitializingBean {
                     try {
                         if (webSocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.CLOSED.name()) ||
                                 webSocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.NOT_YET_CONNECTED.name())) {
-
-                            webSocketClient.connect();
                             if (isFirstConn) {
+                                isFirstConn = false;
+                                webSocketClient.connect();
                                 //提交 http host and port
                                 CDWebSocketMsgHandler.this.offerMsg(MsgConstant.ReqCoreBizType.UPDATE_ADDRESS, httpHost + ":" + httpPort);
-                                isFirstConn = false;
+                            }else{
+                                isFirstConn = true;
+                                webSocketClient.close();
+                                webSocketClient = new CDWebSocketClient(host,port,key);
+                                CDWebSocketClient cdWebSocketClient = (CDWebSocketClient) webSocketClient;
+                                cdWebSocketClient.setCdWebSocketMsgHandler(CDWebSocketMsgHandler.this);
+                                //提交 http host and port
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        try {
-                            webSocketClient = new CDWebSocketClient(host,port,key);
-                        } catch (URISyntaxException e1) {
-                            e1.printStackTrace();
-                        }
                     }
 
                     try {
