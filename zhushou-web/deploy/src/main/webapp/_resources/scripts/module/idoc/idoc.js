@@ -20,6 +20,39 @@
             //moduleType
             YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
 
+            //是否私有
+            YT.deploy.util.initEnumSelect(enums.yesNoType, "pri", data.pri);
+
+            if($("#resNewForm").length == 1) {  //资源文档
+                // debugger;
+                YT.deploy.idoc.resDocMDE = new SimpleMDE({
+                    element: document.getElementById("resDoc"),
+                    insertTexts: {
+                        horizontalRule: ["", "\n\n-----\n\n"],
+                        image: ["![](http://", ")"],
+                        link: ["[<a href='", "' target='_blank'></a>](http://)"],
+                        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+                    },
+                });
+            }
+
+            if($("#resViewForm").length == 1) {  //资源文档
+                // debugger;
+                YT.deploy.idoc.resDocMDE = new SimpleMDE({
+                    toolbar: false,
+                    toolbarTips: false,
+                    status:false,
+                });
+
+                // YT.deploy.idoc.resDocMDE = new SimpleMDE({ // element: document.getElementById("resDoc"),
+                // });
+                var resDocHtmls = YT.deploy.idoc.resDocMDE.options.previewRender(data.resultData);
+                // debugger;
+                $("#resDocHtml").html(resDocHtmls);
+                $(".CodeMirror").hide();
+            }
+
+            // initialValue: "Hello world!",
 
             //添加
             $("button[id='btnAdd']").click(function () {
@@ -121,6 +154,31 @@
 
             });
 
+            $("button[id='btnResDocSave']").click(function () {
+                var params = {appName:"member",pri:$("#pri").val(),name:$("#name").val(),resDocText:YT.deploy.idoc.resDocMDE.value()};
+                YT.deploy.util.reqPost("/idocUrl/saveResDoc", params, function (d) {
+                    if (d.success) {
+                        alert("保存成功");
+                        YT.deploy.idocList.queryRes(1);
+                    } else {
+                        alert("保存提交失败,err=" + d.message);
+                    }
+                });
+            });
+
+            $("button[id='btnResDocUpdate']").click(function () {
+                var params = {appName:"member",id:$("#id").val(),pri:$("#pri").val(),name:$("#name").val(),resDocText:YT.deploy.idoc.resDocMDE.value()};
+                YT.deploy.util.reqPost("/idocUrl/updateResDoc", params, function (d) {
+                    if (d.success) {
+                        alert("修改成功");
+                        YT.deploy.idocList.queryRes(1);
+                    } else {
+                        alert("修改失败,err=" + d.message);
+                    }
+                });
+
+            });
+
 
 
 
@@ -130,6 +188,7 @@
 
 
     YT.deploy.idoc = {
+        resDocMDE:null
 
     }
 

@@ -14,6 +14,7 @@ import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.IdocParam;
 import com.yuntao.zhushou.model.domain.IdocUrl;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.IdocUrlType;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
@@ -103,7 +104,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     public IdocUrl findDocByUrlAndVer(String appName, String url, String ver) {
         IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
         idocUrlQuery.setAppName(appName);
-        idocUrlQuery.setType(0);
+        idocUrlQuery.setType(IdocUrlType.inters.getCode());
         idocUrlQuery.setUrl(url);
         idocUrlQuery.setVersion(ver);
         List<IdocUrl> dataList = this.selectList(idocUrlQuery);
@@ -121,7 +122,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     public IdocUrl findEnumByUrl(String appName, String url) {
         IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
         idocUrlQuery.setAppName(appName);
-        idocUrlQuery.setType(0);
+        idocUrlQuery.setType(IdocUrlType.enums.getCode());
         idocUrlQuery.setUrl(url);
         List<IdocUrl> dataList = this.selectList(idocUrlQuery);
         if (CollectionUtils.isNotEmpty(dataList)) {
@@ -190,7 +191,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocUrl.setCompanyId(user.getCompanyId());
         idocUrl.setAppName(docObject.getAppName());
         idocUrl.setModule(docObject.getModule());
-        idocUrl.setType(0);
+        idocUrl.setType(IdocUrlType.inters.getCode());
         idocUrl.setName(docObject.getComment());
         idocUrl.setUrl(docObject.getUrl());
         idocUrl.setCreateUserId(user.getId());
@@ -287,7 +288,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         //get parent data List by appName and type
         IdocUrlQuery query = new IdocUrlQuery();
         query.setAppName(appName);
-        query.setType(1);
+        query.setType(IdocUrlType.enums.getCode());
         List<IdocUrl> idocUrls = this.selectList(query);
         if (CollectionUtils.isNotEmpty(idocUrls)) {
             for (IdocUrl idocUrl : idocUrls) {
@@ -310,7 +311,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             String code = keyStrs[0];
             String text = keyStrs[1];
             IdocUrl idocUrl = new IdocUrl();
-            idocUrl.setType(1);
+            idocUrl.setType(IdocUrlType.enums.getCode());
             idocUrl.setName(text);
             idocUrl.setUrl(code);
             idocUrl.setAppName(appName);
@@ -381,6 +382,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
+    @Transactional
     public void submitEnum(Long companyId,String appName, String emunJson) {
 //        App app = appService.findByName(appName);
         HashMap dataMap = JsonUtils.json2Object(emunJson, HashMap.class);
@@ -403,7 +405,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             } else {
                 idocUrl = new IdocUrl();
                 idocUrl.setCompanyId(companyId);
-                idocUrl.setType(1);
+                idocUrl.setType(IdocUrlType.enums.getCode());
                 idocUrl.setAppName(appName);
                 idocUrl.setVersion("1.0.0");
                 idocUrl.setUrl(url);
@@ -425,6 +427,46 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             }
             //end
         }
+    }
+
+    @Override
+    public void saveResDoc(boolean pri,User user, String appName,String title, String resDocText) {
+        String pinYinTitle = PinyinUtils.cn2Spell(title);
+        IdocUrl idocUrl = new IdocUrl();
+        idocUrl.setType(IdocUrlType.res.getCode());
+        idocUrl.setVersion("1.0.0");
+        idocUrl.setStatus(0);
+        if (pri) {
+            idocUrl.setCompanyId(user.getCompanyId());
+        }
+        idocUrl.setAppName(appName);
+        idocUrl.setUrl(pinYinTitle);
+        idocUrl.setName(title);
+        idocUrl.setCreateUserId(user.getId());
+        idocUrl.setCreateUserName(user.getNickName());
+        idocUrl.setResultData(resDocText);
+        this.insert(idocUrl);
+
+
+    }
+
+    @Override
+    public void updateResDoc(Long id,boolean pri,User user, String appName,String title, String resDocText) {
+        IdocUrl idocUrl = this.findById(id);
+        idocUrl.setType(IdocUrlType.res.getCode());
+        idocUrl.setVersion("1.0.0");
+        idocUrl.setStatus(0);
+        if (pri) {
+            idocUrl.setCompanyId(user.getCompanyId());
+        }
+        idocUrl.setAppName(appName);
+        String pinYinTitle = PinyinUtils.cn2Spell(title);
+        idocUrl.setUrl(pinYinTitle);
+        idocUrl.setName(title);
+        idocUrl.setCreateUserId(user.getId());
+        idocUrl.setCreateUserName(user.getNickName());
+        idocUrl.setResultData(resDocText);
+        this.idocUrlMapper.updateById(idocUrl);
     }
 
 }

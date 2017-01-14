@@ -2,7 +2,9 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
+import com.yuntao.zhushou.model.domain.IdocUrl;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.IdocUrlType;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
@@ -36,7 +38,7 @@ public class IdocUrlController extends BaseController {
         User user = userService.getCurrentUser();
         query.setCompanyId(user.getCompanyId());
         if (query.getType() == null) {
-            query.setType(0);
+            query.setType(IdocUrlType.inters.getCode());
         }
         Pagination<IdocUrlVo> pagination = idocUrlService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
@@ -77,7 +79,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject save(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
-        idocDataParam.setType(0);
+        idocDataParam.setType(IdocUrlType.inters.getCode());
         idocUrlService.save(idocDataParam,user);
         return responseObject;
     }
@@ -87,7 +89,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject update(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
-        idocDataParam.setType(0);
+        idocDataParam.setType(IdocUrlType.inters.getCode());
         idocUrlService.update(idocDataParam,user);
         return responseObject;
     }
@@ -124,6 +126,34 @@ public class IdocUrlController extends BaseController {
         User user = userService.getCurrentUser();
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         idocUrlService.submitEnum(user.getCompanyId(),appName,jsonEnum);
+        return responseObject;
+    }
+
+    @RequestMapping("saveResDoc")
+    @NeedLogin
+    public ResponseObject saveResDoc(@RequestParam String appName,@RequestParam Boolean pri,@RequestParam String name,@RequestParam String resDocText) {
+        User user = userService.getCurrentUser();
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        idocUrlService.saveResDoc(pri,user,appName,name,resDocText);
+        return responseObject;
+    }
+
+    @RequestMapping("updateResDoc")
+    @NeedLogin
+    public ResponseObject updateResDoc(@RequestParam Long id,@RequestParam String appName,@RequestParam Boolean pri,
+                                       @RequestParam String name,@RequestParam String resDocText) {
+        User user = userService.getCurrentUser();
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        idocUrlService.updateResDoc(id,pri,user,appName,name,resDocText);
+        return responseObject;
+    }
+
+    @RequestMapping("viewResDoc")
+//    @NeedLogin
+    public ResponseObject viewResDoc(@RequestParam Long id) {
+        IdocUrl idocUrl = idocUrlService.findById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(idocUrl);
         return responseObject;
     }
 

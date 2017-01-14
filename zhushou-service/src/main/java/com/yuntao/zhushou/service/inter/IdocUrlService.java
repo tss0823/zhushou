@@ -120,4 +120,14 @@ public interface IdocUrlService {
      * @param appName
      */
     void submitEnum(Long companyId,String appName,String emunJson);
+
+    /**
+     * 保存资源文档
+     */
+    void saveResDoc(boolean pri,User user,String appName,String title,String resDocText);
+
+    /**
+     * 修改资源文档
+     */
+    void updateResDoc(Long id,boolean pri,User user,String appName,String title,String resDocText);
 }

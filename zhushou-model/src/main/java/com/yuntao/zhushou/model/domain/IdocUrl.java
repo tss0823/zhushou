@@ -72,7 +72,7 @@ public class IdocUrl implements Serializable {
 
 
 	/**
-	 * 类型 0 文档; 1 枚举
+	 * 类型 0 文档; 1 枚举; 2 资源文件
 	 */
 	private Integer type;
 

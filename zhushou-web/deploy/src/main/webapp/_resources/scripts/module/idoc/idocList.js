@@ -20,6 +20,29 @@
             //moduleType
             YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
 
+
+            // if($("#resNewForm").length == 1) {  //资源文档
+            //     YT.deploy.idoc.resDocMDE = new SimpleMDE({
+            //         element: document.getElementById("resDoc"),
+            //         insertTexts: {
+            //             horizontalRule: ["", "\n\n-----\n\n"],
+            //             image: ["![](http://", ")"],
+            //             link: ["[<a href='", "' target='_blank'></a>](http://)"],
+            //             table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+            //         },
+            //     });
+            // }
+            //
+            // if($("#resViewForm").length == 1) {  //资源文档
+            //     debugger;
+            //     YT.deploy.idoc.resDocMDE = new SimpleMDE({
+            //         element: document.getElementById("resDoc"),
+            //     });
+            //     var resDocHtmls = YT.deploy.idoc.resDocMDE.options.previewRender(data.resultData);
+            //     $("#resDocHtml").html(resDocHtmls);
+            // }
+
+
             //tab
             $( "div[id='tabs']" ).tabs();
 
@@ -31,12 +54,17 @@
                 YT.deploy.idocList.query(pageNum);
             });
 
+
             $("#btnQueryEnums").click(function () {
                 //debugger;
-                var pageNum = 1; 
-                // $(this).html("查询中...");
-                // $(this).attr("disabled", "true");
+                var pageNum = 1;
                 YT.deploy.idocList.queryEnums(pageNum);
+            });
+
+            $("#btnQueryRes").click(function () {
+                //debugger;
+                var pageNum = 1; 
+                YT.deploy.idocList.queryRes(pageNum);
             });
 
             $("#btnListAll").click(function () {
@@ -74,12 +102,18 @@
             // });
             //end
 
+
+
             //分页信息init
             YT.deploy.util.paginationInit(d.data, YT.deploy.idocList.query);
 
             //创建接口
             $("#btnNewTemplate").click(function () {
                 YT.deploy.routeTpl("/idoc/bind.html",{title:"接口新建"});
+            });
+            //创建资源文档
+            $("#btnNewRes").click(function () {
+                YT.deploy.routeTpl("/idoc/newRes.html",{title:"资源文档新建"});
             });
 
             //提交接口
@@ -157,7 +191,7 @@
                 YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
                     if (d.success) {
                         alert("删除成功");
-                        YT.deploy.route("/idocUrl/list", {}, "/idoc/list.html", {});
+                        YT.deploy.idocList.queryEnums(1);
                     } else {
                         alert("删除失败,err=" + d.message);
                     }
@@ -177,7 +211,7 @@
                     }
                 });
             });
-            
+
             //枚举同步更新
             $("a[name='btnSyncUpdate']").each(function(index,item){
                 $(item).click(function(){
@@ -192,6 +226,35 @@
                             alert("同步修改失败,err=" + d.message);
                         }
                     });
+                });
+            });
+
+            //查看资源文档
+            $("a[name='btnViewResDoc']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/resDetail.html",{title:"资源文档详情"});
+            });
+
+            //修改资源文档
+            $("a[name='btnEditResDoc']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{title:"资源文档修改"});
+            });
+
+            //删除资源文档
+            $("a[name='btnDelResDoc']").click(function () {
+                if (!confirm("您确认需要删除吗？")) {
+                    return;
+                }
+
+                var id = $(this).attr("data");
+                YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
+                    if (d.success) {
+                        alert("删除成功");
+                        YT.deploy.idocList.queryRes(1);
+                    } else {
+                        alert("删除失败,err=" + d.message);
+                    }
                 });
             });
 
@@ -225,6 +288,14 @@
             params["type"] = 1;
             var ext_data = $.extend(params, {title: "枚举接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);
+        },
+        queryRes: function (pageNum) {
+            var params = YT.deploy.util.getFormParams("#idocListForm");
+            params["pageNum"] = pageNum;
+            var pageSize = $("#pageSize").val();
+            params["type"] = 2;
+            var ext_data = $.extend(params, {title: "资源文档"});
+            YT.deploy.route("/idocUrl/list", params, "/idoc/res.html", ext_data);
         },
 
         queryExport:function(){

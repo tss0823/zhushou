@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/_resources/scripts/markdown/simplemde.min.css?ver={{ver}}" />
+<script src="/_resources/scripts/markdown/simplemde.min.js?ver={{ver}}"></script>
+<script src="/_resources/scripts/module/idoc/idoc.js?ver={{ver}}"></script>
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{name}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" id="resViewForm" onsubmit="return false;">
+                <!--<div class="form-group" style="padding-left: 50px">-->
+                    <!--<label>{{name}}</label>-->
+                <!--</div>-->
+                <textarea name="resDoc" id="resDoc" style="width: 0px;height: 0px;"></textarea>
+                <div id="resDocHtml"></div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->

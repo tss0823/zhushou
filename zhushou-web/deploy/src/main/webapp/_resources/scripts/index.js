@@ -100,7 +100,7 @@
                     var queryParams = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_queryData");
                     queryParams = queryParams || {};
                     //end
-                    debugger;
+                    // debugger;
                     var extData = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_extData");
                     // extData = {title: authRes.name,authRes:authRes};
                     extData = $.extend(extData,{title: authRes.name,authRes:authRes});
