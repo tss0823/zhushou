@@ -23,20 +23,17 @@ public class ConfigServiceImpl extends AbstService implements ConfigService {
     private ConfigMapper configMapper;
 
     @Override
-    public String getValueByName(String name) {
+    public String getValueByName(Long companyId,String name) {
         Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("companyId", companyId);
         queryMap.put("name", name);
         return configMapper.findByCondition(queryMap).getValue();
     }
 
     @Override
-    public int getIntByName(String name) {
-        return Integer.valueOf(getValueByName(name));
-    }
-
-    @Override
-    public Config getByName(String name) {
+    public Config getByName(Long companyId,String name) {
         Map<String, Object> queryMap = new HashMap<>();
+        queryMap.put("companyId", companyId);
         queryMap.put("name", name);
         return configMapper.findByCondition(queryMap);
     }

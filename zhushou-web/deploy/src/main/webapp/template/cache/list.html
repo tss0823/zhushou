@@ -1,0 +1,54 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" id="cacheForm" onsubmit="return false;">
+                <input type="hidden" id="id" name="id" value="{{id}}">
+                <div class="form-group" style="padding-left: 50px">
+                    <label>类型：</label>
+                    <span>
+                        <select id="type" name="type">
+                            <option value=""></option>
+                        </select>
+                    </span>
+                    <label>应用：</label>
+                    <span>
+                        <select id="appName" name="appName">
+                            <option value=""></option>
+                        </select>
+                    </span>
+                    &nbsp;
+                    &nbsp;
+                    <label>Key(nameSpace+key)：</label>
+                    <span>
+                        <input type="text" id="key" name="key" value="{{key}}" placeholder="请输入Key" >
+                    </span>
+                    &nbsp;
+                    <label>Field：</label>
+                    <span>
+                        <input type="text" id="field" name="field" value="{{field}}" placeholder="请输入field" >
+                    </span>
+                </div>
+                <div class="space-4"></div>
+                <div id="result"></div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" id="btnSearch"><i class="icon-ok bigger-110"></i> 查询</button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset"><i class="icon-undo bigger-110"></i> 清空</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->
+<script src="/_resources/scripts/module/cache/cache.js?ver={{ver}}"></script>

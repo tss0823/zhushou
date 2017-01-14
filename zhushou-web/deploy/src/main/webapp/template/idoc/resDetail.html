@@ -7,6 +7,12 @@
             <small>
                 <i class="icon-double-angle-right"></i>
                 {{name}}
+                {{if authMap.enterIdoc.child.btnNewTemplate }}
+                <button class="btn btn-pink" id="btnUpdateResDoc" data="{{id}}"> <i class="icon-building align-top bigger-125"></i> 修改 </button>
+                &nbsp;
+                &nbsp;
+                <button class="btn btn-danger" id="btnDelResDoc" data="{{id}}"> <i class="icon-building align-top bigger-125"></i> 删除 </button>
+                {{/if}}
             </small>
         </h1>
     </div><!-- /.page-header -->

@@ -179,6 +179,29 @@
 
             });
 
+            //修改资源文档
+            $("button[id='btnUpdateResDoc']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{title:"资源文档修改"});
+            });
+
+            //删除资源文档
+            $("button[id='btnDelResDoc']").click(function () {
+                if (!confirm("您确认需要删除吗？")) {
+                    return;
+                }
+
+                var id = $(this).attr("data");
+                YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
+                    if (d.success) {
+                        alert("删除成功");
+                        YT.deploy.idocList.queryRes(1);
+                    } else {
+                        alert("删除失败,err=" + d.message);
+                    }
+                });
+            });
+
 
 
 

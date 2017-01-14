@@ -9,11 +9,9 @@ import java.util.List;
  */
 public interface ConfigService {
 
-    String getValueByName(String name);
+    String getValueByName(Long companyId,String name);
 
-    int getIntByName(String name);
-
-    Config getByName(String name);
+    Config getByName(Long companyId,String name);
 
     List<Config> selectList();
 
