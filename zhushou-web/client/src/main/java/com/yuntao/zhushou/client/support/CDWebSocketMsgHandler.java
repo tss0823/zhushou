@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -49,6 +50,7 @@ public class CDWebSocketMsgHandler implements InitializingBean {
 
     @Value("${http.port}")
     private String httpPort;
+
 
     private volatile boolean isFirstConn = true; //第一次链接
 
@@ -141,6 +143,7 @@ public class CDWebSocketMsgHandler implements InitializingBean {
                     try {
                         if (webSocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.CLOSED.name()) ||
                                 webSocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.NOT_YET_CONNECTED.name())) {
+
                             webSocketClient.connect();
                             if (isFirstConn) {
                                 //提交 http host and port
@@ -150,6 +153,11 @@ public class CDWebSocketMsgHandler implements InitializingBean {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        try {
+                            webSocketClient = new CDWebSocketClient(host,port,key);
+                        } catch (URISyntaxException e1) {
+                            e1.printStackTrace();
+                        }
                     }
 
                     try {
