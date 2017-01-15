@@ -438,6 +438,8 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocUrl.setStatus(0);
         if (pri) {
             idocUrl.setCompanyId(user.getCompanyId());
+        }else{
+            idocUrl.setCompanyId(-1L);
         }
         idocUrl.setAppName(appName);
         idocUrl.setUrl(pinYinTitle);
@@ -458,6 +460,8 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocUrl.setStatus(0);
         if (pri) {
             idocUrl.setCompanyId(user.getCompanyId());
+        }else{
+            idocUrl.setCompanyId(-1L);
         }
         idocUrl.setAppName(appName);
         String pinYinTitle = PinyinUtils.cn2Spell(title);

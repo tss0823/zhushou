@@ -41,7 +41,9 @@
     <sql id="Base_Where">
         delStatus = 1
         <if test="id != null">and `id` = #{id}</if>
-        <if test="companyId != null">and companyId = #{companyId}</if>
+        <!--<if test="companyId != null">and companyId = #{companyId}</if>-->
+        <if test="type != null and type == 2 and companyId != null">and (companyId = #{companyId} or companyId = -1)</if>
+        <if test="type != null and type != 2 and companyId != null">and companyId = #{companyId} </if>
         <if test="url != null and url != '' ">and `url` = #{url}</if>
         <if test="name != null and name != '' ">and `name` = #{name}</if>
         <if test="appName != null and appName != '' ">and `appName` = #{appName}</if>

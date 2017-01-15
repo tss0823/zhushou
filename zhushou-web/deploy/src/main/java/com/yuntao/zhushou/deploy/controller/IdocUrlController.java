@@ -46,6 +46,18 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("listRes")
+    @NeedLogin
+    public ResponseObject listRes(IdocUrlQuery query) {
+        User user = userService.getCurrentUser();
+        query.setCompanyId(user.getCompanyId());
+        query.setType(IdocUrlType.res.getCode());
+        Pagination<IdocUrlVo> pagination = idocUrlService.selectPage(query);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(pagination);
+        return responseObject;
+    }
+
     @RequestMapping("bind")
     @NeedLogin
     public ResponseObject bind(@RequestParam String month,@RequestParam String model,@RequestParam String stackId) {
