@@ -1,14 +1,14 @@
 package com.yuntao.zhushou.deploy.controller.log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.utils.*;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.LogMesssageType;
 import com.yuntao.zhushou.model.query.LogQuery;
 import com.yuntao.zhushou.model.query.LogTextQuery;
-import com.yuntao.zhushou.model.vo.LogSqlVo;
+import com.yuntao.zhushou.model.vo.LogMessageVo;
 import com.yuntao.zhushou.model.vo.LogVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.common.web.Pagination;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -68,78 +67,47 @@ public class AppLogController extends BaseController {
     public ResponseObject selectListByStackId(@RequestParam String month,@RequestParam String model, @RequestParam String stackId) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         List<LogWebVo> dataList = logService.selectListByStackId(month,model, stackId);
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
         Collections.reverse(dataList); //反转
-        List<String> sqlList = new ArrayList<>();
+//        List<String> sqlList = new ArrayList<>();
+        List<LogMessageVo> logList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(dataList)) {
             for (LogVo logVo : dataList) {
                 String message = logVo.getMessage();
+                LogMessageVo logMessageVo = new LogMessageVo();
+                logMessageVo.setId(logVo.getId());
                 if (logVo.isMaster()) {
                     message = JsonUtils.object2Json(logVo);
+                    logMessageVo.setType(LogMesssageType.master.getCode());
+                }else if(message.startsWith("^SQL^")){
+                    logMessageVo.setType(LogMesssageType.sql.getCode());
+                    int index = message.lastIndexOf("^#^");
+                    String dataMsg = message.substring(index+3);
+                    logMessageVo.setDataMsg(dataMsg);
+                    index = message.indexOf("^#^");
+                    index = message.indexOf("^#^",index+1);
+                    int endIndex = message.indexOf("^#^",index+1);
+                    String sql = message.substring(index+3,endIndex);
+                    logMessageVo.setSql(sql);
+                    message = message.substring(0,index);
+                }else if(message.startsWith("^CACHE^")){
+                    logMessageVo.setType(LogMesssageType.cache.getCode());
+                    int index = message.indexOf(",key=")+5;
+                    int endIndex = message.indexOf(",",index);
+                    String key = message.substring(index,endIndex);
+                    logMessageVo.setSql(key);
+                }else{
+                    logMessageVo.setType(LogMesssageType.other.getCode());
                 }
-                sb.append(message + "\r\n");
+                logMessageVo.setMessage(message);
+                logList.add(logMessageVo);
             }
         }
-        //
-        responseObject.put("logText", sb.toString());
+//        //
+        responseObject.put("logList", logList);
         return responseObject;
     }
 
-    @RequestMapping("selectFormatListByStackId")
-    @NeedLogin
-    public ResponseObject selectFormatListByStackId(@RequestParam String month,@RequestParam String model, @RequestParam String stackId) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        List<LogWebVo> dataList = logService.selectListByStackId(month,model, stackId);
-        StringBuilder sb = new StringBuilder();
-        Collections.reverse(dataList); //反转
-        List<String> sqlList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(dataList)) {
-            for (LogVo logVo : dataList) {
-                String message = logVo.getMessage();
-                if (StringUtils.startsWith(message, "==>") || StringUtils.startsWith(message, "<==")) {
-                    sqlList.add(message);
-                }
-            }
-        }
-        //
-        if (sqlList.size() > 0) {
-            String sqlPre = "Preparing:";
-            String sqlPar = "Parameters:";
-            LogSqlVo logSqlVo = null;
-            boolean isStart = false;
-            for (String sql : sqlList) {
-                if (sql.startsWith("==>")) {
-                    if (!isStart) {
-                        isStart = true;
-                        logSqlVo = new LogSqlVo();
-                    }
-                    int startIndex = sql.indexOf(sqlPre);
-                    if (startIndex > 0) {  //preparing
-                        startIndex = startIndex + sqlPre.length();
-                        logSqlVo.setPreSql(sql.substring(startIndex).trim());
-                    } else { //parameter
-                        startIndex = sql.indexOf(sqlPar) + sqlPar.length();
-                        String params = sql.substring(startIndex).trim();
-                        if (StringUtils.isEmpty(params)) {
-                            continue;
-                        }
-                        List<String> paramList = new ArrayList<String>();
-                        StringTokenizer st = new StringTokenizer(params, "),");
-                        while (st.hasMoreElements()) {
-                            String param = st.nextElement().toString().trim();
-                            if (StringUtils.isNotEmpty(param) && !StringUtils.equals(param, "null")) {
-                                paramList.add(param + ")");
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        }
-        responseObject.put("logText", sb.toString());
-        return responseObject;
-    }
 
     @RequestMapping("findMasterByStackId")
     @NeedLogin

@@ -25,7 +25,12 @@
                 if(!type){
                     type = "byt";
                 }
-                var params = {appName:$("#appName").val(),key:$("#key").val(),field:$("#field").val(),type:type};
+                var appName = $("appName").val();
+                var key = $("#key").val();
+                if(appName){
+                    key = appName+"_"+key;
+                }
+                var params = {key:key,field:$("#field").val(),type:type};
                 YT.deploy.util.reqPost("/cache/getCache", params, function (d) {
                     if (d.success) {
                         $("#result").html(d.data);

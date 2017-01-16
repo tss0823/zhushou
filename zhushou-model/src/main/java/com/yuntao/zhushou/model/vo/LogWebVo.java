@@ -1,6 +1,5 @@
 package com.yuntao.zhushou.model.vo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class LogWebVo extends  LogVo {
 
     private String resFormatMsg;
 
-    private List<LogSqlVo> logSqlVoList = new ArrayList<>();
+    private List<LogMessageVo> logSqlVoList = new ArrayList<>();
 
     public String getErrMsg() {
         return errMsg;
@@ -32,11 +31,11 @@ public class LogWebVo extends  LogVo {
         this.resFormatMsg = resFormatMsg;
     }
 
-    public List<LogSqlVo> getLogSqlVoList() {
+    public List<LogMessageVo> getLogSqlVoList() {
         return logSqlVoList;
     }
 
-    public void setLogSqlVoList(List<LogSqlVo> logSqlVoList) {
+    public void setLogSqlVoList(List<LogMessageVo> logSqlVoList) {
         this.logSqlVoList = logSqlVoList;
     }
 }
