@@ -3,7 +3,7 @@ package com.yuntao.zhushou.common.cache.impl;
 import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.cache.QueueService;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
-import com.yuntao.zhushou.common.utils.SerializeUtil;
+import com.yuntao.zhushou.common.utils.SerializeNewUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.*;
@@ -57,7 +57,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
         try{
             String newKey = namespace+"_"+key;
             jedis = shardedJedisPool.getResource();
-            byte[] bs = SerializeUtil.serialize(value);
+            byte[] bs = SerializeNewUtil.serialize(value);
             int period = 60 * 60 * 5;  //默认过期时间
             jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
@@ -74,7 +74,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
         try{
             String newKey = namespace+"_"+key;
             jedis = shardedJedisPool.getResource();
-            byte[] bs = SerializeUtil.serialize(value);
+            byte[] bs = SerializeNewUtil.serialize(value);
             jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
             throw new RuntimeException(e);
@@ -91,7 +91,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             String newKey = namespace+"_"+key;
             jedis = shardedJedisPool.getResource();
             byte [] bs = jedis.get(newKey.getBytes());
-            Object value = SerializeUtil.unserialize(bs);
+            Object value = SerializeNewUtil.unserialize(bs);
             return value;
         }catch (Exception e){
             throw new RuntimeException(e);
