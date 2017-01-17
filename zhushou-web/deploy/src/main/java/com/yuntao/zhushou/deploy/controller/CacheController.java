@@ -1,15 +1,12 @@
 package com.yuntao.zhushou.deploy.controller;
 
-import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.common.utils.SerializeUtil;
+import com.yuntao.zhushou.common.utils.SerializeNewUtil;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.service.inter.ConfigService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,7 +72,7 @@ public class CacheController extends BaseController {
                     sb.append(value);
                 }else {  //byte
                     byte [] bs = client.get(newKey.getBytes());
-                    Object obj = SerializeUtil.unserialize(bs);
+                    Object obj = SerializeNewUtil.unserialize(bs);
                     String str = JsonUtils.object2Json(obj);
                     sb.append(str);
                 }
