@@ -76,28 +76,32 @@ public class AppLogController extends BaseController {
                 String message = logVo.getMessage();
                 LogMessageVo logMessageVo = new LogMessageVo();
                 logMessageVo.setId(logVo.getId());
-                if (logVo.isMaster()) {
-                    message = JsonUtils.object2Json(logVo);
-                    logMessageVo.setType(LogMesssageType.master.getCode());
-                }else if(message.startsWith("^SQL^")){
-                    logMessageVo.setType(LogMesssageType.sql.getCode());
-                    int index = message.lastIndexOf("^#^");
-                    String dataMsg = message.substring(index+3);
-                    logMessageVo.setDataMsg(dataMsg);
-                    index = message.indexOf("^#^");
-                    index = message.indexOf("^#^",index+1);
-                    int endIndex = message.indexOf("^#^",index+1);
-                    String sql = message.substring(index+3,endIndex);
-                    logMessageVo.setSql(sql);
-                    message = message.substring(0,index);
-                }else if(message.startsWith("^CACHE^")){
-                    logMessageVo.setType(LogMesssageType.cache.getCode());
-                    int index = message.indexOf(",key=")+5;
-                    int endIndex = message.indexOf(",",index);
-                    String key = message.substring(index,endIndex);
-                    logMessageVo.setSql(key);
-                }else{
-                    logMessageVo.setType(LogMesssageType.other.getCode());
+                try{
+                    if (logVo.isMaster()) {
+                        message = JsonUtils.object2Json(logVo);
+                        logMessageVo.setType(LogMesssageType.master.getCode());
+                    }else if(message.startsWith("^SQL^")){
+                        logMessageVo.setType(LogMesssageType.sql.getCode());
+                        int index = message.lastIndexOf("^#^");
+                        String dataMsg = message.substring(index+3);
+                        logMessageVo.setDataMsg(dataMsg);
+                        index = message.indexOf("^#^");
+                        index = message.indexOf("^#^",index+1);
+                        int endIndex = message.indexOf("^#^",index+1);
+                        String sql = message.substring(index+3,endIndex);
+                        logMessageVo.setSql(sql);
+                        message = message.substring(0,index);
+                    }else if(message.startsWith("^CACHE^")){
+                        logMessageVo.setType(LogMesssageType.cache.getCode());
+                        int index = message.indexOf(",key=")+5;
+                        int endIndex = message.indexOf(",",index);
+                        String key = message.substring(index,endIndex);
+                        logMessageVo.setSql(key);
+                    }else{
+                        logMessageVo.setType(LogMesssageType.other.getCode());
+                    }
+                }catch (Exception e){
+                   log.error("parse all log failed",e);
                 }
                 logMessageVo.setMessage(message);
                 logList.add(logMessageVo);
