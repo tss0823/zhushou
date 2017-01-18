@@ -32,7 +32,8 @@
                 {{/if}}
                 {{if log.type == 2}}
                 <pre style="background:lightgreen">{{log.message}} <button class="btn btn-sm btn-primary" id="btnShowCache">显示结果</button> </pre>
-                <pre style="display: none" name="cacheData" data="{{log.sql}}"></pre>
+                <!--<pre style="display: none" name="cacheData" data="{{log.sql}}"></pre>-->
+                <pre style="display: none" name="cacheData">{{log.dataMsg}}</pre>
                 {{/if}}
                 {{if log.type == 3}}
                 <div>{{log.message}}</div>

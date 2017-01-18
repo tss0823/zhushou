@@ -97,6 +97,13 @@ public class AppLogController extends BaseController {
                         int endIndex = message.indexOf(",",index);
                         String key = message.substring(index,endIndex);
                         logMessageVo.setSql(key);
+
+                        index = message.indexOf("^#^");
+                        String dataMsg = message.substring(index+3);
+                        logMessageVo.setDataMsg(dataMsg);
+
+                        message = message.substring(0,index);
+
                     }else{
                         logMessageVo.setType(LogMesssageType.other.getCode());
                     }

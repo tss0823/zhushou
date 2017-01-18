@@ -325,17 +325,29 @@
 
                     //all msg show cache data
                     $("button[id='btnShowCache']").click(function () {
-                        var $showCache = $(this).parent().next();
-                        var key = $showCache.attr("data");
-                        YT.deploy.util.reqPost("/cache/getCache", {key:key,type:'byt'}, function (d) {
-                            if (d.success) {
-                                $showCache.show();
-                                $showCache.html(d.data);
-                            } else {
-                                alert("查询cache失败,err=" + d.message);
-                            }
-                        });
+                        // var $showCache = $(this).parent().next();
+                        // var key = $showCache.attr("data");
                         //get cache data
+                        // YT.deploy.util.reqPost("/cache/getCache", {key:key,type:'byt'}, function (d) {
+                        //     if (d.success) {
+                        //         $showCache.show();
+                        //         $showCache.html(d.data);
+                        //     } else {
+                        //         alert("查询cache失败,err=" + d.message);
+                        //     }
+                        // });
+                        var state = $(this).html() == "显示结果";
+                        $("button[id='btnShowCache']").each(function (index, item) {
+                            $(this).parent().next().hide();
+                            $(this).html("显示结果");
+                        });
+                        if (state) {
+                            $(this).parent().next().show();
+                            $(this).html("隐藏结果");
+                        } else {
+                            $(this).parent().next().hide();
+                            $(this).html("显示结果");
+                        }
                     });
 
                     //all msg show db sql
@@ -376,9 +388,16 @@
 
                     //格式化基础数据
                     $("button[id='btnNormalMsgFormat']").click(function () {
-                        var jsonText = $(this).parent().attr("data");
-                        $(this).parent().find("span").JSONView(jsonText, { collapsed: true });
-
+                        var state = $(this).html() == "格式化";
+                        if(state){
+                            $(this).html("还原");
+                            var jsonText = $(this).parent().attr("data");
+                            $(this).parent().find("span").JSONView(jsonText, { collapsed: true });
+                        }else{
+                            $(this).html("格式化");
+                            var jsonText = $(this).parent().attr("data");
+                            $(this).parent().find("span").html(jsonText);
+                        }
                     });
 
 
