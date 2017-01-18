@@ -4,6 +4,7 @@ import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.cache.QueueService;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.SerializeNewUtil;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.*;
@@ -17,6 +18,8 @@ import java.util.List;
  */
 @Service("cacheService")
 public class JedisCacheServiceImpl implements CacheService ,QueueService {
+
+    private final static Logger log = org.slf4j.LoggerFactory.getLogger(JedisCacheServiceImpl.class);
 
     @Value("${redis.host}")
     private String host;
@@ -61,7 +64,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             int period = 60 * 60 * 5;  //默认过期时间
             jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            log.error("set cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
@@ -77,7 +80,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             byte[] bs = SerializeNewUtil.serialize(value);
             jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            log.error("get cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
@@ -94,6 +97,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             Object value = SerializeNewUtil.unserialize(bs);
             return value;
         }catch (Exception e){
+
             throw new RuntimeException(e);
         }finally {
             shardedJedisPool.returnResource(jedis);

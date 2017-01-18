@@ -622,7 +622,7 @@
             // var webSocket = YT.deploy.WebSocket.webSocket;
             var hostname = location.hostname;
             this.webSocket = new WebSocket('ws://'+hostname+':9003/index.index?platform=user&token='+$.cookie("sid"));
-            // webSocket.send("发送消息ok");
+            // var sendJson = {}
 
             this.webSocket.onerror = function(event) {
                 console.error("error,data="+event.data);
@@ -635,6 +635,7 @@
             this.webSocket.onmessage = function(event) {
                 YT.deploy.eventProcess.notifyEvent(event.data);
                 console.log("onmessage data="+event.data);
+                YT.deploy.WebSocket.webSocket.send('{"type":"user","bizType":"init","message":"user client init"}');
             };
 
             this.webSocket.onclose = function(event) {

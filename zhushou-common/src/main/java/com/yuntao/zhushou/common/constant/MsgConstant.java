@@ -19,6 +19,8 @@ public interface MsgConstant {
     }
 
     interface ReqUserBizType{  //client User请求业务类型
+        String INIT = "init";  //初始化
+
     }
 
 

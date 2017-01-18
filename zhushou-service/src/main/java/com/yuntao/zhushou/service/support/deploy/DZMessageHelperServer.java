@@ -297,7 +297,21 @@ public class DZMessageHelperServer  {
             }
 
         } else if (StringUtils.equals(requestObject.getType(), MsgConstant.ReqResType.USER)) { //用户
-            //TODO 暂停发布,other
+            //客户端第一次打开
+            if (StringUtils.equals(requestObject.getBizType(), MsgConstant.ReqUserBizType.INIT)) {
+
+                //清空 checkserver job exec status
+                AtomicBoolean atomicBoolean = checkServerStatusJob.execMap.get(fTWebSocket.getCpKey());
+                if(atomicBoolean != null){
+                    atomicBoolean.set(false);  //执行完毕
+                }
+                //end
+
+                //其他消息
+            } else{
+                //暂停发布 TODO
+
+            }
 
         } else {
             writeSystemMsg("接收消息类型出错", "desc:" + message);
