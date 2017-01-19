@@ -10,6 +10,8 @@ public interface AppConstant {
     String AUTH_USER = "auth_user";
     String AUTH_PWD = "auth_pwd";
 
+    String proxyIndex = "proxy";
+
     interface ResponseLevel{
         String INFO = "info";
         String WARN = "warn";

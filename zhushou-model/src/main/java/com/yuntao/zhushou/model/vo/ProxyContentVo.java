@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class ProxyContentVo extends ProxyContent {
 
+    private String index;
+
     private String statusText;
 
     private String lastReqTime;
@@ -83,5 +85,13 @@ public class ProxyContentVo extends ProxyContent {
 
     public void setResDataText(String resDataText) {
         this.resDataText = resDataText;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }

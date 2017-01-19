@@ -21,7 +21,7 @@ public class ProxyContent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**  Id * */
-	private Long id;
+	private String id;
 
 	/**
 	 * 企业id
@@ -70,24 +70,26 @@ public class ProxyContent implements Serializable {
 	/**  状态 * */
 	private Integer status;
 
-	/**  创建时间 * */
+	/**  请求时间 * */
 	private Date gmtRequest;
 
-	/**  修改时间 * */
+	/**  返回时间 * */
 	private Date gmtResponse;
 
 	/**  删除状态（0：已删除；1：未删除） * */
 	private Boolean delStatus;
 
+	private String lastTime;
+
 
 	public ProxyContent(){
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -233,5 +235,13 @@ public class ProxyContent implements Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public String getLastTime() {
+		return lastTime;
+	}
+
+	public void setLastTime(String lastTime) {
+		this.lastTime = lastTime;
 	}
 }

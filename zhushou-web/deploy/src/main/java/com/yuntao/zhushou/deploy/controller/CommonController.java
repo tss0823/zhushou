@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.UserService;
+import com.yuntao.zhushou.service.support.bis.HttpProxyServerSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by shengshan.tang on 2015/12/16 at 23:45
  */
 @Controller
 public class CommonController extends BaseController {
+
+    @Autowired
+    private HttpProxyServerSupport httpProxyServerSupport;
 
     int cacheSize = 800;
 
@@ -36,6 +43,12 @@ public class CommonController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+
+    @PostConstruct
+    private void init() {
+        httpProxyServerSupport.init();
+    }
 
 
     @RequestMapping("/")

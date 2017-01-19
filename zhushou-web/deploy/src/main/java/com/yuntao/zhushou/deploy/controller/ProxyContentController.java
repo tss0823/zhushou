@@ -9,6 +9,8 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
+import com.yuntao.zhushou.service.inter.ProxyEsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +25,7 @@ public class ProxyContentController extends BaseController {
 
 
     @Autowired
-    private ProxyContentService reqContentService;
+    private ProxyEsService proxyEsService;
 
     @Autowired
     private AppService appService;
@@ -34,7 +36,10 @@ public class ProxyContentController extends BaseController {
 //        User user = userService.getCurrentUser();
 //        query.setCompanyId(user.getCompanyId());
 //        query.setPageSize(30);  //固定30条
-        Pagination<ProxyContentVo> pagination = reqContentService.selectPage(query);
+        if (StringUtils.isEmpty(query.getModel())) {
+            query.setModel("test");
+        }
+        Pagination<ProxyContentVo> pagination = proxyEsService.selectByPage(query);
 //        if(CollectionUtils.isNotEmpty(pagination.getDataList())){
 //            for (ProxyContentVo reqContentVo : pagination.getDataList()) {
 //                String resData = reqContentVo.getResData();

@@ -4,7 +4,9 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.model.domain.ProxyContent;
 import com.yuntao.zhushou.model.enums.ProxyContentStatus;
 import com.yuntao.zhushou.service.impl.AbstService;
+import com.yuntao.zhushou.service.inter.LogService;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
+import com.yuntao.zhushou.service.inter.ProxyEsService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
@@ -17,7 +19,6 @@ import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,11 +37,10 @@ public class HttpProxyServerSupport extends AbstService {
     private Queue<ProxyContent> proxyContentQueue = new ConcurrentLinkedQueue<>();
 
     @Autowired
-    private ProxyContentService proxyContentService;
+    private ProxyEsService proxyEsService;
 
 
-//    @PostConstruct
-    private void init() {
+    public void init() {
         serverStart();
 
         ExecutorService ec = Executors.newFixedThreadPool(1);
@@ -51,6 +51,8 @@ public class HttpProxyServerSupport extends AbstService {
             }
         });
     }
+
+
 
     private void serverStart() {
         HttpProxyServer server =
@@ -64,6 +66,10 @@ public class HttpProxyServerSupport extends AbstService {
 //                                return 10 * 1024;
 //                            }
                             public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx) {
+//                                if (originalRequest.getMethod().equals("CONNECT")) {  //https break
+//                                    return null;
+//                                }
+                                //new proxy bean
                                 final ProxyContent proxyContent = new ProxyContent();
                                 String remoteInfo = ctx.channel().remoteAddress().toString();
                                 String remoteIp = remoteInfo.substring(1, remoteInfo.lastIndexOf(":"));
@@ -75,15 +81,22 @@ public class HttpProxyServerSupport extends AbstService {
                                 final ByteArrayBuffer byteArrayBuffer = new ByteArrayBuffer(0);
 
                                 return new HttpFiltersAdapter(originalRequest) {
+
                                     @Override
                                     public HttpResponse clientToProxyRequest(HttpObject httpObject) {
                                         // TODO: implement your filtering here
+
                                         System.err.println("clientToProxyRequest httpObject=" + httpObject);
                                         if(proxyContent.getGmtRequest() == null){
                                             proxyContent.setGmtRequest(new Date());
                                         }
-                                        if (httpObject instanceof DefaultHttpRequest) {
+                                        if (httpObject instanceof DefaultHttpRequest) {  //request
                                             DefaultHttpRequest defaultHttpRequest = (DefaultHttpRequest) httpObject;
+                                            if (defaultHttpRequest.getMethod().equals("CONNECT")) {  //443 https break
+                                                HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                                                HttpHeaders.setHeader(response, HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
+                                                return response;
+                                            }
                                             String uri = defaultHttpRequest.getUri();
                                             proxyContent.setUrl(uri);
                                             try {
@@ -102,8 +115,7 @@ public class HttpProxyServerSupport extends AbstService {
                                             }
                                             String headerJson = JsonUtils.object2Json(headerMap);
                                             proxyContent.setReqHeader(headerJson);
-                                        }
-                                        if (httpObject instanceof DefaultHttpContent) {
+                                        }else if (httpObject instanceof DefaultHttpContent) { //req content
                                             //
                                             DefaultHttpContent defaultHttpContent = (DefaultHttpContent) httpObject;
                                             ByteBuf byteBuf = defaultHttpContent.content();
@@ -140,9 +152,7 @@ public class HttpProxyServerSupport extends AbstService {
                                             }
                                             String headerJson = JsonUtils.object2Json(headerMap);
                                             proxyContent.setResHeader(headerJson);
-                                        }
-
-                                        if (httpObject instanceof DefaultHttpContent) {
+                                        }else if (httpObject instanceof DefaultHttpContent) {
                                             //
                                             DefaultHttpContent defaultHttpContent = (DefaultHttpContent) httpObject;
                                             ByteBuf byteBuf = defaultHttpContent.content();
@@ -221,31 +231,20 @@ public class HttpProxyServerSupport extends AbstService {
     }
 
     private void storeDataTask() {
-        List<ProxyContent> dataList = new ArrayList<>();
-        int maxSize = 200;
-        try{
-            while (true){
+//        List<ProxyContent> dataList = new ArrayList<>();
+//        int maxSize = 50;
+        while (true){
+            try{
                 ProxyContent proxyContent = proxyContentQueue.poll();
                 if(proxyContent == null)   {  //没有消息，歇一会儿
-                    if(dataList.size() == 0){
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                        }
-                    }else{
-                        proxyContentService.insertBatch(dataList);
-                        dataList.clear();
-                    }
+                    Thread.sleep(1000);
                     continue;
+                }else{
+                    proxyEsService.addPorxyContent(proxyContent);
                 }
-                dataList.add(proxyContent);
-                if(dataList.size() >= maxSize){
-                    proxyContentService.insertBatch(dataList);
-                    dataList.clear();
-                }
+            }catch (Exception e){
+                bisLog.error("storeDataTask failed! ",e);
             }
-        }catch (Exception e){
-            bisLog.error("storeDataTask failed! ",e);
         }
 
     }

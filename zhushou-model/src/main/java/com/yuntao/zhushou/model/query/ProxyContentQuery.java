@@ -20,6 +20,31 @@ public class ProxyContentQuery extends BaseQuery {
 
     private String reqTimeEnd;
 
+    private String month;
+
+    private String model;
+
+    private String id;
+
+    private Integer status;
+
+
+    private String urlType = "match";
+
+    private String url ;
+
+    private String clientIpType = "term";
+
+    private String userAgentType = "fuzzy";
+
+    private String userAgent;
+
+    private String textCat;
+
+    private String textType = "fuzzy";
+
+    private String text;
+
     public String getClientIp() {
         return clientIp;
     }
@@ -50,5 +75,101 @@ public class ProxyContentQuery extends BaseQuery {
 
     public void setReqTimeEnd(String reqTimeEnd) {
         this.reqTimeEnd = reqTimeEnd;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getUrlType() {
+        return urlType;
+    }
+
+    public void setUrlType(String urlType) {
+        this.urlType = urlType;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getClientIpType() {
+        return clientIpType;
+    }
+
+    public void setClientIpType(String clientIpType) {
+        this.clientIpType = clientIpType;
+    }
+
+    public String getUserAgentType() {
+        return userAgentType;
+    }
+
+    public void setUserAgentType(String userAgentType) {
+        this.userAgentType = userAgentType;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public String getTextCat() {
+        return textCat;
+    }
+
+    public void setTextCat(String textCat) {
+        this.textCat = textCat;
+    }
+
+    public String getTextType() {
+        return textType;
+    }
+
+    public void setTextType(String textType) {
+        this.textType = textType;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
