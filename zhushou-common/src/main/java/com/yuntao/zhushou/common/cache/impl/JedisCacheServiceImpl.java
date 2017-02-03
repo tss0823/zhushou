@@ -80,7 +80,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             byte[] bs = SerializeNewUtil.serialize(value);
             jedis.setex(newKey.getBytes(),period,bs);
         }catch (Exception e){
-            log.error("get cache failed",e);
+            log.error("set cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
@@ -97,11 +97,11 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             Object value = SerializeNewUtil.unserialize(bs);
             return value;
         }catch (Exception e){
-
-            throw new RuntimeException(e);
+            log.error("get cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
+        return null;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             key = namespace+"_"+key;
             jedis.lpush(key,msg);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            log.error("add queue cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
@@ -142,9 +142,10 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
             key = namespace+"_"+key;
             return jedis.rpop(key);
         }catch (Exception e){
-            throw new RuntimeException(e);
+            log.error("pop queue cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
+        return null;
     }
 }

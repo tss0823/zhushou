@@ -45,7 +45,7 @@ public class CommonController extends BaseController {
     private UserService userService;
 
 
-    @PostConstruct
+//    @PostConstruct
     private void init() {
         httpProxyServerSupport.init();
     }
