@@ -117,6 +117,8 @@
 //            return;
 //        }
 
+        YunTao.deploy.WebSocket.init();   //初始化socket
+
         var userId = appData["user"].id;
         $.ajax({
             url: "/data/appUserDataList",

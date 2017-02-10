@@ -661,8 +661,7 @@
     };
     //end
 
-    YT.deploy.WebSocket.init();   //初始化socket
-    
+
     // window.confirm = function(message){
     //     bootbox.confirm(message, function(result) {
     //         return result;
