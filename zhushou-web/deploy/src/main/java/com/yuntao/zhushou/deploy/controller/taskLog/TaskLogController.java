@@ -49,9 +49,9 @@ public class TaskLogController extends BaseController {
 
     @RequestMapping("selectListByBatchNo")
     @NeedLogin
-    public ResponseObject selectListByBatchNo(@RequestParam String month, @RequestParam String model, @RequestParam String batchNo) {
+    public ResponseObject selectListByBatchNo(TaskLogQuery query) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        Pagination<TaskLogVo> pagination = taskLogService.selectListByBatchNo(month, model, batchNo);
+        Pagination<TaskLogVo> pagination = taskLogService.selectListByBatchNo(query);
         responseObject.setData(pagination);
         return responseObject;
     }

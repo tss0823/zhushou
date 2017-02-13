@@ -12,6 +12,7 @@
         route_callback: function (d,data) {
             console.log("app list after render call");
             //组件初始化之后
+            YT.deploy.taskLogDetail.currData = data;
 
             $("#startTime").datetimepicker({
                 showSecond: true,
@@ -102,13 +103,24 @@
     }
     $.extend(YT.deploy, common);
 
-
+    YT.deploy.taskLogDetail.currData = null,
     YT.deploy.taskLogDetail = {
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
-            var checkState = checked ? "prod" : "test";
+            // var checkState = checked ? "prod" : "test";
             // debugger;
-            YT.deploy.goSearchPage("taskLogDetailListForm",pageNum,pageSize,{model:checkState});
+            var params = YT.deploy.util.getFormParams("#taskLogDetailListForm");
+            params["pageNum"] = pageNum;
+            var pageSize = $("#pageSize").val();
+            params["month"] = YT.deploy.taskLogDetail.currData.month;
+            params["model"] = YT.deploy.taskLogDetail.currData.model;
+            params["batchNo"] = YT.deploy.taskLogDetail.currData.batchNo;
+
+            var ext_data = $.extend(params, {
+                title: YT.deploy.taskLogDetail.currData.title,
+                msTitle: YT.deploy.taskLogDetail.currData.msTitle
+            });
+            YT.deploy.route("/taskLog/selectListByBatchNo", params, "/taskLog/detailList.html", ext_data);
         },
 
     }

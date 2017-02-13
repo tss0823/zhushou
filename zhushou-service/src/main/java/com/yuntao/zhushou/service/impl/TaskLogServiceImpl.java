@@ -95,13 +95,12 @@ public class TaskLogServiceImpl implements TaskLogService {
     }
 
     @Override
-    public Pagination<TaskLogVo> selectListByBatchNo(String month, String model, String batchNo) {
-        TaskLogQuery query = new TaskLogQuery();
-        query.setMonth(month);
-        query.setModel(model);
-        query.setBatchNo(batchNo);
+    public Pagination<TaskLogVo> selectListByBatchNo(TaskLogQuery query) {
+//        query.setMonth(month);
+//        query.setModel(model);
+//        query.setBatchNo(batchNo);
         query.setPage(true);
-        query.setPageSize(8000);  //足够大,不然出现不能查询全部数据
+//        query.setPageSize(8000);  //足够大,不然出现不能查询全部数据
         Pagination<TaskLogVo> pagination = selectList(query);
         return pagination;
     }

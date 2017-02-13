@@ -10,6 +10,9 @@
     var common = {
 
         route_callback: function (d,data) {
+
+            YT.deploy.taskLog.currData = data;
+
             console.log("app list after render call");
             //组件初始化之后
             var appList = appData.appList;
@@ -75,6 +78,7 @@
                 YT.deploy.taskLog.query(pageNum, pageSize);
             });
 
+
             $("a[id='enterDetail']").each(function (index, item) {
                 $(this).click(function () {
                     var batchNo = $(item).attr("batchNo");
@@ -123,13 +127,19 @@
     }
     $.extend(YT.deploy, common);
 
+    YT.deploy.taskLog.currData = null,
+
 
     YT.deploy.taskLog = {
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
-            // debugger;
-            YT.deploy.goSearchPage("taskLogForm",pageNum,pageSize,{model:checkState});
+            debugger;
+            if($("form:first").attr("id") == "taskLogDetailListForm"){
+               YT.deploy.queryDetail(pageNum,pageSize);
+            }else{
+                YT.deploy.goSearchPage("taskLogForm",pageNum,pageSize,{model:checkState});
+            }
         },
 
     }
