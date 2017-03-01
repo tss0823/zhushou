@@ -64,9 +64,9 @@ public class AppLogController extends BaseController {
 
     @RequestMapping("selectListByStackId")
     @NeedLogin
-    public ResponseObject selectListByStackId(@RequestParam String month,@RequestParam String model, @RequestParam String stackId) {
+    public ResponseObject selectListByStackId(@RequestParam String month, @RequestParam String model, @RequestParam String stackId) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        List<LogWebVo> dataList = logService.selectListByStackId(month,model, stackId);
+        List<LogWebVo> dataList = logService.selectListByStackId(month, model, stackId);
 //        StringBuilder sb = new StringBuilder();
         Collections.reverse(dataList); //反转
 //        List<String> sqlList = new ArrayList<>();
@@ -76,39 +76,50 @@ public class AppLogController extends BaseController {
                 String message = logVo.getMessage();
                 LogMessageVo logMessageVo = new LogMessageVo();
                 logMessageVo.setId(logVo.getId());
-                try{
+                try {
                     if (logVo.isMaster()) {
                         message = JsonUtils.object2Json(logVo);
                         logMessageVo.setType(LogMesssageType.master.getCode());
-                    }else if(message.startsWith("^SQL^")){
-                        logMessageVo.setType(LogMesssageType.sql.getCode());
-                        int index = message.lastIndexOf("^#^");
-                        String dataMsg = message.substring(index+3);
-                        logMessageVo.setDataMsg(dataMsg);
-                        index = message.indexOf("^#^");
-                        index = message.indexOf("^#^",index+1);
-                        int endIndex = message.indexOf("^#^",index+1);
-                        String sql = message.substring(index+3,endIndex);
-                        logMessageVo.setSql(sql);
-                        message = message.substring(0,index);
-                    }else if(message.startsWith("^CACHE^")){
-                        logMessageVo.setType(LogMesssageType.cache.getCode());
-                        int index = message.indexOf(",key=")+5;
-                        int endIndex = message.indexOf(",",index);
-                        String key = message.substring(index,endIndex);
-                        logMessageVo.setSql(key);
+                    } else {
+                        int keyIndex = message.indexOf("^|^");
+                        if(keyIndex > -1){
+                            String key = message.substring(0,keyIndex);
+                            message = message.substring(keyIndex+3);
+                            if(StringUtils.equalsIgnoreCase(key,"methodStack")){
+                               //TODO
+                            }
+                        }
 
-                        index = message.indexOf("^#^");
-                        String dataMsg = message.substring(index+3);
-                        logMessageVo.setDataMsg(dataMsg);
+                        if (message.startsWith("^SQL^")) {
+                            logMessageVo.setType(LogMesssageType.sql.getCode());
+                            int index = message.lastIndexOf("^#^");
+                            String dataMsg = message.substring(index + 3);
+                            logMessageVo.setDataMsg(dataMsg);
+                            index = message.indexOf("^#^");
+                            index = message.indexOf("^#^", index + 1);
+                            int endIndex = message.indexOf("^#^", index + 1);
+                            String sql = message.substring(index + 3, endIndex);
+                            logMessageVo.setSql(sql);
+                            message = message.substring(0, index);
+                        } else if (message.startsWith("^CACHE^")) {
+                            logMessageVo.setType(LogMesssageType.cache.getCode());
+                            int index = message.indexOf(",key=") + 5;
+                            int endIndex = message.indexOf(",", index);
+                            String key = message.substring(index, endIndex);
+                            logMessageVo.setSql(key);
 
-                        message = message.substring(0,index);
+                            index = message.indexOf("^#^");
+                            String dataMsg = message.substring(index + 3);
+                            logMessageVo.setDataMsg(dataMsg);
 
-                    }else{
-                        logMessageVo.setType(LogMesssageType.other.getCode());
+                            message = message.substring(0, index);
+
+                        } else {
+                            logMessageVo.setType(LogMesssageType.other.getCode());
+                        }
                     }
-                }catch (Exception e){
-                   log.error("parse all log failed",e);
+                } catch (Exception e) {
+                    log.error("parse all log failed", e);
                 }
                 logMessageVo.setMessage(message);
                 logList.add(logMessageVo);
@@ -122,9 +133,9 @@ public class AppLogController extends BaseController {
 
     @RequestMapping("findMasterByStackId")
     @NeedLogin
-    public ResponseObject findMasterByStackId(@RequestParam String month,@RequestParam String model, @RequestParam String stackId) {
+    public ResponseObject findMasterByStackId(@RequestParam String month, @RequestParam String model, @RequestParam String stackId) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        LogVo logVo = logService.findMasterByStackId(month,model, stackId);
+        LogVo logVo = logService.findMasterByStackId(month, model, stackId);
         LogWebVo logWebVo = BeanUtils.beanCopy(logVo, LogWebVo.class);
 //        String response = logWebVo.getResponse();
 
@@ -143,15 +154,15 @@ public class AppLogController extends BaseController {
 
     @RequestMapping("httpExecute")
     @NeedLogin
-    public ResponseObject httpExecute(@RequestParam String month,@RequestParam String model,@RequestParam String stackId, String reqCookie) {
+    public ResponseObject httpExecute(@RequestParam String month, @RequestParam String model, @RequestParam String stackId, String reqCookie) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        LogVo logVo = logService.findMasterByStackId(month,model, stackId);
+        LogVo logVo = logService.findMasterByStackId(month, model, stackId);
 
         String url = logVo.getReqUrl();
         String reqHeads = logVo.getReqHeaders();
-        Map<String, String> headers = JsonUtils.json2Object(reqHeads,HashMap.class);
+        Map<String, String> headers = JsonUtils.json2Object(reqHeads, HashMap.class);
         String parameters = logVo.getParameters();
-        Map<String, String> params = JsonUtils.json2Object(parameters,HashMap.class);
+        Map<String, String> params = JsonUtils.json2Object(parameters, HashMap.class);
         //处理cooke 防止 重复提交
         String cookie = null;
         if (StringUtils.isNotEmpty(reqCookie)) {
