@@ -1,6 +1,11 @@
 package com.yuntao.zhushou.deploy.controller.log;
 
-import com.yuntao.zhushou.common.utils.*;
+import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.HttpUtil;
+import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.Company;
@@ -8,11 +13,7 @@ import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.LogMesssageType;
 import com.yuntao.zhushou.model.query.LogQuery;
 import com.yuntao.zhushou.model.query.LogTextQuery;
-import com.yuntao.zhushou.model.vo.LogMessageVo;
-import com.yuntao.zhushou.model.vo.LogVo;
-import com.yuntao.zhushou.model.vo.LogWebVo;
-import com.yuntao.zhushou.common.web.Pagination;
-import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.model.vo.*;
 import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.LogService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -71,22 +72,24 @@ public class AppLogController extends BaseController {
         Collections.reverse(dataList); //反转
 //        List<String> sqlList = new ArrayList<>();
         List<LogMessageVo> logList = new ArrayList<>();
+        ProfileTaskVo profileTaskVo = null;
         if (CollectionUtils.isNotEmpty(dataList)) {
             for (LogVo logVo : dataList) {
                 String message = logVo.getMessage();
                 LogMessageVo logMessageVo = new LogMessageVo();
-                logMessageVo.setId(logVo.getId());
                 try {
                     if (logVo.isMaster()) {
+                        logMessageVo.setKey(logVo.getId());
                         message = JsonUtils.object2Json(logVo);
                         logMessageVo.setType(LogMesssageType.master.getCode());
                     } else {
                         int keyIndex = message.indexOf("^|^");
-                        if(keyIndex > -1){
-                            String key = message.substring(0,keyIndex);
-                            message = message.substring(keyIndex+3);
-                            if(StringUtils.equalsIgnoreCase(key,"methodStack")){
-                               //TODO
+                        if (keyIndex > -1) {
+                            String key = message.substring(0, keyIndex);
+                            logMessageVo.setKey(key);
+                            message = message.substring(keyIndex + 3);
+                            if (StringUtils.equalsIgnoreCase(key, "methodStack")) {
+                                profileTaskVo = JsonUtils.json2Object(message, ProfileTaskVo.class);
                             }
                         }
 
@@ -126,8 +129,36 @@ public class AppLogController extends BaseController {
             }
         }
 //        //
-        responseObject.put("logList", logList);
+        //聚合成树
+        LogMsgTreeVo logMsgTreeVo = transLogTreeVo(0,profileTaskVo,logList);
+        responseObject.put("logMsgTreeVo", logMsgTreeVo);
         return responseObject;
+    }
+
+    private LogMsgTreeVo transLogTreeVo(Integer level,ProfileTaskVo taskVo, List<LogMessageVo> logList) {
+        LogMsgTreeVo logMsgTreeVo = new LogMsgTreeVo();
+        logMsgTreeVo.setLevel(level);
+        logMsgTreeVo.setName(taskVo.getName() + "," + taskVo.getContent() + ",[" + taskVo.getLevel() + "] take time " + taskVo.getTime() + " ms");
+        List<ProfileTaskVo> taskChildList = taskVo.getChildList();
+        //add log item
+        for (LogMessageVo logMessageVo : logList) {
+            String key = logMessageVo.getKey();
+            if (StringUtils.equals(key, taskVo.getKey())) {
+                logMsgTreeVo.getLogMessageVoList().add(logMessageVo);
+            }
+        }
+
+        //child
+        if (CollectionUtils.isNotEmpty(taskChildList)) {
+            level++;
+            for (ProfileTaskVo childTaskVo : taskChildList) {
+                LogMsgTreeVo childLogMsgTreeVo = transLogTreeVo(level,childTaskVo, logList);
+                logMsgTreeVo.getChild().add(childLogMsgTreeVo);
+            }
+        }
+        return logMsgTreeVo;
+
+
     }
 
 

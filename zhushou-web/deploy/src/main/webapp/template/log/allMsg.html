@@ -7,7 +7,7 @@
                 <span style="background: lightgreen">淡绿色</span>： 缓存 &nbsp;&nbsp;,
                 <span style="background: lightpink">淡红色</span>： DB &nbsp;&nbsp;,
                 <span style="background: lightgrey">淡灰色</span>： 基础 &nbsp;&nbsp;,
-                <span>默认</span>： 其他 &nbsp;
+                <span>默认</span>： 其他11 &nbsp;
             </small>
         </h1>
     </div><!-- /.page-header -->
@@ -18,31 +18,11 @@
 
         </div>
         <div id="logContent">
-            <!--<pre>-->
-            {{each logList as log i}}
             <div>
-                {{if log.type == 0}}
-                <pre style="background:lightgrey" data="{{log.message}}"><span>{{log.message}}</span> <button class="btn btn-sm btn-primary"
-                                                                          id="btnNormalMsgFormat">格式化</button> </pre>
-                {{/if}}
-                {{if log.type == 1}}
-                <pre style="background:lightpink">{{log.message}} <button class="btn btn-sm btn-primary" id="btnShowDbResult">显示结果</button> &nbsp;<button class="btn btn-sm btn-primary" id="btnShowDbSql">显示SQL</button> &nbsp;<button class="btn btn-sm btn-primary" data-clipboard-target="#logSql{{log.id}}"  id="btnCopySql">复制SQL</button></pre>
-                <textarea id="logSql{{log.id}}" name="dbSql"  readonly="true" style="width:100%;height: 60px;display: none" >{{log.sql}}</textarea>
-                <pre style="display: none" name="dbResult">{{log.dataMsg}}</pre>
-                {{/if}}
-                {{if log.type == 2}}
-                <pre style="background:lightgreen">{{log.message}} <button class="btn btn-sm btn-primary" id="btnShowCache">显示结果</button> </pre>
-                <!--<pre style="display: none" name="cacheData" data="{{log.sql}}"></pre>-->
-                <pre style="display: none" name="cacheData">{{log.dataMsg}}</pre>
-                {{/if}}
-                {{if log.type == 3}}
-                <div>{{log.message}}</div>
-                {{/if}}
+                <pre>aaaaaaaaa</pre>
+                <pre>   <span>+</span> aaaaaaaaa</pre>
+                <pre>      <span>+</span> aaaaaaaaa</pre>
             </div>
-            {{/each}}
-            <!--</pre>-->
-            <!--<pre style="display: none" id="formatLogText" >{{formatLogText}}</pre>-->
-            <!--<input id="formatLogText" value="https://github.com/zenorocha/clipboard.js.git">-->
         </div>
         <textarea id="formatLogText" style="width:1px;height:1px" readonly="true">{{formatLogText}}</textarea>
     </div>

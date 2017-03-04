@@ -3,24 +3,26 @@
  * ESunny.com ("Confidential Information"). You shall not disclose such Confidential Information and shall use it only
  * in accordance with the terms of the license agreement you entered into with ESunny.com.
  */
-package com.yuntao.zhushou.common.profiler;
+package com.yuntao.zhushou.model.vo;
 
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.UUID;
 
 /**
  * 类ProfileTask.java的实现描述：性能统计监控任务
  * 
  * @author shengshang.tang 2014年5月19日 下午4:25:17
  */
-public class ProfileTask implements Serializable {
+public class ProfileTaskVo implements Serializable {
+
+    private String key;
 
     /**
      * 日志级别
      */
-    private Level level;
+    private String level;
 
     /**
      * 开始时间
@@ -47,7 +49,11 @@ public class ProfileTask implements Serializable {
      */
     private String content;
 
-    private List<ProfileTask> childList;
+    private List<ProfileTaskVo> childList;
+
+    public ProfileTaskVo() {
+        this.key = UUID.randomUUID().toString();
+    }
 
     public Long getTime() {
         time = endTime - startTime;
@@ -90,19 +96,27 @@ public class ProfileTask implements Serializable {
         this.endTime = endTime;
     }
 
-    public Level getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(Level level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 
-    public List<ProfileTask> getChildList() {
+    public List<ProfileTaskVo> getChildList() {
         return childList;
     }
 
-    public void setChildList(List<ProfileTask> childList) {
+    public void setChildList(List<ProfileTaskVo> childList) {
         this.childList = childList;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

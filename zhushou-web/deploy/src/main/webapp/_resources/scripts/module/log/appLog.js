@@ -310,7 +310,7 @@
             var params = {stackId: id, month: $("#month").val(), model: checkState};
             YT.deploy.util.reqGet("/appLog/selectListByStackId", params, function (d) {
                 var data = d.data;
-                var param = {title: "消息", logList: data.logList};
+                var param = {title: "消息"};
                 $.get("/log/allMsg.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
@@ -319,6 +319,16 @@
                         width: "800px",
                     });
                     $(".modal-dialog").prop("style", "width:90%")
+
+                    //渲染日志树
+                    var logMsgTreeVo = data.logMsgTreeVo;
+                    var logContentArray = [];
+                    logContentArray.push("<div>");
+                    YT.deploy.appLog.showAllLog(logMsgTreeVo,logContentArray);
+                    logContentArray.push("</div>");
+
+                    $("#logContent").html(logContentArray.join(""));
+                    //end
 
 
                     new Clipboard("#btnCopySql");
@@ -527,6 +537,45 @@
                     }
                 }
             });
+        },
+
+        //日志渲染
+        showAllLog: function (logMsgTreeVo,logContentArray) {
+            var childTreeList = logMsgTreeVo.child;
+            var logMessageVoList = logMsgTreeVo.logMessageVoList;
+            logContentArray.push("<div>");
+
+            logContentArray.push("<pre>");
+            logContentArray.push("<span style='cursor:pointer'>+</span>");
+            var level = logMsgTreeVo.level;
+            var spaceNum = parseInt(level);
+            while (spaceNum > 0){
+                logContentArray.push("  ");
+                spaceNum--;
+            }
+            logContentArray.push(logMsgTreeVo.name)
+            logContentArray.push("</pre>");
+            if(logMessageVoList && logMessageVoList.length > 0){
+                for(var logIndex in logMessageVoList){
+                    var log = logMessageVoList[logIndex];
+                    if(log.type == 0){
+                        logContentArray.push('<pre style="background:lightgrey" data="'+log.message+'"><span>'+log.message+'</span> <button class="btn btn-sm btn-primary" id="btnNormalMsgFormat">格式化</button> </pre>');
+                    }else if(log.type == 1){
+                        logContentArray.push('<pre style="background:lightpink">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowDbResult">显示结果</button> &nbsp;<button class="btn btn-sm btn-primary" id="btnShowDbSql">显示SQL</button> &nbsp;<button class="btn btn-sm btn-primary" data-clipboard-target="#logSql'+log.id+'"  id="btnCopySql">复制SQL</button></pre> <textarea id="logSql'+log.id+'" name="dbSql"  readonly="true" style="width:100%;height: 60px;display: none" >'+log.sql+'</textarea> <pre style="display: none" name="dbResult">'+log.dataMsg+'</pre>');
+                    }else if(log.type == 2){
+                        logContentArray.push('<pre style="background:lightgreen">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowCache">显示结果</button> </pre> <pre style="display: none" name="cacheData">'+log.dataMsg+'</pre>');
+                    }else if(log.type == 3){
+                        logContentArray.push('<pre>'+log.message+'</pre>');
+                    }
+                }
+
+            }
+
+            for(var childIndex in childTreeList){
+                var childLogMsgTreeVo = childTreeList[childIndex];
+                YT.deploy.appLog.showAllLog(childLogMsgTreeVo,logContentArray);
+
+            }
         }
 
 

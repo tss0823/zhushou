@@ -1,9 +1,8 @@
 package com.yuntao.zhushou.service.auth;
 
-import com.yuntao.zhushou.common.exception.AuthException;
-import com.yuntao.zhushou.common.profiler.ProfileTaskManger;
-import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.common.constant.AppConstant;
+import com.yuntao.zhushou.common.exception.AuthException;
+import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,10 +11,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 
@@ -35,8 +31,8 @@ public class AuthAspect {
     public Object aroundController(final ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         //start profile
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        ProfileTaskManger.startFirst("", request.getRequestURL().toString());
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        ProfileTaskManger.startFirst("", request.getRequestURL().toString());
         //end
         try {
             NeedLogin needLogin = method.getAnnotation(NeedLogin.class);
@@ -51,8 +47,8 @@ public class AuthAspect {
             return joinPoint.proceed();
         } finally {
             //start profile
-            ProfileTaskManger.endLast(threshold);
-            ProfileTaskManger.clear();
+//            ProfileTaskManger.endLast(threshold);
+//            ProfileTaskManger.clear();
             //end
         }
     }

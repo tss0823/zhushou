@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class LogMessageVo implements Serializable {
 
-    private String id;
+    private String key;
 
     private Integer type;  //0 master message,1 sql,2 cache
 
@@ -50,11 +50,12 @@ public class LogMessageVo implements Serializable {
         this.sql = sql;
     }
 
-    public String getId() {
-        return id;
+
+    public String getKey() {
+        return key;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setKey(String key) {
+        this.key = key;
     }
 }
