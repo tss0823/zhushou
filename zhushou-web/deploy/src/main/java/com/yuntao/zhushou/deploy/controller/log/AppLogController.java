@@ -79,9 +79,10 @@ public class AppLogController extends BaseController {
                 LogMessageVo logMessageVo = new LogMessageVo();
                 try {
                     if (logVo.isMaster()) {
-                        logMessageVo.setKey(logVo.getId());
-                        message = JsonUtils.object2Json(logVo);
-                        logMessageVo.setType(LogMesssageType.master.getCode());
+                        continue;
+//                        logMessageVo.setKey(logVo.getId());
+//                        message = JsonUtils.object2Json(logVo);
+//                        logMessageVo.setType(LogMesssageType.master.getCode());
                     } else {
                         int keyIndex = message.indexOf("^|^");
                         if (keyIndex > -1) {

@@ -333,6 +333,36 @@
 
                     new Clipboard("#btnCopySql");
 
+                    $("#btnSwitch").click(function(){
+                        var attrData = $(this).attr("data");
+                        if(attrData == 1){
+                            $(this).attr("data",0);
+                            $("pre[name='msgItem']").hide();
+                            $("span[name='btnSmallSwitch']").html(" + ");
+                            $("span[name='btnSmallSwitch']").attr("value",0);
+                        }else{
+                            $(this).attr("data",1);
+                            $("pre[name='msgItem']").show();
+                            $("span[name='btnSmallSwitch']").html(" - ");
+                            $("span[name='btnSmallSwitch']").attr("value",1);
+
+                        }
+                    });
+
+                    $("span[name='btnSmallSwitch']").click(function(){
+                        var attrData = $(this).attr("value");
+                        var data = $(this).attr("data");
+                        if(attrData == 1){
+                            $(this).html(" + ");
+                            $(this).attr("value",0);
+                            $("pre[data='"+data+"']").hide();
+                        }else{
+                            $(this).html(" - ");
+                            $(this).attr("value",1);
+                            $("pre[data='"+data+"']").show();
+                        }
+                    });
+
                     //all msg show cache data
                     $("button[id='btnShowCache']").click(function () {
                         // var $showCache = $(this).parent().next();
@@ -546,26 +576,28 @@
             logContentArray.push("<div>");
 
             logContentArray.push("<pre>");
-            logContentArray.push("<span style='cursor:pointer'>+</span>");
             var level = logMsgTreeVo.level;
             var spaceNum = parseInt(level);
             while (spaceNum > 0){
                 logContentArray.push("  ");
                 spaceNum--;
             }
+            var data = new Date().getTime()+parseInt(Math.random() * 10000)
+            logContentArray.push("<span style='cursor:pointer' data='"+data+"' name='btnSmallSwitch' value='1'> - </span>");
+            logContentArray.push(" "+level+" ")
             logContentArray.push(logMsgTreeVo.name)
             logContentArray.push("</pre>");
             if(logMessageVoList && logMessageVoList.length > 0){
                 for(var logIndex in logMessageVoList){
                     var log = logMessageVoList[logIndex];
                     if(log.type == 0){
-                        logContentArray.push('<pre style="background:lightgrey" data="'+log.message+'"><span>'+log.message+'</span> <button class="btn btn-sm btn-primary" id="btnNormalMsgFormat">格式化</button> </pre>');
+                        logContentArray.push('<pre name="msgItem" data="'+data+'" style="background:lightgrey" data="'+log.message+'"><span>'+log.message+'</span> <button class="btn btn-sm btn-primary" id="btnNormalMsgFormat">格式化</button> </pre>');
                     }else if(log.type == 1){
-                        logContentArray.push('<pre style="background:lightpink">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowDbResult">显示结果</button> &nbsp;<button class="btn btn-sm btn-primary" id="btnShowDbSql">显示SQL</button> &nbsp;<button class="btn btn-sm btn-primary" data-clipboard-target="#logSql'+log.id+'"  id="btnCopySql">复制SQL</button></pre> <textarea id="logSql'+log.id+'" name="dbSql"  readonly="true" style="width:100%;height: 60px;display: none" >'+log.sql+'</textarea> <pre style="display: none" name="dbResult">'+log.dataMsg+'</pre>');
+                        logContentArray.push('<pre name="msgItem" data="'+data+'" style="background:lightpink">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowDbResult">显示结果</button> &nbsp;<button class="btn btn-sm btn-primary" id="btnShowDbSql">显示SQL</button> &nbsp;<button class="btn btn-sm btn-primary" data-clipboard-target="#logSql'+log.id+'"  id="btnCopySql">复制SQL</button></pre> <textarea id="logSql'+log.id+'" name="dbSql"  readonly="true" style="width:100%;height: 60px;display: none" >'+log.sql+'</textarea> <pre style="display: none" name="dbResult">'+log.dataMsg+'</pre>');
                     }else if(log.type == 2){
-                        logContentArray.push('<pre style="background:lightgreen">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowCache">显示结果</button> </pre> <pre style="display: none" name="cacheData">'+log.dataMsg+'</pre>');
+                        logContentArray.push('<pre  name="msgItem" data="'+data+'" style="background:lightgreen">'+log.message+' <button class="btn btn-sm btn-primary" id="btnShowCache">显示结果</button> </pre> <pre style="display: none" name="cacheData">'+log.dataMsg+'</pre>');
                     }else if(log.type == 3){
-                        logContentArray.push('<pre>'+log.message+'</pre>');
+                        logContentArray.push('<pre name="msgItem" data="'+data+'" style="background:lightgrey">'+log.message+'</pre>');
                     }
                 }
 
