@@ -576,27 +576,27 @@
     var preKeyCode = null;
     $(document).keydown(function (e) {
         console.log("keyCode=" + e.keyCode);
-        if (preKeyCode == 18 && e.keyCode == 13) {
+        if ((preKeyCode == 18 || preKeyCode == 91 ) && e.keyCode == 13) {
             $("button[enter='true']").trigger("click");
             return false;
         }
 
-        if (preKeyCode == 17 && e.keyCode == 82) { //ctrl + r
+        if ((preKeyCode == 17 || preKeyCode == 91 ) && e.keyCode == 82) { //ctrl + r
             console.log("presskey ctrl + r");
             YT.deploy.routeStackProcess.refresh();
             return false;  //屏蔽系统event
         }
-        if (preKeyCode == 18 && e.keyCode == 72) { //alt + h
+        if ((preKeyCode == 18 || preKeyCode == 91 ) && e.keyCode == 72) { //alt + h
             console.log("presskey alt + h");
             YT.deploy.routeStackProcess.home();
             return false;  //屏蔽系统event
         }
-        if (preKeyCode == 18 && e.keyCode == 37) { //alt + left
+        if ((preKeyCode == 18 || preKeyCode == 91 ) && e.keyCode == 37) { //alt + left
             console.log("presskey alt+left");
             YT.deploy.routeStackProcess.prevRoute();
             return false;
         }
-        if (preKeyCode == 18 && e.keyCode == 39) { //alt + right
+        if ((preKeyCode == 18 || preKeyCode == 91 ) && e.keyCode == 39) { //alt + right
             console.log("presskey alt + right");
             YT.deploy.routeStackProcess.nextRoute();
             return false;
