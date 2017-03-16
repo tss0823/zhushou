@@ -172,10 +172,20 @@
                 YT.deploy.appLog.openMsgDialog(id);
             });
 
+            //header msg
+            $("a[id='btnHeaderMsg']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.appLog.openHeaderMsgDialog(id);
+            });
             //format msg
             $("a[id='btnFormatMsg']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.appLog.openFormatMsgDialog(id);
+            });
+            //all msg
+            $("a[id='btnAllMsg']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.appLog.openAllMsgDialog(id);
             });
 
             //req url
@@ -304,14 +314,14 @@
             });
         },
 
-        openMsgDialog: function (id) {
+        openFormatMsgDialog: function (id) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
             var params = {stackId: id, month: $("#month").val(), model: checkState};
             YT.deploy.util.reqGet("/appLog/selectListByStackId", params, function (d) {
                 var data = d.data;
                 var param = {title: "消息"};
-                $.get("/log/allMsg.html", function (source) {
+                $.get("/log/msgFormat.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
                     bootbox.dialog({
@@ -324,7 +334,7 @@
                     var logMsgTreeVo = data.logMsgTreeVo;
                     var logContentArray = [];
                     logContentArray.push("<div>");
-                    YT.deploy.appLog.showAllLog(logMsgTreeVo,logContentArray);
+                    YT.deploy.appLog.showFormatMsg(logMsgTreeVo,logContentArray);
                     logContentArray.push("</div>");
 
                     $("#logContent").html(logContentArray.join(""));
@@ -485,7 +495,8 @@
                 //渲染左侧栏
                 var newData = {
                     url: data.url, appName: data.appName, model: data.type, reqHeader: data.reqHeaders,
-                    reqData: data.parameters, resHeader: data.resHeaders, resData: data.response
+                    reqData: data.parameters, resHeader: data.resHeaders, resData: data.response,
+                    key:data.key
                 };
                 $.extend(YT.deploy.data, {reqContentInitData: newData});
 
@@ -505,7 +516,7 @@
         },
 
         //
-        openFormatMsgDialog: function (id) {
+        openHeaderMsgDialog: function (id) {
             var checked = $("#model").attr("checked");
             var model = checked ? "prod" : "test";
             var params = {stackId: id, month: $("#month").val(), model: model};
@@ -524,7 +535,7 @@
                 }
                 // debugger;
                 var param = {reqTitle: "请求头列表", reqDataList: reqDataList, resTitle: "返回头列表", resDataList: resDataList};
-                $.get("/log/msgFormat.html", function (source) {
+                $.get("/log/msgHeader.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
                     bootbox.dialog({
@@ -537,6 +548,25 @@
             });
 
         },
+
+        openAllMsgDialog: function (id) {
+            var checked = $("#model").attr("checked");
+            var checkState = checked ? "prod" : "test";
+            var params = {stackId: id, month: $("#month").val(), model: checkState};
+            YT.deploy.util.reqGet("/appLog/selectAllListByStackId", params, function (d) {
+                var param = {title: "所有消息", logText: d.data};
+                $.get("/log/allMsg.html", function (source) {
+                    var render = template.compile(source);
+                    var html = render(param);
+                    bootbox.dialog({
+                        message: html,
+                        width: "800px",
+                    });
+                    $(".modal-dialog").prop("style", "width:70%;height:85%")
+                });
+            });
+        },
+
 
         //展示ip城市
         showIpCity: function () {
@@ -569,8 +599,8 @@
             });
         },
 
-        //日志渲染
-        showAllLog: function (logMsgTreeVo,logContentArray) {
+        //格式化日志渲染
+        showFormatMsg: function (logMsgTreeVo,logContentArray) {
             var childTreeList = logMsgTreeVo.child;
             var logMessageVoList = logMsgTreeVo.logMessageVoList;
             logContentArray.push("<div>");
@@ -605,10 +635,12 @@
 
             for(var childIndex in childTreeList){
                 var childLogMsgTreeVo = childTreeList[childIndex];
-                YT.deploy.appLog.showAllLog(childLogMsgTreeVo,logContentArray);
+                YT.deploy.appLog.showFormatMsg(childLogMsgTreeVo,logContentArray);
 
             }
-        }
+        },
+
+
 
 
     }

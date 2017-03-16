@@ -163,6 +163,30 @@ public class AppLogController extends BaseController {
     }
 
 
+
+    @RequestMapping("selectAllListByStackId")
+    @NeedLogin
+    public ResponseObject selectAllListByStackId(@RequestParam String month,@RequestParam String model, @RequestParam String stackId) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        List<LogWebVo> dataList = logService.selectListByStackId(month,model, stackId);
+        StringBuilder sb = new StringBuilder();
+        Collections.reverse(dataList); //反转
+//        List<String> sqlList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (LogVo logVo : dataList) {
+                String message = logVo.getMessage();
+                if (logVo.isMaster()) {
+                    message = JsonUtils.object2Json(logVo);
+                }
+                sb.append(message + "\r\n");
+            }
+        }
+        //
+        responseObject.setData(sb.toString());
+        return responseObject;
+    }
+
+
     @RequestMapping("findMasterByStackId")
     @NeedLogin
     public ResponseObject findMasterByStackId(@RequestParam String month, @RequestParam String model, @RequestParam String stackId) {

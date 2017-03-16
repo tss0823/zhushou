@@ -4,31 +4,19 @@
             <small>
                 <i class="icon-double-angle-right"></i>
                 {{title}}
-                <span style="background: lightgreen">缓存</span>&nbsp;&nbsp;,
-                <span style="background: lightpink">DB</span>&nbsp;&nbsp;,
-                <span style="background: lightgrey">基础</span>&nbsp;&nbsp;,
-                <span>默认</span>&nbsp;
             </small>
         </h1>
     </div><!-- /.page-header -->
     <div>
         <div>
-            <button class="btn btn-sm" id="btnCache">缓存</button>
-            <button class="btn btn-sm" id="btnDB">DB</button>
-            <button class="btn btn-sm" id="btnSwitch" data="1">切换</button>
-
+            <pre id="logText" >{{logText}}</pre>
+            <!--<pre style="display: none" id="formatLogText" >{{formatLogText}}</pre>-->
+            <!--<input id="formatLogText" value="https://github.com/zenorocha/clipboard.js.git">-->
         </div>
-        <div id="logContent">
-            <div>
-                <pre>aaaaaaaaa</pre>
-                <pre>   <span>+</span> aaaaaaaaa</pre>
-                <pre>      <span>+</span> aaaaaaaaa</pre>
-            </div>
-        </div>
-        <textarea id="formatLogText" style="width:1px;height:1px" readonly="true">{{formatLogText}}</textarea>
+        <textarea id="formatLogText" style="width:1px;height:1px" readonly="true" >{{logText}}</textarea>
     </div>
 
 </div><!-- /.page-content -->
 <link rel="stylesheet" href="/_resources/scripts/json/jquery.jsonview.min.css"/>
-<script src="/_resources/scripts/clipboard.min.js"></script>
-<script src="/_resources/scripts/json/jquery.jsonview.min.js"></script>
+<script src="/_resources/scripts/clipboard.min.js" ></script>
+<script src="/_resources/scripts/json/jquery.jsonview.min.js" ></script>

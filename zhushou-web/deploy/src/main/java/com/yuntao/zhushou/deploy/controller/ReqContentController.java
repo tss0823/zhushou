@@ -13,6 +13,7 @@ import com.yuntao.zhushou.model.domain.ReqContent;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.param.ReqDataParam;
+import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.query.ReqContentQuery;
 import com.yuntao.zhushou.model.vo.ReqContentVo;
 import com.yuntao.zhushou.common.web.Pagination;
@@ -106,6 +107,9 @@ public class ReqContentController extends BaseController {
         //url 处理
         Long companyId = param.getCompanyId();
         String appName = param.getAppName();
+        AppQuery appQuery = new AppQuery();
+//        appQuery.setName(appName);
+//        App app = appService.selectList(companyId, appName);
         App app = appService.findByName(companyId, appName);
         String domain = app.getDomain();
         String model = param.getModel();  //model
