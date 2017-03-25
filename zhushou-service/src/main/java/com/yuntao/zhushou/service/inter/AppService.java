@@ -17,6 +17,8 @@ public interface AppService {
 
     Pagination<AppVo> selectPage(AppQuery query);
 
+    Pagination<AppVo> selectFrontPage(AppQuery query);
+
     List<App> selectAllList();
 
     List<App> selectList(AppQuery query);

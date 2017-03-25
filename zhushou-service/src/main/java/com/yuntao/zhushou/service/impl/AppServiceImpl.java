@@ -1,16 +1,17 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.cache.CacheService;
+import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AppMapper;
-import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.vo.AppVo;
-import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.AppService;
+import com.yuntao.zhushou.service.inter.AppVersionService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class AppServiceImpl extends AbstService implements AppService {
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private AppVersionService appVersionService;
 
     @Override
     public App findById(Long id) {
@@ -79,6 +83,47 @@ public class AppServiceImpl extends AbstService implements AppService {
             }
             String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(),"yyyy-MM-dd HH:mm:ss");
             appVo.setLastTime(lastTime);
+
+        }
+        return newPageInfo;
+    }
+
+    @Override
+    public Pagination<AppVo> selectFrontPage(AppQuery query) {
+        Map<String, Object> queryMap = BeanUtils.beanToMap(query);
+        long totalCount = appMapper.selectListCount(queryMap);
+        if (totalCount == 0) {
+            return null;
+        }
+        Pagination<App> pageInfo = new Pagination<>(totalCount,
+                query.getPageSize(), query.getPageNum());
+        List<App> dataList = appMapper.selectList(queryMap);
+        List<AppVo> resultDataList = new ArrayList();
+        Pagination<AppVo> newPageInfo = new Pagination<>(pageInfo);
+        newPageInfo.setDataList(resultDataList);
+        for(App app : dataList){
+            AppVo appVo = BeanUtils.beanCopy(app,AppVo.class);
+            resultDataList.add(appVo);
+            if(appVo.getUserId() != null){
+                User user = userService.findById(appVo.getUserId());
+                if(user != null){
+                    appVo.setUserName(user.getNickName());
+                }
+            }
+            String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(),"yyyy-MM-dd HH:mm:ss");
+            appVo.setLastTime(lastTime);
+
+//            //appVersion
+//            AppVersion testAppVersion = appVersionService.getLastVersion(query.getCompanyId(),appVo.getName(),"test");
+//            appVo.setTestVersion(testAppVersion.getVersion());
+//            String testDeployVersion = appVersionService.getDeployVersion(testAppVersion.getVersion());
+//            appVo.setTestDeployVersion(testDeployVersion);
+//
+//            AppVersion prodAppVersion = appVersionService.getLastVersion(query.getCompanyId(),appVo.getName(),"prod");
+//            appVo.setProdVersion(prodAppVersion.getVersion());
+//            String prodDeployVersion = appVersionService.getDeployVersion(prodAppVersion.getVersion());
+//            appVo.setProdDeployVersion(prodDeployVersion);
+
 
         }
         return newPageInfo;

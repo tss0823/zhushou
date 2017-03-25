@@ -490,6 +490,14 @@
             <version>2.4</version>
         </dependency>
 
+        <!--qiniu-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>7.0.8</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

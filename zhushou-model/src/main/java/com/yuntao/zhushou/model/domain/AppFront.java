@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Created by shengshan.tang on 2015/12/12 at 15:11
  */
-public class App implements Serializable {
+public class AppFront implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -1,11 +1,11 @@
 package com.yuntao.zhushou.model.vo;
 
-import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.AppFront;
 
 /**
  * Created by shengshan.tang on 2015/12/26 at 22:13
  */
-public class AppVo extends App {
+public class AppFrontVo extends AppFront {
 
     private String userName;
 

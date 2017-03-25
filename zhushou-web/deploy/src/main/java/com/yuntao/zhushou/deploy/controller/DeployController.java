@@ -7,15 +7,15 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.service.inter.AppService;
+import com.yuntao.zhushou.service.inter.AppVersionService;
 import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.UserService;
-import com.yuntao.zhushou.service.support.YTWebSocketServer;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 @RequestMapping("deploy")
@@ -38,6 +37,9 @@ public class DeployController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AppVersionService appVersionService;
 
 
     @RequestMapping("branchList")
@@ -265,6 +267,57 @@ public class DeployController extends BaseController {
         return responseObject;
     }
 
+
+    @RequestMapping("deployFront")
+    @NeedLogin
+    public ResponseObject deployFront( @RequestParam String appName, @RequestParam String model,@RequestParam String version,
+                                       @RequestParam String type,@RequestParam Boolean forceUpdate,@RequestParam String updateLog) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
+
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+//        if (StringUtils.isEmpty(version)) {
+//            //根据 appName and model 获取最新的
+//            version = appVersionService.getDeployVersion(companyId, appName, model);
+//        }
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deployFront");
+        Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("model",model);
+        params.put("version",version);
+        params.put("type",type);
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
+        if(responseRes.getStatus() != HttpStatus.SC_OK){
+            return responseObject;
+        }
+        Object appUrl = responseObject.getData();
+        //save appVersion
+        AppVersion appVersion = new AppVersion();
+        appVersion.setCompanyId(companyId);
+        appVersion.setAppName(appName);
+        appVersion.setModel(model);
+        appVersion.setAppUrl(appUrl.toString());
+        appVersion.setType(type);
+        appVersion.setVersion(version);
+        appVersion.setForceUpdate(forceUpdate);
+        appVersion.setUpdateLog(updateLog);
+        appVersionService.insert(appVersion);
+        //end
+        return responseObject;
+    }
 
 
 }

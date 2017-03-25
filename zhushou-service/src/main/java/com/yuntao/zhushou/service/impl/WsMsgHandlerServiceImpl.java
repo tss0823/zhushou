@@ -8,6 +8,7 @@ import com.yuntao.zhushou.common.web.ShellExecObject;
 import com.yuntao.zhushou.model.domain.DeployLog;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.DeployLogType;
 import com.yuntao.zhushou.model.query.HostQuery;
 import com.yuntao.zhushou.service.inter.*;
 import com.yuntao.zhushou.service.job.CheckServerStatusJob;
@@ -32,6 +33,9 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
     private AppService appService;
 
     @Autowired
+    private AppFrontService appFrontService;
+
+    @Autowired
     private DeployLogService deployLogService;
 
     @Autowired
@@ -54,26 +58,31 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
     }
 
     @Transactional
-    private void saveLog(Long userId,String appName, String model, String method, List<String> ipList) {
+    private void saveLog(Long userId,String appName, String model, String method,boolean deployFront, List<String> ipList,String type) {
         User user = userService.findById(userId);
 
         //insert log
-        HostQuery hostQuery = new HostQuery();
-        hostQuery.setCompanyId(user.getCompanyId());
-        List<Host> hostList = hostService.selectList(hostQuery);
-        List<String> hostNameList = new ArrayList(ipList.size());
-        //get hostNameList
-        for (String ip : ipList) {
-            for (Host host : hostList) {
-                if (StringUtils.equals(ip, host.getEth0())) {
-                    hostNameList.add(host.getName());
-                    break;
+        String content = null;
+        if(!deployFront){
+            HostQuery hostQuery = new HostQuery();
+            hostQuery.setCompanyId(user.getCompanyId());
+            List<Host> hostList = hostService.selectList(hostQuery);
+            List<String> hostNameList = new ArrayList(ipList.size());
+            //get hostNameList
+            for (String ip : ipList) {
+                for (Host host : hostList) {
+                    if (StringUtils.equals(ip, host.getEth0())) {
+                        hostNameList.add(host.getName());
+                        break;
+                    }
                 }
             }
+            //end
+            content = user.getNickName() + "【" + method + "】了节点【 " + StringUtils.join(hostNameList, ",") + " 】";
+        }else{
+            content = user.getNickName()  + "【" + method + "】了【"+model+"】【 " + type + " 】";
         }
-        //end
 
-        String content = user.getNickName() + "【" + method + "】了节点【 " + StringUtils.join(hostNameList, ",") + " 】";
         DeployLog deployLog = new DeployLog();
         deployLog.setCompanyId(user.getCompanyId());
         deployLog.setAppName(appName);
@@ -81,6 +90,15 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
         deployLog.setContent(content);
         deployLog.setUserId(user.getId());
         deployLog.setUserName(user.getNickName());
+        if (StringUtils.isNotEmpty(type)) {
+            if(type.equals(DeployLogType.android.getDescription())){
+                deployLog.setType(DeployLogType.android.getCode());
+            }else{  //ios
+                deployLog.setType(DeployLogType.ios.getCode());
+            }
+        }else{
+            deployLog.setType(DeployLogType.server.getCode());
+        }
         StringBuilder sb = new StringBuilder();
         StringBuilder backVerSb = new StringBuilder();
         String backVer = null;
@@ -107,7 +125,11 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
         deployLogService.insert(deployLog);
 
         //记录app log
-        appService.updateLog(user.getCompanyId(),appName,content);
+        if(deployFront){  //前端发布
+            appFrontService.updateLog(user.getCompanyId(),appName,content);
+        }else{
+            appService.updateLog(user.getCompanyId(),appName,content);
+        }
 
 
     }
@@ -124,7 +146,7 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
                 Object data = responseObject.getData();
 //                String dataStr = JsonUtils.object2Json(data);
                 ShellExecObject shellExecObj = JsonUtils.json2Object(data.toString(),ShellExecObject.class);
-                saveLog(shellExecObj.getUserId(),shellExecObj.getAppName(),shellExecObj.getModel(),shellExecObj.getMethod(),shellExecObj.getIpList());
+                saveLog(shellExecObj.getUserId(),shellExecObj.getAppName(),shellExecObj.getModel(),shellExecObj.getMethod(),shellExecObj.getDeployFront(),shellExecObj.getIpList(),shellExecObj.getType());
 
             }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.SHELL)){  //脚本日志
                 deployLogQueue.offer(responseObject.getData().toString());

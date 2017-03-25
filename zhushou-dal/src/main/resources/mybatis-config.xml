@@ -12,6 +12,7 @@
         <typeAlias alias="Config" type="com.yuntao.zhushou.model.domain.Config"/>
         <typeAlias alias="User" type="com.yuntao.zhushou.model.domain.User"/>
         <typeAlias alias="App" type="com.yuntao.zhushou.model.domain.App"/>
+        <typeAlias alias="AppFront" type="com.yuntao.zhushou.model.domain.AppFront"/>
         <typeAlias alias="Company" type="com.yuntao.zhushou.model.domain.Company"/>
         <typeAlias alias="Host" type="com.yuntao.zhushou.model.domain.Host"/>
         <typeAlias alias="DeployLog" type="com.yuntao.zhushou.model.domain.DeployLog"/>
@@ -30,12 +31,16 @@
         <typeAlias alias="ReqContent" type="com.yuntao.zhushou.model.domain.ReqContent"/>
         <typeAlias alias="ProxyContent" type="com.yuntao.zhushou.model.domain.ProxyContent"/>
         <typeAlias alias="ShowRes" type="com.yuntao.zhushou.model.domain.ShowRes"/>
+        <typeAlias alias="AppVersion" type="com.yuntao.zhushou.model.domain.AppVersion"/>
+        <typeAlias alias="AppDownloadRecords" type="com.yuntao.zhushou.model.domain.AppDownloadRecords"/>
     </typeAliases>
+
 
     <mappers>
         <mapper resource="mapper/ConfigMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
         <mapper resource="mapper/AppMapper.xml"/>
+        <mapper resource="mapper/AppFrontMapper.xml"/>
         <mapper resource="mapper/CompanyMapper.xml"/>
         <mapper resource="mapper/HostMapper.xml"/>
         <mapper resource="mapper/DeployLogMapper.xml"/>
@@ -52,6 +57,8 @@
         <mapper resource="mapper/ReqContentMapper.xml"/>
         <mapper resource="mapper/ProxyContentMapper.xml"/>
         <mapper resource="mapper/ShowResMapper.xml"/>
+        <mapper resource="mapper/AppVersionMapper.xml"/>
+        <mapper resource="mapper/AppDownloadRecordsMapper.xml"/>
     </mappers>
 
 </configuration>

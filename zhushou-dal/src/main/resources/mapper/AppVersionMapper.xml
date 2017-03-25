@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.AppVersionMapper">
+
+	<resultMap type="AppVersion" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="gmtCreate" property="gmtCreate"/>
+		<result column="gmtModify" property="gmtModify"/>
+		<result column="delState" property="delState"/>
+		<result column="companyId" property="companyId"/>
+		<result column="appName" property="appName"/>
+		<result column="model" property="model"/>
+		<result column="type" property="type"/>
+		<result column="version" property="version"/>
+		<result column="appUrl" property="appUrl"/>
+		<result column="forceUpdate" property="forceUpdate"/>
+		<result column="updateLog" property="updateLog"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `companyId`, `appName`, `model`, `type`,
+	 `version`, `appUrl`, `forceUpdate`,`updateLog`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		appVersion
+	</sql>
+
+	<sql id="Base_Where">
+		delState = 1
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
+		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
+		<if test="companyId != null "> and  `companyId` = #{companyId} </if>
+		<if test="appName != null  and appName != ''"> and  `appName` = #{appName} </if>
+		<if test="model != null  and model != ''"> and  `model` = #{model} </if>
+		<if test="type != null  and type != ''"> and  `type` = #{type} </if>
+		<if test="version != null  and version != ''"> and  `version` = #{version} </if>
+		<if test="appUrl != null  and appUrl != ''"> and  `appUrl` = #{appUrl} </if>
+		<if test="forceUpdate != null "> and  `forceUpdate` = #{forceUpdate} </if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="AppVersion">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		`gmtCreate`,`gmtModify`,`delState`,`companyId`,`appName`,
+		`model`,`type`,`version`,`appUrl`,`forceUpdate`,`updateLog`
+		)
+		values
+		(
+		 now(6), now(6), 1, #{companyId}, #{appName}, #{model}, #{type}, #{version}, 
+		 #{appUrl}, #{forceUpdate},#{updateLog}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="AppVersion">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="delState != null">`delState` = #{delState}, </if>
+			<if test="companyId != null">`companyId` = #{companyId}, </if>
+			<if test="appName != null and appName != ''">`appName` = #{appName}, </if>
+			<if test="model != null and model != ''">`model` = #{model}, </if>
+			<if test="type != null and type != ''">`type` = #{type}, </if>
+			<if test="version != null and version != ''">`version` = #{version}, </if>
+			<if test="appUrl != null and appUrl != ''">`appUrl` = #{appUrl}, </if>
+			<if test="forceUpdate != null">`forceUpdate` = #{forceUpdate}, </if>
+			<if test="updateLog != null and updateLog != ''">`updateLog` = #{updateLog}, </if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+	<select id="getLastVersion" parameterType="Map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+		<where>
+			<include refid="Base_Where"/>
+		</where>
+		order by id desc limit 1
+	</select>
+
+	<!-- user definition code start -->
+	<!-- user definition code end -->
+</mapper>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yuntao.zhushou.dal.mapper.AppMapper">
+<mapper namespace="com.yuntao.zhushou.dal.mapper.AppFrontMapper">
 
-    <resultMap id="BaseResultMap" type="App">
+    <resultMap id="BaseResultMap" type="AppFront">
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="companyId" property="companyId" jdbcType="BIGINT" />
         <result column="userId" property="userId" jdbcType="BIGINT" />

@@ -64,6 +64,11 @@ public class DeployLog implements Serializable {
      */
     private String backVer;
 
+    /**
+     * 发布应用类型（0 后台，1 android , 2 ios）
+     */
+    private Integer type;
+
     public Long getId() {
         return id;
     }
@@ -158,5 +163,13 @@ public class DeployLog implements Serializable {
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

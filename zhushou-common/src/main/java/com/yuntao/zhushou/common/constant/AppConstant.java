@@ -38,6 +38,9 @@ public interface AppConstant {
         String KEY = "LTAINYZHsqPLGKju";
         String SECRET = "9UMnWw0eXXaZgaJuOiNoJYGXHAwv0y";
     }
+    interface deploy{
+        String frontBuildPath = "/u01/output/front/";
+    }
 
 
 }

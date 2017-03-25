@@ -14,6 +14,7 @@
         <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP"/>
         <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
         <result column="backVer" property="backVer" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap id="BaseResultDetailMap" type="DeployLogVo">
@@ -29,14 +30,17 @@
         <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
         <result column="backVer" property="backVer" jdbcType="VARCHAR"/>
         <result column="log" property="log" jdbcType="BLOB"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`
+        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,
+        `type`
     </sql>
 
     <sql id="Log_Column_list">
-        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`
+        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`,
+        `type`
     </sql>
 
     <sql id="Base_Table_Name">
@@ -52,6 +56,7 @@
         <if test="type != null">and type = #{type}</if>
         <if test="status != null">and status = #{status}</if>
         <if test="backVerLike != null and backVerLike != ''">and `backVer` like concat('%',#{backVerLike},'%')</if>
+        <if test="type != null">and type = #{type}</if>
     </sql>
 
     <select id="findById" parameterType="Long" resultMap="BaseResultMap">
@@ -113,9 +118,14 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`)
+        (
+        `companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`,
+        `type`
+        )
         values
-        (#{companyId},#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer})
+        (
+        #{companyId},#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer},#{type}
+        )
     </insert>
 
     <update id="updateById">
@@ -124,9 +134,10 @@
         <set>
             <if test="companyId != null">`companyId`=#{companyId},</if>
             <if test="content != null and content !=''">`content`=#{content},</if>
-            <if test="userId != null and userId !=''">`userId`=#{userId},</if>
+            <if test="userId != null">`userId`=#{userId},</if>
             <if test="userName != null and userName !=''">`userName`=#{userName},</if>
             <if test="log != null and log !=''">`log`=#{log},</if>
+            <if test="type != null">`type`=#{type},</if>
         </set>
         where id = #{id}
     </update>

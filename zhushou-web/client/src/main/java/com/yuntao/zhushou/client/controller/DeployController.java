@@ -1,13 +1,16 @@
 package com.yuntao.zhushou.client.controller;
 
 import com.yuntao.zhushou.client.support.CDWebSocketMsgHandler;
+import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.exception.BizException;
-import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.QiNiuTools;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.web.ShellExecObject;
+import com.yuntao.zhushou.model.enums.DeployLogType;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -76,6 +80,13 @@ public class DeployController extends BaseController {
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_END,message);
     }
 
+    private void offerExecMsg(Long userId,String appName,String model,String method,String type) {
+        ShellExecObject shellExecObject = new ShellExecObject(appName, model, method, type);
+        shellExecObject.setUserId(userId);
+        String message = JsonUtils.object2Json(shellExecObject);
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_END,message);
+    }
+
     private void offerExecInnerMsg(String msg) {
         execMsgList.offer(msg); //为了拉分支用
     }
@@ -91,6 +102,7 @@ public class DeployController extends BaseController {
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
         clearExecMsg();
         if (StringUtils.equals(model,"test") || SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
+//            if (!StringUtils.equals(model,"test") ) {
             for (int i = 0; i < 5; i++) {
                 offerExecMsg("windows 执行测试");
                 try {
@@ -447,6 +459,55 @@ public class DeployController extends BaseController {
         }).start();
         return responseObject;
     }
+
+
+    @RequestMapping("deployFront")
+    public ResponseObject deployFront(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
+                                   final @RequestParam String type,final @RequestParam String version) {
+        final ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!execRun.compareAndSet(false,true)){
+            responseObject.setSuccess(false);
+            responseObject.setMessage(execMessage);
+            return responseObject;
+        }
+        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]前端发布"+type+"操作，请稍候";
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+
+
+        final String frontModel =  model.equals("prod") ? "release":"debug";
+        final String outputPath = AppConstant.deploy.frontBuildPath+type+"/";
+        String postfix = ".dmp";
+        if(type.equals(DeployLogType.android.getDescription())){
+            postfix += ".apk" ;
+        }
+        final  String fileName = appName+"_"+version+"_"+frontModel+postfix;
+        String appDownloadUrl = QiNiuTools.QINIU_DOMAIN + fileName;
+        responseObject.setData(appDownloadUrl);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String cmd = "sh /u01/deploy/script/front/deploy_"+type+".sh " + appName + " " + frontModel + " " + version+" "+outputPath+" "+fileName;
+                    execShellScript(cmd, "deployFront");
+
+                    //上传app
+                    String filePath = outputPath+fileName;
+                    byte data[] = FileUtils.readFileToByteArray(new File(filePath));
+                    QiNiuTools.uploadFileFixName(data, fileName);
+                    //end
+
+                }catch (Exception e){
+                    throw new RuntimeException(e);
+                }finally {
+                    execRun.set(false);  //完成，恢复初始状态
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                    offerExecMsg(userId,appName,model,"发布",type);
+                }
+            }
+        }).start();
+        return responseObject;
+    }
+
 
 
 

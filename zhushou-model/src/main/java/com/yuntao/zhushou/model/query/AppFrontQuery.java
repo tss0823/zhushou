@@ -5,7 +5,7 @@ import com.yuntao.zhushou.common.web.BaseQuery;
 /**
  * Created by shan on 2016/3/27.
  */
-public class AppQuery  extends BaseQuery {
+public class AppFrontQuery extends BaseQuery {
 
     private Long id;
 

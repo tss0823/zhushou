@@ -2,9 +2,6 @@ package com.yuntao.zhushou.dal.config;
 
 import com.yuntao.zhushou.dal.mapper.*;
 import com.yuntao.zhushou.dal.mybatis.IdTypeHandler;
-import com.yuntao.zhushou.model.domain.AuthRes;
-import com.yuntao.zhushou.model.domain.Role;
-import com.yuntao.zhushou.model.domain.ShowRes;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -48,6 +45,10 @@ public class DalConfig {
     @Bean
     public AppMapper appMapper() throws Exception {
         return newMapperFactoryBean(AppMapper.class).getObject();
+    }
+    @Bean
+    public AppFrontMapper appFrontMapper() throws Exception {
+        return newMapperFactoryBean(AppFrontMapper.class).getObject();
     }
 
 
@@ -125,6 +126,14 @@ public class DalConfig {
     @Bean
     public ShowResMapper showResMapper() throws Exception {
         return newMapperFactoryBean(ShowResMapper.class).getObject();
+    }
+    @Bean
+    public AppVersionMapper appVersionMapper() throws Exception {
+        return newMapperFactoryBean(AppVersionMapper.class).getObject();
+    }
+    @Bean
+    public AppDownloadRecordsMapper appDownloadRecordsMapper() throws Exception {
+        return newMapperFactoryBean(AppDownloadRecordsMapper.class).getObject();
     }
 
 
