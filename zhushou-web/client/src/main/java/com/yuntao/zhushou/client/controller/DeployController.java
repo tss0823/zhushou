@@ -9,6 +9,8 @@ import com.yuntao.zhushou.common.utils.QiNiuTools;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.web.ShellExecObject;
+import com.yuntao.zhushou.model.domain.AppVersion;
+import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.model.enums.DeployLogType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -101,7 +103,7 @@ public class DeployController extends BaseController {
         //执行前先清空历史残留队里消息,for 浏览器 or client 可能中断执行
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
         clearExecMsg();
-        if (StringUtils.equals(model,"test") || SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
+        if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
 //            if (!StringUtils.equals(model,"test") ) {
             for (int i = 0; i < 5; i++) {
                 offerExecMsg("windows 执行测试");
@@ -463,7 +465,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("deployFront")
     public ResponseObject deployFront(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
-                                   final @RequestParam String type,final @RequestParam String version) {
+                                   final @RequestParam String type,final @RequestParam String version,final @RequestParam Long appVersionId ) {
         final ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -478,14 +480,15 @@ public class DeployController extends BaseController {
         final String outputPath = AppConstant.deploy.frontBuildPath+type+"/";
         String postfix = ".dmp";
         if(type.equals(DeployLogType.android.getDescription())){
-            postfix += ".apk" ;
+            postfix = ".apk" ;
         }
         final  String fileName = appName+"_"+version+"_"+frontModel+postfix;
-        String appDownloadUrl = QiNiuTools.QINIU_DOMAIN + fileName;
+        final String appDownloadUrl = QiNiuTools.QINIU_DOMAIN + fileName;
         responseObject.setData(appDownloadUrl);
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean execState = true;
                 try{
                     String cmd = "sh /u01/deploy/script/front/deploy_"+type+".sh " + appName + " " + frontModel + " " + version+" "+outputPath+" "+fileName;
                     execShellScript(cmd, "deployFront");
@@ -497,10 +500,23 @@ public class DeployController extends BaseController {
                     //end
 
                 }catch (Exception e){
+                    execState = false;
                     throw new RuntimeException(e);
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+
+                    //发送消息执行完成，触发升级生效
+                    AppVersion appVersion = new AppVersion();
+                    appVersion.setId(appVersionId);
+                    appVersion.setAppUrl(appDownloadUrl);
+                    if(execState){
+                        appVersion.setStatus(AppVerionStatus.online.getCode());
+                    }
+                    String appVersionJson = JsonUtils.object2Json(appVersion);
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.FRONT_DEPLOY_END,appVersionJson);
+                    //end
+
                     offerExecMsg(userId,appName,model,"发布",type);
                 }
             }

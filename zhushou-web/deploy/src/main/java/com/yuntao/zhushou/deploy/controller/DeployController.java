@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.deploy.controller;
 
+import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
@@ -10,6 +11,7 @@ import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.AppVersionService;
 import com.yuntao.zhushou.service.inter.CompanyService;
@@ -287,6 +289,24 @@ public class DeployController extends BaseController {
 //            version = appVersionService.getDeployVersion(companyId, appName, model);
 //        }
 
+
+        //save appVersion
+        AppVersion appVersion = new AppVersion();
+        appVersion.setCompanyId(companyId);
+        appVersion.setAppName(appName);
+        appVersion.setModel(model);
+//        appVersion.setAppUrl(appUrl.toString());
+        appVersion.setType(type);
+        appVersion.setVersion(version);
+        appVersion.setForceUpdate(forceUpdate);
+        appVersion.setUpdateLog(updateLog);
+        appVersion.setStatus(AppVerionStatus.ready.getCode());
+        try{
+            appVersionService.insert(appVersion);
+        }catch (Exception e){
+            throw new BizException("发布失败，请确认版本是否重复了."+e.getMessage());
+        }
+        //end
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deployFront");
         Map<String,String> params = new HashMap<>();
@@ -296,6 +316,7 @@ public class DeployController extends BaseController {
         params.put("model",model);
         params.put("version",version);
         params.put("type",type);
+        params.put("appVersionId",appVersion.getId().toString());
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -303,19 +324,6 @@ public class DeployController extends BaseController {
         if(responseRes.getStatus() != HttpStatus.SC_OK){
             return responseObject;
         }
-        Object appUrl = responseObject.getData();
-        //save appVersion
-        AppVersion appVersion = new AppVersion();
-        appVersion.setCompanyId(companyId);
-        appVersion.setAppName(appName);
-        appVersion.setModel(model);
-        appVersion.setAppUrl(appUrl.toString());
-        appVersion.setType(type);
-        appVersion.setVersion(version);
-        appVersion.setForceUpdate(forceUpdate);
-        appVersion.setUpdateLog(updateLog);
-        appVersionService.insert(appVersion);
-        //end
         return responseObject;
     }
 

@@ -5,7 +5,6 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.User;
-import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.AppFrontQuery;
 import com.yuntao.zhushou.model.vo.AppFrontVo;
 import com.yuntao.zhushou.service.inter.AppFrontService;
@@ -29,7 +28,7 @@ public class AppFrontController extends BaseController {
     public ResponseObject list(AppFrontQuery query) {
         User user = userService.getCurrentUser();
         query.setCompanyId(user.getCompanyId());
-        query.setFront(YesNoIntType.yes.getCode());
+//        query.setFront(YesNoIntType.yes.getCode());
         Pagination<AppFrontVo> pagination = appFrontService.selectFrontPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);

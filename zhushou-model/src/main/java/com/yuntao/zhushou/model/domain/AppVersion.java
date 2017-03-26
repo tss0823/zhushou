@@ -55,6 +55,9 @@ public class AppVersion implements Serializable {
 
     /** 更新日志 * */
     private String updateLog;
+
+    /** 状态（0 就绪，1 启动，2 下线） * */
+    private Integer status;
         
     
     public AppVersion(){
@@ -145,5 +148,13 @@ public class AppVersion implements Serializable {
 
     public void setUpdateLog(String updateLog) {
         this.updateLog = updateLog;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

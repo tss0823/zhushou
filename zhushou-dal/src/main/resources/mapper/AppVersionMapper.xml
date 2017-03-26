@@ -18,11 +18,12 @@
 		<result column="appUrl" property="appUrl"/>
 		<result column="forceUpdate" property="forceUpdate"/>
 		<result column="updateLog" property="updateLog"/>
+		<result column="status" property="status"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
 	 `id`, `gmtCreate`, `gmtModify`, `delState`, `companyId`, `appName`, `model`, `type`,
-	 `version`, `appUrl`, `forceUpdate`,`updateLog`
+	 `version`, `appUrl`, `forceUpdate`,`updateLog`,`status`
 	</sql>
 
 	<sql id="Base_Table_Name">
@@ -41,6 +42,7 @@
 		<if test="version != null  and version != ''"> and  `version` = #{version} </if>
 		<if test="appUrl != null  and appUrl != ''"> and  `appUrl` = #{appUrl} </if>
 		<if test="forceUpdate != null "> and  `forceUpdate` = #{forceUpdate} </if>
+		<if test="status != null "> and  `status` = #{status} </if>
 	</sql>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -74,12 +76,12 @@
         <include refid="Base_Table_Name"/>
         (
 		`gmtCreate`,`gmtModify`,`delState`,`companyId`,`appName`,
-		`model`,`type`,`version`,`appUrl`,`forceUpdate`,`updateLog`
+		`model`,`type`,`version`,`appUrl`,`forceUpdate`,`updateLog`,`status`
 		)
 		values
 		(
 		 now(6), now(6), 1, #{companyId}, #{appName}, #{model}, #{type}, #{version}, 
-		 #{appUrl}, #{forceUpdate},#{updateLog}
+		 #{appUrl}, #{forceUpdate},#{updateLog},#{status}
 		)
     </insert>
 
@@ -95,6 +97,7 @@
 			<if test="appUrl != null and appUrl != ''">`appUrl` = #{appUrl}, </if>
 			<if test="forceUpdate != null">`forceUpdate` = #{forceUpdate}, </if>
 			<if test="updateLog != null and updateLog != ''">`updateLog` = #{updateLog}, </if>
+			<if test="status != null">`status` = #{status}, </if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

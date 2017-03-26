@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.MsgRequestObject;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.ShellExecObject;
+import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.domain.DeployLog;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.domain.User;
@@ -46,6 +47,12 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
 
     @Autowired
     private CheckServerStatusJob checkServerStatusJob;
+
+    @Autowired
+    private AppVersionService appVersionService;
+
+    @Autowired
+    private CompanyService companyService;
 
     /**
      * 发布日志队列,一个服务器一个实例
@@ -153,6 +160,10 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
             }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.SERVER_STATUS_CHECK)){  //服务状态检查
                 AtomicBoolean atomicBoolean = checkServerStatusJob.execMap.get(responseObject.getKey());
                 atomicBoolean.set(false);  //执行完毕
+            }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.FRONT_DEPLOY_END)){  //前端发布完成
+                Object data = responseObject.getData();
+                AppVersion appVersion = JsonUtils.json2Object(data.toString(),AppVersion.class);
+                appVersionService.updateById(appVersion);
             }else{
                 //TODO 其他消息暂不处理
             }
