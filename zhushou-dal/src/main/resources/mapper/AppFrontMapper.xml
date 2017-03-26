@@ -24,7 +24,7 @@
         `front`
     </sql>
     <sql id="Base_Table_Name">
-        app
+        appFront
     </sql>
     <sql id="Base_Where">
         delStatus = 1
