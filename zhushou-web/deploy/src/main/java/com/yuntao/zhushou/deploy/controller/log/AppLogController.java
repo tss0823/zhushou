@@ -245,6 +245,7 @@ public class AppLogController extends BaseController {
             sb.delete(sb.length() - 1, sb.length());
         }
         headers.put("cookie", sb.toString());
+//        headers.put("cookie", "sid=a6586d73-564d-400a-a41f-2c0906ab2d14");
         try {
             boolean result = HttpUtil.request(url, headers, params);
             responseObject.setData(result);

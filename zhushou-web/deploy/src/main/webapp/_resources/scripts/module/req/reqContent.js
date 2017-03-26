@@ -205,6 +205,8 @@
             formData.append("url", $("#reqUrl").val());
             formData.append("appName", $("#reqAppName").val());
             formData.append("model", $("#reqModel").val());
+            formData.append("companyId", appData["companyId"]);
+            debugger;
             // formData.append("headerList",headerList);
             // formData.append("dataList",dataList);
             var data = {url: reqUrl, headerList: headerList, dataList: dataList};

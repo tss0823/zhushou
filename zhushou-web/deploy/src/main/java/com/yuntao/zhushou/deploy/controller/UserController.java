@@ -82,6 +82,7 @@ public class UserController extends BaseController {
 //                responseObject.put(config.getName(),config.getValue());
             }
             Company company = companyService.findById(user.getCompanyId());
+            configDataMap.put("companyId",company.getId().toString());
             configDataMap.put("companyName",company.getName());
             responseObject.put("configData",configDataMap);
         }
@@ -118,6 +119,7 @@ public class UserController extends BaseController {
 //                responseObject.put(config.getName(),config.getValue());
             }
             Company company = companyService.findById(user.getCompanyId());
+            configDataMap.put("companyId",company.getId().toString());
             configDataMap.put("companyName",company.getName());
             responseObject.put("configData",configDataMap);
         }
