@@ -162,7 +162,7 @@
                     }
                     var color = "green";
                     var text = "OK";
-                    if(errArray.length == Object.keys(hostStatusMsg).length){
+                    if(typeof(hostStatusMsg) != "undefined" && errArray.length == Object.keys(hostStatusMsg).length){
                         color = "red"; //all failed
                         text = "ERROR";
                     }else if(errArray.length > 0){
