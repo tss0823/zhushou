@@ -76,6 +76,8 @@ public class AppVersionQuery extends BaseQuery {
      */
     private Boolean forceUpdate;
 
+    private Integer status;
+
 
     public void setId(Long value) {
         this.id = value;
@@ -166,4 +168,11 @@ public class AppVersionQuery extends BaseQuery {
     }
 
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

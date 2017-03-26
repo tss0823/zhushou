@@ -9,6 +9,7 @@ import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.domain.DeployLog;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.model.enums.DeployLogType;
 import com.yuntao.zhushou.model.query.HostQuery;
 import com.yuntao.zhushou.service.inter.*;
@@ -163,7 +164,11 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
             }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.FRONT_DEPLOY_END)){  //前端发布完成
                 Object data = responseObject.getData();
                 AppVersion appVersion = JsonUtils.json2Object(data.toString(),AppVersion.class);
-                appVersionService.updateById(appVersion);
+                if(appVersion.getStatus() == AppVerionStatus.error.getCode()){ //直接删掉
+                    appVersionService.deleteById(appVersion.getId());
+                }else{
+                    appVersionService.updateById(appVersion);
+                }
             }else{
                 //TODO 其他消息暂不处理
             }

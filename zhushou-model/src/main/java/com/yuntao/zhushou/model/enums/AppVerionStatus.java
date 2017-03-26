@@ -12,6 +12,8 @@ public enum AppVerionStatus {
 
     offline(3, "下线"),
 
+    error(4, "错误"),
+
 ;
 
     private int code;

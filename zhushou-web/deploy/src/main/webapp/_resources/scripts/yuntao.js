@@ -431,7 +431,9 @@
                 if(myEvent.type != type){
                     continue;
                 }
-                executeFun(msgObj);
+                if(executeFun){
+                    executeFun(msgObj);
+                }
             }
         }
     };

@@ -11,6 +11,7 @@ import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AppVersionMapper;
 import com.yuntao.zhushou.model.domain.AppVersion;
+import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.model.query.AppVersionQuery;
 import com.yuntao.zhushou.model.vo.AppVersionVo;
 import com.yuntao.zhushou.service.inter.AppVersionService;
@@ -93,6 +94,7 @@ public class AppVersionServiceImpl extends AbstService implements AppVersionServ
         appVersionQuery.setCompanyId(companyId);
         appVersionQuery.setAppName(appName);
         appVersionQuery.setModel(model);
+        appVersionQuery.setStatus(AppVerionStatus.online.getCode());
         Map<String, Object> queryMap = BeanUtils.beanToMap(appVersionQuery);
         AppVersion lastVersion = appVersionMapper.getLastVersion(queryMap);
         if(lastVersion == null){

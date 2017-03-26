@@ -512,6 +512,8 @@ public class DeployController extends BaseController {
                     appVersion.setAppUrl(appDownloadUrl);
                     if(execState){
                         appVersion.setStatus(AppVerionStatus.online.getCode());
+                    }else{
+                        appVersion.setStatus(AppVerionStatus.error.getCode());
                     }
                     String appVersionJson = JsonUtils.object2Json(appVersion);
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.FRONT_DEPLOY_END,appVersionJson);
