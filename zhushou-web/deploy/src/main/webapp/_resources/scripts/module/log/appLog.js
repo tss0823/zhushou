@@ -392,7 +392,11 @@
                             $(this).html("显示结果");
                         });
                         if (state) {
-                            $(this).parent().next().show();
+                            var $result = $(this).parent().next();
+                            $result.show();
+                            var jsonText = $result.html();
+                            $result.JSONView(jsonText, { collapsed: true });
+
                             $(this).html("隐藏结果");
                         } else {
                             $(this).parent().next().hide();
@@ -420,18 +424,19 @@
                     $("button[id='btnShowDbResult']").click(function () {
                         var state = $(this).html() == "显示结果";
                         $("button[id='btnShowDbResult']").each(function (index, item) {
-                            $(this).parent().siblings("pre[name='dbResult']").hide();
+                            $(this).parent().next().next().hide();
                             $(this).html("显示结果");
                         });
                         if (state) {
-                            var $dbResult = $(this).parent().siblings("pre[name='dbResult']");
+                            // debugger;
+                            var $dbResult = $(this).parent().next().next();
                             $dbResult.show();
-                            // var jsonText = "{"+$dbResult.val()+"}";
-                            // $dbResult.JSONView(jsonText, { collapsed: true });
+                            var jsonText = $dbResult.html();
+                            $dbResult.JSONView(jsonText, { collapsed: true });
 
                             $(this).html("隐藏结果");
                         } else {
-                            $(this).parent().siblings("pre[name='dbResult']").hide();
+                            $(this).parent().next().next().hide();
                             $(this).html("显示结果");
                         }
                     });
