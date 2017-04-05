@@ -48,7 +48,7 @@
                                             }
                                             YT.deploy.appFront.writeMsg("执行发布开始,请稍等...\r\n",true);
                                             var version = $("#txtVersion").val();
-                                            var checked = $("#chkForceUpdate").attr("checked");
+                                            var checked = $("#chkForceUpdate").prop("checked");
                                             var forceUpdate = checked ? 1 : 0;
                                             var updateLog = $("#txtaUpdateLog").val();
                                             if(!updateLog){
