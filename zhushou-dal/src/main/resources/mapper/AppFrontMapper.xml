@@ -16,12 +16,13 @@
         <result column="codeName" property="codeName" jdbcType="VARCHAR" />
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="port" property="port" jdbcType="INTEGER" />
-        <result column="front" property="front" jdbcType="INTEGER" />
+        <result column="testBranch" property="testBranch" jdbcType="VARCHAR" />
+        <result column="prodBranch" property="prodBranch" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List">
         `id`,`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,
-        `front`
+        `testBranch`,`prodBranch`
     </sql>
     <sql id="Base_Table_Name">
         appFront
@@ -33,7 +34,8 @@
         <if test="name != null and name != ''">and name = #{name}</if>
         <if test="type != null">and type = #{type}</if>
         <if test="status != null">and status = #{status}</if>
-        <if test="front != null">and front = #{front}</if>
+        <if test="testBranch != null">and testBranch = #{testBranch}</if>
+        <if test="prodBranch != null">and prodBranch = #{prodBranch}</if>
 
     </sql>
 
@@ -85,9 +87,9 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`front`)
+        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`testBranch`,`prodBranch`)
         values
-        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{front})
+        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{testBranch},#{prodBranch})
     </insert>
 
     <update id="updateById">
@@ -104,7 +106,8 @@
             <if test="codeName != null and codeName !=''">`codeName`=#{codeName},</if>
             <if test="domain != null and domain !=''">`domain`=#{domain},</if>
             <if test="port != null">`port`=#{port},</if>
-            <if test="front != null">`front`=#{front},</if>
+            <if test="testBranch != null">`testBranch`=#{testBranch},</if>
+            <if test="prodBranch != null">`prodBranch`=#{prodBranch},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

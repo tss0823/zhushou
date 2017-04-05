@@ -79,10 +79,16 @@ public class AppFront implements Serializable {
      */
     private Integer port;
 
+
     /**
-     * 是否前端（1 是，0 否）
+     *测试 分支
      */
-    private Integer front;
+    private String testBranch;
+
+    /**
+     *线上 分支
+     */
+    private String prodBranch;
 
     public Long getId() {
         return id;
@@ -196,11 +202,19 @@ public class AppFront implements Serializable {
         this.companyId = companyId;
     }
 
-    public Integer getFront() {
-        return front;
+    public String getTestBranch() {
+        return testBranch;
     }
 
-    public void setFront(Integer front) {
-        this.front = front;
+    public void setTestBranch(String testBranch) {
+        this.testBranch = testBranch;
+    }
+
+    public String getProdBranch() {
+        return prodBranch;
+    }
+
+    public void setProdBranch(String prodBranch) {
+        this.prodBranch = prodBranch;
     }
 }

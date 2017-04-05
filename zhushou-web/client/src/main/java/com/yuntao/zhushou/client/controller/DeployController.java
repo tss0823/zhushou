@@ -464,8 +464,9 @@ public class DeployController extends BaseController {
 
 
     @RequestMapping("deployFront")
-    public ResponseObject deployFront(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
-                                   final @RequestParam String type,final @RequestParam String version,final @RequestParam Long appVersionId ) {
+    public ResponseObject deployFront(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,
+                                     final @RequestParam String br,  final @RequestParam String model,final @RequestParam String type,
+                                      final @RequestParam String version,final @RequestParam Long appVersionId ) {
         final ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -490,7 +491,7 @@ public class DeployController extends BaseController {
             public void run() {
                 boolean execState = true;
                 try{
-                    String cmd = "sh /u01/deploy/script/front/deploy_"+type+".sh " + appName + " " + frontModel + " " + version+" "+outputPath+" "+fileName;
+                    String cmd = "sh /u01/deploy/script/front/deploy_"+type+".sh " + appName + " " + br + " "+ frontModel + " " + version+" "+outputPath+" "+fileName;
                     execShellScript(cmd, "deployFront");
 
                     //上传app

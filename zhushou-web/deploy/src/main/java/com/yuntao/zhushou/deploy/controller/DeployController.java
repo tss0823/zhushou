@@ -7,15 +7,9 @@ import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.domain.App;
-import com.yuntao.zhushou.model.domain.AppVersion;
-import com.yuntao.zhushou.model.domain.Company;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AppVerionStatus;
-import com.yuntao.zhushou.service.inter.AppService;
-import com.yuntao.zhushou.service.inter.AppVersionService;
-import com.yuntao.zhushou.service.inter.CompanyService;
-import com.yuntao.zhushou.service.inter.UserService;
+import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +29,9 @@ public class DeployController extends BaseController {
 
     @Autowired
     private AppService appService;
+
+    @Autowired
+    private AppFrontService appFrontService;
 
 
     @Autowired
@@ -279,7 +276,7 @@ public class DeployController extends BaseController {
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        AppFront appFront = appFrontService.findByName(companyId, appName);
 
         //get compnay
         Company company = companyService.findById(companyId);
@@ -307,12 +304,17 @@ public class DeployController extends BaseController {
             throw new BizException("发布失败，请确认版本是否重复了."+e.getMessage());
         }
         //end
+        String branch = appFront.getProdBranch();
+        if(model.equals("test")){
+            branch = appFront.getTestBranch();
+        }
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deployFront");
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
+        params.put("br",branch);
         params.put("model",model);
         params.put("version",version);
         params.put("type",type);
