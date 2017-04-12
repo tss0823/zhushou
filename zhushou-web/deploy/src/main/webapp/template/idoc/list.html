@@ -7,7 +7,7 @@
             </small>
         </h1>
         <form id="idocListForm" onsubmit="return false">
-        <h1 style="text-align: right">
+            <h1 style="text-align: right;margin-top: 5px">
             <small>
                     应用：
                     <select id="appName" name="appName">
@@ -19,15 +19,19 @@
                         <option value=""></option>
                     </select>
                     &nbsp;
-                    名称：
-                    <input type="text" id="nameLike" name="nameLike" value="{{nameLike}}" class="input-sm"/>
-                    &nbsp;
                     URL：
+                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="selName" data-placeholder="请选择接口名称">
+                        <option value=""></option>
+                    </select>
+                    <!--<input type="text" id="nameLike" name="nameLike" value="{{nameLike}}" class="input-sm"/>-->
+                    <!--&nbsp;-->
+                    <!--URL：-->
                     <input type="text" id="urlLike" name="urlLike" value="{{urlLike}}" class="input-xlarge"/>
                     &nbsp;
-                    负责人：
-                    <input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />
+                    <!--负责人：-->
+                    <!--<input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />-->
                     <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-white" id="btnClear" >清空</button>
                 </small>
         </h1>
         <h1 style="text-align: right;padding-top: 10px">

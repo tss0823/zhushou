@@ -1,8 +1,6 @@
 package com.yuntao.zhushou.common.http;
 
 import com.yuntao.zhushou.common.utils.ExceptionUtils;
-import com.yuntao.zhushou.common.utils.JsonUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -81,7 +79,9 @@ public class HttpNewUtils {
             int status = response.getStatusLine().getStatusCode();
             responseRes.setStatus(status);
             if(status != HttpStatus.SC_OK){
-                log.error("http status="+status+",url="+url);
+                String errMsg = "http status="+status+",url="+url;
+                log.error(errMsg);
+                responseRes.setResult(errMsg.getBytes());
                 return responseRes;
             }
             HttpEntity entity = response.getEntity();

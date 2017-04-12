@@ -252,7 +252,7 @@
 
 
         initLeftPanel: function (data) {
-            debugger;
+            // debugger;
             var d = data || {};
             var reqHeaderList = [];
             if (d.reqHeader) {

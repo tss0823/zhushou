@@ -15,6 +15,29 @@
             var appList = YT.deploy.data.appList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
+            var docList = YT.deploy.data.docList;
+
+            //doc select init
+            var branchValArray = [];
+            for (var i = 0; i < docList.length; i++) {
+                var doc = docList[i];
+                branchValArray.push("<option value='" + doc.url + "'>");
+                branchValArray.push(doc.name);
+                branchValArray.push("\n");
+                branchValArray.push(doc.url);
+                branchValArray.push("</option>");
+            }
+            $("#selName").append(branchValArray.join(""));
+            $('#selName').chosen({
+                search_contains: true,
+                // disable_search_threshold: 10
+            });
+            $('#selName').change(function () {
+                $("#urlLike").val($(this).val());
+                // $("#btnQuery").trigger("click");
+            });
+            //end
+
             var enums = YT.deploy.data.enums;
 
             //moduleType
@@ -45,6 +68,11 @@
 
             //tab
             $( "div[id='tabs']" ).tabs();
+
+            //select change to query
+            $("#appName,#module,#selName").change(function(){
+                $("#btnQuery").trigger("click");
+            });
 
             //注册事件
             $("#btnQuery").click(function () {

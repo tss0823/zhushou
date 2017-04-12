@@ -53,6 +53,7 @@
             });
             $('#branch').change(function () {
                 $("#url").val($(this).val());
+                // $("#btnQuery").trigger("click");
             });
             //end
 
@@ -101,6 +102,11 @@
             //init doc name
             YT.deploy.appLog.showDocName(docList);
             //end
+
+            //select change to query
+            $("#appName,#level,#branch,#month,#startTime,#endTime").change(function(){
+                $("#btnQuery").trigger("click");
+            });
 
             //注册事件
             $("#btnQuery").click(function () {

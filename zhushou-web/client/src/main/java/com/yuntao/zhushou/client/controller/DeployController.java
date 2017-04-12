@@ -473,7 +473,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]前端发布"+type+"操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]前端发布"+type+"操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
 

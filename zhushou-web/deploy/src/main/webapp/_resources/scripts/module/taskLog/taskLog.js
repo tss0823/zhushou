@@ -68,6 +68,10 @@
             //descType
             YT.deploy.util.initEnumSelect(logQueryType,"descType",data.descType);
 
+            //select change to query
+            $("#appName,#month,#startTime,#endTime").change(function(){
+                $("#btnQuery").trigger("click");
+            });
 
             //注册事件
             $("#btnQuery").click(function () {

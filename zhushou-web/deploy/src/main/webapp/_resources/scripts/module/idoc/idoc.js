@@ -15,6 +15,7 @@
             var appList = YT.deploy.data.appList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
+
             var enums = YT.deploy.data.enums;
 
             //moduleType
