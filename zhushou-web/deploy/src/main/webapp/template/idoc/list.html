@@ -60,14 +60,14 @@
             <th width="5%">应用</th>
             <th width="7%">模块</th>
             <th width="4%">版本</th>
-            <th width="10%">名称</th>
+            <th width="12%">名称</th>
             <th width="16%">URL</th>
-            <th width="6%">负责人</th>
-            <th width="7%">
+            <th width="4%">负责人</th>
+            <th width="6%">
                 <i class="icon-time "></i>
                 操作时间
             </th>
-            <th width="8%">操作</th>
+            <th width="14%">操作</th>
         </tr>
         </thead>
 
@@ -88,11 +88,12 @@
                 {{if authMap.enterIdoc.child.btnEnterEdit }}
                 <a href="javascript:void(0)" name="btnEnterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>
                 {{/if}}
+                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" ><strong style="color:green">详细</strong></a>
+                <a href="javascript:void(0)" name="enterLogQuery" data="{{bean.url}}" ><strong style="color:green">日志</strong></a>
                 {{if authMap.enterIdoc.child.btnDel }}
                 <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
                 <a href="javascript:void(0)" name="btnHttpReq" data="{{bean.id}}" ><strong style="color:red">执行Http</strong></a>
                 {{/if}}
-                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" ><strong style="color:green">详细</strong></a>
             </td>
         </tr>
         <tr  name="trChildItem" data="trChildItem_{{bean.id}}" style="display: none">

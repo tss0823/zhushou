@@ -171,6 +171,17 @@
                 }
             });
 
+            //跳转到日志
+            $("a[name='enterLogQuery']").click(function () {
+                var data = $(this).attr("data");
+                var authRes = appData.authMap["enterAppLog"];
+                //set userData with queryParams
+                YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_queryData",{url:data,showAll:true,model:'prod'});
+                $(".nav-list").find("#enterAppLog").trigger("click");
+                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"日志"});
+
+            });
+
             $("a[name='btnEnterEdit']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});

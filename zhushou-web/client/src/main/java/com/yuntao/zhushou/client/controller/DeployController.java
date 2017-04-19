@@ -479,7 +479,7 @@ public class DeployController extends BaseController {
 
         final String frontModel =  model.equals("prod") ? "release":"debug";
         final String outputPath = AppConstant.deploy.frontBuildPath+type+"/";
-        String postfix = ".dmp";
+        String postfix = ".ipa";
         if(type.equals(DeployLogType.android.getDescription())){
             postfix = ".apk" ;
         }
@@ -498,6 +498,7 @@ public class DeployController extends BaseController {
                     String filePath = outputPath+fileName;
                     byte data[] = FileUtils.readFileToByteArray(new File(filePath));
                     QiNiuTools.uploadFileFixName(data, fileName);
+                    offerExecMsg("upload file url="+appDownloadUrl);
                     //end
 
                 }catch (Exception e){

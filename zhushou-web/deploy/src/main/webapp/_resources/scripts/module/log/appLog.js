@@ -206,6 +206,16 @@
                 YT.deploy.appLog.toReqExecute(id);
             });
 
+            //to view doc
+            $("a[id='btnViewDoc']").click(function () {
+                var data = $(this).attr("data");
+                var authRes = appData.authMap["enterIdoc"];
+                var appName = $("#appName").val();
+                //set userData with queryParams
+                YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_queryData",{urlLike:data,appName:appName});
+                $(".nav-list").find("#enterIdoc").trigger("click");
+            });
+
             //bind idoc
             $("a[id='btnBindIdoc']").click(function () {
                 var id = $(this).attr("data");
