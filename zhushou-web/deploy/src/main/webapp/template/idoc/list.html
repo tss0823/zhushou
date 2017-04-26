@@ -34,24 +34,32 @@
                     <button class="btn btn-white" id="btnClear" >清空</button>
                 </small>
         </h1>
-        <h1 style="text-align: right;padding-top: 10px">
-            <small>
-                <button class="btn btn-success" id="btnQueryEnums"> <i class="icon-search align-top bigger-125"></i> 枚举状态列表 </button>&nbsp;&nbsp;&nbsp;
-                <button class="btn btn-success" id="btnQueryRes"> <i class="icon-search align-top bigger-125"></i> 资源文档列表 </button>&nbsp;&nbsp;&nbsp;
-                {{if authMap.enterIdoc.child.btnNewTemplate }}
-                <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
-                &nbsp;&nbsp;
-                <button class="btn btn-pink" id="btnNewRes"> <i class="icon-building align-top bigger-125"></i> 创建资源文档 </button>
-                &nbsp;&nbsp;
-                <button class="btn btn-pink" id="btnSubmitDoc"> <i class="icon-building align-top bigger-125"></i> 提交接口 </button>
-                &nbsp;&nbsp;
-                <button class="btn btn-pink" id="btnSubmitEnum"> <i class="icon-building align-top bigger-125"></i> 提交枚举 </button>
-                {{/if}}
-                {{if authMap.enterIdoc.child.btnListAll }}
-                <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 打印文档 </button>&nbsp;&nbsp;&nbsp;
-                {{/if}}
-            </small>
-        </h1>
+            <h1 style="text-align: right;padding-top: 10px">
+                <small>
+                    <button class="btn btn-success" id="btnQueryEnums"> <i class="icon-search align-top bigger-125"></i> 枚举状态列表 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnQueryRes"> <i class="icon-search align-top bigger-125"></i> 资源文档列表 </button>&nbsp;&nbsp;&nbsp;
+                    {{if authMap.enterIdoc.child.btnNewTemplate }}
+                    <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnNewRes"> <i class="icon-building align-top bigger-125"></i> 创建资源文档 </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnSubmitDoc"> <i class="icon-building align-top bigger-125"></i> 提交接口 </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnSubmitEnum"> <i class="icon-building align-top bigger-125"></i> 提交枚举 </button>
+                    {{/if}}
+                    {{if authMap.enterIdoc.child.btnListAll }}
+                    <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 打印文档 </button>&nbsp;&nbsp;&nbsp;
+                    {{/if}}
+                </small>
+            </h1>
+        <!--<h1 style="text-align: right;padding-top: 10px">-->
+            <!--<small>-->
+                <!--<button class="btn btn-pink" id="btnUploadUED"> <i class="icon-building align-top bigger-125"></i> UED资源上传 </button>-->
+                <!--&nbsp;&nbsp;-->
+                <!--<button class="btn btn-pink" id="btnUploadFRD"> <i class="icon-building align-top bigger-125"></i> FRD资源上传 </button>-->
+                <!--&nbsp;&nbsp;-->
+            <!--</small>-->
+        <!--</h1>-->
         </form>
     </div><!-- /.page-header -->
     <table id="sample-table-1" class="table table-striped table-bordered table-hover">

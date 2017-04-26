@@ -169,6 +169,15 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("saveUploadRes")
+//    @NeedLogin
+    public ResponseObject saveUploadRes(@RequestParam Integer type,String appVersion,String name,String fileRes) {
+//        IdocUrl idocUrl = idocUrlService.findById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+//        responseObject.setData(idocUrl);
+        return responseObject;
+    }
+
 
 
 }

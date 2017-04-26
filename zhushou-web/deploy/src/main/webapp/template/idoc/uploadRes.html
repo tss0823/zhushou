@@ -1,0 +1,36 @@
+<div class="form-group" style="padding-left: 50px">
+    <label>版本号：</label>
+    <span>
+        <input type="text" id="appVersion" name="appVersion"  placeholder="请输入版本号" class="input-xlarge">
+    </span>
+</div>
+<div class="form-group" style="padding-left: 50px">
+    <label>名称：</label>
+    <span>
+        <input type="text" id="name" name="name"  placeholder="请输入名称" class="input-xlarge">
+    </span>
+</div>
+<div class="form-group" style="padding-left: 50px">
+    <label>文件：</label>
+    <div id="videoContainer" style="position: relative;">
+                        <span>
+                            <input type="hidden" id="fileRes" name="fileRes" value="{{fileRes}}" style="width:450px">
+                        </span>
+        <a class="btn btn-default btn-lg " id="btnUploadRes" href="#" style="position: relative; z-index: 1;">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>选择文件上传</span>
+        </a>
+        <span style="color:green;font-size: 18px;" id="uploadResult"></span>
+    </div>
+    <table class="table table-striped table-hover text-left" id="tbUploadProcess" style="width: 100%;margin-top:40px;display:none">
+        <thead>
+        <tr>
+            <th class="col-md-4" width="20%">文件名称</th>
+            <th class="col-md-2" width="15%">大小</th>
+            <th class="col-md-6" width="75%">上传进度</th>
+        </tr>
+        </thead>
+        <tbody id="fsUploadProgress">
+        </tbody>
+    </table>
+</div>
