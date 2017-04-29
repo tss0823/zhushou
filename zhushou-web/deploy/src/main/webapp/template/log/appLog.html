@@ -7,7 +7,7 @@
             </small>
         </h1>
         <form id="appLogForm" onsubmit="return false" actionId="{{authRes.actionId}}">
-        <h1 style="text-align: right;padding-top: 5px">
+            <h1 style="text-align: right;padding-top: 5px">
                 <small>
                     <label class="pull-left inline">
                         <small class="muted">展示所有:</small>
@@ -31,12 +31,18 @@
                         <option value=""></option>
                     </select>
                     &nbsp;
+                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="mobileSel" data-placeholder="请选择手机账号">
+                        <option value=""></option>
+                    </select>
                     手机账号：
                     <input type="text" id="mobile" name="mobile" value="{{mobile}}" class="input-sm"/>
                     &nbsp;
                     用户ID：
                     <input type="text" id="userId" name="userId" value="{{userId}}" class="input-small"/>
-                    &nbsp;
+                </small>
+            </h1>
+        <h1 style="text-align: right;padding-top: 5px">
+                <small>
                     级别：
                     <select id="level" name="level">
                         <option value=""></option>
@@ -47,25 +53,25 @@
                     &nbsp;
                     <!--客户端IP：-->
                     <!--<input type="text" id="clientIp" name="clientIp" value="{{clientIp}}" class="input-sm"/>-->
+                    URL：
+                    <select id="urlType" name="urlType">
+                    </select>
+                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="urlSel" data-placeholder="请选择接口名称">
+                        <option value=""></option>
+                    </select>
+                    <input type="text" id="url" name="url" value="{{url}}" class="input-sm" style="width:310px"/>
+                    &nbsp;
                 </small>
             </h1>
             <h1 style="text-align: right;margin-top: 5px">
                 <small>
-                    URL：
-                    <select id="urlType" name="urlType">
-                    </select>
-                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="branch" data-placeholder="请选择接口名称">
-                        <option value=""></option>
-                    </select>
-                    <input type="text" id="url" name="url" value="{{url}}" class="input-sm" style="width:380px"/>
-                    &nbsp;
 
                     文本：
                     <select id="textCat" name="textCat">
                     </select>
                     <select id="textType" name="textType">
                     </select>
-                    <input type="text" id="text" name="text" value="{{text}}" class="input-group-lg" style="width:380px"/>
+                    <input type="text" id="text" name="text" value="{{text}}" class="input-group-lg" style="width:280px"/>
                 </small>
             </h1>
             <h1 style="text-align: right;margin-top: 5px">
@@ -124,8 +130,8 @@
             </td>
             <td>{{bean.userId}}</td>
             <td>
-                <div>{{bean.mobile}}</div>
-                <div>{{bean.name}}</div>
+                <div name="cellMobile" data="{{bean.mobile}}">{{bean.mobile}}</div>
+                <div name="cellUserName" data="{{bean.name}}">{{bean.name}}</div>
             </td>
             <td>
                 <div name="url">{{bean.url}}</div>

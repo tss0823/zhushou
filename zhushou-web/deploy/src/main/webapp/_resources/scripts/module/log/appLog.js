@@ -36,6 +36,58 @@
             YT.deploy.util.initSelect(monthArray, "value", "text", "month", data.month);
             //end
 
+            // 处理mobile data
+            var mobileVal = $("#mobile").val();
+            if(mobileVal){
+                var $mobileData = $("#sample-table-1").find("#tbContent").find("tr:eq(0)").find("td:eq(3)");
+                var cellMobileVal = $mobileData.find("div[name='cellMobile']").attr("data");
+                var cellUserNameVal = $mobileData.find("div[name='cellUserName']").attr("data");
+                if(mobileVal == cellMobileVal){
+                    // var mobileData = {key:mobileVal,value:cellUserNameVal};
+                    var checked = $("#model").attr("checked");
+                    var model = checked ? "prod" : "test";
+                    var cacheKey = YT.deploy.constant.APPLOG_MOBILE_SEL_MAP+"_"+model;
+                    //get from cache
+                    var appLogMobileSelMap = YT.deploy.Cache.get(cacheKey) || {};
+                    appLogMobileSelMap[mobileVal] = cellUserNameVal;
+                    if (Object.keys(appLogMobileSelMap).length > 3) {
+                        //删除最后一个
+                        var keys = Object.keys(appLogMobileSelMap);
+                        var delKey = keys[0];
+                        delete appLogMobileSelMap[delKey];
+                    }
+                    //set to cache
+                    YT.deploy.Cache.set(cacheKey,appLogMobileSelMap);
+                }
+            }
+
+            //mobile select init
+            var checked = $("#model").attr("checked");
+            var model = checked ? "prod" : "test";
+            var cacheKey = YT.deploy.constant.APPLOG_MOBILE_SEL_MAP+"_"+model;
+            var appLogMobileSelMap = YT.deploy.Cache.get(cacheKey) || {};
+            // var mobileDataList = appLogMobileSelMap[model] || [];
+            var branchValArray = [];
+            var mobileKeys = Object.keys(appLogMobileSelMap) || [];
+            mobileKeys.reverse();
+            for (var i = 0; i <  mobileKeys.length; i++) {
+                var key = mobileKeys[i];
+                var value = appLogMobileSelMap[key];
+                branchValArray.push("<option value='" + key + "'>");
+                branchValArray.push(key+" "+value);
+                branchValArray.push("</option>");
+            }
+            $("#mobileSel").append(branchValArray.join(""));
+            $('#mobileSel').chosen({
+                search_contains: true,
+                // disable_search_threshold: 10
+            });
+            $('#mobileSel').change(function () {
+                $("#mobile").val($(this).val());
+                // $("#btnQuery").trigger("click");
+            });
+            //end
+
             //doc select init
             var branchValArray = [];
             for (var i = 0; i < docList.length; i++) {
@@ -46,12 +98,12 @@
                 branchValArray.push(doc.url);
                 branchValArray.push("</option>");
             }
-            $("#branch").append(branchValArray.join(""));
-            $('#branch').chosen({
+            $("#urlSel").append(branchValArray.join(""));
+            $('#urlSel').chosen({
                 search_contains: true,
                 // disable_search_threshold: 10
             });
-            $('#branch').change(function () {
+            $('#urlSel').change(function () {
                 $("#url").val($(this).val());
                 // $("#btnQuery").trigger("click");
             });
@@ -104,7 +156,7 @@
             //end
 
             //select change to query
-            $("#appName,#level,#branch,#month,#startTime,#endTime").change(function(){
+            $("#appName,#level,#mobileSel,#urlSel,#month,#startTime,#endTime").change(function(){
                 $("#btnQuery").trigger("click");
             });
 
@@ -253,6 +305,7 @@
             // var ext_data = $.extend(params, {title: "应用日志"});
             // ext_data = $.extend(ext_data,{authRes:authRes});
             // YT.deploy.route("/appLog/list", params, "/log/appLog.html", ext_data);
+
         },
 
         openParameterDialog: function (id) {

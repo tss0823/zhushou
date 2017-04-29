@@ -172,35 +172,39 @@
                     }
                 });
 
-                var branchMap = {};
-                var itemValue = localStorage.getItem("branchMap");
-                if(itemValue != null) {
-                    branchMap = JSON.parse(itemValue);
-                }
+                // var branchMap = {};
+                // var itemValue = localStorage.getItem(YT.deploy.constant.BRANCH_MAP);
+                // if(itemValue != null) {
+                //     branchMap = JSON.parse(itemValue);
+                // }
+                var branchMap = YT.deploy.Cache.get(YT.deploy.constant.BRANCH_MAP) || {};
                 branchMap[appName] = branchList;
 
-                //set to localStorage
-                localStorage.setItem("branchMap",JSON.stringify(branchMap));
-                //set to local cache
-                $.extend(YT.deploy.data, {branchMap:branchMap});
+                YT.deploy.Cache.set(YT.deploy.constant.BRANCH_MAP,branchMap);
+
+                // //set to localStorage
+                // localStorage.setItem(YT.deploy.constant.BRANCH_MAP,JSON.stringify(branchMap));
+                // //set to local cache
+                // $.extend(YT.deploy.data, {branchMap:branchMap});
 
             }else{
                 //初始化控件
-                var branchMap = YT.deploy.data.branchMap || {};
-                if(branchMap[appName] == null || branchMap[appName].length == 0){
-                    //get from localStorage
-                    var itemValue = localStorage.getItem("branchMap");
-                    if(itemValue != null){
-                        branchMap = JSON.parse(itemValue);
-
-                        //set to local cache
-                        $.extend(YT.deploy.data, {branchMap:branchMap});
-                    }
-                    // var branchData = branchMap[appName];
-                    // if(typeof(branchData) != "undefined" && branchData){
-                    //     branchList = JSON.parse(branchData);
-                    // }
-                }
+                var branchMap = YT.deploy.Cache.get(YT.deploy.constant.BRANCH_MAP) || {};
+                // var branchMap = YT.deploy.data.branchMap || {};
+                // if(branchMap[appName] == null || branchMap[appName].length == 0){
+                //     //get from localStorage
+                //     var itemValue = localStorage.getItem(YT.deploy.constant.BRANCH_MAP);
+                //     if(itemValue != null){
+                //         branchMap = JSON.parse(itemValue);
+                //
+                //         //set to local cache
+                //         $.extend(YT.deploy.data, {branchMap:branchMap});
+                //     }
+                //     // var branchData = branchMap[appName];
+                //     // if(typeof(branchData) != "undefined" && branchData){
+                //     //     branchList = JSON.parse(branchData);
+                //     // }
+                // }
                 branchList = branchMap[appName];
             }
             if(branchList){
@@ -230,25 +234,27 @@
             var appName = YT.deploy.appHost.appName;
             var brVal = $("#branch").val();
             // var branchMap = {};
-            // var itemValue = localStorage.getItem("branchMap");
+            // var itemValue = localStorage.getItem(YT.deploy.constant.BRANCH_MAP);
             // if(itemValue != null) {
             //     branchMap = JSON.parse(itemValue);
             // }
             var branchMap = YT.deploy.data.branchMap || {};
-            var branchList = branchMap[appName];
-            var newbranchList = [brVal];
+            var branchList = branchMap[appName] || [];
+            var newBranchList = [brVal];
             for(var i = 0; i < branchList.length; i++){
                 var branchVal = branchList[i];
                 if(branchVal != brVal){
-                    newbranchList.push(branchVal)
+                    newBranchList.push(branchVal)
                 }
             } 
-            branchMap[appName] = newbranchList;
+            branchMap[appName] = newBranchList;
 
-            //set to localStorage
-            localStorage.setItem("branchMap",JSON.stringify(branchMap));
-            //set to local cache
-            $.extend(YT.deploy.data, {branchMap:branchMap});
+            YT.deploy.Cache.set(YT.deploy.constant.BRANCH_MAP,branchMap);
+
+            // //set to localStorage
+            // localStorage.setItem(YT.deploy.constant.BRANCH_MAP,JSON.stringify(branchMap));
+            // //set to local cache
+            // $.extend(YT.deploy.data, {branchMap:branchMap});
 
         },
 

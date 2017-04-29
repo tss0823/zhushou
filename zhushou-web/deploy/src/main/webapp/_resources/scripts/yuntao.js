@@ -24,6 +24,11 @@
         NOT_LOGIN: "01",  //未登录
         
         C_USER_DATA : "c_user_data",   //用户数据cookie key
+
+        BRANCH_MAP : "branch_map",  //分支map
+
+        APPLOG_MOBILE_SEL_MAP : "appLog_mobile_sel_map",  //mobile sel map
+        APPLOG_MOBILE_SEL_MAP : "appLog_mobile_sel_map",  //mobile sel map
     }
 
 
@@ -142,7 +147,7 @@
             }
             $("#"+selectId).append(dataArray.join(""));
         },
-        
+
         paginationInit: function (data, queryFn) {
             if ($(".totalCount").length == 0 || !data) {
                 return;
@@ -436,6 +441,34 @@
                 }
             }
         }
+    };
+
+    YT.deploy.Cache = {
+
+        set:function(key,value){
+            //set to local storage
+            localStorage.setItem(key,JSON.stringify(value));
+
+            //set to local cache
+            $.extend(YT.deploy.data, {key:value});
+
+        },
+
+        get:function(key){
+            var value = YT.deploy.data[key];
+            if(!value){
+                //get from localStorage
+                var valueJson = localStorage.getItem(key);
+                if(valueJson != null){
+                    value = JSON.parse(valueJson);
+
+                    //set to local cache
+                    $.extend(YT.deploy.data, {key:value});
+                }
+            }
+            return value;
+        }
+
     };
 
     var common = {
