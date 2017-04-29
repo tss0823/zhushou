@@ -50,7 +50,7 @@
                     //get from cache
                     var appLogMobileSelMap = YT.deploy.Cache.get(cacheKey) || {};
                     appLogMobileSelMap[mobileVal] = cellUserNameVal;
-                    if (Object.keys(appLogMobileSelMap).length > 3) {
+                    if (Object.keys(appLogMobileSelMap).length > 50) {
                         //删除最后一个
                         var keys = Object.keys(appLogMobileSelMap);
                         var delKey = keys[0];
