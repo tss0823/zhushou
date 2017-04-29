@@ -62,6 +62,12 @@ public class DeployController extends BaseController {
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
         ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
+//        List<String> dataList = new ArrayList<>();
+//        dataList.add("test1");
+//        dataList.add("test2");
+//        dataList.add("test3");
+//        dataList.add("test4");
+//        responseObject.setData(dataList);
         return responseObject;
     }
 

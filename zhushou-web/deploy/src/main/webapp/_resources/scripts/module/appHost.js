@@ -32,6 +32,11 @@
                 YT.deploy.routeStackProcess.refresh();
             });
 
+            //热点分支置顶
+            $("#branch").change(function () {
+               YT.deploy.appHost.changeBranchSort();
+            });
+
             //注册事件
             $("#btnComplie").click(function () {
                 YT.deploy.appHost.complie();
@@ -209,6 +214,33 @@
                 $("#branch").html(branchValArray.join(""));
             }
             $('#branch').chosen();
+        },
+
+        changeBranchSort: function () {
+            var appName = YT.deploy.appHost.appName;
+            var model = YT.deploy.appHost.model;
+            var brVal = $("#branch").val();
+            // var branchMap = {};
+            // var itemValue = localStorage.getItem("branchMap");
+            // if(itemValue != null) {
+            //     branchMap = JSON.parse(itemValue);
+            // }
+            var branchMap = YT.deploy.data.branchMap || {};
+            var branchList = branchMap[appName];
+            var newbranchList = [brVal];
+            for(var i = 0; i < branchList.length; i++){
+                var branchVal = branchList[i];
+                if(branchVal != brVal){
+                    newbranchList.push(branchVal)
+                }
+            } 
+            branchMap[appName] = newbranchList;
+
+            //set to localStorage
+            localStorage.setItem("branchMap",JSON.stringify(branchMap));
+            //set to local cache
+            $.extend(YT.deploy.data, {branchMap:branchMap});
+
         },
 
         complie: function () {
