@@ -204,10 +204,14 @@
                 branchList = branchMap[appName];
             }
             if(branchList){
-                var branchValArray = ["master"];
+                var model = YT.deploy.appHost.model;
+                var branchValArray = [];
+                if(model == "prod"){
+                    branchValArray.push("master");
+                }
                 for(var i = 0; i < branchList.length; i++){
                     var branchVal = branchList[i];
-                    if(branchVal == "master"){
+                    if(branchVal == "master" && model == "prod"){
                         continue;
                     }
                     branchValArray.push("<option value='"+branchVal+"'>");
@@ -221,7 +225,6 @@
 
         changeBranchSort: function () {
             var appName = YT.deploy.appHost.appName;
-            var model = YT.deploy.appHost.model;
             var brVal = $("#branch").val();
             // var branchMap = {};
             // var itemValue = localStorage.getItem("branchMap");
