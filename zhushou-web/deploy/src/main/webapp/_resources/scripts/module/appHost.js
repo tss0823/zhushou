@@ -204,9 +204,12 @@
                 branchList = branchMap[appName];
             }
             if(branchList){
-                var branchValArray = [];
+                var branchValArray = ["master"];
                 for(var i = 0; i < branchList.length; i++){
                     var branchVal = branchList[i];
+                    if(branchVal == "master"){
+                        continue;
+                    }
                     branchValArray.push("<option value='"+branchVal+"'>");
                     branchValArray.push(branchVal);
                     branchValArray.push("</option>");
