@@ -207,7 +207,10 @@
                 var model = YT.deploy.appHost.model;
                 var branchValArray = [];
                 if(model == "prod"){
-                    branchValArray.push("master");
+                    var branchVal = "master";
+                    branchValArray.push("<option value='"+branchVal+"'>");
+                    branchValArray.push(branchVal);
+                    branchValArray.push("</option>");
                 }
                 for(var i = 0; i < branchList.length; i++){
                     var branchVal = branchList[i];
