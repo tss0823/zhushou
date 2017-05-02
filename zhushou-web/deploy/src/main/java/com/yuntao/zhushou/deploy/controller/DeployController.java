@@ -11,6 +11,7 @@ import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.httpclient.HttpStatus;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,7 +104,6 @@ public class DeployController extends BaseController {
         }catch (Exception e){
             bisLog.error("get compile property json error",e);
         }
-        params.put("compileProperty",app.getCompileProperty());
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -347,5 +347,11 @@ public class DeployController extends BaseController {
         return responseObject;
     }
 
+    public static void main(String[] args) throws JSONException {
+        String json = "{test:\"-Ddb.user=dfit -Ddb.pwd=Tqp1928mysql\",prod:\"-Ddb.user=doublefit -Ddb.pwd=DoubleFitTqp1928DF\"}";
+        JSONObject jsonObject = new JSONObject(json);
+        Object compileProp = jsonObject.get("prod");
+        System.out.println(compileProp);
+    }
 
 }
