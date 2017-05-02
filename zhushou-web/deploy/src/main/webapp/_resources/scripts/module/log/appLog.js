@@ -49,6 +49,9 @@
                     var cacheKey = YT.deploy.constant.APPLOG_MOBILE_SEL_MAP+"_"+model;
                     //get from cache
                     var appLogMobileSelMap = YT.deploy.Cache.get(cacheKey) || {};
+                    if(appLogMobileSelMap[mobileVal]){  //先删除，再添加，保证最后查询的在上面
+                        delete appLogMobileSelMap[mobileVal];
+                    }
                     appLogMobileSelMap[mobileVal] = cellUserNameVal;
                     if (Object.keys(appLogMobileSelMap).length > 50) {
                         //删除最后一个
