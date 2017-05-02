@@ -17,11 +17,12 @@
         <result column="domain" property="domain" jdbcType="VARCHAR" />
         <result column="port" property="port" jdbcType="INTEGER" />
         <result column="front" property="front" jdbcType="INTEGER" />
+        <result column="compileProperty" property="compileProperty" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List">
         `id`,`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,
-        `front`
+        `front`,`compileProperty`
     </sql>
     <sql id="Base_Table_Name">
         app
@@ -85,9 +86,9 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`front`)
+        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`front`,`compileProperty`)
         values
-        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{front})
+        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{front},#{compileProperty})
     </insert>
 
     <update id="updateById">
@@ -105,6 +106,7 @@
             <if test="domain != null and domain !=''">`domain`=#{domain},</if>
             <if test="port != null">`port`=#{port},</if>
             <if test="front != null">`front`=#{front},</if>
+            <if test="compileProperty != null and compileProperty !=''">`compileProperty`=#{compileProperty},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

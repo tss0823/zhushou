@@ -213,7 +213,7 @@ public class DeployController extends BaseController {
     @RequestMapping("complie")
 //    @NeedLogin
     public ResponseObject complie(final @RequestParam String nickname,final @RequestParam String codeName,
-                                  final @RequestParam String branch,final @RequestParam String model) {
+                                  final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -229,7 +229,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model;
+                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+compileProperty;
                     execShellScript(cmd, "complie");
                     compileResult = true;
                 }catch (Exception e){

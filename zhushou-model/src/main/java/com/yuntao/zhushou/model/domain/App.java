@@ -84,6 +84,11 @@ public class App implements Serializable {
      */
     private Integer front;
 
+    /**
+     * 编译变量
+     */
+    private String compileProperty;
+
     public Long getId() {
         return id;
     }
@@ -202,5 +207,13 @@ public class App implements Serializable {
 
     public void setFront(Integer front) {
         this.front = front;
+    }
+
+    public String getCompileProperty() {
+        return compileProperty;
+    }
+
+    public void setCompileProperty(String compileProperty) {
+        this.compileProperty = compileProperty;
     }
 }

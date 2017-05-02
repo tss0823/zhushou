@@ -11,6 +11,7 @@ import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.httpclient.HttpStatus;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,6 +93,17 @@ public class DeployController extends BaseController {
         params.put("codeName",app.getCodeName());
         params.put("branch",branch);
         params.put("model",model);
+        String compilePropertyJson = app.getCompileProperty();
+        try{
+            JSONObject jsonObject = new JSONObject(compilePropertyJson);
+            Object compileProp = jsonObject.get(model);
+            if(compileProp != null){
+                params.put("compileProperty",compileProp.toString());
+            }
+        }catch (Exception e){
+            bisLog.error("get compile property json error",e);
+        }
+        params.put("compileProperty",app.getCompileProperty());
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
