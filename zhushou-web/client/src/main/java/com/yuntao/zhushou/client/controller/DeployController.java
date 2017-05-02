@@ -229,7 +229,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+compileProperty;
+                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
                     execShellScript(cmd, "complie");
                     compileResult = true;
                 }catch (Exception e){
