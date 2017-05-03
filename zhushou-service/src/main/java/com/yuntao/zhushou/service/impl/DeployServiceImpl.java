@@ -87,7 +87,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             autoDeployVo.setBranch(branch);
             autoDeployVo.setCommits(commitsJSONObject.toString());
 
-            Boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
+            boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
             if(!sismember){
                 //add to set
                 jedisService.getShardedJedis().sadd(CacheConstant.Deploy.autoDeplyList,cacheValue);
@@ -105,9 +105,19 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
     @Override
     public void autoDeployTask() {
+        //清空所有
+        String cacheKeyList = CacheConstant.Deploy.autoDeplyList;
+        Long count = jedisService.getShardedJedis().scard(cacheKeyList);
+        if(count > 0){
+           jedisService.getShardedJedis().spop(cacheKeyList,count);
+//           count = jedisService.getShardedJedis().scard(cacheKeyList);
+        }
+        while (StringUtils.isNotEmpty(queueService.pop(cacheKeyList))){
+        }
+
         //take task from queue
         while(true){
-            String value = queueService.peek(CacheConstant.Deploy.autoDeplyList);
+            String value = queueService.peek(cacheKeyList);
             if(StringUtils.isEmpty(value)){
                 try {
                     Thread.sleep(5000);
@@ -171,10 +181,10 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 throw new BizException("error!",e);
             }finally {
                 // 移除set key
-                jedisService.getShardedJedis().srem(CacheConstant.Deploy.autoDeplyList,cacheValue);
+                jedisService.getShardedJedis().srem(cacheKeyList,cacheValue);
 
                 //移除 list key
-                queueService.pop(CacheConstant.Deploy.autoDeplyList);
+                queueService.pop(cacheKeyList);
             }
 
         }
