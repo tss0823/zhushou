@@ -87,13 +87,13 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             autoDeployVo.setBranch(branch);
             autoDeployVo.setCommits(commitsJSONObject.toString());
 
-            boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
+           boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
             if(!sismember){
                 //add to set
                 jedisService.getShardedJedis().sadd(CacheConstant.Deploy.autoDeplyList,cacheValue);
 
                 //add to queue
-                String jsonValue = JsonUtils.object2Json(authorJsonObject);
+                String jsonValue = JsonUtils.object2Json(autoDeployVo);
                 queueService.add(CacheConstant.Deploy.autoDeplyList,jsonValue);
             }
 
