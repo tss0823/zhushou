@@ -32,5 +32,10 @@ public interface CacheConstant {
 
     }
 
+    interface Deploy{
+        String autoDeplyList = "auto_deploy_list";
+
+    }
+
 
 }

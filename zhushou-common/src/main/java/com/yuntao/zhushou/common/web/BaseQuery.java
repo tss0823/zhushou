@@ -24,6 +24,8 @@ public class BaseQuery implements Serializable {
 
     private String key;
 
+    private String codeName;
+
     public int getPageSize() {
         return pageSize;
     }
@@ -70,5 +72,13 @@ public class BaseQuery implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getCodeName() {
+        return codeName;
+    }
+
+    public void setCodeName(String codeName) {
+        this.codeName = codeName;
     }
 }

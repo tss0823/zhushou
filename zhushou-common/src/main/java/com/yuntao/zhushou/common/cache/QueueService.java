@@ -9,5 +9,7 @@ public interface QueueService {
 
     String pop(String key);
 
+    String peek(String key);
+
 
 }

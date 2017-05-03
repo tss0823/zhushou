@@ -129,6 +129,9 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
         if (backVerSb.length() > 0) {
             deployLog.setBackVer(backVer + "," + backVerSb.delete(backVerSb.length() - 1, backVerSb.length()).toString());
         }
+        //添加自动发布日志 TODO
+
+        //end
         deployLog.setLog(sb.toString().getBytes());
         deployLogService.insert(deployLog);
 

@@ -4,6 +4,7 @@ import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.service.inter.DeployService;
 import com.yuntao.zhushou.service.inter.UserService;
 import com.yuntao.zhushou.service.support.bis.HttpProxyServerSupport;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -23,6 +25,9 @@ public class CommonController extends BaseController {
 
     @Autowired
     private HttpProxyServerSupport httpProxyServerSupport;
+
+    @Autowired
+    private DeployService deployService;
 
     int cacheSize = 800;
 
@@ -42,9 +47,19 @@ public class CommonController extends BaseController {
     private UserService userService;
 
 
-//    @PostConstruct
+    @PostConstruct
     private void init() {
-        httpProxyServerSupport.init();
+//        httpProxyServerSupport.init();
+
+
+        //自动发布任务处理
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                deployService.autoDeployTask();
+            }
+        }).start();
+
     }
 
 

@@ -1,13 +1,16 @@
 package com.yuntao.zhushou.common.cache.impl;
 
 import com.yuntao.zhushou.common.cache.CacheService;
+import com.yuntao.zhushou.common.cache.JedisService;
 import com.yuntao.zhushou.common.cache.QueueService;
-import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.SerializeNewUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.*;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ import java.util.List;
  * Created by shan on 2016/5/5.
  */
 @Service("cacheService")
-public class JedisCacheServiceImpl implements CacheService ,QueueService {
+public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisService {
 
     private final static Logger log = org.slf4j.LoggerFactory.getLogger(JedisCacheServiceImpl.class);
 
@@ -125,7 +128,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
         try{
             jedis = shardedJedisPool.getResource();
             key = namespace+"_"+key;
-            jedis.lpush(key,msg);
+            jedis.rpush(key,msg);
         }catch (Exception e){
             log.error("add queue cache failed",e);
         }finally {
@@ -140,12 +143,40 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService {
         try{
             jedis = shardedJedisPool.getResource();
             key = namespace+"_"+key;
-            return jedis.rpop(key);
+            return jedis.lpop(key);
         }catch (Exception e){
             log.error("pop queue cache failed",e);
         }finally {
             shardedJedisPool.returnResource(jedis);
         }
         return null;
+    }
+
+    @Override
+    public String peek(String key) {
+        ShardedJedis jedis = null;
+        try{
+            jedis = shardedJedisPool.getResource();
+            key = namespace+"_"+key;
+            return jedis.lindex(key,0);
+        }catch (Exception e){
+            log.error("pop queue cache failed",e);
+        }finally {
+            shardedJedisPool.returnResource(jedis);
+        }
+        return null;
+    }
+
+    @Override
+    public ShardedJedis getShardedJedis() {
+        ShardedJedis jedis = null;
+        try{
+            jedis = shardedJedisPool.getResource();
+            return jedis;
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }finally {
+            shardedJedisPool.returnResource(jedis);
+        }
     }
 }

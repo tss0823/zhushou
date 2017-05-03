@@ -38,8 +38,8 @@
             });
 
             //注册事件
-            $("#btnComplie").click(function () {
-                YT.deploy.appHost.complie();
+            $("#btncompile").click(function () {
+                YT.deploy.appHost.compile();
             });
 
             $("#btnBtachDeploy").click(function () {
@@ -258,7 +258,7 @@
 
         },
 
-        complie: function () {
+        compile: function () {
             var model = YT.deploy.appHost.model;
             var appName = YT.deploy.appHost.appName;
             var branch = $("#branch").val();
@@ -269,7 +269,7 @@
             }
             var param = {appName:appName,branch:branch,model:model};
             YT.deploy.appHost.writeMsg("执行编译开始,请稍等...\r\n",true);
-            YT.deploy.util.reqPost("/deploy/complie",param,function(d){
+            YT.deploy.util.reqPost("/deploy/compile",param,function(d){
                 //打印消息
                 // interval = window.setInterval(YT.deploy.appHost.printMsg,300);
             });

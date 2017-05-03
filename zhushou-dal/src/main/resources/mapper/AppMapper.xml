@@ -32,6 +32,7 @@
         <if test="id != null">and id = #{id}</if>
         <if test="companyId != null">and companyId = #{companyId}</if>
         <if test="name != null and name != ''">and name = #{name}</if>
+        <if test="codeName != null and codeName != ''">and codeName = #{codeName}</if>
         <if test="type != null">and type = #{type}</if>
         <if test="status != null">and status = #{status}</if>
         <if test="front != null">and front = #{front}</if>

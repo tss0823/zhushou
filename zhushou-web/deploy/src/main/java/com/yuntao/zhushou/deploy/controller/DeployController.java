@@ -10,13 +10,18 @@ import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AppVerionStatus;
 import com.yuntao.zhushou.service.inter.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("deploy")
 public class DeployController extends BaseController {
+
+    @Autowired
+    private DeployService deployService;
 
     @Autowired
     private CompanyService companyService;
@@ -73,9 +81,9 @@ public class DeployController extends BaseController {
     }
 
 
-    @RequestMapping("complie")
+    @RequestMapping("compile")
     @NeedLogin
-    public ResponseObject complie(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
+    public ResponseObject compile(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
@@ -87,7 +95,7 @@ public class DeployController extends BaseController {
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
-        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/complie");
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/compile");
         Map<String,String> params = new HashMap<>();
         params.put("nickname",user.getNickName());
         params.put("codeName",app.getCodeName());
@@ -346,5 +354,19 @@ public class DeployController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("autoDeploy")
+//    @NeedLogin
+    public String autoDeploy(HttpServletRequest request) {
+        try {
+            List<String> paramList = IOUtils.readLines(request.getInputStream());
+            if(CollectionUtils.isEmpty(paramList)){
+                throw new BizException("param is empty!");
+            }
+            deployService.autoDeploy(StringUtils.join(paramList,""));
+        } catch (IOException e) {
+            throw new BizException("autoDeploy error",e);
+        }
+        return "OK";
+    }
 
 }

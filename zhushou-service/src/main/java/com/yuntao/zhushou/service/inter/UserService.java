@@ -21,5 +21,7 @@ public interface UserService {
 
     void setCurrentUser(User user);
 
+    User getByEmail(String email);
+
 
 }

@@ -144,5 +144,14 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public User getByEmail(String email) {
+        UserQuery userQuery = new UserQuery();
+        userQuery.setEmail(email);
+        Map<String,Object> queryMap = BeanUtils.beanToMap(userQuery);
+        User user = userMapper.findByCondition(queryMap);
+        return user;
+    }
+
 
 }

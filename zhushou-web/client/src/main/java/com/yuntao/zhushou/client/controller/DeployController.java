@@ -101,7 +101,6 @@ public class DeployController extends BaseController {
 
     private void execShellScript(String cmd, String method) {
         //执行前先清空历史残留队里消息,for 浏览器 or client 可能中断执行
-        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
         clearExecMsg();
         if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
 //            if (!StringUtils.equals(model,"test") ) {
@@ -210,9 +209,9 @@ public class DeployController extends BaseController {
 
 
 
-    @RequestMapping("complie")
+    @RequestMapping("compile")
 //    @NeedLogin
-    public ResponseObject complie(final @RequestParam String nickname,final @RequestParam String codeName,
+    public ResponseObject compile(final @RequestParam String nickname,final @RequestParam String codeName,
                                   final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -223,14 +222,49 @@ public class DeployController extends BaseController {
 //        final User user = userService.getCurrentUser();
         execModel = model;
         execMessage = nickname+"正在执行["+branch+"]["+execModel+"]编译操作，请稍候";
-
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
                     String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
-                    execShellScript(cmd, "complie");
+                    execShellScript(cmd, "compile");
+                    compileResult = true;
+                }catch (Exception e){
+                    compileResult = false;
+                    throw e;
+                }finally {
+                    execRun.set(false);  //完成，恢复初始状态
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                }
+            }
+        }).start();
+        return responseObject;
+    }
+
+    @RequestMapping("autoCompile")
+//    @NeedLogin
+    public ResponseObject autoCompile(final @RequestParam String nickname,final @RequestParam String codeName,
+                                  final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!execRun.compareAndSet(false,true)){
+            responseObject.setSuccess(false);
+            responseObject.setMessage(execMessage);
+            return responseObject;
+        }
+//        final User user = userService.getCurrentUser();
+        execModel = model;
+        execMessage = nickname+"正在执行["+branch+"]["+execModel+"][自动]编译操作，请稍候";
+
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
+                    execShellScript(cmd, "compile");
                     compileResult = true;
                 }catch (Exception e){
                     compileResult = false;
@@ -257,6 +291,9 @@ public class DeployController extends BaseController {
     public ResponseObject deploy(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String codeName,
                                  final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!compileResult){
+            return responseObject;
+        }
         if(!StringUtils.equals(execModel,model)){
             responseObject.setSuccess(false);
             responseObject.setMessage("发布模式不对，当前模式["+execModel+"],期待模式["+model+"],请先编译");
@@ -305,6 +342,9 @@ public class DeployController extends BaseController {
     public ResponseObject deployStatic(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName, final @RequestParam String codeName,
                                        final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!compileResult){
+            return responseObject;
+        }
         if(!StringUtils.equals(execModel,model)){
             responseObject.setSuccess(false);
             responseObject.setMessage("发布模式不对，当前模式["+execModel+"],期待模式["+model+"],请先编译");
