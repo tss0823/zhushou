@@ -110,7 +110,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             String value = queueService.peek(CacheConstant.Deploy.autoDeplyList);
             if(StringUtils.isEmpty(value)){
                 try {
-                    Thread.sleep(50000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                 }
                 continue;
