@@ -75,6 +75,13 @@
                     YT.deploy.appHost.restart(ip);
                 });
             });
+
+            $("button[id='btnSingleDebug']").each(function(index,item){
+                $(this).click(function() {
+                    var ip = $(item).attr("data");
+                    YT.deploy.appHost.debug(ip);
+                });
+            });
             $("button[id='btnSingleStop']").each(function(index,item){
                 $(this).click(function() {
                     var ip = $(item).attr("data");
@@ -421,6 +428,20 @@
             var param = {appName: appName, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行重启开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/restart", param, function (d) {
+                //打印消息
+                // interval = window.setInterval(YT.deploy.appHost.printMsg, 300);
+            });
+
+        },
+        debug: function (ip) {
+            var appName = YT.deploy.appHost.appName;
+            var model = YT.deploy.appHost.model;
+            if (!confirm("您确认要调式重启【 " + appName + " 】 > " + model + " 吗？")) {
+                return;
+            }
+            var param = {appName: appName, model: model, ipList: [ip]};
+            YT.deploy.appHost.writeMsg("执行调式重启开始,请稍等...\r\n", true);
+            YT.deploy.util.reqPost("/deploy/debug", param, function (d) {
                 //打印消息
                 // interval = window.setInterval(YT.deploy.appHost.printMsg, 300);
             });
