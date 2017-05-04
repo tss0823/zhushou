@@ -19,9 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.java_websocket.WebSocket;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
@@ -546,12 +544,12 @@ public class DZMessageHelperServer  {
             }).start();
 
             //记录服务器一条主日志
-            this.writeSystemMsg("服务端ws已启动", "");
+            this.writeSystemMsg("发布服务端ws已启动", "");
 
 
             //end
         } catch (Exception e) {
-            this.writeSystemErrorMsg("客服端ws启动失败", ExceptionUtils.getPrintStackTrace(e));
+            this.writeSystemErrorMsg("发布服务端ws启动失败", ExceptionUtils.getPrintStackTrace(e));
         }
 
     }

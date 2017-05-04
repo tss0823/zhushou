@@ -55,6 +55,10 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private DeployService deployService;
+
+
     /**
      * 发布日志队列,一个服务器一个实例
      */
@@ -172,6 +176,10 @@ public class WsMsgHandlerServiceImpl extends AbstService implements WsMsgHandler
                 }else{
                     appVersionService.updateById(appVersion);
                 }
+            }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_START)){  //自动发布开始
+                deployService.changeDeployState(true);
+            }else if(responseObject.getBizType().equals(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_END)){  //自动发布结束
+                deployService.changeDeployState(false);
             }else{
                 //TODO 其他消息暂不处理
             }

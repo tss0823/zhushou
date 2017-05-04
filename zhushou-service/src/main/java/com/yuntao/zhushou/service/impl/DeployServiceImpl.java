@@ -9,7 +9,10 @@ import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
-import com.yuntao.zhushou.model.domain.*;
+import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.Company;
+import com.yuntao.zhushou.model.domain.Host;
+import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.vo.AutoDeployVo;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by shan on 2017/5/2.
@@ -50,6 +54,8 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
     @Autowired
     private ConfigService configService;
+
+    private AtomicBoolean deployState = new AtomicBoolean(false);  //false 未开始，true 已开始
 
     @Override
     public void autoDeploy(String json) {
@@ -120,12 +126,16 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
         //take task from queue
         while(true){
-            String value = queueService.pop(cacheKeyList);
+            String value = queueService.peek(cacheKeyList);
+            //value为空或者正在执行
             if(StringUtils.isEmpty(value)){
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                 }
+                continue;
+            }
+            if (deployState.compareAndSet(false, true)) {  //未结束
                 continue;
             }
             //
@@ -136,6 +146,9 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
                 // 移除set key
                 jedisService.getShardedJedis().srem(cacheKeyList,cacheValue);
+
+                // 移除list key
+                queueService.pop(cacheKeyList);
 
                 //get app
                 App app = appService.findByName(autoDeployVo.getCompanyId(),autoDeployVo.getAppName());
@@ -194,5 +207,10 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
 
 
+    }
+
+    @Override
+    public void changeDeployState(boolean state) {
+        deployState.set(state);
     }
 }

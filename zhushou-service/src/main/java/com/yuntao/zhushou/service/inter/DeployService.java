@@ -8,4 +8,10 @@ public interface DeployService {
     void autoDeploy(String json);
 
     void autoDeployTask();
+
+    /**
+     * 改变自动发布状态
+     * @param state false 结束，true 开始
+     */
+    void changeDeployState(boolean state);
 }

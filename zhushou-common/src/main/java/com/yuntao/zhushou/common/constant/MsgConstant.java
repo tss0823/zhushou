@@ -17,6 +17,8 @@ public interface MsgConstant {
         String UPDATE_ADDRESS = "update_address";  //core 提给 deploy http ip and port
         String SERVER_STATUS_CHECK = "server_status_check";  //服务器节点状态检查
         String FRONT_DEPLOY_END = "front_deploy_end";  //front deploy end
+        String AUTO_DEPLOY_START = "auto_deploy_start";  //自动发布开始
+        String AUTO_DEPLOY_END = "auto_deploy_end";  //自动发布结束
     }
 
     interface ReqUserBizType{  //client User请求业务类型

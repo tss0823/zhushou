@@ -236,8 +236,8 @@ public class DeployController extends BaseController {
                     compileResult = false;
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -260,6 +260,7 @@ public class DeployController extends BaseController {
         execMessage = nickname+"正在执行["+branch+"]["+execModel+"][自动]编译操作，请稍候";
 
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_START,"自动发布开始");
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
         new Thread(new Runnable() {
             @Override
@@ -285,8 +286,9 @@ public class DeployController extends BaseController {
                     compileResult = false;
                     throw new BizException("auto compile failed!",e);
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_END,"自动发布结束");
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -336,9 +338,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"发布",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -387,9 +389,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"静态发布",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -418,9 +420,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"下线",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -448,9 +450,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"上线",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -478,9 +480,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"重启",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();
@@ -508,9 +510,9 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     throw e;
                 }finally {
-                    execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"回滚",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
                 }
             }
         }).start();

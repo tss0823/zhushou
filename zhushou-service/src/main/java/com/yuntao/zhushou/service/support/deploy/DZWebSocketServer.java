@@ -16,6 +16,9 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.List;
 
+/**
+ * 发布服务端socket
+ */
 @Component
 public class DZWebSocketServer extends WebSocketServer  {
 
