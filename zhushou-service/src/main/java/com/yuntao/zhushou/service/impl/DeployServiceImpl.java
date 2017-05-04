@@ -7,6 +7,7 @@ import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
+import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.vo.AutoDeployVo;
@@ -156,7 +157,6 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 for (String autoDeployAppNameStr : autoDeployAppNameStrs) {
                     HttpParam httpParam = new HttpParam("appNames[]", autoDeployAppNameStr);
                     paramList.add(httpParam);
-                    params.put("appNames[]",autoDeployAppNameStr);
                     App thisApp = appService.findByName(autoDeployVo.getCompanyId(), autoDeployAppNameStr);
                     //get ipList
                     List<Host> hostList = hostService.selectListByAppAndModel(thisApp.getId(), autoDeployVo.getModel());
@@ -179,7 +179,9 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                     bisLog.error("get compile property json error",e);
                 }
                 requestRes.setParams(params);
-                HttpNewUtils.execute(requestRes);
+                ResponseRes execute = HttpNewUtils.execute(requestRes);
+                byte[] result = execute.getResult();
+                bisLog.info(new String(result));
 
             }catch (Exception e){
                 throw new BizException("error!",e);
