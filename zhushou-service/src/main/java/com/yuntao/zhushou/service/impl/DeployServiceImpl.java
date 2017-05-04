@@ -7,10 +7,7 @@ import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
-import com.yuntao.zhushou.model.domain.App;
-import com.yuntao.zhushou.model.domain.Company;
-import com.yuntao.zhushou.model.domain.Host;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.vo.AutoDeployVo;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +16,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +45,9 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
     @Autowired
     private HostService hostService;
+
+    @Autowired
+    private ConfigService configService;
 
     @Override
     public void autoDeploy(String json) {
@@ -117,7 +118,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
         //take task from queue
         while(true){
-            String value = queueService.peek(cacheKeyList);
+            String value = queueService.pop(cacheKeyList);
             if(StringUtils.isEmpty(value)){
                 try {
                     Thread.sleep(5000);
@@ -126,11 +127,13 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 continue;
             }
             //
-
             String cacheValue = null;
             try{
                 AutoDeployVo autoDeployVo = JsonUtils.json2Object(value, AutoDeployVo.class);
                 cacheValue = autoDeployVo.getCompanyId() +"_"+ autoDeployVo.getAppName()+"_"+autoDeployVo.getBranch();
+
+                // 移除set key
+                jedisService.getShardedJedis().srem(cacheKeyList,cacheValue);
 
                 //get app
                 App app = appService.findByName(autoDeployVo.getCompanyId(),autoDeployVo.getAppName());
@@ -141,10 +144,25 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 RequestRes requestRes = new RequestRes();
                 requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/autoCompile");
                 Map<String,String> params = new HashMap<>();
+                params.put("userId",autoDeployVo.getUserId().toString());
                 params.put("nickname",autoDeployVo.getNickname());
                 params.put("codeName",app.getCodeName());
                 params.put("branch",autoDeployVo.getBranch());
                 params.put("model",autoDeployVo.getModel());
+                String autoDeployAppName = configService.getValueByName(autoDeployVo.getCompanyId(), "autoDeployAppName");
+                String[] autoDeployAppNameStrs = autoDeployAppName.split(",");
+                for (String autoDeployAppNameStr : autoDeployAppNameStrs) {
+                    params.put("appNames[]",autoDeployAppNameStr);
+                    App thisApp = appService.findByName(autoDeployVo.getCompanyId(), autoDeployAppNameStr);
+                    //get ipList
+                    List<Host> hostList = hostService.selectListByAppAndModel(thisApp.getId(), autoDeployVo.getModel());
+                    List<String> ipList = new ArrayList<>();
+                    for (Host host : hostList) {
+                        ipList.add(host.getEth0());
+                    }
+                    params.put("ipsList[]",StringUtils.join(ipList,","));
+                }
+                //end
                 String compilePropertyJson = app.getCompileProperty();
                 try{
                     JSONObject jsonObject = new JSONObject(compilePropertyJson);
@@ -158,33 +176,10 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 requestRes.setParams(params);
                 HttpNewUtils.execute(requestRes);
 
-                //发布
-                requestRes = new RequestRes();
-                requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/deploy");
-                params = new HashMap<>();
-                params.put("userId",autoDeployVo.getUserId().toString());
-                params.put("nickname",autoDeployVo.getNickname());
-                params.put("appName",autoDeployVo.getAppName());
-                params.put("codeName",app.getCodeName());
-                params.put("model",autoDeployVo.getModel());
-
-                //get ipList
-                List<Host> hostList = hostService.selectListByAppAndModel(app.getId(), autoDeployVo.getModel());
-
-                for (Host host : hostList) {
-                    params.put("ipList[]",host.getEth0());
-                }
-                requestRes.setParams(params);
-                HttpNewUtils.execute(requestRes);
-
             }catch (Exception e){
                 throw new BizException("error!",e);
             }finally {
-                // 移除set key
-                jedisService.getShardedJedis().srem(cacheKeyList,cacheValue);
-
-                //移除 list key
-                queueService.pop(cacheKeyList);
+                //
             }
 
         }

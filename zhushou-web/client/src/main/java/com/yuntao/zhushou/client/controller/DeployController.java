@@ -245,8 +245,9 @@ public class DeployController extends BaseController {
 
     @RequestMapping("autoCompile")
 //    @NeedLogin
-    public ResponseObject autoCompile(final @RequestParam String nickname,final @RequestParam String codeName,
-                                  final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty) {
+    public ResponseObject autoCompile(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
+                                      final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty,
+                                      final @RequestParam List<String> appNames, final @RequestParam("ipList[]") List<String> ipsList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -266,9 +267,21 @@ public class DeployController extends BaseController {
                     String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
+                    //自动发布
+                    for (int i = 0; i < appNames.size(); i++) {
+                        String appName = appNames.get(i);
+                        String ipStr = ipsList.get(i);
+                        String[] ips = ipStr.split(",");
+                        List<String> ipList = Arrays.asList(ips);
+                        while (execRun.get()) {  //已经在运行
+                            Thread.sleep(5000);
+                        }
+                        deploy(userId,nickname,appName,codeName,model,ipList);
+                    }
+                    //end
                 }catch (Exception e){
                     compileResult = false;
-                    throw e;
+                    throw new BizException("auto compile failed!",e);
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
