@@ -407,7 +407,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]下线操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]下线操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
         new Thread(new Runnable() {
@@ -438,7 +438,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]上线操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]上线操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
         new Thread(new Runnable() {
@@ -468,7 +468,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]重启操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]重启操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
         new Thread(new Runnable() {
@@ -498,7 +498,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]debug 重启操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]debug 重启操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
         new Thread(new Runnable() {
@@ -528,7 +528,7 @@ public class DeployController extends BaseController {
             responseObject.setMessage(execMessage);
             return responseObject;
         }
-        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]回滚操作，请稍候";
+        execMessage = nickname+"正在执行["+appName+"]["+model+"]回滚操作，请稍候";
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
 
         new Thread(new Runnable() {
