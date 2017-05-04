@@ -286,7 +286,7 @@ public class DeployController extends BaseController {
                     compileResult = false;
                     throw new BizException("auto compile failed!",e);
                 }finally {
-                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+//                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_END,"自动发布结束");
                     execRun.set(false);  //完成，恢复初始状态
                 }
@@ -482,6 +482,36 @@ public class DeployController extends BaseController {
                 }finally {
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
                     offerExecMsg(userId,appName,model,"重启",Arrays.asList(ipList.split(",")));
+                    execRun.set(false);  //完成，恢复初始状态
+                }
+            }
+        }).start();
+        return responseObject;
+    }
+
+    @RequestMapping("debug")
+    public ResponseObject debug(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
+                                  final @RequestParam("ipList") String ipList) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!execRun.compareAndSet(false,true)){
+            responseObject.setSuccess(false);
+            responseObject.setMessage(execMessage);
+            return responseObject;
+        }
+        execMessage = nickname+"正在执行["+appName+"]["+execModel+"]debug 重启操作，请稍候";
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String cmd = "sh /u01/deploy/script/deploy.sh debug " + appName + " " + ipList;
+                    execShellScript(cmd, "debug");
+                }catch (Exception e){
+                    throw e;
+                }finally {
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                    offerExecMsg(userId,appName,model,"debug重启",Arrays.asList(ipList.split(",")));
                     execRun.set(false);  //完成，恢复初始状态
                 }
             }
