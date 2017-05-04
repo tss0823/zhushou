@@ -179,6 +179,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                     bisLog.error("get compile property json error",e);
                 }
                 requestRes.setParams(params);
+                requestRes.setParamList(paramList);
                 ResponseRes execute = HttpNewUtils.execute(requestRes);
                 byte[] result = execute.getResult();
                 bisLog.info(new String(result));
