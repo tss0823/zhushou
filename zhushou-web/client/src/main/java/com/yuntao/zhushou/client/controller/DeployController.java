@@ -268,6 +268,7 @@ public class DeployController extends BaseController {
                     String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
+                    execRun.set(false);  //完成，恢复初始状态
                     //自动发布
                     for (int i = 0; i < appNames.size(); i++) {
                         String appName = appNames.get(i);
