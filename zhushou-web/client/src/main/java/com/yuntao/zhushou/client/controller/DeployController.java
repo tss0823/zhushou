@@ -144,6 +144,7 @@ public class DeployController extends BaseController {
                 }
                 if(method.equals("branchList")){
                     offerExecInnerMsg(result);
+                    offerExecMsg(result);
                 }else{
                     offerExecMsg(result);
                 }

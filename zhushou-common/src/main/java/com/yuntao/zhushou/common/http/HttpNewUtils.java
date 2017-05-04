@@ -76,7 +76,7 @@ public class HttpNewUtils {
                 }
             }
             //针对 多个一样的name 比如 name[] name[]
-            if(CollectionUtils.isEmpty(paramList)){
+            if(CollectionUtils.isNotEmpty(paramList)){
                 for (HttpParam httpParam : paramList) {
                     nvps.add(new BasicNameValuePair(httpParam.getKey(), httpParam.getValue()));
                 }
