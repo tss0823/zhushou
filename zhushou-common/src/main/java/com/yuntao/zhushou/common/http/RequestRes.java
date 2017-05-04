@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.common.http;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +13,8 @@ public class RequestRes {
     private Map<String,String> headers;
 
     private Map<String,String> params;
+
+    private List<HttpParam> paramList;
 
 
     public String getUrl() {
@@ -36,5 +39,13 @@ public class RequestRes {
 
     public void setParams(Map<String, String> params) {
         this.params = params;
+    }
+
+    public List<HttpParam> getParamList() {
+        return paramList;
+    }
+
+    public void setParamList(List<HttpParam> paramList) {
+        this.paramList = paramList;
     }
 }

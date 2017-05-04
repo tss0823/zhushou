@@ -247,7 +247,7 @@ public class DeployController extends BaseController {
 //    @NeedLogin
     public ResponseObject autoCompile(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
                                       final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty,
-                                      final @RequestParam List<String> appNames, final @RequestParam("ipList[]") List<String> ipsList) {
+                                      final @RequestParam("appNames[]") List<String> appNames, final @RequestParam("ipList[]") List<String> ipsList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -276,7 +276,7 @@ public class DeployController extends BaseController {
                         while (execRun.get()) {  //已经在运行
                             Thread.sleep(5000);
                         }
-                        deploy(userId,nickname,appName,codeName,model,ipList);
+                        deploy(userId,nickname,appName,codeName,model,StringUtils.join(ipList,","));
                     }
                     //end
                 }catch (Exception e){
@@ -302,7 +302,7 @@ public class DeployController extends BaseController {
     @RequestMapping("deploy")
 //    @NeedLogin
     public ResponseObject deploy(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String codeName,
-                                 final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+                                 final @RequestParam String model,final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!compileResult){
             return responseObject;
@@ -329,14 +329,14 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh run,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh run,"+codeName+" "+ appName + " " + ipList;
                     execShellScript(cmd, "deploy");
                 }catch (Exception e){
                     throw e;
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"发布",ipList);
+                    offerExecMsg(userId,appName,model,"发布",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();
@@ -353,7 +353,7 @@ public class DeployController extends BaseController {
      */
     @RequestMapping("deployStatic")
     public ResponseObject deployStatic(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName, final @RequestParam String codeName,
-                                       final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+                                       final @RequestParam String model,final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!compileResult){
             return responseObject;
@@ -380,14 +380,14 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh install,"+codeName+" "+ appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh install,"+codeName+" "+ appName + " " + ipList;
                     execShellScript(cmd, "deployStatic");
                 }catch (Exception e){
                     throw e;
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"静态发布",ipList);
+                    offerExecMsg(userId,appName,model,"静态发布",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();
@@ -396,7 +396,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("stop")
     public ResponseObject stop(final @RequestParam Long userId,String nickname,final @RequestParam String appName,final @RequestParam String model,
-                               final @RequestParam("ipList[]") List<String> ipList) {
+                               final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -410,7 +410,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh stop " + appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh stop " + appName + " " + ipList;
                     execShellScript(cmd, "stop");
 //                    deployExecuteService.stop(user,appName,model,ipList);
                 }catch (Exception e){
@@ -418,7 +418,7 @@ public class DeployController extends BaseController {
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"下线",ipList);
+                    offerExecMsg(userId,appName,model,"下线",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();
@@ -427,7 +427,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("start")
     public ResponseObject start(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
-                                final @RequestParam("ipList[]") List<String> ipList) {
+                                final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -441,14 +441,14 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh start " + appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh start " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 }catch (Exception e){
                     throw e;
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"上线",ipList);
+                    offerExecMsg(userId,appName,model,"上线",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();
@@ -457,7 +457,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("restart")
     public ResponseObject restart(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
-                                  final @RequestParam("ipList[]") List<String> ipList) {
+                                  final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -471,14 +471,14 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh restart " + appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh restart " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 }catch (Exception e){
                     throw e;
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"重启",ipList);
+                    offerExecMsg(userId,appName,model,"重启",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();
@@ -487,7 +487,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("rollback")
     public ResponseObject rollback(final @RequestParam Long userId,@RequestParam String nickname, final @RequestParam String appName,final @RequestParam String model,
-                                   final @RequestParam String backVer, final @RequestParam("ipList[]") List<String> ipList) {
+                                   final @RequestParam String backVer, final @RequestParam("ipList") String ipList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -501,14 +501,14 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try{
-                    String cmd = "sh /u01/deploy/script/deploy.sh rollback," + backVer + " " + appName + " " + StringUtils.join(ipList, ",");
+                    String cmd = "sh /u01/deploy/script/deploy.sh rollback," + backVer + " " + appName + " " + ipList;
                     execShellScript(cmd, "rollback");
                 }catch (Exception e){
                     throw e;
                 }finally {
                     execRun.set(false);  //完成，恢复初始状态
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
-                    offerExecMsg(userId,appName,model,"回滚",ipList);
+                    offerExecMsg(userId,appName,model,"回滚",Arrays.asList(ipList.split(",")));
                 }
             }
         }).start();

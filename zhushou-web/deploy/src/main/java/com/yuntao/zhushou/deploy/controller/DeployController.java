@@ -148,9 +148,7 @@ public class DeployController extends BaseController {
         params.put("appName",appName);
         params.put("codeName",app.getCodeName());
         params.put("model",model);
-        for (String ip : ipList) {
-            params.put("ipList[]",ip);
-        }
+        params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -189,9 +187,7 @@ public class DeployController extends BaseController {
         params.put("appName",appName);
         params.put("codeName",app.getCodeName());
         params.put("model",model);
-        for (String ip : ipList) {
-            params.put("ipList[]",ip);
-        }
+        params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -219,9 +215,7 @@ public class DeployController extends BaseController {
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("model",model);
-        for (String ip : ipList) {
-            params.put("ipList[]",ip);
-        }
+        params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -249,9 +243,7 @@ public class DeployController extends BaseController {
         params.put("nickname",user.getNickName());
         params.put("appName",appName);
         params.put("model",model);
-        for (String ip : ipList) {
-            params.put("ipList[]",ip);
-        }
+        params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -281,9 +273,7 @@ public class DeployController extends BaseController {
         params.put("appName",appName);
         params.put("model",model);
         params.put("backVer",backVer);
-        for (String ip : ipList) {
-            params.put("ipList[]",ip);
-        }
+        params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());

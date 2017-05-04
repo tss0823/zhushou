@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.common.http;
 
 import com.yuntao.zhushou.common.utils.ExceptionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -64,16 +65,26 @@ public class HttpNewUtils {
             }
         }
         Map<String, String> params = requestRes.getParams();
+        List<HttpParam> paramList = requestRes.getParamList();
         try{
 
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
             if (MapUtils.isNotEmpty(params)) {
-                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
                 Set<Map.Entry<String, String>> paramEntrySet = params.entrySet();
                 for (Map.Entry<String, String> paramEntry : paramEntrySet) {
                     nvps.add(new BasicNameValuePair(paramEntry.getKey(), paramEntry.getValue()));
                 }
+            }
+            //针对 多个一样的name 比如 name[] name[]
+            if(CollectionUtils.isEmpty(paramList)){
+                for (HttpParam httpParam : paramList) {
+                    nvps.add(new BasicNameValuePair(httpParam.getKey(), httpParam.getValue()));
+                }
+            }
+            if(CollectionUtils.isNotEmpty(nvps)){
                 httpPost.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
             }
+
             log.info("执行 http "+requestRes.getUrl());
             CloseableHttpResponse response = httpclient.execute(httpPost);
             int status = response.getStatusLine().getStatusCode();

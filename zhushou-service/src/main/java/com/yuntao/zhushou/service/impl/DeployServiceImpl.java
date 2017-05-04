@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.cache.QueueService;
 import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
+import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.model.domain.*;
@@ -144,6 +145,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 RequestRes requestRes = new RequestRes();
                 requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/autoCompile");
                 Map<String,String> params = new HashMap<>();
+                List<HttpParam> paramList = new ArrayList<>();
                 params.put("userId",autoDeployVo.getUserId().toString());
                 params.put("nickname",autoDeployVo.getNickname());
                 params.put("codeName",app.getCodeName());
@@ -152,6 +154,8 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 String autoDeployAppName = configService.getValueByName(autoDeployVo.getCompanyId(), "autoDeployAppName");
                 String[] autoDeployAppNameStrs = autoDeployAppName.split(",");
                 for (String autoDeployAppNameStr : autoDeployAppNameStrs) {
+                    HttpParam httpParam = new HttpParam("appNames[]", autoDeployAppNameStr);
+                    paramList.add(httpParam);
                     params.put("appNames[]",autoDeployAppNameStr);
                     App thisApp = appService.findByName(autoDeployVo.getCompanyId(), autoDeployAppNameStr);
                     //get ipList
@@ -160,7 +164,8 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                     for (Host host : hostList) {
                         ipList.add(host.getEth0());
                     }
-                    params.put("ipsList[]",StringUtils.join(ipList,","));
+                    httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, ","));
+                    paramList.add(httpParam);
                 }
                 //end
                 String compilePropertyJson = app.getCompileProperty();
