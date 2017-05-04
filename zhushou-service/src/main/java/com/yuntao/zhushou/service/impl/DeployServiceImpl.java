@@ -135,7 +135,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 }
                 continue;
             }
-            if (deployState.compareAndSet(false, true)) {  //未结束
+            if (!deployState.compareAndSet(false, true)) {  //未结束
                 continue;
             }
             //
