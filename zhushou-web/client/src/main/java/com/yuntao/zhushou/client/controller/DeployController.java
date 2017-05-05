@@ -213,7 +213,7 @@ public class DeployController extends BaseController {
     @RequestMapping("compile")
 //    @NeedLogin
     public ResponseObject compile(final @RequestParam String nickname,final @RequestParam String codeName,
-                                  final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty) {
+                                  final @RequestParam String branch,final @RequestParam String model,final @RequestParam(required = false) String compileProperty) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -247,7 +247,7 @@ public class DeployController extends BaseController {
     @RequestMapping("autoCompile")
 //    @NeedLogin
     public ResponseObject autoCompile(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
-                                      final @RequestParam String branch,final @RequestParam String model,final @RequestParam String compileProperty,
+                                      final @RequestParam String branch,final @RequestParam String model,final @RequestParam(required = false) String compileProperty,
                                       final @RequestParam("appNames[]") List<String> appNames, final @RequestParam("ipList[]") List<String> ipsList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
