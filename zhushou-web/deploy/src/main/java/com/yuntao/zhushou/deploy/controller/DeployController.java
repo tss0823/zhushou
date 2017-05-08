@@ -195,6 +195,34 @@ public class DeployController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("start")
+    @NeedLogin
+    public ResponseObject start(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
+
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/start");
+        Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
+        params.put("nickname",user.getNickName());
+        params.put("appName",appName);
+        params.put("model",model);
+        params.put("ipList",StringUtils.join(ipList,","));
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
+        return responseObject;
+    }
+
     @RequestMapping("stop")
     @NeedLogin
     public ResponseObject stop(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {

@@ -100,7 +100,7 @@
                     {{if model == "test"}}
 					<button class="btn btn-xs btn-pink" data="{{bean.eth0}}" id="btnSingleDebug">调式</button>
 					{{/if}}
-					<button class="btn btn-xs btn-danger" data="{{bean.eth0}}" id="btnSingleStop">下线</button>
+					<button class="btn btn-xs btn-danger" data="{{bean.eth0}}" state="-1" id="btnSingleStartAndStop">上线OR下线</button>
 					<button class="btn btn-xs btn-info" data="{{bean.eth0}}" id="btnSingleRollback">回滚</button>
 
 					{{if appName == "web" || appName == "bos"}}

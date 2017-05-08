@@ -82,10 +82,18 @@
                     YT.deploy.appHost.debug(ip);
                 });
             });
-            $("button[id='btnSingleStop']").each(function(index,item){
+            $("button[id='btnSingleStartAndStop']").each(function(index,item){
                 $(this).click(function() {
                     var ip = $(item).attr("data");
-                    YT.deploy.appHost.stop(ip);
+                    var state = $(item).attr("state");
+                    if(state == 0){  //当前下线状态
+                        YT.deploy.appHost.start(ip,state);
+                    }else if(state == 1){ //当前上线状态
+                        YT.deploy.appHost.stop(ip,state);
+                    }else{  //禁止点击
+                        alert("当前状态不可用");
+                        return;
+                    }
                 });
             });
             //
@@ -118,6 +126,19 @@
                 $tdServerStatusText.css("color",statHostObj.color);
                 $tdServerStatusText.html(statHostObj.text);
                 $tdServerStatusText.attr("title",statHostObj.error);
+
+                //上线，下线buuton 显示
+                var state = 0;
+                var btnText = "上线";
+                if(statHostObj.text == "OK"){
+                    state = 1;
+                    btnText = "下线";
+                }
+                // $("#btnSingleStartAndStop").attr("disabled",false);
+                $("#btnSingleStartAndStop").val(btnText);
+                $("#btnSingleStartAndStop").attr("state",state);
+
+
             });
             //end
         },
@@ -447,6 +468,20 @@
             });
 
         },
+        start: function (ip) {
+            var appName = YT.deploy.appHost.appName;
+            var model = YT.deploy.appHost.model;
+            if (!confirm("您确认要上线【 " + appName + " 】 > " + model + " 吗？")) {
+                return;
+            }
+            var param = {appName: appName, model: model, ipList: [ip]};
+            YT.deploy.appHost.writeMsg("执行上线开始,请稍等...\r\n", true);
+            YT.deploy.util.reqPost("/deploy/start", param, function (d) {
+                //打印消息
+                // interval = window.setInterval(YT.deploy.appHost.printMsg, 300);
+            });
+        },
+
         stop: function (ip) {
             var appName = YT.deploy.appHost.appName;
             var model = YT.deploy.appHost.model;
