@@ -478,6 +478,8 @@
             YT.deploy.util.reqPost("/deploy/start", param, function (d) {
                 //打印消息
                 // interval = window.setInterval(YT.deploy.appHost.printMsg, 300);
+                YT.deploy.routeStackProcess.refresh();
+
             });
         },
 
@@ -492,6 +494,7 @@
             YT.deploy.util.reqPost("/deploy/stop", param, function (d) {
                 //打印消息
                 // interval = window.setInterval(YT.deploy.appHost.printMsg, 300);
+                YT.deploy.routeStackProcess.refresh();
             });
 
         },

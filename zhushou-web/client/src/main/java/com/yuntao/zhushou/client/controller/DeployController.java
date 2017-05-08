@@ -130,7 +130,8 @@ public class DeployController extends BaseController {
         BufferedReader reader = null;
         InputStream is = null;
         try {
-            offerExecMsg(cmd);
+//            offerExecMsg(cmd);
+            bisLog.info(cmd);
             ProcessBuilder pb = new ProcessBuilder("bash", "-c", cmd);
             pb.redirectErrorStream(true);
             process = pb.start();
