@@ -31,24 +31,24 @@
 
 
             //app table row  server status check
-            $("#tbContentApp").find("tr").each(function (index, item) {
-                var appName = $(item).find("td:first").attr("appName");
-                var serverAppStatus = appData.serverStatus[appName];
-                if(!serverAppStatus){
-                    return false;
-                }
-                var statAppObj = serverAppStatus["total"];
-                if(!statAppObj){
-                    return false;
-                }
-
-                //回显ui
-                var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
-                $tdServerStatusText.css("color",statAppObj.color);
-                $tdServerStatusText.html(statAppObj.text);
-                $tdServerStatusText.attr("title",statAppObj.text);
-
-            });
+            // $("#tbContentApp").find("tr").each(function (index, item) {
+            //     var appName = $(item).find("td:first").attr("appName");
+            //     var serverAppStatus = appData.serverStatus[appName];
+            //     if(!serverAppStatus){
+            //         return false;
+            //     }
+            //     var statAppObj = serverAppStatus["total"];
+            //     if(!statAppObj){
+            //         return false;
+            //     }
+            //
+            //     //回显ui
+            //     var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+            //     $tdServerStatusText.css("color",statAppObj.color);
+            //     $tdServerStatusText.html(statAppObj.text);
+            //     $tdServerStatusText.attr("title",statAppObj.text);
+            //
+            // });
             //end
 
 

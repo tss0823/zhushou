@@ -221,6 +221,19 @@
                     $tdServerStatusText.css("color",color);
                     $tdServerStatusText.html("<strong>"+text+"</strong>");
                     $tdServerStatusText.attr("title",errMsg);
+
+                    //上线，下线button 显示
+                    var state = 0;
+                    var btnText = "上线";
+                    if(text == "OK"){
+                        state = 1;
+                        btnText = "下线";
+                    }
+                    // $("#btnSingleStartAndStop").attr("disabled",false);
+                    $("#btnSingleStartAndStop").html(btnText);
+                    $("#btnSingleStartAndStop").attr("state",state);
+
+
                     
                 });
                 //end

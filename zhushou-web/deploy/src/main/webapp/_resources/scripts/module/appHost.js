@@ -109,37 +109,36 @@
             YT.deploy.appHost.refreshBranch(false);
 
             //host table row server check status
-            var statAppObj = appData.serverStatus[appName];
-            $("#tbContentHost").find("tr").each(function (index, item) {
-                debugger;
-                if(!statAppObj){
-                    return false;
-                }
-                var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
-                var hostName = $tdServerStatusText.attr("data");
-                var statHostObj = statAppObj[hostName];
-                if(!statHostObj){
-                    return;
-                }
-
-                //回显ui
-                $tdServerStatusText.css("color",statHostObj.color);
-                $tdServerStatusText.html(statHostObj.text);
-                $tdServerStatusText.attr("title",statHostObj.error);
-
-                //上线，下线button 显示
-                var state = 0;
-                var btnText = "上线";
-                if(statHostObj.text == "OK"){
-                    state = 1;
-                    btnText = "下线";
-                }
-                // $("#btnSingleStartAndStop").attr("disabled",false);
-                $("#btnSingleStartAndStop").html(btnText);
-                $("#btnSingleStartAndStop").attr("state",state);
-
-
-            });
+            // var statAppObj = appData.serverStatus[appName];
+            // $("#tbContentHost").find("tr").each(function (index, item) {
+            //     if(!statAppObj){
+            //         return false;
+            //     }
+            //     var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
+            //     var hostName = $tdServerStatusText.attr("data");
+            //     var statHostObj = statAppObj[hostName];
+            //     if(!statHostObj){
+            //         return;
+            //     }
+            //
+            //     //回显ui
+            //     $tdServerStatusText.css("color",statHostObj.color);
+            //     $tdServerStatusText.html(statHostObj.text);
+            //     $tdServerStatusText.attr("title",statHostObj.error);
+            //
+            //     //上线，下线button 显示
+            //     var state = 0;
+            //     var btnText = "上线";
+            //     if(statHostObj.text == "OK"){
+            //         state = 1;
+            //         btnText = "下线";
+            //     }
+            //     // $("#btnSingleStartAndStop").attr("disabled",false);
+            //     $("#btnSingleStartAndStop").html(btnText);
+            //     $("#btnSingleStartAndStop").attr("state",state);
+            //
+            //
+            // });
             //end
         },
     });
