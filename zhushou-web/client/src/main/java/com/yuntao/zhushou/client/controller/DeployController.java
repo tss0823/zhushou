@@ -130,8 +130,11 @@ public class DeployController extends BaseController {
         BufferedReader reader = null;
         InputStream is = null;
         try {
-//            offerExecMsg(cmd);
-            bisLog.info(cmd);
+            if(!StringUtils.equals(method,"compile")){  //编译的时候不要暴露maven prop 参数
+                offerExecMsg(cmd);
+            }else{
+                bisLog.info(cmd);
+            }
             ProcessBuilder pb = new ProcessBuilder("bash", "-c", cmd);
             pb.redirectErrorStream(true);
             process = pb.start();
