@@ -24,7 +24,7 @@
             //刷新分支
             $("#btnRefreshBranch").click(function () {
                 $(this).html("刷新中..");
-                $(this).prop("disabled",true);
+                $(this).attr("disabled",true);
                 // document.getElementById("btnRefreshBranch").disabled = true;
                 YT.deploy.appHost.refreshBranch(true);
                 // $(this).html("刷新分支");
@@ -111,7 +111,7 @@
             //host table row server check status
             var statAppObj = appData.serverStatus[appName];
             $("#tbContentHost").find("tr").each(function (index, item) {
-                // debugger;
+                debugger;
                 if(!statAppObj){
                     return false;
                 }
@@ -125,9 +125,9 @@
                 //回显ui
                 $tdServerStatusText.css("color",statHostObj.color);
                 $tdServerStatusText.html(statHostObj.text);
-                $tdServerStatusText.prop("title",statHostObj.error);
+                $tdServerStatusText.attr("title",statHostObj.error);
 
-                //上线，下线buuton 显示
+                //上线，下线button 显示
                 var state = 0;
                 var btnText = "上线";
                 if(statHostObj.text == "OK"){
@@ -135,8 +135,8 @@
                     btnText = "下线";
                 }
                 // $("#btnSingleStartAndStop").attr("disabled",false);
-                $("#btnSingleStartAndStop").prop("value",btnText);
-                $("#btnSingleStartAndStop").prop("state",state);
+                $("#btnSingleStartAndStop").html(btnText);
+                $("#btnSingleStartAndStop").attr("state",state);
 
 
             });
