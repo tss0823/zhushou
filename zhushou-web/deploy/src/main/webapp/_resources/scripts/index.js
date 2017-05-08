@@ -207,13 +207,11 @@
                     var errMsg = hostStatusMsg["message"];
                     //set to appData
 
-                    var statObj = {};
-                    if(appData.serverStatus[appName] ){
-                        statObj = appData.serverStatus[appName][hostName] ;
-                    }else{
+                    // var statObj = {};
+                    if(!appData.serverStatus[appName] ){
                         appData.serverStatus[appName] = {};
                     }
-                    statObj = {color:color,text:text,error:errMsg};
+                    var statObj = {color:color,text:text,error:errMsg};
                     appData.serverStatus[appName][hostName] = statObj;
                     //end
                     
@@ -230,8 +228,8 @@
                         btnText = "下线";
                     }
                     // $("#btnSingleStartAndStop").attr("disabled",false);
-                    $("#btnSingleStartAndStop").html(btnText);
-                    $("#btnSingleStartAndStop").attr("state",state);
+                    $("button[id='btnSingleStartAndStop']").html(btnText);
+                    $("button[id='btnSingleStartAndStop']").attr("state",state);
 
 
                     

@@ -65,12 +65,16 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             String ref = jsonObject.getString("ref");
             int index = ref.lastIndexOf("/");
             String branch = ref.substring(index + 1);
+            if(StringUtils.equals(branch,"master")){  //主干不处理
+                return;
+            }
 //            System.out.println("branch="+branch);
 //            System.out.println("ref="+jsonObject.getString("ref"));
             String name= jsonObject.getJSONObject("project").getString("name");  //git 名称预留
             String url= jsonObject.getJSONObject("project").getString("url");
             JSONArray commits = jsonObject.getJSONArray("commits");
             JSONObject commitsJSONObject = commits.getJSONObject(0);
+            String message = commitsJSONObject.getString("message");
             JSONObject authorJsonObject = commitsJSONObject.getJSONObject("author");
             String userName = authorJsonObject.getString("name");
             String email = authorJsonObject.getString("email");
