@@ -24,7 +24,7 @@
             //刷新分支
             $("#btnRefreshBranch").click(function () {
                 $(this).html("刷新中..");
-                $(this).attr("disabled",true);
+                $(this).prop("disabled",true);
                 // document.getElementById("btnRefreshBranch").disabled = true;
                 YT.deploy.appHost.refreshBranch(true);
                 // $(this).html("刷新分支");
@@ -125,7 +125,7 @@
                 //回显ui
                 $tdServerStatusText.css("color",statHostObj.color);
                 $tdServerStatusText.html(statHostObj.text);
-                $tdServerStatusText.attr("title",statHostObj.error);
+                $tdServerStatusText.prop("title",statHostObj.error);
 
                 //上线，下线buuton 显示
                 var state = 0;
@@ -135,8 +135,8 @@
                     btnText = "下线";
                 }
                 // $("#btnSingleStartAndStop").attr("disabled",false);
-                $("#btnSingleStartAndStop").val(btnText);
-                $("#btnSingleStartAndStop").attr("state",state);
+                $("#btnSingleStartAndStop").prop("value",btnText);
+                $("#btnSingleStartAndStop").prop("state",state);
 
 
             });
