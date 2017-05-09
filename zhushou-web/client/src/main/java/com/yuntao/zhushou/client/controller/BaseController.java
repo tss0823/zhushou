@@ -26,7 +26,7 @@ public class BaseController {
     @ExceptionHandler
     @ResponseBody
     public ResponseObject resolveException(HttpServletRequest request, Exception ex) {
-        bisLog.error("system error",ex);
+        log.error("system error",ex);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setSuccess(false);
         responseObject.setMessage(ex.getMessage());

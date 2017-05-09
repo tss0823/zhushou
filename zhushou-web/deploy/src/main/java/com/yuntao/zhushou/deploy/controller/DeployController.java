@@ -97,6 +97,7 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/compile");
         Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
         params.put("codeName",app.getCodeName());
         params.put("branch",branch);

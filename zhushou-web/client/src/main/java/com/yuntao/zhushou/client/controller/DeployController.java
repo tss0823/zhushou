@@ -216,7 +216,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("compile")
 //    @NeedLogin
-    public ResponseObject compile(final @RequestParam String nickname,final @RequestParam String codeName,
+    public ResponseObject compile(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
                                   final @RequestParam String branch,final @RequestParam String model,final @RequestParam(required = false) String compileProperty) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
@@ -238,6 +238,7 @@ public class DeployController extends BaseController {
                     compileResult = true;
                 }catch (Exception e){
                     compileResult = false;
+                    offerExecMsg(userId,"member",model,"编译","member");
                     throw e;
                 }finally {
                     cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
@@ -288,6 +289,7 @@ public class DeployController extends BaseController {
                     //end
                 }catch (Exception e){
                     compileResult = false;
+                    offerExecMsg(userId,"member",model,"编译","member");
                     throw new BizException("auto compile failed!",e);
                 }finally {
 //                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
