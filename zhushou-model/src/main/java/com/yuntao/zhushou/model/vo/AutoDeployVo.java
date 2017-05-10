@@ -27,6 +27,8 @@ public class AutoDeployVo implements Serializable {
 
     private String url;
 
+    private String message;
+
     public Long getUserId() {
         return userId;
     }
@@ -105,5 +107,13 @@ public class AutoDeployVo implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

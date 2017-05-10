@@ -252,8 +252,9 @@ public class DeployController extends BaseController {
     @RequestMapping("autoCompile")
 //    @NeedLogin
     public ResponseObject autoCompile(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
-                                      final @RequestParam String branch,final @RequestParam String model,final @RequestParam(required = false) String compileProperty,
-                                      final @RequestParam("appNames[]") List<String> appNames, final @RequestParam("ipList[]") List<String> ipsList) {
+                                      final @RequestParam String branch,final @RequestParam String model,final @RequestParam(required = false) String comment,
+                                      final @RequestParam(required = false) String compileProperty, final @RequestParam("appNames[]") List<String> appNames,
+                                      final @RequestParam("ipList[]") List<String> ipsList) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         if(!execRun.compareAndSet(false,true)){
             responseObject.setSuccess(false);
@@ -262,7 +263,11 @@ public class DeployController extends BaseController {
         }
 //        final User user = userService.getCurrentUser();
         execModel = model;
-        execMessage = nickname+"正在执行["+branch+"]["+execModel+"][自动]编译操作，请稍候";
+        String commentMsg = "";
+        if(StringUtils.isNotEmpty(comment)){
+            commentMsg = ",变更内容["+comment+"]";
+        }
+        execMessage = nickname+"正在执行["+branch+"]["+execModel+"][自动]编译操作"+commentMsg+"，请稍候";
 
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
         cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_START,"自动发布开始");
@@ -290,6 +295,7 @@ public class DeployController extends BaseController {
                 }catch (Exception e){
                     compileResult = false;
                     offerExecMsg(userId,"member",model,"编译","member");
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"编译失败");
                     throw new BizException("auto compile failed!",e);
                 }finally {
 //                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");

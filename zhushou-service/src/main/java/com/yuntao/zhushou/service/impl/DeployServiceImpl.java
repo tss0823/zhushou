@@ -99,6 +99,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             autoDeployVo.setModel("test");  //写死test
             autoDeployVo.setBranch(branch);
             autoDeployVo.setCommits(commitsJSONObject.toString());
+            autoDeployVo.setMessage(message);
 
            boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
             if(!sismember){
@@ -195,6 +196,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 }catch (Exception e){
                     bisLog.error("get compile property json error",e);
                 }
+                params.put("comment",autoDeployVo.getMessage());
                 requestRes.setParams(params);
                 requestRes.setParamList(paramList);
                 ResponseRes execute = HttpNewUtils.execute(requestRes);
