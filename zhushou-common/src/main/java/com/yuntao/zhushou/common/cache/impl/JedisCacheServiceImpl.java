@@ -182,7 +182,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisSe
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {
-//            shardedJedisPool.returnResource(jedis);
+            shardedJedisPool.returnResource(jedis);
         }
     }
 
