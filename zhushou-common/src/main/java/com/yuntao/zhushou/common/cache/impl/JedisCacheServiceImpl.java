@@ -168,6 +168,12 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisSe
     }
 
     @Override
+    public String getKey(String key) {
+        key = namespace+"_"+key;
+        return key;
+    }
+
+    @Override
     public ShardedJedis getShardedJedis() {
         ShardedJedis jedis = null;
         try{
@@ -176,7 +182,12 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisSe
         }catch (Exception e){
             throw new RuntimeException(e);
         }finally {
-            shardedJedisPool.returnResource(jedis);
+//            shardedJedisPool.returnResource(jedis);
         }
+    }
+
+    @Override
+    public void returnResource(ShardedJedis jedis) {
+        shardedJedisPool.returnResource(jedis);
     }
 }

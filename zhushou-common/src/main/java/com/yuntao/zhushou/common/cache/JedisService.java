@@ -7,6 +7,9 @@ import redis.clients.jedis.ShardedJedis;
  */
 public interface JedisService {
 
+    String getKey(String key);
 
     ShardedJedis getShardedJedis();
+
+    void returnResource(ShardedJedis jedis);
 }

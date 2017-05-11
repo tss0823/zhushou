@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.ShardedJedis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
     @Override
     public void autoDeploy(String json) {
+        ShardedJedis shardedJedis = null;
         //analyse json
         try{
             JSONObject jsonObject = new JSONObject(json);
@@ -101,10 +103,13 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             autoDeployVo.setCommits(commitsJSONObject.toString());
             autoDeployVo.setMessage(message);
 
-           boolean sismember = jedisService.getShardedJedis().sismember(CacheConstant.Deploy.autoDeplyList, cacheValue);
+
+            String cacheKey = jedisService.getKey(CacheConstant.Deploy.autoDeplyList);
+            shardedJedis = jedisService.getShardedJedis();
+            boolean sismember = shardedJedis.sismember(cacheKey, cacheValue);
             if(!sismember){
                 //add to set
-                jedisService.getShardedJedis().sadd(CacheConstant.Deploy.autoDeplyList,cacheValue);
+                shardedJedis.sadd(cacheKey,cacheValue);
 
                 //add to queue
                 String jsonValue = JsonUtils.object2Json(autoDeployVo);
@@ -114,24 +119,29 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
         }catch (Exception e){
             throw new BizException("error!",e);
+        }finally {
+            jedisService.returnResource(shardedJedis);
         }
     }
 
     @Override
     public void autoDeployTask() {
         //清空所有
-        String cacheKeyList = CacheConstant.Deploy.autoDeplyList;
-        Long count = jedisService.getShardedJedis().scard(cacheKeyList);
+        ShardedJedis shardedJedis = jedisService.getShardedJedis();
+        String cacheKeyList = jedisService.getKey(CacheConstant.Deploy.autoDeplyList);
+        Long count = shardedJedis.scard(cacheKeyList);
         if(count > 0){
-           jedisService.getShardedJedis().spop(cacheKeyList,count);
+           shardedJedis.spop(cacheKeyList,count);
 //           count = jedisService.getShardedJedis().scard(cacheKeyList);
         }
-        while (StringUtils.isNotEmpty(queueService.pop(cacheKeyList))){
+        jedisService.returnResource(shardedJedis);
+        while (StringUtils.isNotEmpty(queueService.pop(CacheConstant.Deploy.autoDeplyList))){
         }
 
         //take task from queue
         while(true){
-            String value = queueService.peek(cacheKeyList);
+            shardedJedis = jedisService.getShardedJedis();
+            String value = queueService.peek(CacheConstant.Deploy.autoDeplyList);
             //value为空或者正在执行
             if(StringUtils.isEmpty(value)){
                 try {
@@ -150,10 +160,10 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 cacheValue = autoDeployVo.getCompanyId() +"_"+ autoDeployVo.getAppName()+"_"+autoDeployVo.getBranch();
 
                 // 移除set key
-                jedisService.getShardedJedis().srem(cacheKeyList,cacheValue);
+                shardedJedis.srem(cacheKeyList,cacheValue);
 
                 // 移除list key
-                queueService.pop(cacheKeyList);
+                queueService.pop(CacheConstant.Deploy.autoDeplyList);
 
                 //get app
                 App app = appService.findByName(autoDeployVo.getCompanyId(),autoDeployVo.getAppName());
@@ -207,6 +217,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 throw new BizException("error!",e);
             }finally {
                 //
+                jedisService.returnResource(shardedJedis);
             }
 
         }
