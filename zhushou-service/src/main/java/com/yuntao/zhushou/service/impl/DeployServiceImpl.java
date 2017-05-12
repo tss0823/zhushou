@@ -130,11 +130,11 @@ public class DeployServiceImpl extends AbstService implements DeployService {
         ShardedJedis shardedJedis = jedisService.getShardedJedis();
         String cacheKeyList = jedisService.getKey(CacheConstant.Deploy.autoDeplyList);
         Long count = shardedJedis.scard(cacheKeyList);
-        if(count != null && count > 0){
+        if(count > 0){
            shardedJedis.spop(cacheKeyList,count);
 //           count = jedisService.getShardedJedis().scard(cacheKeyList);
         }
-//        jedisService.returnResource(shardedJedis);
+        jedisService.returnResource(shardedJedis);
         while (StringUtils.isNotEmpty(queueService.pop(CacheConstant.Deploy.autoDeplyList))){
         }
 
@@ -217,7 +217,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 throw new BizException("error!",e);
             }finally {
                 //
-//                jedisService.returnResource(shardedJedis);
+                jedisService.returnResource(shardedJedis);
             }
 
         }
