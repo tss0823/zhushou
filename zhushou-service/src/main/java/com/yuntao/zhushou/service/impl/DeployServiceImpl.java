@@ -82,9 +82,18 @@ public class DeployServiceImpl extends AbstService implements DeployService {
 
             //自动发布人员
             User user = userService.getByEmail(email);
+            if(user == null){ //没有配置用户
+                return;
+            }
             //call remote method
             Long companyId = user.getCompanyId();
 
+            String autoDeployParam = configService.getValueByName(companyId, "autoDeployParam");
+            JSONObject autoDeployParamJsonObj = new JSONObject(autoDeployParam);
+            String appNames = autoDeployParamJsonObj.getString(branch);
+            if(StringUtils.isEmpty(appNames)){  //该分支没有配置自动发布
+                return;
+            }
             String cacheValue = companyId +"_"+ appName +"_"+branch;
 
             AutoDeployVo autoDeployVo = new AutoDeployVo();
@@ -96,6 +105,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
             autoDeployVo.setUserName(userName);
             autoDeployVo.setEmail(email);
             autoDeployVo.setAppName(appName);  //写死member
+            autoDeployVo.setAutoAppNames(appNames);
             autoDeployVo.setModel("test");  //写死test
             autoDeployVo.setBranch(branch);
             autoDeployVo.setCommits(commitsJSONObject.toString());
@@ -170,7 +180,7 @@ public class DeployServiceImpl extends AbstService implements DeployService {
                 params.put("codeName",app.getCodeName());
                 params.put("branch",autoDeployVo.getBranch());
                 params.put("model",autoDeployVo.getModel());
-                String autoDeployAppName = configService.getValueByName(autoDeployVo.getCompanyId(), "autoDeployAppName");
+                String autoDeployAppName = autoDeployVo.getAutoAppNames();
                 String[] autoDeployAppNameStrs = autoDeployAppName.split(",");
                 for (String autoDeployAppNameStr : autoDeployAppNameStrs) {
                     HttpParam httpParam = new HttpParam("appNames[]", autoDeployAppNameStr);

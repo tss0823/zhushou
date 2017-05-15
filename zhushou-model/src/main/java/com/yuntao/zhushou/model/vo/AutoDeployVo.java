@@ -29,6 +29,8 @@ public class AutoDeployVo implements Serializable {
 
     private String message;
 
+    private String autoAppNames;
+
     public Long getUserId() {
         return userId;
     }
@@ -115,5 +117,13 @@ public class AutoDeployVo implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getAutoAppNames() {
+        return autoAppNames;
+    }
+
+    public void setAutoAppNames(String autoAppNames) {
+        this.autoAppNames = autoAppNames;
     }
 }
