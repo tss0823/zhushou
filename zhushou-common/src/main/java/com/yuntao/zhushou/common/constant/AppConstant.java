@@ -35,8 +35,8 @@ public interface AppConstant {
     }
 
     interface Aliyun{
-        String KEY = "LTAINYZHsqPLGKju";
-        String SECRET = "9UMnWw0eXXaZgaJuOiNoJYGXHAwv0y";
+        String KEY = "LTAISXWFlr743FSR";
+        String SECRET = "vbBhkCV5mcQdrGSR3XyvFd7bpU0rRX";
     }
     interface deploy{
         String frontBuildPath = "/u01/output/front/";

@@ -2,15 +2,19 @@ package com.yuntao.zhushou.service.support.aliyun;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.HttpResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.aliyuncs.rds.model.v20140815.DescribeBinlogFilesRequest;
+import com.aliyuncs.rds.model.v20140815.DescribeBinlogFilesResponse;
 import com.aliyuncs.slb.model.v20140515.AddBackendServersRequest;
 import com.aliyuncs.slb.model.v20140515.RemoveBackendServersRequest;
 import com.yuntao.zhushou.common.constant.AppConstant;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +23,8 @@ import java.util.Map;
 @Component
 public class SlbServerReloadService {
 
-    IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", AppConstant.Aliyun.KEY, AppConstant.Aliyun.SECRET);
-    IAcsClient client = new DefaultAcsClient(profile);
+    static IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", AppConstant.Aliyun.KEY, AppConstant.Aliyun.SECRET);
+    static IAcsClient client = new DefaultAcsClient(profile);
 
     private Map<String,String> serverMap = new HashMap<>();
     {
@@ -59,5 +63,31 @@ public class SlbServerReloadService {
         }catch (Exception e) {
             throw new RuntimeException("添加节点失败",e);
         }
+    }
+
+    public static void main(String[] args) {
+//        DescribeInstancesRequest describe = new DescribeInstancesRequest();
+        DescribeBinlogFilesRequest request = new DescribeBinlogFilesRequest();
+        request.setDBInstanceId("rm-bp128xoehj28o314y");
+        request.setStartTime("2017-05-15T08:00:00Z");
+        request.setEndTime("2017-05-16T23:00:00Z");
+        try {
+//            DescribeInstancesResponse response = client.getAcsResponse(request);
+            DescribeBinlogFilesResponse response = client.getAcsResponse(request);
+            System.out.println(response);
+            List<DescribeBinlogFilesResponse.BinLogFile> items = response.getItems();
+            for (DescribeBinlogFilesResponse.BinLogFile item : items) {
+                String downloadLink = item.getDownloadLink();
+                String logBeginTime = item.getLogBeginTime();
+                String logEndTime = item.getLogEndTime();
+                System.out.println();
+                System.out.println("startTime="+logBeginTime+",endTime="+logEndTime);
+                System.out.println(downloadLink);
+            }
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

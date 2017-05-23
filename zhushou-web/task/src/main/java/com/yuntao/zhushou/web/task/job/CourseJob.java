@@ -16,10 +16,20 @@ public class CourseJob extends  BaseJob {
     /**
      * 每天凌晨00:01始执行
      */
-    @Scheduled(cron = "0 1 0 *0 * ?")
-    public void execute() {
-//        courseService.startAndEndTask();
+//    @Scheduled(cron = "0 1 0 *0 * ?")
+//    public void execute() {
+////        courseService.startAndEndTask();
+//    }
+
+    /**
+     * 每5分钟执行一次
+     */
+    @Scheduled(cron = "0 0/5 0 * * ?")
+    public void checkErrorLog() {
+
     }
+
+
 
 
 

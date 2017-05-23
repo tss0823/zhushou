@@ -79,7 +79,15 @@
             </td>
             <td>{{bean.batchNo}}</td>
             <td>{{bean.message}}</td>
-            <td>{{bean.status}}</td>
+            <td>
+            {{if bean.success == false }}
+            <div><strong style="color:red">{{bean.status}}</strong></div>
+            {{/if}}
+            {{if bean.success == true }}
+            <div><strong style="color:green">{{bean.status}}</strong></div>
+            {{/if}}
+            </td>
+            <!--<td>{{bean.status}}</td>-->
             <td>{{bean.takeTime}}</td>
             <td>
                 <button class="btn btn-xs btn-default" data="{{bean.id}}" id="btnMore">详细</button>
