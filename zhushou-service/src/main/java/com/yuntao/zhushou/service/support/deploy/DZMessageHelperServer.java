@@ -286,7 +286,7 @@ public class DZMessageHelperServer  {
                 responseObject.setType(MsgConstant.ReqResType.USER);  //发送给用户端
                 responseObject.setBizType(requestObject.getBizType());
                 responseObject.setCode(MsgConstant.ResponseCode.NORMAL);
-                responseObject.setKey(fTWebSocket.getCpKey());
+                responseObject.setKey(requestObject.getKey());
                 responseObject.setUserId(fTWebSocket.getUserId());
                 responseObject.setData(requestObject.getMessage());
                 this.offerSendMsg(responseObject);
@@ -294,7 +294,7 @@ public class DZMessageHelperServer  {
 //                queueService.add(listKey, resMsg);
             }
 
-        } else if (StringUtils.equals(requestObject.getType(), MsgConstant.ReqResType.USER)) { //用户
+        } else if (StringUtils.equals(requestObject.getType(), MsgConstant.ReqResType.USER)) { //用户,从客户端传过来，写在js中的json
             //客户端第一次打开
             if (StringUtils.equals(requestObject.getBizType(), MsgConstant.ReqUserBizType.INIT)) {
 

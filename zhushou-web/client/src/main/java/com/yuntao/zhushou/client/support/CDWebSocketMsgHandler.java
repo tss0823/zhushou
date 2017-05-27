@@ -1,14 +1,10 @@
 package com.yuntao.zhushou.client.support;
 
-import com.yuntao.zhushou.common.constant.CacheConstant;
 import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
-import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.common.utils.SystemUtils;
 import com.yuntao.zhushou.common.web.MsgRequestObject;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
-import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.web.ws.AppObject;
 import com.yuntao.zhushou.common.web.ws.HostObject;
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -112,6 +106,7 @@ public class CDWebSocketMsgHandler implements InitializingBean {
      */
     public void offerMsg(String bizType, String message) {
         MsgRequestObject requestObject = new MsgRequestObject();
+        requestObject.setKey(key);
         requestObject.setType(MsgConstant.ReqResType.CORE);
         requestObject.setBizType(bizType);
         requestObject.setMessage(message);
