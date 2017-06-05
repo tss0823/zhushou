@@ -10,11 +10,13 @@ public class RequestRes {
 
     private String url;
 
-    private Map<String,String> headers;
+    private Map<String, String> headers;
 
-    private Map<String,String> params;
+    private Map<String, String> params;
 
     private List<HttpParam> paramList;
+
+    private String paramText;
 
 
     public String getUrl() {
@@ -47,5 +49,13 @@ public class RequestRes {
 
     public void setParamList(List<HttpParam> paramList) {
         this.paramList = paramList;
+    }
+
+    public String getParamText() {
+        return paramText;
+    }
+
+    public void setParamText(String paramText) {
+        this.paramText = paramText;
     }
 }

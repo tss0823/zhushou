@@ -33,8 +33,9 @@
         <typeAlias alias="ShowRes" type="com.yuntao.zhushou.model.domain.ShowRes"/>
         <typeAlias alias="AppVersion" type="com.yuntao.zhushou.model.domain.AppVersion"/>
         <typeAlias alias="AppDownloadRecords" type="com.yuntao.zhushou.model.domain.AppDownloadRecords"/>
+        <typeAlias alias="WarnEvent" type="com.yuntao.zhushou.model.domain.WarnEvent"/>
+        <typeAlias alias="WarnEventResult" type="com.yuntao.zhushou.model.domain.WarnEventResult"/>
     </typeAliases>
-
 
     <mappers>
         <mapper resource="mapper/ConfigMapper.xml"/>
@@ -59,6 +60,8 @@
         <mapper resource="mapper/ShowResMapper.xml"/>
         <mapper resource="mapper/AppVersionMapper.xml"/>
         <mapper resource="mapper/AppDownloadRecordsMapper.xml"/>
+        <mapper resource="mapper/WarnEventMapper.xml"/>
+        <mapper resource="mapper/WarnEventResultMapper.xml"/>
     </mappers>
 
 </configuration>

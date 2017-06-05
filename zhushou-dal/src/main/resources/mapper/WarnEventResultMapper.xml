@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.WarnEventResultMapper">
+
+	<resultMap type="WarnEventResult" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="gmtCreate" property="gmtCreate"/>
+		<result column="gmtModify" property="gmtModify"/>
+		<result column="delState" property="delState"/>
+		<result column="warnEventId" property="warnEventId"/>
+		<result column="type" property="type"/>
+		<result column="status" property="status"/>
+		<result column="userId" property="userId"/>
+		<result column="tryCount" property="tryCount"/>
+		<result column="content" property="content"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `warnEventId`, `type`, `status`, `userId`,
+	 `tryCount`, `content`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		warnEventResult
+	</sql>
+
+	<sql id="Base_Where">
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
+		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
+		<if test="delState != null "> and  `delState` = #{delState} </if>
+		<if test="warnEventId != null "> and  `warnEventId` = #{warnEventId} </if>
+		<if test="type != null "> and  `type` = #{type} </if>
+		<if test="status != null "> and  `status` = #{status} </if>
+		<if test="userId != null "> and  `userId` = #{userId} </if>
+		<if test="tryCount != null "> and  `tryCount` = #{tryCount} </if>
+		<if test="content != null  and content != ''"> and  `content` = #{content} </if>
+		<if test="maxTryCount != null ">
+			<![CDATA[ and  tryCount < #{maxTryCount} ]]>
+		</if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="WarnEventResult">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		`gmtCreate`,`gmtModify`,`delState`,`warnEventId`,`type`,`status`,
+		`userId`,`tryCount`,`content`
+		)
+		values
+		(
+		 now(6), now(6), 1, #{warnEventId}, #{type}, #{status}, #{userId}, #{tryCount}, 
+		 #{content}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="WarnEventResult">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="delState != null">`delState` = #{delState}, </if>
+			<if test="warnEventId != null">`warnEventId` = #{warnEventId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="userId != null">`userId` = #{userId}, </if>
+			<if test="tryCount != null">`tryCount` = #{tryCount}, </if>
+			<if test="content != null and content != ''">`content` = #{content}, </if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+
+	<!-- user definition code start -->
+	<!-- user definition code end -->
+</mapper>

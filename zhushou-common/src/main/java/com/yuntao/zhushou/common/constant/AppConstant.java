@@ -42,5 +42,10 @@ public interface AppConstant {
         String frontBuildPath = "/u01/output/front/";
     }
 
+    interface ExceptionCode{
+        int NORMAL = 0;
+        int REMOTE_TIME_OUT = 1;  //连接超时
+    }
+
 
 }

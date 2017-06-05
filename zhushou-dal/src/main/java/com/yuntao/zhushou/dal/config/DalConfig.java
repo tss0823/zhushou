@@ -136,6 +136,14 @@ public class DalConfig {
         return newMapperFactoryBean(AppDownloadRecordsMapper.class).getObject();
     }
 
+    @Bean
+    public WarnEventMapper warnEventMapper() throws Exception {
+        return newMapperFactoryBean(WarnEventMapper.class).getObject();
+    }
+    @Bean
+    public WarnEventResultMapper warnEventResultMapper() throws Exception {
+        return newMapperFactoryBean(WarnEventResultMapper.class).getObject();
+    }
 
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {
