@@ -45,7 +45,7 @@
 		<if test="status != null "> and  `status` = #{status} </if>
 		<if test="userIds != null  and userIds != ''"> and  `userIds` = #{userIds} </if>
 		<if test="execTimeEnd != null ">
-			<![CDATA[ and date(`execTime`) <= date(#{execTimeEnd}) ]]>
+			<![CDATA[ and `execTime` <= #{execTimeEnd} ]]>
 		</if>
 	</sql>
 

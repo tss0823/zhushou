@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.deploy.controller;
 
+import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
@@ -81,7 +82,7 @@ public class CommonController extends BaseController {
                     try{
                         WarnEventQuery query = new WarnEventQuery();
                         query.setStatus(YesNoIntType.no.getCode());
-                        query.setExecTimeEnd(new Date());
+                        query.setExecTimeEnd(DateUtil.getFmtYMDHMS(new Date().getTime()));
                         List<WarnEvent> warnEventList = warnEventService.selectList(query);
                         if (CollectionUtils.isEmpty(warnEventList)) {
                             Thread.sleep(5000);  //5秒钟

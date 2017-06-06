@@ -60,7 +60,7 @@ public class WarnEventQuery extends BaseQuery {
     /**  发送的用户ids(多个用逗号隔开) * */
     private String userIds;
 
-    private Date execTimeEnd;
+    private String execTimeEnd;
         
     
 
@@ -158,11 +158,11 @@ public class WarnEventQuery extends BaseQuery {
     }
 
 
-    public Date getExecTimeEnd() {
+    public String getExecTimeEnd() {
         return execTimeEnd;
     }
 
-    public void setExecTimeEnd(Date execTimeEnd) {
+    public void setExecTimeEnd(String execTimeEnd) {
         this.execTimeEnd = execTimeEnd;
     }
 }
