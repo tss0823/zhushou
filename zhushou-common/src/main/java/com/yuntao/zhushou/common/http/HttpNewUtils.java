@@ -9,16 +9,21 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +51,10 @@ public class HttpNewUtils {
 
     final static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(30000).setSocketTimeout(30000).build();
 
-    static CloseableHttpClient httpclient = HttpClients.custom().setDefaultSocketConfig(null).setConnectionManager(cm).build();
+    static CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(cm).build();
 
 //    static Map<Res,byte []> contentMap = new ConcurrentHashMap();
+   static CookieStore cookieStore = new BasicCookieStore();
 
     public static ResponseRes get(String url){
         RequestRes requestRes = new RequestRes();
@@ -57,6 +63,9 @@ public class HttpNewUtils {
     }
 
     public static ResponseRes execute(RequestRes requestRes) {
+        HttpContext httpContext = new BasicHttpContext();
+        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, null);
+
         ResponseRes responseRes = new ResponseRes();
         String url = requestRes.getUrl();
         HttpPost httpPost = new HttpPost(url);
@@ -98,7 +107,7 @@ public class HttpNewUtils {
                 httpPost.setEntity(entity);
             }
 
-            CloseableHttpResponse response = httpclient.execute(httpPost);
+            CloseableHttpResponse response = httpclient.execute(httpPost,httpContext);
             int status = response.getStatusLine().getStatusCode();
             responseRes.setStatus(status);
             if (status != HttpStatus.SC_OK) {
