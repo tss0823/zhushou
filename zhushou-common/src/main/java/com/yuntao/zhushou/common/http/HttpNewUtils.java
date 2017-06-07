@@ -63,7 +63,8 @@ public class HttpNewUtils {
 
     public static ResponseRes execute(RequestRes requestRes) {
         HttpContext httpContext = new HttpClientContext();
-        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, null);
+        cookieStore.clear();
+        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 
         ResponseRes responseRes = new ResponseRes();
         String url = requestRes.getUrl();
