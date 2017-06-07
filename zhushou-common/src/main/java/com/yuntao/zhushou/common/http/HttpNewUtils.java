@@ -46,7 +46,7 @@ public class HttpNewUtils {
 
     final static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(30000).setSocketTimeout(30000).build();
 
-    static CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(null).setConnectionManager(cm).build();
+    static CloseableHttpClient httpclient = HttpClients.custom().setDefaultSocketConfig(null).setConnectionManager(cm).build();
 
 //    static Map<Res,byte []> contentMap = new ConcurrentHashMap();
 
