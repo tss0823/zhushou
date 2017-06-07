@@ -22,7 +22,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.ByteArrayBuffer;
 import org.slf4j.Logger;
@@ -63,8 +62,8 @@ public class HttpNewUtils {
     }
 
     public static ResponseRes execute(RequestRes requestRes) {
-        HttpContext httpContext = new BasicHttpContext();
-        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        HttpContext httpContext = new HttpClientContext();
+        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, null);
 
         ResponseRes responseRes = new ResponseRes();
         String url = requestRes.getUrl();
