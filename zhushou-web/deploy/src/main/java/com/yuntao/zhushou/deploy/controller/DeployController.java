@@ -2,6 +2,7 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
+import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,9 @@ public class DeployController extends BaseController {
 
     @Autowired
     private AppVersionService appVersionService;
+
+    @Autowired
+    private HostService hostService;
 
 
     @RequestMapping("branchList")
@@ -118,6 +123,65 @@ public class DeployController extends BaseController {
         ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
         return responseObject;
     }
+
+    @RequestMapping("compileAndDeploy")
+    @NeedLogin
+    public ResponseObject compileAndDeploy(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
+
+        //get app
+        App app = appService.findByName(companyId, appName);
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/compileAndDeploy");
+        Map<String,String> params = new HashMap<>();
+        params.put("userId",user.getId().toString());
+        params.put("nickname",user.getNickName());
+        params.put("codeName",app.getCodeName());
+        params.put("branch",branch);
+        params.put("model",model);
+
+        List<HttpParam> paramList = new ArrayList<>();
+
+        List<App> appList = appService.selectByCompanyId(companyId);
+        for (App thisApp : appList) {
+            HttpParam httpParam = new HttpParam("appNames[]", thisApp.getName());
+            paramList.add(httpParam);
+            httpParam = new HttpParam("ports[]", thisApp.getPort().toString());
+            paramList.add(httpParam);
+            //get ipList
+            List<Host> hostList = hostService.selectListByAppAndModel(thisApp.getId(), model);
+            List<String> ipList = new ArrayList<>();
+            for (Host host : hostList) {
+                ipList.add(host.getEth0());
+            }
+            httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, ","));
+            paramList.add(httpParam);
+        }
+
+        String compilePropertyJson = app.getCompileProperty();
+        try{
+            JSONObject jsonObject = new JSONObject(compilePropertyJson);
+            Object compileProp = jsonObject.get(model);
+            if(compileProp != null){
+                params.put("compileProperty",compileProp.toString());
+            }
+        }catch (Exception e){
+            bisLog.error("get compile property json error",e);
+        }
+        requestRes.setParams(params);
+        requestRes.setParamList(paramList);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
+        return responseObject;
+    }
+
 
     /**
      * 发布

@@ -7,6 +7,7 @@ import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.QiNiuTools;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.utils.ServerCheckUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.web.ShellExecObject;
 import com.yuntao.zhushou.model.domain.AppVersion;
@@ -306,6 +307,85 @@ public class DeployController extends BaseController {
         }).start();
         return responseObject;
     }
+
+    @RequestMapping("compileAndDeploy")
+//    @NeedLogin
+    public ResponseObject compileAndDeploy(final @RequestParam Long userId,final @RequestParam String nickname,final @RequestParam String codeName,
+                                      final @RequestParam String branch,final @RequestParam String model,
+                                      final @RequestParam(required = false) String compileProperty, final @RequestParam("appNames[]") List<String> appNames,
+                                      final @RequestParam("ports[]") List<String> ports, final @RequestParam("ipList[]") List<String> ipsList) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        if(!execRun.compareAndSet(false,true)){
+            responseObject.setSuccess(false);
+            responseObject.setMessage(execMessage);
+            return responseObject;
+        }
+//        final User user = userService.getCurrentUser();
+        execModel = model;
+        execMessage = nickname+"正在执行["+branch+"]["+execModel+"]编译并发布操作，请稍候";
+
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,execMessage);
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_START,"编译并发布开始");
+        cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.EVENT_START,"");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String cmd = "sh /u01/deploy/script/deploy.sh package,"+codeName+"," + branch + "," + model+","+"'"+compileProperty+"'";
+                    execShellScript(cmd, "compile");
+                    compileResult = true;
+                    execRun.set(false);  //完成，恢复初始状态
+                    //自动发布
+                    for (int i = 0; i < appNames.size(); i++) {
+                        String appName = appNames.get(i);
+                        String port = ports.get(i);
+                        String ipStr = ipsList.get(i);
+                        String[] ips = ipStr.split(",");
+                        String lastHost = null;
+                        Integer lastPort = Integer.valueOf(port);
+                        boolean checkServerStatusIsOK = true;  //默认上次ok
+                        for (String ip : ips) {
+                            if(lastHost != null){  //需要检测上一个节点状态
+//                                String result = ServerCheckUtils.checkStatus(ip, lastPort);
+//                                checkServerStatusIsOK = StringUtils.equals(result, "checkServerStatusIsOK");
+                                int timeout = 60 * 1000;  //一分钟
+                                long startTime = System.currentTimeMillis();
+                                while(!checkServerStatusIsOK){  //没有检测成功，直到成功
+                                    Thread.sleep(1000);
+                                    String result = ServerCheckUtils.checkStatus(ip, lastPort);
+                                    checkServerStatusIsOK = StringUtils.equals(result, "checkServerStatusIsOK");
+                                    if((System.currentTimeMillis() - startTime) > timeout){  //超时，跳出
+//                                        checkServerStatusIsOK = true;  //直接发下一个节点
+                                        break;
+                                    }
+                                }
+                            }
+                            //发当前节点
+                            while (execRun.get()) {  //已经在运行
+                                Thread.sleep(1000);
+                            }
+                            deploy(userId,nickname,appName,codeName,model,ip);
+                            checkServerStatusIsOK = false;
+                            lastHost = ip;
+
+                        }
+                    }
+                    //end
+                }catch (Exception e){
+                    compileResult = false;
+                    offerExecMsg(userId,"member",model,"编译","member");
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"编译失败");
+                    throw new BizException("auto compile failed!",e);
+                }finally {
+//                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.WARN,"空闲");
+                    cdWebSocketMsgHandler.offerMsg(MsgConstant.ReqCoreBizType.AUTO_DEPLOY_END,"编译并发布结束");
+                    execRun.set(false);  //完成，恢复初始状态
+                }
+            }
+        }).start();
+        return responseObject;
+    }
+
 
     /**
      * 发布

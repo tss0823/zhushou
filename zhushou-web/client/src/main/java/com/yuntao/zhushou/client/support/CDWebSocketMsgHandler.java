@@ -1,8 +1,8 @@
 package com.yuntao.zhushou.client.support;
 
 import com.yuntao.zhushou.common.constant.MsgConstant;
-import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.ServerCheckUtils;
 import com.yuntao.zhushou.common.web.MsgRequestObject;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.ws.AppObject;
@@ -75,15 +75,7 @@ public class CDWebSocketMsgHandler implements InitializingBean {
                 appMap.put(appObject.getName(),hostMap);
                 Integer port = appObject.getPort();
                 for (HostObject hostObject : hostObjectList) {
-                    String hostAddr = hostObject.getHost();
-                    String checkUrl = "http://" + hostAddr + ":" + port+ "/checkServerStatus";
-                    String result;
-                    try {
-                        List<String> lines = HttpUtils.reqGet(checkUrl,6000,10000);
-                        result = StringUtils.join(lines, ",");
-                    } catch (Exception e) {
-                        result = e.getMessage();
-                    }
+                    String result = ServerCheckUtils.checkStatus(hostObject.getHost(),port);
                     boolean checkServerStatusIsOK = StringUtils.equals(result, "checkServerStatusIsOK");
                     hostObject.setSuccess(checkServerStatusIsOK);
                     hostObject.setMessage(result);

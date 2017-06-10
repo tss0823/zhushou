@@ -41,6 +41,9 @@
             $("#btncompile").click(function () {
                 YT.deploy.appHost.compile();
             });
+            $("#btncompileAndDeploy").click(function () {
+                YT.deploy.appHost.compileAndDeploy();
+            });
 
             $("#btnBtachDeploy").click(function () {
                 YT.deploy.appHost.batchDeploy();
@@ -297,6 +300,23 @@
             var param = {appName:appName,branch:branch,model:model};
             YT.deploy.appHost.writeMsg("执行编译开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/compile",param,function(d){
+                //打印消息
+                // interval = window.setInterval(YT.deploy.appHost.printMsg,300);
+            });
+        },
+
+        compileAndDeploy: function () {
+            var model = YT.deploy.appHost.model;
+            var appName = YT.deploy.appHost.appName;
+            var branch = $("#branch").val();
+            if(!branch){
+                $("#branch").focus();
+                alert("请输入分支名称");
+                return;
+            }
+            var param = {appName:appName,branch:branch,model:model};
+            YT.deploy.appHost.writeMsg("执行编译并发布开始,请稍等...\r\n",true);
+            YT.deploy.util.reqPost("/deploy/compileAndDeploy",param,function(d){
                 //打印消息
                 // interval = window.setInterval(YT.deploy.appHost.printMsg,300);
             });
