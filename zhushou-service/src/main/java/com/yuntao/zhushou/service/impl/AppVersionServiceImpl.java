@@ -16,6 +16,7 @@ import com.yuntao.zhushou.model.query.AppVersionQuery;
 import com.yuntao.zhushou.model.vo.AppVersionVo;
 import com.yuntao.zhushou.service.inter.AppVersionService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +125,9 @@ public class AppVersionServiceImpl extends AbstService implements AppVersionServ
 
     @Override
     public String getDeployVersion(String lastVersion) {
+        if(StringUtils.isEmpty(lastVersion)){
+            lastVersion = "0.0.1";
+        }
         String versionStr = lastVersion.replaceAll("\\.","");
         versionStr = ""+(Integer.valueOf(versionStr) + 1);
         while(versionStr.length() < 3){

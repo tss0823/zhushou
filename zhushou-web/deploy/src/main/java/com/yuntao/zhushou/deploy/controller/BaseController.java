@@ -2,6 +2,7 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.exception.AuthException;
 import com.yuntao.zhushou.common.exception.BizException;
+import com.yuntao.zhushou.common.utils.ExceptionUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.common.web.ResponseObject;
@@ -42,6 +43,7 @@ public class BaseController {
             responseObject.setLevel(AppConstant.ResponseLevel.ERROR);
             responseObject.setLevel(AppConstant.ResponseCode.SYSTEM_ERROR);
         }
+        responseObject.setData(ExceptionUtils.getPrintStackTrace(ex));
         return responseObject;
     }
 

@@ -352,7 +352,7 @@ public class DeployController extends BaseController {
                                 long startTime = System.currentTimeMillis();
                                 while(!checkServerStatusIsOK){  //没有检测成功，直到成功
                                     Thread.sleep(1000);
-                                    String result = ServerCheckUtils.checkStatus(ip, lastPort);
+                                    String result = ServerCheckUtils.checkStatus(lastHost, lastPort);
                                     checkServerStatusIsOK = StringUtils.equals(result, "checkServerStatusIsOK");
                                     if((System.currentTimeMillis() - startTime) > timeout){  //超时，跳出
 //                                        checkServerStatusIsOK = true;  //直接发下一个节点
