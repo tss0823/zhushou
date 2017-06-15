@@ -673,11 +673,13 @@ public class DeployController extends BaseController {
                     String cmd = "sh /u01/deploy/script/front/deploy_"+type+".sh " + appName + " " + br + " "+ frontModel + " " + version+" "+outputPath+" "+fileName;
                     execShellScript(cmd, "deployFront");
 
-                    //上传app
-                    String filePath = outputPath+fileName;
-                    byte data[] = FileUtils.readFileToByteArray(new File(filePath));
-                    QiNiuTools.uploadFileFixName(data, fileName);
-                    offerExecMsg("upload file url="+appDownloadUrl);
+                    //上传app,只处理android,ios 暂时不管
+                    if(type.endsWith(DeployLogType.android.getDescription())){
+                        String filePath = outputPath+fileName;
+                        byte data[] = FileUtils.readFileToByteArray(new File(filePath));
+                        QiNiuTools.uploadFileFixName(data, fileName);
+                        offerExecMsg("upload file url="+appDownloadUrl);
+                    }
                     //end
 
                 }catch (Exception e){
