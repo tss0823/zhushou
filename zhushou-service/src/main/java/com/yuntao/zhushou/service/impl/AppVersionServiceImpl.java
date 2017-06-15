@@ -89,10 +89,11 @@ public class AppVersionServiceImpl extends AbstService implements AppVersionServ
     }
 
     @Override
-    public AppVersion getLastVersion(Long companyId, String appName, String model) {
+    public AppVersion getLastVersion(Long companyId, String appName,String type, String model) {
         AppVersionQuery appVersionQuery = new AppVersionQuery();
         appVersionQuery.setCompanyId(companyId);
         appVersionQuery.setAppName(appName);
+        appVersionQuery.setType(type);
         appVersionQuery.setModel(model);
         appVersionQuery.setStatus(AppVerionStatus.online.getCode());
         Map<String, Object> queryMap = BeanUtils.beanToMap(appVersionQuery);
@@ -107,8 +108,8 @@ public class AppVersionServiceImpl extends AbstService implements AppVersionServ
     }
 
     @Override
-    public String  getDeployVersion(Long companyId, String appName, String model) {
-        AppVersion lastVersion = this.getLastVersion(companyId, appName, model);
+    public String  getDeployVersion(Long companyId, String appName,String type, String model) {
+        AppVersion lastVersion = this.getLastVersion(companyId, appName,type, model);
         String version = "0.0.1";
         if(lastVersion != null){
             String versionStr = version.replaceAll("\\.","");

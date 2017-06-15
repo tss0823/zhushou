@@ -34,7 +34,7 @@ public class AppVersionController extends BaseController {
 
     @RequestMapping("checkUpdate")
     @ResponseBody
-    public ResponseObject checkUpdate(@RequestParam String cpKey,@RequestParam String appName,@RequestParam String model,@RequestParam String version) {
+    public ResponseObject checkUpdate(@RequestParam String cpKey,@RequestParam String appName,@RequestParam String type,@RequestParam String model,@RequestParam String version) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         //
         Company company = companyService.findByKey(cpKey);
@@ -44,7 +44,7 @@ public class AppVersionController extends BaseController {
 //        appVersionQuery.setCompanyId(company.getId());
 //        appVersionQuery.setAppName(appName);
 //        appVersionQuery.setModel(model);
-        AppVersion lastVersion = appVersionService.getLastVersion(company.getId(), appName, model);
+        AppVersion lastVersion = appVersionService.getLastVersion(company.getId(), appName, type,model);
 //        String version = (String) lastVersion1
 //        AppVersion lastVersion = (AppVersion) version
         if(lastVersion != null){

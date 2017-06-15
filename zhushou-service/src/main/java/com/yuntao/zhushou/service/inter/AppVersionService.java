@@ -85,13 +85,13 @@ public interface AppVersionService {
      * 获取最新版本
      * @return
      */
-    AppVersion getLastVersion(Long companyId,String appName,String model);
+    AppVersion getLastVersion(Long companyId,String appName,String type,String model);
 
     /**
      * 获取准备发布的最新版本
      * @return
      */
-    String getDeployVersion(Long companyId,String appName,String model);
+    String getDeployVersion(Long companyId,String appName,String type,String model);
 
     /**
      * 获取准备发布的最新版本

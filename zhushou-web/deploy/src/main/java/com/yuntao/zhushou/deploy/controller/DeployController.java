@@ -435,7 +435,7 @@ public class DeployController extends BaseController {
         appVersion.setUpdateLog(updateLog);
         appVersion.setStatus(AppVerionStatus.ready.getCode());
         try{
-            appVersionService.insert(appVersion);
+            appFrontService.deploy(appFront.getId(),appVersion);
         }catch (Exception e){
             throw new BizException("发布失败，请确认版本是否重复了."+e.getMessage());
         }

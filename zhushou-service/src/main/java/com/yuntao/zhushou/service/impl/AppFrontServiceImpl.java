@@ -8,6 +8,8 @@ import com.yuntao.zhushou.dal.mapper.AppFrontMapper;
 import com.yuntao.zhushou.model.domain.AppFront;
 import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.DeployLogType;
+import com.yuntao.zhushou.model.enums.LogModel;
 import com.yuntao.zhushou.model.query.AppFrontQuery;
 import com.yuntao.zhushou.model.vo.AppFrontVo;
 import com.yuntao.zhushou.service.inter.AppFrontService;
@@ -111,17 +113,18 @@ public class AppFrontServiceImpl extends AbstService implements AppFrontService 
             String lastTime = DateUtil.getRangeTime(appFrontVo.getGmtModify(),"yyyy-MM-dd HH:mm:ss");
             appFrontVo.setLastTime(lastTime);
 
-            //appFrontVersion
-            AppVersion testAppFrontVersion = appVersionService.getLastVersion(query.getCompanyId(),appFrontVo.getName(),"test");
-            appFrontVo.setTestVersion(testAppFrontVersion.getVersion());
-            String testDeployVersion = appVersionService.getDeployVersion(testAppFrontVersion.getVersion());
-            appFrontVo.setTestDeployVersion(testDeployVersion);
+            //app deploy version ,for deploy action parameter
+            String testAndroidDeployVersion = appVersionService.getDeployVersion(appFrontVo.getTestAndroidVersion());
+            appFrontVo.setTestAndroidDeployVersion(testAndroidDeployVersion);
 
-            AppVersion prodAppFrontVersion = appVersionService.getLastVersion(query.getCompanyId(),appFrontVo.getName(),"prod");
-            appFrontVo.setProdVersion(prodAppFrontVersion.getVersion());
-            String prodDeployVersion = appVersionService.getDeployVersion(prodAppFrontVersion.getVersion());
-            appFrontVo.setProdDeployVersion(prodDeployVersion);
+            String testIOSDeployVersion = appVersionService.getDeployVersion(appFrontVo.getTestIOSVersion());
+            appFrontVo.setTestIOSDeployVersion(testIOSDeployVersion);
 
+            String prodAndroidDeployVersion = appVersionService.getDeployVersion(appFrontVo.getProdAndroidVersion());
+            appFrontVo.setProdAndroidDeployVersion(prodAndroidDeployVersion);
+
+            String prodIOSDeployVersion = appVersionService.getDeployVersion(appFrontVo.getProdIOSVersion());
+            appFrontVo.setProdIOSDeployVersion(prodIOSDeployVersion);
 
         }
         return newPageInfo;
@@ -139,5 +142,26 @@ public class AppFrontServiceImpl extends AbstService implements AppFrontService 
         AppFrontQuery appFrontQuery = new AppFrontQuery();
         appFrontQuery.setCompanyId(companyId);
         return selectList(appFrontQuery);
+    }
+
+    @Override
+    public void deploy(Long appFrontId, AppVersion appVersion) {
+        appVersionService.insert(appVersion);
+        AppFront appFront = this.findById(appFrontId);
+
+        if(appVersion.getModel().equals(LogModel.TEST.getCode())){ //测试
+            if(appVersion.getType().equals(DeployLogType.android.getDescription())){
+                appFront.setTestAndroidVersion(appVersion.getVersion());
+            }else{
+                appFront.setTestIOSVersion(appVersion.getVersion());
+            }
+        }else{
+            if(appVersion.getType().equals(DeployLogType.android.getDescription())){
+                appFront.setProdAndroidVersion(appVersion.getVersion());
+            }else{
+                appFront.setProdIOSVersion(appVersion.getVersion());
+            }
+        }
+        appFrontMapper.updateById(appFront);
     }
 }

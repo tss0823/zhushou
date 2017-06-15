@@ -24,10 +24,8 @@
                 最后操作时间
             </th>
             <th width="25%">操作日志</th>
-            <th width="5%">最新测试版本</th>
-            <th width="5%">最新正式版本</th>
-            <th width="12%">Android</th>
-            <th width="12%">IOS</th>
+            <th width="17%">Android 测试版本|线上版本</th>
+            <th width="17%">IOS 测试版本|线上版本</th>
         </tr>
         </thead>
 
@@ -41,23 +39,21 @@
             <td>{{bean.userName}}</td>
             <td>{{bean.lastTime}}</td>
             <td>{{bean.log}}</td>
-            <td  style="font-weight: bold">{{bean.testVersion}}</td>
-            <td  style="font-weight: bold">{{bean.prodVersion}}</td>
+            <td  style="font-weight: bold">
+                {{bean.testAndroidVersion}}
+                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="test" deployType="Android" deployVersion="{{bean.testAndroidDeployVersion}}"  >发布测试</button>
+                |
+                {{bean.prodAndroidVersion}}
+                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="Android" deployVersion="{{bean.prodAndroidDeployVersion}}"  >发布线上</button>
+            </td>
+            <td  style="font-weight: bold">
+                {{bean.testIOSVersion}}
+                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="test" deployType="IOS" deployVersion="{{bean.testIOSDeployVersion}}"  >发布测试</button>
+                |
+                {{bean.prodIOSVersion}}
+                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="IOS" deployVersion="{{bean.prodIOSDeployVersion}}"  >发布线上</button>
+            </td>
 
-            <td class="hidden-480">
-                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="test" deployType="Android" deployVersion="{{bean.testDeployVersion}}"  >发布测试</button>
-                <button class="btn btn-xs btn-danger"  id="btnDeploy"  appName="{{bean.name}}" model="prod" deployType="Android" deployVersion="{{bean.prodDeployVersion}}"  >发布线上</button>
-                <!--<a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="test" appName="{{bean.name}}" color="green"  ><strong style="color:green">测试</strong></a>-->
-                <!--<a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="prod" appName="{{bean.name}}" color="red"  ><strong style="color:red">线上</strong></a>-->
-                <!--[<strong>{{bean.name}}</strong>]-->
-            </td>
-            <td class="hidden-480">
-                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}"  model="test" deployType="IOS"  deployVersion="{{bean.testDeployVersion}}"  >发布测试</button>
-                <button class="btn btn-xs btn-danger"  id="btnDeploy"  appName="{{bean.name}}"  model="prod" deployType="IOS"  deployVersion="{{bean.prodDeployVersion}}"  >发布线上</button>
-                <!--<a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="test" appName="{{bean.name}}" color="green"  ><strong style="color:green">测试</strong></a>-->
-                <!--<a href="javascript:void(0)" id="enterDeploy" appId="{{bean.id}}" model="prod" appName="{{bean.name}}" color="red"  ><strong style="color:red">线上</strong></a>-->
-                <!--[<strong>{{bean.name}}</strong>]-->
-            </td>
         </tr>
         {{/each}}
         </tbody>

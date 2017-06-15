@@ -2,6 +2,7 @@ package com.yuntao.zhushou.service.inter;
 
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.AppFront;
+import com.yuntao.zhushou.model.domain.AppVersion;
 import com.yuntao.zhushou.model.query.AppFrontQuery;
 import com.yuntao.zhushou.model.vo.AppFrontVo;
 
@@ -24,6 +25,8 @@ public interface AppFrontService {
     List<AppFront> selectList(AppFrontQuery query);
 
     List<AppFront> selectByCompanyId(Long companyId);
+
+    void deploy(Long appFrontId, AppVersion appVersion);
 
 
 

@@ -11,13 +11,21 @@ public class AppFrontVo extends AppFront {
 
     private String lastTime;
 
-    private String testVersion;
+    private String testAndroidVersion;
 
-    private String prodVersion;
+    private String prodAndroidVersion;
 
-    private String testDeployVersion;
+    private String testIOSVersion;
 
-    private String prodDeployVersion;
+    private String prodIOSVersion;
+
+    private String testAndroidDeployVersion;
+
+    private String prodAndroidDeployVersion;
+
+    private String testIOSDeployVersion;
+
+    private String prodIOSDeployVersion;
 
     public String getUserName() {
         return userName;
@@ -35,35 +43,67 @@ public class AppFrontVo extends AppFront {
         this.lastTime = lastTime;
     }
 
-    public String getTestVersion() {
-        return testVersion;
+    public String getTestAndroidVersion() {
+        return testAndroidVersion;
     }
 
-    public void setTestVersion(String testVersion) {
-        this.testVersion = testVersion;
+    public void setTestAndroidVersion(String testAndroidVersion) {
+        this.testAndroidVersion = testAndroidVersion;
     }
 
-    public String getProdVersion() {
-        return prodVersion;
+    public String getProdAndroidVersion() {
+        return prodAndroidVersion;
     }
 
-    public void setProdVersion(String prodVersion) {
-        this.prodVersion = prodVersion;
+    public void setProdAndroidVersion(String prodAndroidVersion) {
+        this.prodAndroidVersion = prodAndroidVersion;
     }
 
-    public String getTestDeployVersion() {
-        return testDeployVersion;
+    public String getTestIOSVersion() {
+        return testIOSVersion;
     }
 
-    public void setTestDeployVersion(String testDeployVersion) {
-        this.testDeployVersion = testDeployVersion;
+    public void setTestIOSVersion(String testIOSVersion) {
+        this.testIOSVersion = testIOSVersion;
     }
 
-    public String getProdDeployVersion() {
-        return prodDeployVersion;
+    public String getProdIOSVersion() {
+        return prodIOSVersion;
     }
 
-    public void setProdDeployVersion(String prodDeployVersion) {
-        this.prodDeployVersion = prodDeployVersion;
+    public void setProdIOSVersion(String prodIOSVersion) {
+        this.prodIOSVersion = prodIOSVersion;
+    }
+
+    public String getTestAndroidDeployVersion() {
+        return testAndroidDeployVersion;
+    }
+
+    public void setTestAndroidDeployVersion(String testAndroidDeployVersion) {
+        this.testAndroidDeployVersion = testAndroidDeployVersion;
+    }
+
+    public String getProdAndroidDeployVersion() {
+        return prodAndroidDeployVersion;
+    }
+
+    public void setProdAndroidDeployVersion(String prodAndroidDeployVersion) {
+        this.prodAndroidDeployVersion = prodAndroidDeployVersion;
+    }
+
+    public String getTestIOSDeployVersion() {
+        return testIOSDeployVersion;
+    }
+
+    public void setTestIOSDeployVersion(String testIOSDeployVersion) {
+        this.testIOSDeployVersion = testIOSDeployVersion;
+    }
+
+    public String getProdIOSDeployVersion() {
+        return prodIOSDeployVersion;
+    }
+
+    public void setProdIOSDeployVersion(String prodIOSDeployVersion) {
+        this.prodIOSDeployVersion = prodIOSDeployVersion;
     }
 }

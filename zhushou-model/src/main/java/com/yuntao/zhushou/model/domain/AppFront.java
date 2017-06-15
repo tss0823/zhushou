@@ -90,6 +90,15 @@ public class AppFront implements Serializable {
      */
     private String prodBranch;
 
+    private String testAndroidVersion;
+
+    private String testIOSVersion;
+
+    private String prodAndroidVersion;
+
+    private String prodIOSVersion;
+
+
     public Long getId() {
         return id;
     }
@@ -216,5 +225,37 @@ public class AppFront implements Serializable {
 
     public void setProdBranch(String prodBranch) {
         this.prodBranch = prodBranch;
+    }
+
+    public String getTestAndroidVersion() {
+        return testAndroidVersion;
+    }
+
+    public void setTestAndroidVersion(String testAndroidVersion) {
+        this.testAndroidVersion = testAndroidVersion;
+    }
+
+    public String getTestIOSVersion() {
+        return testIOSVersion;
+    }
+
+    public void setTestIOSVersion(String testIOSVersion) {
+        this.testIOSVersion = testIOSVersion;
+    }
+
+    public String getProdAndroidVersion() {
+        return prodAndroidVersion;
+    }
+
+    public void setProdAndroidVersion(String prodAndroidVersion) {
+        this.prodAndroidVersion = prodAndroidVersion;
+    }
+
+    public String getProdIOSVersion() {
+        return prodIOSVersion;
+    }
+
+    public void setProdIOSVersion(String prodIOSVersion) {
+        this.prodIOSVersion = prodIOSVersion;
     }
 }

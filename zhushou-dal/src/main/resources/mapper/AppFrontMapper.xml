@@ -18,11 +18,15 @@
         <result column="port" property="port" jdbcType="INTEGER" />
         <result column="testBranch" property="testBranch" jdbcType="VARCHAR" />
         <result column="prodBranch" property="prodBranch" jdbcType="VARCHAR" />
+        <result column="testAndroidVersion" property="testAndroidVersion" jdbcType="VARCHAR" />
+        <result column="testIOSVersion" property="testIOSVersion" jdbcType="VARCHAR" />
+        <result column="prodAndroidVersion" property="prodAndroidVersion" jdbcType="VARCHAR" />
+        <result column="prodIOSVersion" property="prodIOSVersion" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List">
         `id`,`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,
-        `testBranch`,`prodBranch`
+        `testBranch`,`prodBranch`,`testAndroidVersion`,`testIOSVersion`,`prodAndroidVersion`,`prodIOSVersion`
     </sql>
     <sql id="Base_Table_Name">
         appFront
@@ -87,9 +91,15 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`testBranch`,`prodBranch`)
+        (
+        `name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`testBranch`,`prodBranch`,
+        `testAndroidVersion`,`testIOSVersion`,`prodAndroidVersion`,`prodIOSVersion`
+        )
         values
-        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{testBranch},#{prodBranch})
+        (
+        #{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{testBranch},#{prodBranch} ,
+        #{testAndroidVersion},#{testIOSVersion},#{prodAndroidVersion},#{prodIOSVersion}
+        )
     </insert>
 
     <update id="updateById">
@@ -108,6 +118,10 @@
             <if test="port != null">`port`=#{port},</if>
             <if test="testBranch != null">`testBranch`=#{testBranch},</if>
             <if test="prodBranch != null">`prodBranch`=#{prodBranch},</if>
+            <if test="testAndroidVersion != null and testAndroidVersion !=''">`testAndroidVersion`=#{testAndroidVersion},</if>
+            <if test="testIOSVersion != null and testIOSVersion !=''">`testIOSVersion`=#{testIOSVersion},</if>
+            <if test="prodAndroidVersion != null and prodAndroidVersion !=''">`prodAndroidVersion`=#{prodAndroidVersion},</if>
+            <if test="prodIOSVersion != null and prodIOSVersion !=''">`prodIOSVersion`=#{prodIOSVersion},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}
