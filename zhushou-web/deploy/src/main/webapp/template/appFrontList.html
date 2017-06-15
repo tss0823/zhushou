@@ -44,14 +44,14 @@
                 <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="test" deployType="Android" deployVersion="{{bean.testAndroidDeployVersion}}"  >发布测试</button>
                 |
                 {{bean.prodAndroidVersion}}
-                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="Android" deployVersion="{{bean.prodAndroidDeployVersion}}"  >发布线上</button>
+                <button class="btn btn-xs btn-danger" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="Android" deployVersion="{{bean.prodAndroidDeployVersion}}"  >发布线上</button>
             </td>
             <td  style="font-weight: bold">
                 {{bean.testIOSVersion}}
                 <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="test" deployType="IOS" deployVersion="{{bean.testIOSDeployVersion}}"  >发布测试</button>
                 |
                 {{bean.prodIOSVersion}}
-                <button class="btn btn-xs btn-default" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="IOS" deployVersion="{{bean.prodIOSDeployVersion}}"  >发布线上</button>
+                <button class="btn btn-xs btn-danger" id="btnDeploy" appName="{{bean.name}}" model="prod" deployType="IOS" deployVersion="{{bean.prodIOSDeployVersion}}"  >发布线上</button>
             </td>
 
         </tr>
