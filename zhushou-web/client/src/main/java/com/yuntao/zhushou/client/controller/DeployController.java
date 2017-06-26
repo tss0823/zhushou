@@ -51,6 +51,7 @@ public class DeployController extends BaseController {
     private volatile String execModel = "prod";  //模式
     private volatile String execMessage = "nothing";  //操作
     private volatile boolean compileResult = true;
+    public volatile boolean cancelExecute = false;
 
 
     private AtomicBoolean execRun = new AtomicBoolean(false);
@@ -102,6 +103,7 @@ public class DeployController extends BaseController {
     private void execShellScript(String cmd, String method) {
         //执行前先清空历史残留队里消息,for 浏览器 or client 可能中断执行
         clearExecMsg();
+        cancelExecute = false;
         if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
 //            if (!StringUtils.equals(model,"test") ) {
             for (int i = 0; i < 5; i++) {
@@ -142,6 +144,9 @@ public class DeployController extends BaseController {
             reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
             String result;
             while ((result = reader.readLine()) != null) {
+                if(cancelExecute){  //取消执行
+
+                }
                 if (method.equals("compile") && result.indexOf("编译打包失败") != -1) {
                     offerExecMsg("exec-0");
                     throw new BizException("编译打包失败");

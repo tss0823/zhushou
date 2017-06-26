@@ -317,11 +317,19 @@
 
     YT.deploy.idocList = {
         query: function (pageNum) {
-            var params = YT.deploy.util.getFormParams("#idocListForm");
-            params["pageNum"] = pageNum;
-            var pageSize = $("#pageSize").val();
-            var ext_data = $.extend(params, {title: "接口文档"});
-            YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
+            var id = $("form:first").prop("id");
+            if(id == "resForm"){
+                //
+                YT.deploy.idocList.queryRes(pageNum);
+            }else if(id == "enumsForm"){
+                YT.deploy.idocList.queryEnums(pageNum);
+            }else{
+                var params = YT.deploy.util.getFormParams("#idocListForm");
+                params["pageNum"] = pageNum;
+                var pageSize = $("#pageSize").val();
+                var ext_data = $.extend(params, {title: "接口文档"});
+                YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
+            }
         },
 
         docPrint: function () {
