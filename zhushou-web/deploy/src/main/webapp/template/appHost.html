@@ -57,7 +57,8 @@
 				<button class="btn btn-danger" id="btnBtachDeploy">批量发布</button>
 				<button class="btn btn-pink" id="btnBatchRestart">批量重启</button>
 				<button class="btn btn-info" id="btnBatchRollback">批量回滚</button>
-				<button class="btn btn-danger" id="btncompileAndDeploy">编译并发布</button>
+				<button class="btn btn-danger" id="btnCompileAndDeploy">编译并发布[ALL]</button>
+				<button class="btn btn-danger" id="btnSingleCompileAndDeploy">编译并发布[{{appName}}]</button>
 			</small>
 		</h1>
 
@@ -98,13 +99,11 @@
 				<td>
 					<button class="btn btn-xs btn-danger" data="{{bean.eth0}}" id="btnSingleDeploy">发布</button>
 					<button class="btn btn-xs btn-pink" data="{{bean.eth0}}" id="btnSingleRestart">重启</button>
-                    {{if model == "test"}}
 					<button class="btn btn-xs btn-pink" data="{{bean.eth0}}" id="btnSingleDebug">调式</button>
-					{{/if}}
 					<button class="btn btn-xs btn-danger" data="{{bean.eth0}}" state="-1" id="btnSingleStartAndStop">上线OR下线</button>
 					<button class="btn btn-xs btn-info" data="{{bean.eth0}}" id="btnSingleRollback">回滚</button>
 
-					{{if appName == "web" || appName == "bos"}}
+					{{if appName == "bos" || appName == "h5"}}
 					<button class="btn btn-xs btn-danger" data="{{bean.eth0}}" id="btnSingleDeployStatic" title="不重启发布">静态发布</button>
 					{{/if}}
 				</td>
