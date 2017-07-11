@@ -92,6 +92,9 @@ public class ReqContentController extends BaseController {
         Map<String,String> headerMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(headerList)) {
             for (DataMap dataMap : headerList) {
+                if(dataMap.getKey().equalsIgnoreCase("content-length") || dataMap.getKey().equalsIgnoreCase("content-type")){
+                    continue;
+                }
                 headerMap.put(dataMap.getKey(),dataMap.getValue());
             }
         }
