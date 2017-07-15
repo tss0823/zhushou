@@ -8,6 +8,7 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.VersionUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AppVersionMapper;
 import com.yuntao.zhushou.model.domain.AppVersion;
@@ -16,7 +17,6 @@ import com.yuntao.zhushou.model.query.AppVersionQuery;
 import com.yuntao.zhushou.model.vo.AppVersionVo;
 import com.yuntao.zhushou.service.inter.AppVersionService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,27 +113,17 @@ public class AppVersionServiceImpl extends AbstService implements AppVersionServ
         AppVersion lastVersion = this.getLastVersion(companyId, appName,type, model);
         String version = "0.0.1";
         if(lastVersion != null){
-            String versionStr = version.replaceAll("\\.","");
-            versionStr = ""+(Integer.valueOf(versionStr) + 1);
-            while(versionStr.length() < 3){
-                versionStr = "0"+versionStr;
-            }
-            version = versionStr.charAt(0)+"."+versionStr.charAt(1)+"."+versionStr.charAt(2);
+            version = VersionUtils.dcrVersion(version);
         }
         return version;
     }
 
     @Override
     public String getDeployVersion(String lastVersion) {
-        if(StringUtils.isEmpty(lastVersion)){
-            lastVersion = "0.0.1";
-        }
-        String versionStr = lastVersion.replaceAll("\\.","");
-        versionStr = ""+(Integer.valueOf(versionStr) + 1);
-        while(versionStr.length() < 3){
-            versionStr = "0"+versionStr;
-        }
-        return versionStr.charAt(0)+"."+versionStr.charAt(1)+"."+versionStr.charAt(2);
+//        if(StringUtils.isEmpty(lastVersion)){
+//            lastVersion = "0.0.1";
+//        }
+        return VersionUtils.dcrVersion(lastVersion);
     }
 
 

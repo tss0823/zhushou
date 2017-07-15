@@ -178,6 +178,16 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("copyDoc")
+    @NeedLogin
+    public ResponseObject copyDoc(@RequestParam Long id) {
+        User user = userService.getCurrentUser();
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+//        idocUrlService.updateResDoc(id,pri,user,appName,name,resDocText);
+        idocUrlService.copyDoc(id);
+        return responseObject;
+    }
+
 
 
 }

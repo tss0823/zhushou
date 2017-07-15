@@ -249,6 +249,18 @@
                 });
             });
 
+            $("a[name='btnCopy']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.util.reqPost("/idocUrl/copyDoc", {id:id}, function (d) {
+                    if (d.success) {
+                        alert("复制成功");
+                        YT.deploy.idocList.queryEnums(1);
+                    } else {
+                        alert("复制失败,err=" + d.message);
+                    }
+                });
+            });
+
             //枚举同步创建
             $("#btnSyncNew").click(function () {
                 if (!confirm("您确认需要同步创建吗？")) {

@@ -130,4 +130,9 @@ public interface IdocUrlService {
      * 修改资源文档
      */
     void updateResDoc(Long id,boolean pri,User user,String appName,String title,String resDocText);
+
+    /**
+     * 复制接口
+     */
+    void copyDoc(Long id);
 }

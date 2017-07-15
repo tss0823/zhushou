@@ -77,7 +77,7 @@
                 $nextTr.after($thisTr);
             });
 
-            
+
             //删除
             $(document).on("click","a[name='itemRemove']",function(){
                 if (!confirm("您确要删除吗？")) {
@@ -89,6 +89,7 @@
                 }
                 $(this).parents("tr").remove();
             });
+
 
 
             $("button[id='btnSave']").click(function () {
@@ -202,8 +203,6 @@
                     }
                 });
             });
-
-
 
 
         },

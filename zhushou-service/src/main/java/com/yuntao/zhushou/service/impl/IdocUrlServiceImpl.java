@@ -473,4 +473,23 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         this.idocUrlMapper.updateById(idocUrl);
     }
 
+    @Override
+    public void copyDoc(Long id) {
+        IdocUrl idocUrl = this.findById(id);
+        String version = idocUrl.getVersion();
+        idocUrl.setVersion(VersionUtils.dcrVersion(version));
+        this.insert(idocUrl);
+
+        List<IdocParam> idocParamList = idocParamService.selectByParentId(id);
+
+        if (CollectionUtils.isNotEmpty(idocParamList)) {
+            for (IdocParam idocParam : idocParamList) {
+                if (StringUtils.isBlank(idocParam.getCode())) {
+                    continue;
+                }
+                idocParamService.insert(idocParam);
+            }
+        }
+    }
+
 }
