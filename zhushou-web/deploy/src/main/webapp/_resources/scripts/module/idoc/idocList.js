@@ -254,7 +254,7 @@
                 YT.deploy.util.reqPost("/idocUrl/copyDoc", {id:id}, function (d) {
                     if (d.success) {
                         alert("复制成功");
-                        YT.deploy.idocList.queryEnums(1);
+                        YT.deploy.idocList.query(1);
                     } else {
                         alert("复制失败,err=" + d.message);
                     }

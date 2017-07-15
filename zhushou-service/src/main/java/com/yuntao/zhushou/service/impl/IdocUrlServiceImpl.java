@@ -487,6 +487,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
                 if (StringUtils.isBlank(idocParam.getCode())) {
                     continue;
                 }
+                idocParam.setParentId(idocUrl.getId());
                 idocParamService.insert(idocParam);
             }
         }
