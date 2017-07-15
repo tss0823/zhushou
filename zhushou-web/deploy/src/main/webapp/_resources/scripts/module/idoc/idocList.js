@@ -250,6 +250,9 @@
             });
 
             $("a[name='btnCopy']").click(function () {
+                if (!confirm("您确认需要复制吗？")) {
+                    return;
+                }
                 var id = $(this).attr("data");
                 YT.deploy.util.reqPost("/idocUrl/copyDoc", {id:id}, function (d) {
                     if (d.success) {
