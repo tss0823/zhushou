@@ -1,23 +1,21 @@
 package com.yuntao.zhushou.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.ProxyContentMapper;
 import com.yuntao.zhushou.model.domain.ProxyContent;
 import com.yuntao.zhushou.model.enums.ProxyContentStatus;
 import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.query.ProxyContentQuery;
 import com.yuntao.zhushou.model.vo.ProxyContentVo;
-import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.ProxyContentService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 
@@ -64,30 +62,25 @@ public class ProxyContentServiceImpl extends AbstService implements ProxyContent
             reqContentVo.setLastResTime(DateUtil.getRangeTime(reqContentVo.getGmtResponse()));
 
             //reqDataText
-            byte[] reqData = reqContentVo.getReqData();
-            if(reqData != null){
-                try{
-                    reqContentVo.setReqDataText(new String(reqData,"utf-8"));
-                }catch (Exception e){
-                }
-            }
+//            byte[] reqData = reqContentVo.getReqData();
+//            if(reqData != null){
+//                try{
+//                    reqContentVo.setReqDataText(new String(reqData,"utf-8"));
+//                }catch (Exception e){
+//                }
+//            }
             //end
 
 
             //resDataText
-            byte[] resData = reqContentVo.getResData();
-            if (resData != null) {
-                try {
-                    if(StringUtils.indexOf(reqContentVo.getResContentType(),"json") != -1){
-                        //json 格式化
-                        ObjectMapper mapper = new ObjectMapper();
-                        Object json = mapper.readValue(new String(resData), Object.class);
-                        String text = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-                        reqContentVo.setResDataText(text);
-                    }else{
-                        reqContentVo.setReqDataText(new String(resData,"utf-8"));
-                    }
-                } catch (IOException e) {
+            String resData = reqContentVo.getResData();
+            if (StringUtils.isNotEmpty(resData)) {
+                if(StringUtils.indexOf(reqContentVo.getResContentType(),"json") != -1){
+                    //json 格式化
+                    String formatData = JsonUtils.format(resData);
+                    reqContentVo.setResDataText(formatData);
+                }else{
+                    reqContentVo.setReqDataText(resData);
                 }
             }
             //end

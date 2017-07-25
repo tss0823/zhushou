@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,30 @@ public class JsonUtils {
             log.error(e.getMessage(), e);
         }
         return "";
+    }
+
+    public static String format(String source){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Object obj = mapper.readValue(source, Object.class);
+            String formatData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+            return formatData;
+        } catch (IOException e) {
+            log.error("format json failed,",e);
+            return source;
+        }
+    }
+
+    public static String compress(String source){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Object obj = mapper.readValue(source, Object.class);
+            String formatData = mapper.writeValueAsString(obj);
+            return formatData;
+        } catch (IOException e) {
+            log.error("compress json failed,",e);
+            return source;
+        }
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)

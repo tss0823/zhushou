@@ -35,6 +35,9 @@
         <typeAlias alias="AppDownloadRecords" type="com.yuntao.zhushou.model.domain.AppDownloadRecords"/>
         <typeAlias alias="WarnEvent" type="com.yuntao.zhushou.model.domain.WarnEvent"/>
         <typeAlias alias="WarnEventResult" type="com.yuntao.zhushou.model.domain.WarnEventResult"/>
+        <typeAlias alias="ProxyReqFilter" type="com.yuntao.zhushou.model.domain.ProxyReqFilter"/>
+        <typeAlias alias="ProxyReqFilterItem" type="com.yuntao.zhushou.model.domain.ProxyReqFilterItem"/>
+        <typeAlias alias="ProxyResRewrite" type="com.yuntao.zhushou.model.domain.ProxyResRewrite"/>
     </typeAliases>
 
     <mappers>
@@ -62,6 +65,9 @@
         <mapper resource="mapper/AppDownloadRecordsMapper.xml"/>
         <mapper resource="mapper/WarnEventMapper.xml"/>
         <mapper resource="mapper/WarnEventResultMapper.xml"/>
+        <mapper resource="mapper/ProxyReqFilterMapper.xml"/>
+        <mapper resource="mapper/ProxyReqFilterItemMapper.xml"/>
+        <mapper resource="mapper/ProxyResRewriteMapper.xml"/>
     </mappers>
 
 </configuration>

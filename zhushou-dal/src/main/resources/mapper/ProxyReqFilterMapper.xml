@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.ProxyReqFilterMapper">
+
+	<resultMap type="ProxyReqFilter" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="gmtCreate" property="gmtCreate"/>
+		<result column="gmtModify" property="gmtModify"/>
+		<result column="delState" property="delState"/>
+		<result column="name" property="name"/>
+		<result column="port" property="port"/>
+		<result column="status" property="status"/>
+		<result column="userId" property="userId"/>
+		<result column="joinType" property="joinType"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `name`, `port`, `status`, `userId`,`joinType`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		proxyReqFilter
+	</sql>
+
+	<sql id="Base_Where">
+		delState = 1
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
+		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
+		<if test="name != null  and name != ''"> and  `name` = #{name} </if>
+		<if test="port != null "> and  `port` = #{port} </if>
+		<if test="status != null "> and  `status` = #{status} </if>
+		<if test="userId != null "> and  `userId` = #{userId} </if>
+		<if test="joinType != null "> and  `joinType` = #{joinType} </if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ProxyReqFilter">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		
+		`gmtCreate`,`gmtModify`,`delState`,`name`,`port`,`status`,`userId`,`joinType`
+		)
+		values
+		(
+		 now(6), now(6), 1, #{name}, #{port}, #{status}, #{userId},#{joinType}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="ProxyReqFilter">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="delState != null">`delState` = #{delState}, </if>
+			<if test="name != null and name != ''">`name` = #{name}, </if>
+			<if test="port != null">`port` = #{port}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="userId != null">`userId` = #{userId}, </if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+
+	<!-- user definition code start -->
+	<!-- user definition code end -->
+</mapper>

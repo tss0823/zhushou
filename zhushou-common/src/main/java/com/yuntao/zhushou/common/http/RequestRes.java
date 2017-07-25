@@ -17,6 +17,12 @@ public class RequestRes {
     private List<HttpParam> paramList;
 
     private String paramText;
+    private byte [] paramByte;
+
+    private boolean proxy;
+    private String proxyHost;
+
+    private int proxyPort;
 
 
     public String getUrl() {
@@ -57,5 +63,37 @@ public class RequestRes {
 
     public void setParamText(String paramText) {
         this.paramText = paramText;
+    }
+
+    public byte[] getParamByte() {
+        return paramByte;
+    }
+
+    public void setParamByte(byte[] paramByte) {
+        this.paramByte = paramByte;
+    }
+
+    public boolean isProxy() {
+        return proxy;
+    }
+
+    public void setProxy(boolean proxy) {
+        this.proxy = proxy;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
     }
 }

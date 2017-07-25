@@ -19,6 +19,10 @@ public class IdocUrlVo extends IdocUrl {
 
     private String lastTime;
 
+    private Integer mockStatus;
+
+    private String mockData;
+
     public List<IdocParam> getParamList() {
         return paramList;
     }
@@ -37,5 +41,21 @@ public class IdocUrlVo extends IdocUrl {
 
     public void setLastTime(String lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public String getMockData() {
+        return mockData;
+    }
+
+    public void setMockData(String mockData) {
+        this.mockData = mockData;
+    }
+
+    public Integer getMockStatus() {
+        return mockStatus;
+    }
+
+    public void setMockStatus(Integer mockStatus) {
+        this.mockStatus = mockStatus;
     }
 }

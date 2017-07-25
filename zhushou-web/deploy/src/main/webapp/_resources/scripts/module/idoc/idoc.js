@@ -143,6 +143,15 @@
 
             });
 
+            $("button[id='btnMockDataUpdate']").click(function () {
+                var params = {mockDataId:$("#mockDataId").val(),mockData:$("#mockData").val()};
+                YT.deploy.util.reqPost("/idocUrl/updateMockData", params, function (d) {
+                    alert("修改mock数据成功");
+                    YT.deploy.idocList.query(1);
+                });
+
+            });
+
             $("button[id='btnSubEnumSave']").click(function () {
                 var params = {appName:"member",jsonEnum:$("#jsonEnum").val()};
                 YT.deploy.util.reqPost("/idocUrl/submitEnum", params, function (d) {

@@ -149,6 +149,8 @@
                 YT.deploy.routeTpl("/idoc/subDoc.html",{title:"接口提交"});
             });
 
+
+
             //提交枚举
             $("#btnSubmitEnum").click(function () {
                 YT.deploy.routeTpl("/idoc/subEnum.html",{title:"枚举提交"});
@@ -183,6 +185,7 @@
                 }
             });
 
+
             //跳转到日志
             $("a[name='enterLogQuery']").click(function () {
                 var data = $(this).attr("data");
@@ -197,6 +200,11 @@
             $("a[name='btnEnterEdit']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
+            });
+
+            $("a[name='btnEnterAddMockData']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/addMockData.html",{title:"修改Mock数据"});
             });
 
             $("a[name='btnHttpReq']").click(function () {
@@ -246,6 +254,19 @@
                     } else {
                         alert("删除失败,err=" + d.message);
                     }
+                });
+            });
+
+            $("a[name='btnChangeMockStatus']").click(function () {
+                var actionText = $(this).text();
+                if (!confirm("您确认需要"+actionText+"吗？")) {
+                    return;
+                }
+                var id = $(this).attr("data");
+                var status = $(this).attr("status");
+                YT.deploy.util.reqPost("/idocUrl/changeMockStatus", {mockDataId:id,status:status}, function (d) {
+                    alert(actionText+"成功");
+                    YT.deploy.idocList.query(1);
                 });
             });
 

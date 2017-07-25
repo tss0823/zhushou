@@ -1,12 +1,13 @@
 package com.yuntao.zhushou.deploy.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.utils.UrlUtils;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.ReqContent;
@@ -16,8 +17,6 @@ import com.yuntao.zhushou.model.param.ReqDataParam;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.query.ReqContentQuery;
 import com.yuntao.zhushou.model.vo.ReqContentVo;
-import com.yuntao.zhushou.common.web.Pagination;
-import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.ReqContentService;
 import org.apache.commons.collections.CollectionUtils;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,13 +55,8 @@ public class ReqContentController extends BaseController {
             for (ReqContentVo reqContentVo : pagination.getDataList()) {
                 String resData = reqContentVo.getResData();
                 //json 格式化
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    Object json = mapper.readValue(resData, Object.class);
-                    resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-                } catch (IOException e) {
-                }
-                reqContentVo.setResData(resData);
+                String formatData = JsonUtils.format(resData);
+                reqContentVo.setResData(formatData);
                 //end
 
             }
@@ -144,14 +137,9 @@ public class ReqContentController extends BaseController {
         responseObject.put("resHeaderList",responseRes.getHeaders());
         String resData = new String(responseRes.getResult());
         //json 格式化
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Object json = mapper.readValue(resData, Object.class);
-            resData = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-        } catch (IOException e) {
-        }
+        String formatData = JsonUtils.format(resData);
         //end
-        responseObject.put("resData",resData);
+        responseObject.put("resData",formatData);
         responseObject.put("status",responseRes.getStatus());
         return responseObject;
     }

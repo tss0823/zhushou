@@ -8,9 +8,9 @@ import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.ProxyContent;
-import com.yuntao.zhushou.model.query.LogTextQuery;
+import com.yuntao.zhushou.model.enums.ProxyContentStatus;
+import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.query.ProxyContentQuery;
-import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.model.vo.ProxyContentVo;
 import com.yuntao.zhushou.service.inter.ProxyEsService;
 import com.yuntao.zhushou.service.support.bis.QueryBuilderUtils;
@@ -39,8 +39,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by shan on 2016/5/5.
@@ -184,8 +182,66 @@ public class ProxyEsServiceImpl extends AbstService implements ProxyEsService {
                     hbLogBean.setIndex(searchHit.getIndex());
                     hbLogBean.setId(searchHit.getId());
 
-//                    hbLogBean.setLastTime(DateUtil.getRangeTime(DateUtil.getDate(hbLogBean.getGmtRequest(), "yyyy-MM-dd HH:mm:ss")));
                     ProxyContentVo logWebVo = BeanUtils.beanCopy(hbLogBean,ProxyContentVo.class);
+                    ProxyContentStatus proxyContentStatus = ProxyContentStatus.getByCode(logWebVo.getStatus());
+                    if(proxyContentStatus != null){
+                        logWebVo.setStatusText(proxyContentStatus.getDescription());
+                    }
+                    logWebVo.setLastReqTime(DateUtil.getRangeTime(logWebVo.getGmtRequest(), "yyyy-MM-dd HH:mm:ss"));
+                    logWebVo.setLastResTime(DateUtil.getRangeTime(logWebVo.getGmtResponse(), "yyyy-MM-dd HH:mm:ss"));
+
+                    //reqDataText
+                            logWebVo.setReqDataText(logWebVo.getReqData());
+//                    byte[] reqData = logWebVo.getReqData();
+//                    if(reqData != null && reqData.length > 0){
+//                        try{
+//                            logWebVo.setReqDataText(new String(reqData,"utf-8"));
+//                        }catch (Exception e){
+//                        }
+//                    }
+                    //end
+
+
+                    //resDataText
+
+                    String resData = logWebVo.getResData();
+                    if (StringUtils.isNotEmpty(resData)) {
+                        if(StringUtils.indexOf(logWebVo.getResContentType(),"json") != -1){
+                            //json 格式化
+                            String formatData = JsonUtils.format(resData);
+                            logWebVo.setResDataText(formatData);
+                        }else{
+                            logWebVo.setResDataText(resData);
+                        }
+                    }
+                    //end
+
+                    //header
+                    String reqHeader = logWebVo.getReqHeader();
+                    logWebVo.setReqHeaderList(new ArrayList<DataMap>());
+                    Map<String,String> map = JsonUtils.json2Object(reqHeader, HashMap.class);
+                    Set<Map.Entry<String, String>> entries = map.entrySet();
+                    for (Map.Entry<String, String> entry : entries) {
+                        DataMap dataMap = new DataMap();
+                        dataMap.setKey(entry.getKey());
+                        dataMap.setValue(entry.getValue());
+                        logWebVo.getReqHeaderList().add(dataMap);
+                    }
+
+                    String resHeader = logWebVo.getResHeader();
+                    if(StringUtils.isNotEmpty(resHeader)){
+                        logWebVo.setResHeaderList(new ArrayList<DataMap>());
+                        map = JsonUtils.json2Object(resHeader, HashMap.class);
+                        entries = map.entrySet();
+                        for (Map.Entry<String, String> entry : entries) {
+                            DataMap dataMap = new DataMap();
+                            dataMap.setKey(entry.getKey());
+                            dataMap.setValue(entry.getValue());
+                            logWebVo.getResHeaderList().add(dataMap);
+                        }
+                    }
+                    //end
+
                     dataList.add(logWebVo);
                 }
             }

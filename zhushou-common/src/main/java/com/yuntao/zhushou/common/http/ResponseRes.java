@@ -1,6 +1,5 @@
 package com.yuntao.zhushou.common.http;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,6 +12,8 @@ public class ResponseRes {
     private byte [] result;
 
     private Integer status;
+
+    private String bodyText;
 
     public Map<String, String> getHeaders() {
         return headers;
@@ -36,5 +37,13 @@ public class ResponseRes {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getBodyText() {
+        return bodyText;
+    }
+
+    public void setBodyText(String bodyText) {
+        this.bodyText = bodyText;
     }
 }

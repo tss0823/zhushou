@@ -5,8 +5,11 @@ import com.yuntao.zhushou.dal.mybatis.IdTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -19,13 +22,15 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ImportResource("classpath:applicationContext-dal.xml")
-public class DalConfig {
+public class DalConfig implements ApplicationContextAware {
 
     @Value("classpath:mybatis-config.xml")
     Resource mybatisMapperConfig;
 
     @Autowired
     DataSource dataSource;
+
+    ApplicationContext applicationContext;
 
     @Bean
     public ConfigMapper configMapper() throws Exception {
@@ -46,6 +51,7 @@ public class DalConfig {
     public AppMapper appMapper() throws Exception {
         return newMapperFactoryBean(AppMapper.class).getObject();
     }
+
     @Bean
     public AppFrontMapper appFrontMapper() throws Exception {
         return newMapperFactoryBean(AppFrontMapper.class).getObject();
@@ -77,6 +83,7 @@ public class DalConfig {
     public AtParameterMapper atParameterMapper() throws Exception {
         return newMapperFactoryBean(AtParameterMapper.class).getObject();
     }
+
     @Bean
     public AtProcessInstMapper atProcessInstMapper() throws Exception {
         return newMapperFactoryBean(AtProcessInstMapper.class).getObject();
@@ -127,10 +134,12 @@ public class DalConfig {
     public ShowResMapper showResMapper() throws Exception {
         return newMapperFactoryBean(ShowResMapper.class).getObject();
     }
+
     @Bean
     public AppVersionMapper appVersionMapper() throws Exception {
         return newMapperFactoryBean(AppVersionMapper.class).getObject();
     }
+
     @Bean
     public AppDownloadRecordsMapper appDownloadRecordsMapper() throws Exception {
         return newMapperFactoryBean(AppDownloadRecordsMapper.class).getObject();
@@ -140,10 +149,27 @@ public class DalConfig {
     public WarnEventMapper warnEventMapper() throws Exception {
         return newMapperFactoryBean(WarnEventMapper.class).getObject();
     }
+
     @Bean
     public WarnEventResultMapper warnEventResultMapper() throws Exception {
         return newMapperFactoryBean(WarnEventResultMapper.class).getObject();
     }
+
+    @Bean
+    public ProxyReqFilterMapper proxyReqFilterMapper() throws Exception {
+        return newMapperFactoryBean(ProxyReqFilterMapper.class).getObject();
+    }
+
+    @Bean
+    public ProxyReqFilterItemMapper proxyReqFilterItemMapper() throws Exception {
+        return newMapperFactoryBean(ProxyReqFilterItemMapper.class).getObject();
+    }
+
+    @Bean
+    public ProxyResRewriteMapper proxyResRewriteMapper() throws Exception {
+        return newMapperFactoryBean(ProxyResRewriteMapper.class).getObject();
+    }
+
 
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {
@@ -159,6 +185,13 @@ public class DalConfig {
         fb.setConfigLocation(mybatisMapperConfig);
         fb.setDataSource(dataSource);
         fb.setTypeAliases(new Class<?>[]{IdTypeHandler.class});
+//        fb.setPlugins(new Interceptor[] { new MyBatisInterceptor(this.applicationContext) });
         return fb.getObject();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+
     }
 }

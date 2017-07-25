@@ -1,29 +1,22 @@
 package com.yuntao.zhushou.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yuntao.zhushou.common.web.DocObject;
-import com.yuntao.zhushou.common.web.DocReqFieldObject;
-import com.yuntao.zhushou.common.web.Pagination;
-import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.*;
+import com.yuntao.zhushou.common.web.DocObject;
+import com.yuntao.zhushou.common.web.DocReqFieldObject;
+import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.mapper.IdocUrlMapper;
-import com.yuntao.zhushou.model.domain.App;
-import com.yuntao.zhushou.model.domain.IdocParam;
-import com.yuntao.zhushou.model.domain.IdocUrl;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.IdocUrlType;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.model.vo.LogWebVo;
-import com.yuntao.zhushou.service.inter.AppService;
-import com.yuntao.zhushou.service.inter.IdocParamService;
-import com.yuntao.zhushou.service.inter.IdocUrlService;
-import com.yuntao.zhushou.service.inter.LogService;
+import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
 
 
@@ -58,6 +50,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
 
     @Autowired
     private AppService appService;
+
+    @Autowired
+    private ProxyResRewriteService proxyResRewriteService;
 
     @Override
     public List<IdocUrl> selectList(IdocUrlQuery query) {
@@ -89,6 +84,15 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             //
             String lastTime = DateUtil.getRangeTime(idocUrlVo.getGmtModify());
             idocUrlVo.setLastTime(lastTime);
+
+            //mock data
+            if(idocUrlVo.getMockDataId() != null){
+                ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(idocUrlVo.getMockDataId());
+                if(proxyResRewrite != null){
+                    idocUrlVo.setMockStatus(proxyResRewrite.getStatus());
+                }
+            }
+            //end
             newDataList.add(idocUrlVo);
         }
         return newPageInfo;
@@ -170,13 +174,8 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         }
         String response = logWebVo.getResponse();
         //json 格式化
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Object json = mapper.readValue(response, Object.class);
-            response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-            idocUrlVo.setResultData(response);
-        } catch (IOException e) {
-        }
+        String formatData = JsonUtils.format(response);
+        idocUrlVo.setResultData(formatData);
         return idocUrlVo;
     }
 
@@ -228,10 +227,20 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     public IdocUrlVo getIdocUrlVoById(Long id) {
         IdocUrl idocUrl = this.findById(id);
         IdocUrlVo idocUrlVo = BeanUtils.beanCopy(idocUrl, IdocUrlVo.class);
+        String formatResultData = JsonUtils.format(idocUrlVo.getResultData());
+        idocUrlVo.setResultData(formatResultData);
 
         //获取参数
         List<IdocParam> paramList = idocParamService.selectByParentId(idocUrl.getId());
         idocUrlVo.setParamList(paramList);
+
+        //mock data
+        if(idocUrl.getMockDataId() != null){
+            ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(idocUrl.getMockDataId());
+            //json 格式化
+            String formatData = JsonUtils.format(proxyResRewrite.getData());
+            idocUrlVo.setMockData(formatData);
+        }
         return idocUrlVo;
     }
 

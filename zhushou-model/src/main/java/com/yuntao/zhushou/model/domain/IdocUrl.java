@@ -80,6 +80,11 @@ public class IdocUrl implements Serializable {
 	 * 资源id
 	 */
 	private Long showResId;
+
+	/**
+	 * mock 数据id
+	 */
+	private Long mockDataId;
 	
 	public IdocUrl(){
 	}
@@ -214,5 +219,13 @@ public class IdocUrl implements Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public Long getMockDataId() {
+		return mockDataId;
+	}
+
+	public void setMockDataId(Long mockDataId) {
+		this.mockDataId = mockDataId;
 	}
 }

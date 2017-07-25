@@ -1,8 +1,10 @@
 package com.yuntao.zhushou.deploy.controller;
 
+import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.IdocUrl;
+import com.yuntao.zhushou.model.domain.ProxyResRewrite;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.IdocUrlType;
 import com.yuntao.zhushou.model.param.IdocDataParam;
@@ -11,6 +13,7 @@ import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
+import com.yuntao.zhushou.service.inter.ProxyResRewriteService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +34,9 @@ public class IdocUrlController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProxyResRewriteService proxyResRewriteService;
 
     @RequestMapping("list")
     @NeedLogin
@@ -86,12 +92,16 @@ public class IdocUrlController extends BaseController {
         return responseObject;
     }
 
+
     @RequestMapping("save")
     @NeedLogin
     public ResponseObject save(IdocDataParam idocDataParam) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         idocDataParam.setType(IdocUrlType.inters.getCode());
+        String resultData = idocDataParam.getResultData();
+        String compressData = JsonUtils.compress(resultData);
+        idocDataParam.setResultData(compressData);
         idocUrlService.save(idocDataParam,user);
         return responseObject;
     }
@@ -102,7 +112,35 @@ public class IdocUrlController extends BaseController {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         idocDataParam.setType(IdocUrlType.inters.getCode());
+        String resultData = idocDataParam.getResultData();
+        String compressData = JsonUtils.compress(resultData);
+        idocDataParam.setResultData(compressData);
         idocUrlService.update(idocDataParam,user);
+        return responseObject;
+    }
+
+    @RequestMapping("changeMockStatus")
+    @NeedLogin
+    public ResponseObject changeMockStatus(@RequestParam Long mockDataId,@RequestParam Integer status) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(mockDataId);
+        User user = userService.getCurrentUser();
+        proxyResRewrite.setUserId(user.getId());
+        proxyResRewrite.setStatus(status);
+        proxyResRewriteService.updateById(proxyResRewrite);
+        return responseObject;
+    }
+
+    @RequestMapping("updateMockData")
+    @NeedLogin
+    public ResponseObject updateMockData(@RequestParam Long mockDataId,@RequestParam String mockData) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(mockDataId);
+        User user = userService.getCurrentUser();
+        proxyResRewrite.setUserId(user.getId());
+        String compressData = JsonUtils.compress(mockData);
+        proxyResRewrite.setData(compressData);
+        proxyResRewriteService.updateById(proxyResRewrite);
         return responseObject;
     }
 

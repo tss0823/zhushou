@@ -4,8 +4,6 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.model.domain.ProxyContent;
 import com.yuntao.zhushou.model.enums.ProxyContentStatus;
 import com.yuntao.zhushou.service.impl.AbstService;
-import com.yuntao.zhushou.service.inter.LogService;
-import com.yuntao.zhushou.service.inter.ProxyContentService;
 import com.yuntao.zhushou.service.inter.ProxyEsService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -101,6 +99,7 @@ public class HttpProxyServerSupport extends AbstService {
                                             proxyContent.setUrl(uri);
                                             try {
                                                 URL oURL = new URL(uri);
+                                                proxyContent.setProtocol(oURL.getProtocol());
                                                 proxyContent.setDomain(oURL.getAuthority());
                                                 proxyContent.setPathUrl(oURL.getPath());
                                             } catch (MalformedURLException e) {
@@ -214,14 +213,14 @@ public class HttpProxyServerSupport extends AbstService {
         if(reqByteArrayBuffer.length() > 0){
             byte[] buffer = reqByteArrayBuffer.buffer();
 //            String content = new String(buffer);
-            proxyContent.setReqData(buffer);
+            proxyContent.setReqData(new String(buffer));
         }
 
         //resData
         if(resByteArrayBuffer.length() > 0){
             byte[] buffer = resByteArrayBuffer.buffer();
 //            String content = new String(buffer);
-            proxyContent.setResData(buffer);
+            proxyContent.setResData(new String(buffer));
             proxyContent.setResLength(buffer.length);
         }
         proxyContent.setStatus(status);

@@ -34,6 +34,9 @@ public class ProxyContent implements Serializable {
 	/**  clientIp * */
 	private String clientIp;
 
+	/**  协议，http https * */
+	private String protocol;
+
 	/**  domain * */
 	private String domain;
 
@@ -47,13 +50,13 @@ public class ProxyContent implements Serializable {
 	private String reqHeader;
 
 	/**  请求数据 * */
-	private byte [] reqData;
+	private String reqData;
 
 	/**  返回头 * */
 	private String resHeader;
 
 	/**  返回数据 * */
-	private byte [] resData;
+	private String resData;
 
 	/**  返回数据格式 * */
 	private String resContentType;
@@ -80,6 +83,9 @@ public class ProxyContent implements Serializable {
 	private Boolean delStatus;
 
 	private String lastTime;
+
+	/** 是否存储 */
+	private boolean store;
 
 
 	public ProxyContent(){
@@ -125,28 +131,12 @@ public class ProxyContent implements Serializable {
 		this.reqHeader = reqHeader;
 	}
 
-	public byte [] getReqData() {
-		return reqData;
-	}
-
-	public void setReqData(byte [] reqData) {
-		this.reqData = reqData;
-	}
-
 	public String getResHeader() {
 		return resHeader;
 	}
 
 	public void setResHeader(String resHeader) {
 		this.resHeader = resHeader;
-	}
-
-	public byte [] getResData() {
-		return resData;
-	}
-
-	public void setResData(byte [] resData) {
-		this.resData = resData;
 	}
 
 	public String getReqMethod() {
@@ -243,5 +233,37 @@ public class ProxyContent implements Serializable {
 
 	public void setLastTime(String lastTime) {
 		this.lastTime = lastTime;
+	}
+
+	public String getReqData() {
+		return reqData;
+	}
+
+	public void setReqData(String reqData) {
+		this.reqData = reqData;
+	}
+
+	public String getResData() {
+		return resData;
+	}
+
+	public void setResData(String resData) {
+		this.resData = resData;
+	}
+
+	public boolean isStore() {
+		return store;
+	}
+
+	public void setStore(boolean store) {
+		this.store = store;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 }
