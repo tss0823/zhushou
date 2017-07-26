@@ -29,6 +29,6 @@ public class AppBootServer implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         dzMessageHelperServer.start();
 
-        httpSnoopServer.init();
+//        httpSnoopServer.init();
     }
 }
