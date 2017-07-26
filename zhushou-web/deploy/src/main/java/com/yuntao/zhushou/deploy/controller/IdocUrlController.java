@@ -228,6 +228,8 @@ public class IdocUrlController extends BaseController {
         IdocUrl newsDocByUrl = idocUrlService.findNewsDocByUrl(appName, pathUrl);
         if(newsDocByUrl != null && newsDocByUrl.getMockStatus() == YesNoIntType.yes.getCode()){
             responseObject.setData(newsDocByUrl.getResultData());
+        }else{
+            responseObject.setSuccess(false);
         }
         return responseObject;
     }
