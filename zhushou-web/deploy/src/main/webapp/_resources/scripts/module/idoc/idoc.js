@@ -144,7 +144,7 @@
             });
 
             $("button[id='btnMockDataUpdate']").click(function () {
-                var params = {mockDataId:$("#mockDataId").val(),mockData:$("#mockData").val()};
+                var params = {id:$("#id").val(),mockData:$("#mockData").val()};
                 YT.deploy.util.reqPost("/idocUrl/updateMockData", params, function (d) {
                     alert("修改mock数据成功");
                     YT.deploy.idocList.query(1);

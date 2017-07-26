@@ -13,7 +13,7 @@
         <result column="module" property="module"/>
         <result column="version" property="version"/>
         <result column="resultData" property="resultData"/>
-        <result column="resultCommentData" property="resultCommentData"/>
+        <result column="resultMockData" property="resultMockData"/>
         <result column="status" property="status"/>
         <result column="gmtCreate" property="gmtCreate"/>
         <result column="gmtModify" property="gmtModify"/>
@@ -24,12 +24,14 @@
         <result column="type" property="type"/>
         <result column="showResId" property="showResId"/>
         <result column="mockDataId" property="mockDataId"/>
+        <result column="mockStatus" property="mockStatus"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
-    `id`,`companyId`,`url`,`name`,`appName`,`module`,`version`,`resultCommentData`,`resultData`,`status`,
-    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`
+    `id`,`companyId`,`url`,`name`,`appName`,`module`,`version`,`resultMockData`,`resultData`,`status`,
+    `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`,
+    `mockStatus`
     
   </sql>
 
@@ -62,6 +64,7 @@
         <if test="mockDataId != null">and `mockDataId` = #{mockDataId}</if>
         <if test="nameLike != null and nameLike != '' ">and `name` like concat('%',#{nameLike},'%')</if>
         <if test="urlLike != null and urlLike != '' ">and `url` like concat('%',#{urlLike},'%')</if>
+        <if test="mockStatus != null">and `mockStatus` = #{mockStatus}</if>
     </sql>
 
 
@@ -106,13 +109,14 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `companyId`,`url`,`name`, `appName`,`module`,`version`,`resultData`,`resultCommentData`,`status`,
-        `gmtCreate`,`gmtModify`,`delStatus`, `memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`
+        `companyId`,`url`,`name`, `appName`,`module`,`version`,`resultData`,`resultMockData`,`status`,
+        `gmtCreate`,`gmtModify`,`delStatus`, `memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`,
+        `mockStatus`
         )
         values
         (
-        #{companyId},#{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultCommentData},#{status},
-        now(6), now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId},#{mockDataId}
+        #{companyId},#{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultMockData},#{status},
+        now(6), now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId},#{mockDataId},#{mockStatus}
         )
     </insert>
 
@@ -127,7 +131,7 @@
             <if test="module != null and module !=''">`module` = #{module},</if>
             <if test="version != null and version !=''">`version` = #{version},</if>
             <if test="resultData != null and resultData !=''">`resultData` = #{resultData},</if>
-            <if test="resultCommentData != null and resultCommentData !=''">`resultCommentData` = #{resultCommentData}, </if>
+            <if test="resultMockData != null and resultMockData !=''">`resultMockData` = #{resultMockData}, </if>
             <if test="status != null and status !=''">`status` = #{status},</if>
             <if test="memo != null and memo !=''">`memo` = #{memo},</if>
             <if test="createUserId != null and createUserId !=''">`createUserId` = #{createUserId},</if>
@@ -135,6 +139,7 @@
             <if test="type != null">`type` = #{type},</if>
             <if test="showResId != null">`showResId` = #{showResId},</if>
             <if test="mockDataId != null">`mockDataId` = #{mockDataId},</if>
+            <if test="mockStatus != null">`mockStatus` = #{mockStatus},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

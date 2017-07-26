@@ -49,6 +49,14 @@ public interface IdocUrlService {
      */
     IdocUrl findDocByUrlAndVer(String appName,String url,String ver);
 
+    /**
+     * 根据url and verion获得最新对象
+     * @param url
+     * @return
+     */
+    IdocUrl findNewsDocByUrl(String appName,String url);
+
+
     IdocUrl findEnumByUrl(String appName,String url);
 
 

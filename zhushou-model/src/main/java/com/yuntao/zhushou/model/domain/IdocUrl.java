@@ -47,10 +47,13 @@ public class IdocUrl implements Serializable {
 	private String resultData;
 
 	/**  返回注解数据 * */
-	private String resultCommentData;
-		
-	/**  状态 * */
+	private String resultMockData;
+
+	/**  mock状态(0 未开启，1 已开启) * */
 	private Integer status;
+
+	/**  状态 * */
+	private Integer mockStatus;
 		
 	/**  创建时间 * */
 	private Date gmtCreate;
@@ -85,6 +88,7 @@ public class IdocUrl implements Serializable {
 	 * mock 数据id
 	 */
 	private Long mockDataId;
+
 	
 	public IdocUrl(){
 	}
@@ -197,12 +201,12 @@ public class IdocUrl implements Serializable {
 		this.type = type;
 	}
 
-	public String getResultCommentData() {
-		return resultCommentData;
+	public String getResultMockData() {
+		return resultMockData;
 	}
 
-	public void setResultCommentData(String resultCommentData) {
-		this.resultCommentData = resultCommentData;
+	public void setResultMockData(String resultMockData) {
+		this.resultMockData = resultMockData;
 	}
 
 	public Long getShowResId() {
@@ -227,5 +231,13 @@ public class IdocUrl implements Serializable {
 
 	public void setMockDataId(Long mockDataId) {
 		this.mockDataId = mockDataId;
+	}
+
+	public Integer getMockStatus() {
+		return mockStatus;
+	}
+
+	public void setMockStatus(Integer mockStatus) {
+		this.mockStatus = mockStatus;
 	}
 }

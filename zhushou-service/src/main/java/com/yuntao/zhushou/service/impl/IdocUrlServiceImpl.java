@@ -11,6 +11,7 @@ import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.mapper.IdocUrlMapper;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.IdocUrlType;
+import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocParamVo;
@@ -85,13 +86,13 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             String lastTime = DateUtil.getRangeTime(idocUrlVo.getGmtModify());
             idocUrlVo.setLastTime(lastTime);
 
-            //mock data
-            if(idocUrlVo.getMockDataId() != null){
-                ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(idocUrlVo.getMockDataId());
-                if(proxyResRewrite != null){
-                    idocUrlVo.setMockStatus(proxyResRewrite.getStatus());
-                }
-            }
+//            //mock data
+//            if(idocUrlVo.getMockDataId() != null){
+//                ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(idocUrlVo.getMockDataId());
+//                if(proxyResRewrite != null){
+//                    idocUrlVo.setMockStatus(proxyResRewrite.getStatus());
+//                }
+//            }
             //end
             newDataList.add(idocUrlVo);
         }
@@ -120,6 +121,32 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             }
         }
         return null;
+    }
+
+    @Override
+    public IdocUrl findNewsDocByUrl(String appName, String url) {
+        IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setAppName(appName);
+        idocUrlQuery.setType(IdocUrlType.inters.getCode());
+        idocUrlQuery.setUrl(url);
+        List<IdocUrl> dataList = this.selectList(idocUrlQuery);
+        IdocUrl newsIdocUrl = null;
+        Integer maxVersion = null;
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (IdocUrl idocUrl : dataList) {
+                if (maxVersion == null) {
+                    maxVersion = VersionUtils.toNumber(idocUrl.getVersion());
+                } else {
+                    int currentVersion = VersionUtils.toNumber(idocUrl.getVersion());
+                    if (maxVersion < currentVersion) {
+                        maxVersion = currentVersion;
+                        newsIdocUrl = idocUrl;
+                    }
+                }
+            }
+
+        }
+        return newsIdocUrl;
     }
 
     @Override
@@ -201,8 +228,15 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         String returnObjJson = JsonUtils.object2Json(returnObj);
 
 
+        returnObjJson = JsonUtils.compress(returnObjJson);
+
+        idocUrl.setMockStatus(YesNoIntType.no.getCode());
+        //mock data
         idocUrl.setResultData(returnObjJson);
-//        idocUrl.setResultCommentData(returnObjJson);
+        String mockData = returnObjJson.replaceAll("\\^#\\^[^\"]*", "");
+        mockData = mockData.replaceAll("\\[[^\\]]+\\]", "");
+        idocUrl.setResultMockData(mockData);
+        //end
         this.insert(idocUrl);
 
         //param
@@ -234,13 +268,12 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         List<IdocParam> paramList = idocParamService.selectByParentId(idocUrl.getId());
         idocUrlVo.setParamList(paramList);
 
-        //mock data
-        if(idocUrl.getMockDataId() != null){
-            ProxyResRewrite proxyResRewrite = proxyResRewriteService.findById(idocUrl.getMockDataId());
+        if(StringUtils.isNotEmpty(idocUrlVo.getResultMockData())){
             //json 格式化
-            String formatData = JsonUtils.format(proxyResRewrite.getData());
-            idocUrlVo.setMockData(formatData);
+            String formatData = JsonUtils.format(idocUrl.getResultMockData());
+            idocUrlVo.setResultMockData(formatData);
         }
+
         return idocUrlVo;
     }
 
@@ -252,6 +285,15 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         idocUrl.setCompanyId(user.getCompanyId());
         idocUrl.setCreateUserId(user.getId());
         idocUrl.setCreateUserName(user.getNickName());
+
+        idocUrl.setMockStatus(YesNoIntType.no.getCode());
+        //mock data
+        String resultData = idocUrl.getResultData();
+        idocUrl.setResultData(resultData);
+        String mockData = resultData.replaceAll("\\^#\\^[^\"]*", "");
+        mockData = mockData.replaceAll("\\[[^\\]]+\\]", "");
+        idocUrl.setResultMockData(mockData);
+        //end
         this.insert(idocUrl);
 
         if (CollectionUtils.isNotEmpty(paramList)) {
@@ -273,6 +315,13 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         IdocUrl idocUrl = BeanUtils.beanCopy(idocDataParam, IdocUrl.class);
         idocUrl.setCreateUserId(user.getId());
         idocUrl.setCreateUserName(user.getNickName());
+        //mock data
+        String resultData = idocUrl.getResultData();
+        idocUrl.setResultData(resultData);
+        String mockData = resultData.replaceAll("\\^#\\^[^\"]*", "");
+        mockData = mockData.replaceAll("\\[[^\\]]+\\]", "");
+        idocUrl.setResultMockData(mockData);
+        //end
         this.updateById(idocUrl);
 
         //先删除

@@ -18,4 +18,12 @@ public class VersionUtils {
         }
         return versionStr.charAt(0)+"."+versionStr.charAt(1)+"."+versionStr.charAt(2);
     }
+
+    public static int toNumber(String version) {
+        if(StringUtils.isEmpty(version)){
+            return 0;
+        }
+        String versionStr = version.replaceAll("\\.","");
+        return Integer.valueOf(versionStr);
+    }
 }

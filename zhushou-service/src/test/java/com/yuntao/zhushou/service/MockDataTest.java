@@ -29,7 +29,7 @@ public class MockDataTest extends BaseServiceTest {
 
 
 
-    @Test
+//    @Test
     public void test1() {
         IdocUrlQuery query = new IdocUrlQuery();
         Long userId = 1L;
@@ -78,6 +78,40 @@ public class MockDataTest extends BaseServiceTest {
         }
 
     }
+
+    @Test
+    public void test2() {
+        IdocUrlQuery query = new IdocUrlQuery();
+        Long userId = 1L;
+//        Long userId = 8L;
+        query.setUserId(userId);
+        query.setType(IdocUrlType.inters.getCode());
+        query.setPageSize(2000);
+        Pagination<IdocUrlVo> pagination = idocUrlService.selectPage(query);
+        List<IdocUrlVo> dataList = pagination.getDataList();
+        boolean first = true;
+        for (IdocUrlVo idocUrlVo : dataList) {
+//            if(first){
+//                first = false;
+//                continue;
+//            }
+            String resultData = idocUrlVo.getResultData();
+            String mockData = resultData.replaceAll("\\^#\\^[^\"]*", "");
+            mockData = mockData.replaceAll("\\[[^\\]]+\\]", "");
+            String compressData = JsonUtils.compress(mockData);
+
+            //update set mockDataId
+            IdocUrl idocUrl = BeanUtils.beanCopy(idocUrlVo, IdocUrl.class);
+            idocUrl.setResultMockData(compressData);
+            idocUrl.setMockStatus(YesNoIntType.no.getCode());
+
+            idocUrlService.updateById(idocUrl);
+            break;
+
+        }
+
+    }
+
 
     public static void main(String[] args) {
 //        String content = "{\"aa\":\"bbb^#^cccc\"}";

@@ -264,7 +264,7 @@
                 }
                 var id = $(this).attr("data");
                 var status = $(this).attr("status");
-                YT.deploy.util.reqPost("/idocUrl/changeMockStatus", {mockDataId:id,status:status}, function (d) {
+                YT.deploy.util.reqPost("/idocUrl/changeMockStatus", {id:id,status:status}, function (d) {
                     alert(actionText+"成功");
                     YT.deploy.idocList.query(1);
                 });
