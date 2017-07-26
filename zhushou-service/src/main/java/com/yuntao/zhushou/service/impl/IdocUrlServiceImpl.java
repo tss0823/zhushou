@@ -136,6 +136,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
             for (IdocUrl idocUrl : dataList) {
                 if (maxVersion == null) {
                     maxVersion = VersionUtils.toNumber(idocUrl.getVersion());
+                    newsIdocUrl = idocUrl;
                 } else {
                     int currentVersion = VersionUtils.toNumber(idocUrl.getVersion());
                     if (maxVersion < currentVersion) {
