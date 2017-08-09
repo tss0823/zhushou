@@ -91,10 +91,10 @@ public class MockDataTest extends BaseServiceTest {
         List<IdocUrlVo> dataList = pagination.getDataList();
         boolean first = true;
         for (IdocUrlVo idocUrlVo : dataList) {
-//            if(first){
-//                first = false;
-//                continue;
-//            }
+            if(first){
+                first = false;
+                continue;
+            }
             String resultData = idocUrlVo.getResultData();
             String mockData = resultData.replaceAll("\\^#\\^[^\"]*", "");
             mockData = mockData.replaceAll("\\[[^\\]]+\\]", "");
@@ -106,7 +106,7 @@ public class MockDataTest extends BaseServiceTest {
             idocUrl.setMockStatus(YesNoIntType.no.getCode());
 
             idocUrlService.updateById(idocUrl);
-            break;
+//            break;
 
         }
 

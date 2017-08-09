@@ -50,8 +50,8 @@ public class DataController extends  BaseController {
         responseObject.put("logQueryType", LogQueryType.values());
         responseObject.put("logQueryTextCat", LogQueryTextCat.values());
         responseObject.put("logModel", LogModel.values());
-        responseObject.put("paramRuleType",AtParamterRuleType.values());
-        responseObject.put("paramDataType",AtParamterDataType.values());
+        responseObject.put("paramRuleType", AtParameterRuleType.values());
+        responseObject.put("paramDataType", AtParameterDataType.values());
         responseObject.put("moduleType",ModuleType.values());
         responseObject.put("yesNoType",YesNoType.values());
         responseObject.put("logStatus",LogStatus.values());

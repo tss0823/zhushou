@@ -38,6 +38,7 @@
         <typeAlias alias="ProxyReqFilter" type="com.yuntao.zhushou.model.domain.ProxyReqFilter"/>
         <typeAlias alias="ProxyReqFilterItem" type="com.yuntao.zhushou.model.domain.ProxyReqFilterItem"/>
         <typeAlias alias="ProxyResRewrite" type="com.yuntao.zhushou.model.domain.ProxyResRewrite"/>
+        <typeAlias alias="AtVariable" type="com.yuntao.zhushou.model.domain.AtVariable"/>
     </typeAliases>
 
     <mappers>
@@ -68,6 +69,7 @@
         <mapper resource="mapper/ProxyReqFilterMapper.xml"/>
         <mapper resource="mapper/ProxyReqFilterItemMapper.xml"/>
         <mapper resource="mapper/ProxyResRewriteMapper.xml"/>
+        <mapper resource="mapper/AtVariableMapper.xml"/>
     </mappers>
 
 </configuration>

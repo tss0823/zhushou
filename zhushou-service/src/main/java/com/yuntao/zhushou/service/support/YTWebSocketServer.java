@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
@@ -69,7 +68,7 @@ public class YTWebSocketServer extends WebSocketServer implements InitializingBe
 
     }
 
-    public void sendMessage(String type,String message){
+    public void sendMessage(String type, String message){
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setType(type);
         responseObject.setData(message);

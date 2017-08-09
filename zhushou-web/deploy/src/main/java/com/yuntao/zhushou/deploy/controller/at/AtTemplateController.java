@@ -1,22 +1,26 @@
 package com.yuntao.zhushou.deploy.controller.at;
 
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.AtParameter;
-import com.yuntao.zhushou.model.domain.User;
-import com.yuntao.zhushou.model.query.AtTemplateQuery;
-import com.yuntao.zhushou.model.vo.AtTemplateVo;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.dal.annotation.NeedLogin;
+import com.yuntao.zhushou.deploy.controller.BaseController;
+import com.yuntao.zhushou.model.domain.AtActive;
+import com.yuntao.zhushou.model.domain.AtParameter;
+import com.yuntao.zhushou.model.domain.AtVariable;
+import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.AtVariableScope;
+import com.yuntao.zhushou.model.query.AtTemplateQuery;
+import com.yuntao.zhushou.model.vo.AtTemplateVo;
+import com.yuntao.zhushou.service.inter.AtActiveService;
+import com.yuntao.zhushou.service.inter.AtParameterService;
 import com.yuntao.zhushou.service.inter.AtTemplateService;
-import com.yuntao.zhushou.service.inter.UserService;
+import com.yuntao.zhushou.service.inter.AtVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -31,7 +35,13 @@ public class AtTemplateController extends BaseController {
     private AtTemplateService atTemplateService;
 
     @Autowired
-    private UserService userService;
+    private AtActiveService atActiveService;
+
+    @Autowired
+    private AtParameterService atParameterService;
+
+    @Autowired
+    private AtVariableService atVariableService;
 
 
     @RequestMapping("list")
@@ -44,16 +54,63 @@ public class AtTemplateController extends BaseController {
     }
 
 
-    @RequestMapping("save")
+    @RequestMapping("saveTemplate")
     @NeedLogin
-    public ResponseObject save(AtTemplateVo template,@RequestParam HashMap<String,List<AtParameter>> paramMap) {
+    public ResponseObject saveTemplate(AtTemplateVo template) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         template.setUserId(user.getId());
         template.setUserName(user.getNickName());
-//        atTemplateService.save(template,logIds);
+        atTemplateService.insert(template);
         return responseObject;
     }
 
 
+    @RequestMapping("saveActive")
+    @NeedLogin
+    public ResponseObject saveActive(@RequestParam Long templateId, AtActive active, List<AtParameter> parameterList) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        int result = atActiveService.save(templateId,active, parameterList);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("saveVariable")
+    @NeedLogin
+    public ResponseObject saveVariable(@RequestParam(required = false) Long templateId, @RequestParam  String key,@RequestParam  String value) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        User user = userService.getCurrentUser();
+        AtVariable atVariable = new AtVariable();
+        atVariable.setKey(key);
+        atVariable.setValue(value);
+        atVariable.setUserId(user.getId());
+        if(templateId != null){
+           atVariable.setTemplateId(templateId);
+           atVariable.setScope(AtVariableScope.global.getCode());
+        }else{
+            atVariable.setScope(AtVariableScope.pri.getCode());
+        }
+        int result = atVariableService.insert(atVariable);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+
+    @RequestMapping("start")
+    @NeedLogin
+    public ResponseObject start(final @RequestParam Long id) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    User user = userService.getCurrentUser();
+                    atTemplateService.start(id, user);
+                }catch (Exception e){
+                    throw e;
+                }
+            }
+        }).start();
+        return responseObject;
+    }
 }

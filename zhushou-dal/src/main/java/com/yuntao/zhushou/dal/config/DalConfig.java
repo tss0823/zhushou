@@ -170,6 +170,11 @@ public class DalConfig implements ApplicationContextAware {
         return newMapperFactoryBean(ProxyResRewriteMapper.class).getObject();
     }
 
+    @Bean
+    public AtVariableMapper atVariableMapper() throws Exception {
+        return newMapperFactoryBean(AtVariableMapper.class).getObject();
+    }
+
 
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {

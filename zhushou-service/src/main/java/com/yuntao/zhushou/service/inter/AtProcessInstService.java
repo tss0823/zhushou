@@ -60,12 +60,6 @@ public interface AtProcessInstService {
      */
     int deleteById(Long id);
 
-    /**
-     * 流程启动
-     * @param id
-     */
-    void start(Long id);
-
 
 
 }

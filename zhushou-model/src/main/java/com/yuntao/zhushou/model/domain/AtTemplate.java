@@ -39,7 +39,7 @@ public class AtTemplate implements Serializable {
 	private Date gmtCreate;
 		
 	/**  修改时间 * */
-	private Date gtmModify;
+	private Date gmtModify;
 		
 	/**  是否删除（1:没有；0：已删除） * */
 	private Integer delStatus;
@@ -90,13 +90,15 @@ public class AtTemplate implements Serializable {
 	public Date getGmtCreate() {
 		return this.gmtCreate;
 	}
-	public void setGtmModify(Date value) {
-		this.gtmModify = value;
+
+	public Date getGmtModify() {
+		return gmtModify;
 	}
-	
-	public Date getGtmModify() {
-		return this.gtmModify;
+
+	public void setGmtModify(Date gmtModify) {
+		this.gmtModify = gmtModify;
 	}
+
 	public void setDelStatus(Integer value) {
 		this.delStatus = value;
 	}

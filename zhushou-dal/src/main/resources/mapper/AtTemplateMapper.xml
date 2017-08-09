@@ -11,13 +11,13 @@
      <result  column="userName" property="userName"/>
      <result  column="model" property="model"/>
      <result  column="gmtCreate" property="gmtCreate"/>
-     <result  column="gtmModify" property="gtmModify"/>
+     <result  column="gmtModify" property="gmtModify"/>
      <result  column="delStatus" property="delStatus"/>
 </resultMap>
         
     
  <sql id="Base_Column_List">
-    `id`,`name`,`userId`,`userName`,`model`,`gmtCreate`,`gtmModify`,`delStatus`       
+    `id`,`name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`       
     
   </sql>
         
@@ -34,8 +34,6 @@
     <if test="userId != null and userId != '' ">and  `userId` = #{userId}</if> 
     <if test="userName != null and userName != '' ">and  `userName` = #{userName}</if> 
     <if test="model != null and model != '' ">and  `model` = #{model}</if> 
-    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
-    <if test="gtmModify != null and gtmModify != '' ">and  `gtmModify` = #{gtmModify}</if> 
   </sql>
   
         
@@ -75,11 +73,11 @@
     insert into  <include refid="Base_Table_Name" />
     (
            
-    `name`,`userId`,`userName`,`model`,`gmtCreate`,`gtmModify`,`delStatus`
+    `name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`
     ) 
     values
     (
-    #{name},#{userId},#{userName},#{model},now(6),#{gtmModify},1
+    #{name},#{userId},#{userName},#{model},now(6),now(6),1
     )
   </insert>  
     
@@ -90,7 +88,6 @@
        <if test="userId != null and userId !=''">`userId` = #{userId},</if>
        <if test="userName != null and userName !=''">`userName` = #{userName},</if>
        <if test="model != null and model !=''">`model` = #{model},</if>
-       <if test="gtmModify != null and gtmModify !=''">`gtmModify` = #{gtmModify},</if>
      </set>
    ,gmtModify = now(6)
    where id = #{id}

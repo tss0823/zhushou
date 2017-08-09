@@ -1,17 +1,19 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AtActiveMapper;
 import com.yuntao.zhushou.model.domain.AtActive;
+import com.yuntao.zhushou.model.domain.AtParameter;
 import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.vo.AtActiveVo;
-import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.AtActiveService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.yuntao.zhushou.service.inter.AtParameterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,9 @@ public class AtActiveServiceImpl implements AtActiveService {
 
     @Autowired
     private AtActiveMapper atActiveMapper;
+
+    @Autowired
+    private AtParameterService atParameterService;
 
     @Override
     public List<AtActive> selectList(AtActiveQuery query) {
@@ -81,6 +86,20 @@ public class AtActiveServiceImpl implements AtActiveService {
     @Override
     public int deleteById(Long id) {
         return atActiveMapper.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public int save(Long templateId,AtActive active, List<AtParameter> parameterList) {
+        active.setTemplateId(templateId);
+        this.insert(active);
+
+        //save parameterList
+        for (AtParameter atParameter : parameterList) {
+            atParameter.setActiveId(active.getId());
+            atParameterService.insert(atParameter) ;
+        }
+        return 1;
     }
 
 }

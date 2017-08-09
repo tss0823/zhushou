@@ -1,9 +1,11 @@
 package com.yuntao.zhushou.service.inter;
 
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.AtActive;
+import com.yuntao.zhushou.model.domain.AtParameter;
 import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.vo.AtActiveVo;
-import com.yuntao.zhushou.common.web.Pagination;
+
 import java.util.List;
 
 
@@ -59,6 +61,14 @@ public interface AtActiveService {
      * @return
      */
     int deleteById(Long id);
+
+    /***
+     * 保存活动模版
+     * @param active
+     * @param parameterList
+     * @return
+     */
+    int save(Long templateId,AtActive active, List<AtParameter> parameterList);
 
 
 

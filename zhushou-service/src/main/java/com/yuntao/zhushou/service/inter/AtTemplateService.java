@@ -1,9 +1,11 @@
 package com.yuntao.zhushou.service.inter;
 
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.AtTemplate;
+import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
-import com.yuntao.zhushou.common.web.Pagination;
+
 import java.util.List;
 
 
@@ -74,6 +76,13 @@ public interface AtTemplateService {
      * @return
      */
     AtTemplateVo getTemplateVo(Long templteId);
+
+    /**
+     * 发起流程
+     * @param id
+     * @param user
+     */
+    void start(Long id,User user);
 
 
 
