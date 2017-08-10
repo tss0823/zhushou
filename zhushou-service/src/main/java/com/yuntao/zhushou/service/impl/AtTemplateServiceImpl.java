@@ -15,7 +15,7 @@ import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AtTemplateMapper;
 import com.yuntao.zhushou.model.domain.*;
-import com.yuntao.zhushou.model.enums.AtParameterRuleType;
+import com.yuntao.zhushou.model.enums.AtParameterDataType;
 import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.query.AtParameterQuery;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
@@ -26,6 +26,7 @@ import com.yuntao.zhushou.model.vo.LogWebVo;
 import com.yuntao.zhushou.service.inter.*;
 import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -152,9 +153,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 parameter.setCode(key);
 //                parameter.setDataType(key);
                 //byte 为文件流做准备,之后读取key后，可以修改value
-                parameter.setDataValue(paramJsonObj.getString(key).getBytes());
+                parameter.setDataValue(paramJsonObj.getString(key));
                 parameter.setActiveId(active.getId());
-                parameter.setRuleType(AtParameterRuleType.statics.getCode());
+                parameter.setDataType(AtParameterDataType.statics.getCode());
 //                parameter.setScript();
                 atParameterService.insert(parameter);
             }
@@ -204,6 +205,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 //        List<RequestRes> requestResList = new ArrayList<>();
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             RequestRes requestRes = new RequestRes();
+            requestRes.setUrl(activeVo.getUrl());
 //            requestResList.add(requestRes);
 
             //headers
@@ -243,29 +245,35 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                     //TODO file
                     String value = new String(parameterVo.getDataValue());
                     parameterVo.getDataType();
-                    Integer ruleType = parameterVo.getRuleType();
-                    String script = parameterVo.getScript();
-                    if (ruleType == AtParameterRuleType.statics.getCode()) {  //静态
-                        byte[] dataValue = parameterVo.getDataValue();
+                    Integer dataType = parameterVo.getDataType();
+                    String dataValue = parameterVo.getDataValue();
+                    if (dataType == AtParameterDataType.statics.getCode()) {  //静态
 //                        String[] strings = script.split("-");
 //                        Integer startNum = Integer.valueOf(strings[0].trim());
 //                        Integer endNum = Integer.valueOf(strings[1].trim());
 //                        Integer realValue = RandomUtils.nextInt(startNum, endNum);
                         value = dataValue.toString();
-                    }else if (ruleType == AtParameterRuleType.integer.getCode()) {  //整数
-                        String[] strings = script.split("-");
+                    }else if (dataType == AtParameterDataType.integer.getCode()) {  //整数
+                        String[] strings = dataValue.split(",");
                         Integer startNum = Integer.valueOf(strings[0].trim());
                         Integer endNum = Integer.valueOf(strings[1].trim());
                         Integer realValue = RandomUtils.nextInt(startNum, endNum);
                         value = realValue.toString();
-                    } else if (ruleType == AtParameterRuleType.decimal.getCode()) { //小数
-                        String[] strings = script.split("-");
+                    } else if (dataType == AtParameterDataType.decimal.getCode()) { //小数
+                        String[] strings = dataValue.split(",");
                         Double startNum = Double.valueOf(strings[0].trim());
                         Double endNum = Double.valueOf(strings[1].trim());
                         Double realValue = RandomUtils.nextDouble(startNum, endNum);
                         value = realValue.toString();
 
-                    } else if (ruleType == AtParameterRuleType.result.getCode()) { //结果
+                    } else if (dataType == AtParameterDataType.str.getCode()) { //小数
+                        String[] strings = dataValue.split(",");
+                        String str = strings[0].trim();
+                        Integer length = Integer.valueOf(strings[1].trim());
+                        String randomStr = RandomStringUtils.random(length, true, true);
+                        value = randomStr;
+
+                    } else if (dataType == AtParameterDataType.result.getCode()) { //结果
                         if (lastResponseRes == null) {
                             throw new BizException("lastResponseRes  is null,parameterId=" + parameterVo.getId());
                         }
@@ -273,7 +281,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                         JSONObject resultJsonObj = JSON.parseObject(lastResult);
                         //example data.records[0].id
                         //获取上一个结果的中的值，遍历每一个属性，然后取值
-                        String[] strings = script.split("\\.");
+                        String[] strings = dataValue.split("\\.");
                         for (int i = 0; i < strings.length; i++) {
                             String propKey = strings[i];
                             if (i == strings.length - 1) {
@@ -293,7 +301,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                                 }
                             }
                         }
-                    } else if (ruleType == AtParameterRuleType.inter.getCode()) { //接口，主要是RPC 接口取值，后续再考虑 TODO
+                    } else if (dataType == AtParameterDataType.inter.getCode()) { //接口，主要是RPC 接口取值，后续再考虑 TODO
 
                     }
                     //set param map

@@ -32,17 +32,11 @@ public class AtParameter implements Serializable {
 	/**  名称 * */
 	private String name;
 		
-	/**  数据类型 * */
-	private String dataType;
+	/**  数据类型，0:静态，默认；1:数字，2：字符，3：返回值;4：接口中取 * */
+	private Integer dataType;
 		
 	/**  数据值 * */
-	private byte [] dataValue;
-		
-	/**  规则类型，0:静态，默认；1:数字，2：字符，3：返回值;4：接口中取 * */
-	private Integer ruleType;
-		
-	/**  脚本 * */
-	private String script;
+	private String dataValue;
 		
 	/**  创建时间 * */
 	private Date gmtCreate;
@@ -85,31 +79,15 @@ public class AtParameter implements Serializable {
 	public String getName() {
 		return this.name;
 	}
-	public void setDataType(String value) {
-		this.dataType = value;
+
+	public Integer getDataType() {
+		return dataType;
 	}
-	
-	public String getDataType() {
-		return this.dataType;
+
+	public void setDataType(Integer dataType) {
+		this.dataType = dataType;
 	}
-	public void setRuleType(Integer value) {
-		this.ruleType = value;
-	}
-	
-	public Integer getRuleType() {
-		return this.ruleType;
-	}
-	public void setScript(String value) {
-		this.script = value;
-	}
-	
-	public String getScript() {
-		return this.script;
-	}
-	public void setGmtCreate(Date value) {
-		this.gmtCreate = value;
-	}
-	
+
 	public Date getGmtCreate() {
 		return this.gmtCreate;
 	}
@@ -128,12 +106,15 @@ public class AtParameter implements Serializable {
 		return this.delStatus;
 	}
 
-	public byte[] getDataValue() {
+	public String getDataValue() {
 		return dataValue;
 	}
 
-	public void setDataValue(byte[] dataValue) {
+	public void setDataValue(String dataValue) {
 		this.dataValue = dataValue;
 	}
-}
 
+	public void setGmtCreate(Date gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+}

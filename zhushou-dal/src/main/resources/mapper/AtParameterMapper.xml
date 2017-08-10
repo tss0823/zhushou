@@ -11,8 +11,6 @@
      <result  column="name" property="name"/>
      <result  column="dataType" property="dataType"/>
      <result  column="dataValue" property="dataValue"/>
-     <result  column="ruleType" property="ruleType"/>
-     <result  column="script" property="script"/>
      <result  column="gmtCreate" property="gmtCreate"/>
      <result  column="gmtModify" property="gmtModify"/>
      <result  column="delStatus" property="delStatus"/>
@@ -20,8 +18,7 @@
         
     
  <sql id="Base_Column_List">
-    `id`,`activeId`,`code`,`name`,`dataType`,`dataValue`,`ruleType`,`script`,       
-    `gmtCreate`,`gmtModify`,`delStatus`       
+    `id`,`activeId`,`code`,`name`,`dataType`,`dataValue`, `gmtCreate`,`gmtModify`,`delStatus`
     
   </sql>
         
@@ -39,9 +36,7 @@
     <if test="name != null and name != '' ">and  `name` = #{name}</if> 
     <if test="dataType != null and dataType != '' ">and  `dataType` = #{dataType}</if> 
     <if test="dataValue != null and dataValue != '' ">and  `dataValue` = #{dataValue}</if> 
-    <if test="ruleType != null and ruleType != '' ">and  `ruleType` = #{ruleType}</if> 
-    <if test="script != null and script != '' ">and  `script` = #{script}</if> 
-    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if> 
+    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if>
     <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
   </sql>
   
@@ -81,12 +76,11 @@
       </selectKey>
     insert into  <include refid="Base_Table_Name" />
     (
-    `activeId`,`code`,`name`,`dataType`,`dataValue`,       
-    `ruleType`,`script`,`gmtCreate`,`gmtModify`,`delStatus`
+    `activeId`,`code`,`name`,`dataType`,`dataValue`,`gmtCreate`,`gmtModify`,`delStatus`
     ) 
     values
     (
-    #{activeId},#{code},#{name},#{dataType},#{dataValue},#{ruleType},#{script},now(6),       
+    #{activeId},#{code},#{name},#{dataType},#{dataValue},now(6),
     now(6),1
     )
   </insert>  
@@ -99,8 +93,6 @@
        <if test="name != null and name !=''">`name` = #{name},</if>
        <if test="dataType != null and dataType !=''">`dataType` = #{dataType},</if>
        <if test="dataValue != null and dataValue !=''">`dataValue` = #{dataValue},</if>
-       <if test="ruleType != null and ruleType !=''">`ruleType` = #{ruleType},</if>
-       <if test="script != null and script !=''">`script` = #{script},</if>
      </set>
    ,gmtModify = now(6)
    where id = #{id}

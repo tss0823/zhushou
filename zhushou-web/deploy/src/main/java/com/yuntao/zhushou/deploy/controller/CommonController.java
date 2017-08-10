@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -62,7 +61,7 @@ public class CommonController extends BaseController {
     private WarnEventResultService warnEventResultService;
 
 
-    @PostConstruct
+//    @PostConstruct
     private void init() {
 //        httpProxyServerSupport.init();
 

@@ -5,11 +5,11 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.AtActive;
 import com.yuntao.zhushou.model.domain.AtParameter;
 import com.yuntao.zhushou.model.domain.AtVariable;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.AtVariableScope;
+import com.yuntao.zhushou.model.param.at.AtActiveParam;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
 import com.yuntao.zhushou.service.inter.AtActiveService;
@@ -68,8 +68,9 @@ public class AtTemplateController extends BaseController {
 
     @RequestMapping("saveActive")
     @NeedLogin
-    public ResponseObject saveActive(@RequestParam Long templateId, AtActive active, List<AtParameter> parameterList) {
+    public ResponseObject saveActive(@RequestParam Long templateId, AtActiveParam active) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        List<AtParameter> parameterList = active.getParameterList();
         int result = atActiveService.save(templateId,active, parameterList);
         responseObject.setData(result);
         return responseObject;
@@ -99,12 +100,12 @@ public class AtTemplateController extends BaseController {
     @RequestMapping("start")
     @NeedLogin
     public ResponseObject start(final @RequestParam Long id) {
+        final User user = userService.getCurrentUser();
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    User user = userService.getCurrentUser();
                     atTemplateService.start(id, user);
                 }catch (Exception e){
                     throw e;

@@ -88,6 +88,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         //浏览器中cookie 缓存
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return null;
+        }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest();
         Cookie cookie = WebUtils.getCookie(request,"sid");
