@@ -30,14 +30,12 @@
     
   <sql id="Base_Where">
     delStatus = 1
-    <if test="id != null and id != '' ">and  `id` = #{id}</if> 
-    <if test="activeId != null and activeId != '' ">and  `activeId` = #{activeId}</if> 
+    <if test="id != null">and  `id` = #{id}</if>
+    <if test="activeId != null">and  `activeId` = #{activeId}</if>
     <if test="code != null and code != '' ">and  `code` = #{code}</if> 
     <if test="name != null and name != '' ">and  `name` = #{name}</if> 
-    <if test="dataType != null and dataType != '' ">and  `dataType` = #{dataType}</if> 
+    <if test="dataType != null">and  `dataType` = #{dataType}</if>
     <if test="dataValue != null and dataValue != '' ">and  `dataValue` = #{dataValue}</if> 
-    <if test="gmtCreate != null and gmtCreate != '' ">and  `gmtCreate` = #{gmtCreate}</if>
-    <if test="gmtModify != null and gmtModify != '' ">and  `gmtModify` = #{gmtModify}</if> 
   </sql>
   
         
@@ -88,10 +86,10 @@
   <update id="updateById">  
     update <include refid="Base_Table_Name" />
       <set>
-           <if test="activeId != null and activeId !=''">`activeId` = #{activeId},</if>
+           <if test="activeId != null">`activeId` = #{activeId},</if>
        <if test="code != null and code !=''">`code` = #{code},</if>
        <if test="name != null and name !=''">`name` = #{name},</if>
-       <if test="dataType != null and dataType !=''">`dataType` = #{dataType},</if>
+       <if test="dataType != null">`dataType` = #{dataType},</if>
        <if test="dataValue != null and dataValue !=''">`dataValue` = #{dataValue},</if>
      </set>
    ,gmtModify = now(6)

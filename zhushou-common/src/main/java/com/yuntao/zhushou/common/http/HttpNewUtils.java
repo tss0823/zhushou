@@ -63,6 +63,11 @@ public class HttpNewUtils {
     }
 
     public static ResponseRes execute(RequestRes requestRes) {
+        if (StringUtils.equals(requestRes.getMethod(),"GET")) {
+            //TODO 参数处理
+            return get(requestRes.getUrl());
+        }
+
         HttpContext httpContext = new HttpClientContext();
         cookieStore.clear();
         httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);

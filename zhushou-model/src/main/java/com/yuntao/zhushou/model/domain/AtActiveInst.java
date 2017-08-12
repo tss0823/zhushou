@@ -22,9 +22,12 @@ public class AtActiveInst implements Serializable {
 	
 	/**  ID * */
 	private Long id;
-		
+
 	/**  流程实例ID * */
 	private Long processInstId;
+
+	/**  活动iD * */
+	private Long activeId;
 		
 	/**  名称 * */
 	private String name;
@@ -49,6 +52,12 @@ public class AtActiveInst implements Serializable {
 		
 	/**  是否删除（1：没有；0；已删除） * */
 	private Integer delStatus;
+
+	private String param;
+
+	private String reqHeader;
+
+	private String resHeader;
 		
 	
 	public AtActiveInst(){
@@ -124,9 +133,37 @@ public class AtActiveInst implements Serializable {
 	public Integer getDelStatus() {
 		return this.delStatus;
 	}
-	
 
 
+	public String getParam() {
+		return param;
+	}
 
+	public void setParam(String param) {
+		this.param = param;
+	}
+
+	public String getReqHeader() {
+		return reqHeader;
+	}
+
+	public void setReqHeader(String reqHeader) {
+		this.reqHeader = reqHeader;
+	}
+
+	public String getResHeader() {
+		return resHeader;
+	}
+
+	public void setResHeader(String resHeader) {
+		this.resHeader = resHeader;
+	}
+
+	public Long getActiveId() {
+		return activeId;
+	}
+
+	public void setActiveId(Long activeId) {
+		this.activeId = activeId;
+	}
 }
-

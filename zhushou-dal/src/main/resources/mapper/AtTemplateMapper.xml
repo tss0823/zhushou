@@ -1,103 +1,112 @@
-<?xml version="1.0" encoding="UTF-8" ?>  
-<!DOCTYPE mapper  
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.yuntao.zhushou.dal.mapper.AtTemplateMapper">  
-   
-  <resultMap type="AtTemplate" id="BaseResultMap">
-     <id column="id" property="id" jdbcType="BIGINT" />
-       <result  column="name" property="name"/>
-     <result  column="userId" property="userId"/>
-     <result  column="userName" property="userName"/>
-     <result  column="model" property="model"/>
-     <result  column="gmtCreate" property="gmtCreate"/>
-     <result  column="gmtModify" property="gmtModify"/>
-     <result  column="delStatus" property="delStatus"/>
-</resultMap>
-        
-    
- <sql id="Base_Column_List">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuntao.zhushou.dal.mapper.AtTemplateMapper">
+
+    <resultMap type="AtTemplate" id="BaseResultMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name"/>
+        <result column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="model" property="model"/>
+        <result column="gmtCreate" property="gmtCreate"/>
+        <result column="gmtModify" property="gmtModify"/>
+        <result column="delStatus" property="delStatus"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
     `id`,`name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`       
     
   </sql>
-        
-    
-  <sql id="Base_Table_Name">
+
+
+    <sql id="Base_Table_Name">
       atTemplate
   </sql>
-        
-    
-  <sql id="Base_Where">
-    delStatus = 1
-    <if test="id != null and id != '' ">and  `id` = #{id}</if> 
-    <if test="name != null and name != '' ">and  `name` = #{name}</if> 
-    <if test="userId != null and userId != '' ">and  `userId` = #{userId}</if> 
-    <if test="userName != null and userName != '' ">and  `userName` = #{userName}</if> 
-    <if test="model != null and model != '' ">and  `model` = #{model}</if> 
-  </sql>
-  
-        
-    
-  <select id="findById" resultMap="BaseResultMap">
-     select <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" /> WHERE id = #{id}
-  </select>
-        
-    
-  <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" /> from <include refid="Base_Table_Name" />
+
+
+    <sql id="Base_Where">
+        delStatus = 1
+        <if test="id != null">and `id` = #{id}</if>
+        <if test="name != null and name != '' ">and `name` = #{name}</if>
+        <if test="userId != null">and `userId` = #{userId}</if>
+        <if test="userName != null and userName != '' ">and `userName` = #{userName}</if>
+        <if test="model != null and model != '' ">and `model` = #{model}</if>
+    </sql>
+
+
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
+        WHERE id = #{id}
+    </select>
+
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_Name"/>
         <where>
             <include refid="Base_Where"/>
         </where>
-       order by id desc
-     <if test="pagination != null ">
-          limit #{pagination.startRow}, #{pagination.pageSize}
-    </if>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
     </select>
-    
-        
-    
-  <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
-      SELECT count(*) from <include refid="Base_Table_Name" />
-      <where>
-          <include refid="Base_Where"/>
-      </where>
-  </select>
- 
-        
-    
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="AtTemplate">
-      <selectKey resultType="long" keyProperty="id">
-          SELECT
-          LAST_INSERT_ID() AS id
-      </selectKey>
-    insert into  <include refid="Base_Table_Name" />
-    (
-           
-    `name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`
-    ) 
-    values
-    (
-    #{name},#{userId},#{userName},#{model},now(6),now(6),1
-    )
-  </insert>  
-    
-  <update id="updateById">  
-    update <include refid="Base_Table_Name" />
-      <set>
-           <if test="name != null and name !=''">`name` = #{name},</if>
-       <if test="userId != null and userId !=''">`userId` = #{userId},</if>
-       <if test="userName != null and userName !=''">`userName` = #{userName},</if>
-       <if test="model != null and model !=''">`model` = #{model},</if>
-     </set>
-   ,gmtModify = now(6)
-   where id = #{id}
-  </update>  
-        
-    
-   <update id="deleteById" parameterType="Long">  
-      update  <include refid="Base_Table_Name" /> set delStatuse = 0,gmtModify = now(6)   where id = #{id}
-   </update>  
-   
-     <!-- user definition code start -->
-     <!-- user definition code end -->
+
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from
+        <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="AtTemplate">
+        <selectKey resultType="long" keyProperty="id">
+            SELECT
+            LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+
+        `name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`
+        )
+        values
+        (
+        #{name},#{userId},#{userName},#{model},now(6),now(6),1
+        )
+    </insert>
+
+    <update id="updateById">
+        update
+        <include refid="Base_Table_Name"/>
+        <set>
+            <if test="name != null and name !=''">`name` = #{name},</if>
+            <if test="userId != null">`userId` = #{userId},</if>
+            <if test="userName != null and userName !=''">`userName` = #{userName},</if>
+            <if test="model != null and model !=''">`model` = #{model},</if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+
+    <update id="deleteById" parameterType="Long">
+        update
+        <include refid="Base_Table_Name"/>
+        set delStatuse = 0,gmtModify = now(6) where id = #{id}
+    </update>
+
+    <!-- user definition code start -->
+    <!-- user definition code end -->
 </mapper> 

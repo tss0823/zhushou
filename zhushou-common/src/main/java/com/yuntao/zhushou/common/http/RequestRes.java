@@ -8,6 +8,8 @@ import java.util.Map;
  */
 public class RequestRes {
 
+    private String method;
+
     private String url;
 
     private Map<String, String> headers;
@@ -95,5 +97,13 @@ public class RequestRes {
 
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }
