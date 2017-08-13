@@ -23,7 +23,7 @@ public class LogTextQuery implements Serializable {
 
     private String textType = "fuzzy";
 
-    private String text;
+    private String logText;
 
     public String getUrl() {
         return url;
@@ -57,12 +57,12 @@ public class LogTextQuery implements Serializable {
         this.textType = textType;
     }
 
-    public String getText() {
-        return text;
+    public String getLogText() {
+        return logText;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setLogText(String logText) {
+        this.logText = logText;
     }
 
     public String getUrlType() {

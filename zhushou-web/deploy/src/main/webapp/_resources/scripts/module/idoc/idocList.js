@@ -38,10 +38,10 @@
             });
             //end
 
-            var enums = YT.deploy.data.enums;
+            // var enums = YT.deploy.data.enums;
 
             //moduleType
-            YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
+            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
 
 
             // if($("#resNewForm").length == 1) {  //资源文档

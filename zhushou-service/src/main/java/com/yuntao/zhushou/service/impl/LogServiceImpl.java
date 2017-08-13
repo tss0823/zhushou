@@ -67,8 +67,8 @@ public class LogServiceImpl extends AbstService implements LogService {
         InetSocketTransportAddress inetSocketTransportAddress = null;
         List<InetSocketTransportAddress> adressList = new ArrayList<>();
         try {
-            String esInfos [] = esInfo.split(",");
-            for(String esInfo : esInfos){
+            String esInfos[] = esInfo.split(",");
+            for (String esInfo : esInfos) {
                 String host = esInfo.split(":")[0];
                 Integer port = Integer.valueOf(esInfo.split(":")[1]);
                 inetSocketTransportAddress = new InetSocketTransportAddress(InetAddress.getByName(host), port);
@@ -79,24 +79,23 @@ public class LogServiceImpl extends AbstService implements LogService {
         }
 
         TransportClient transportClient = TransportClient.builder().settings(settings).build();
-        for(InetSocketTransportAddress address : adressList){
+        for (InetSocketTransportAddress address : adressList) {
             transportClient.addTransportAddress(address);
         }
         client = transportClient;
     }
 
     public Pagination<LogWebVo> selectByPage(LogQuery query, LogTextQuery logTextQuery) {
-        query.setPage(true);
         query.setMaster(true);
-        Pagination<LogWebVo> pagination = selectList(query,logTextQuery);
+        Pagination<LogWebVo> pagination = selectList(query, logTextQuery);
         List<LogWebVo> dataList = pagination.getDataList();
-        if(CollectionUtils.isNotEmpty(dataList)){
-            for(LogWebVo logWebVo : dataList){
-                if(StringUtils.equals(logWebVo.getLevel(), LogLevel.BIZ_ERROR.getCode())){
-                    Map<String,Object> map  = JsonUtils.json2Object(logWebVo.getResponse(), HashMap.class);
-                    if(map != null){
+        if (CollectionUtils.isNotEmpty(dataList)) {
+            for (LogWebVo logWebVo : dataList) {
+                if (StringUtils.equals(logWebVo.getLevel(), LogLevel.BIZ_ERROR.getCode())) {
+                    Map<String, Object> map = JsonUtils.json2Object(logWebVo.getResponse(), HashMap.class);
+                    if (map != null) {
                         Object errMsg = map.get("message");
-                        if(errMsg != null){
+                        if (errMsg != null) {
                             logWebVo.setErrMsg(errMsg.toString());
                         }
                     }
@@ -107,27 +106,26 @@ public class LogServiceImpl extends AbstService implements LogService {
     }
 
     @Override
-    public List<LogWebVo> selectListByStackId(String month,String model,String stackId) {
+    public List<LogWebVo> selectListByStackId(String month, String model, String stackId) {
         LogQuery query = new LogQuery();
         query.setMonth(month);
         query.setModel(model);
         query.setStackId(stackId);
-        query.setPage(true);
         query.setPageSize(5000);  //足够大,不然出现不能查询全部数据
-        Pagination<LogWebVo> pagination = selectList(query,new LogTextQuery());
+        Pagination<LogWebVo> pagination = selectList(query, new LogTextQuery());
         return pagination.getDataList();
     }
 
     @Override
-    public LogWebVo findMasterByStackId(String month,String model, String stackId) {
+    public LogWebVo findMasterByStackId(String month, String model, String stackId) {
         LogQuery query = new LogQuery();
         query.setMonth(month);
         query.setModel(model);
         query.setStackId(stackId);
         query.setMaster(true);
-        Pagination<LogWebVo> pagination = selectList(query,new LogTextQuery());
+        Pagination<LogWebVo> pagination = selectList(query, new LogTextQuery());
         List<LogWebVo> dataList = pagination.getDataList();
-        if(CollectionUtils.isNotEmpty(dataList)){
+        if (CollectionUtils.isNotEmpty(dataList)) {
             return dataList.get(0);
         }
         return null;
@@ -135,47 +133,47 @@ public class LogServiceImpl extends AbstService implements LogService {
 
 
     public Pagination<LogWebVo> selectList(LogQuery query, LogTextQuery logTextQuery) {
-        if(StringUtils.isEmpty(query.getMonth())){
-            query.setMonth(DateUtil.getFmt(new Date().getTime(),"yyyy.MM"));
+        if (StringUtils.isEmpty(query.getMonth())) {
+            query.setMonth(DateUtil.getFmt(new Date().getTime(), "yyyy.MM"));
         }
-        String queryIndex = index + "-"+ query.getMonth();
+        String queryIndex = index + "-" + query.getMonth();
         SearchRequestBuilder searchRequestBuilder = client.prepareSearch(queryIndex);
-        if(query.isPage()){
-            int start = (int) ((query.getPageNum() - 1) * query.getPageSize());
-            if(start >= 10000){
-                throw new BizException("查询范围超过【start <=10000】限制，请输入条件再查询");
-            }
-            searchRequestBuilder.setFrom(start).setSize(query.getPageSize());
+//        if(query.isPage()){
+        int start = (int) ((query.getPageNum() - 1) * query.getPageSize());
+        if (start >= 10000) {
+            throw new BizException("查询范围超过【start <=10000】限制，请输入条件再查询");
         }
+        searchRequestBuilder.setFrom(start).setSize(query.getPageSize());
+//        }
         searchRequestBuilder.setTypes("_type", query.getModel());
         searchRequestBuilder.setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-        BoolQueryBuilder queryBuilder  = QueryBuilders.boolQuery();
-        if(query.isMaster()){
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("master",true));
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        if (query.isMaster()) {
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("master", true));
         }
         if (StringUtils.isNotEmpty(query.getKey())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("key",query.getKey()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("key", query.getKey()));
         }
         if (StringUtils.isNotEmpty(query.getStackId())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("stackId",query.getStackId()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("stackId", query.getStackId()));
         }
         if (StringUtils.isNotEmpty(query.getAppName())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("appName",query.getAppName()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("appName", query.getAppName()));
         }
         if (StringUtils.isNotEmpty(query.getLevel())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("level",query.getLevel()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("level", query.getLevel()));
         }
         if (StringUtils.isNotEmpty(query.getClientIp())) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("clientIp",query.getClientIp()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("clientIp", query.getClientIp()));
         }
         if (query.getId() != null) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("id",query.getId()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("id", query.getId()));
         }
         if (query.getUserId() != null) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("userId",query.getUserId()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("userId", query.getUserId()));
         }
         if (query.getStatus() != null) {
-            queryBuilder.must(QueryBuilders.matchPhraseQuery("status",query.getStatus()));
+            queryBuilder.must(QueryBuilders.matchPhraseQuery("status", query.getStatus()));
         }
         if (StringUtils.isNotEmpty(query.getStartTime())) {
             try {
@@ -198,10 +196,10 @@ public class LogServiceImpl extends AbstService implements LogService {
         QueryBuilderUtils.buildQuery(queryBuilder, "url", logTextQuery.getUrlType(), logTextQuery.getUrl());
         QueryBuilderUtils.buildQuery(queryBuilder, "userAgent", logTextQuery.getUserAgentType(), logTextQuery.getUserAgent());
 
-        QueryBuilderUtils.buildQuery(queryBuilder, logTextQuery.getTextCat(), logTextQuery.getTextType(), logTextQuery.getText());
+        QueryBuilderUtils.buildQuery(queryBuilder, logTextQuery.getTextCat(), logTextQuery.getTextType(), logTextQuery.getLogText());
         searchRequestBuilder.setQuery(queryBuilder);
 //        SortBuilder sortBuilder = SortBuilders.fieldSort("timeLong").order(SortOrder.DESC);
-        SearchResponse response = searchRequestBuilder.addSort("timeLong",SortOrder.DESC).setExplain(true)
+        SearchResponse response = searchRequestBuilder.addSort("timeLong", SortOrder.DESC).setExplain(true)
                 .execute()
                 .actionGet();
 
@@ -218,7 +216,7 @@ public class LogServiceImpl extends AbstService implements LogService {
                     Set<String> keys = beanMap.keySet();
                     for (String key : keys) {
                         Object value = searchHit.getSource().get(key);
-                        if(key.equals("key") && value != null && value instanceof ArrayList){
+                        if (key.equals("key") && value != null && value instanceof ArrayList) {
                             List<String> keyList = (List<String>) value;
                             value = keyList.get(0);
                         }
@@ -231,7 +229,7 @@ public class LogServiceImpl extends AbstService implements LogService {
                     hbLogBean.setId(searchHit.getId());
 
                     hbLogBean.setLastTime(DateUtil.getRangeTime(DateUtil.getDate(hbLogBean.getTime(), "yyyy-MM-dd HH:mm:ss")));
-                    LogWebVo logWebVo = BeanUtils.beanCopy(hbLogBean,LogWebVo.class);
+                    LogWebVo logWebVo = BeanUtils.beanCopy(hbLogBean, LogWebVo.class);
                     dataList.add(logWebVo);
                 }
             }
@@ -240,7 +238,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         return pagination;
     }
 
-    public void delHisDataTask(){
+    public void delHisDataTask() {
         //获取数据任务
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2);
 
@@ -250,27 +248,27 @@ public class LogServiceImpl extends AbstService implements LogService {
             public void run() {
                 try {
                     long startTime = System.currentTimeMillis();
-                    bisLog.info("get prod log start starTime="+startTime);
+                    bisLog.info("get prod log start starTime=" + startTime);
                     List<LogWebVo> totalDataList = new ArrayList();
                     //
-                    String month =  DateUtil.getFmt(new Date().getTime(),"yyyy.MM");
-                    List<LogWebVo> dataList = getLogDataList(month,"prod",logPageNum.getAndIncrement());
-                    if(CollectionUtils.isNotEmpty(dataList)){
+                    String month = DateUtil.getFmt(new Date().getTime(), "yyyy.MM");
+                    List<LogWebVo> dataList = getLogDataList(month, "prod", logPageNum.getAndIncrement());
+                    if (CollectionUtils.isNotEmpty(dataList)) {
                         totalDataList.addAll(dataList);
                     }
 
                     //last month
-                    Date lastMonthDay = DateUtil.getMonthAfter(new Date(),-1);
-                    month =  DateUtil.getFmt(lastMonthDay.getTime(),"yyyy.MM");
-                    List<LogWebVo> dataLastList = getLogDataList(month,"prod",logPageNum.getAndIncrement());
-                    if(CollectionUtils.isNotEmpty(dataLastList)){
+                    Date lastMonthDay = DateUtil.getMonthAfter(new Date(), -1);
+                    month = DateUtil.getFmt(lastMonthDay.getTime(), "yyyy.MM");
+                    List<LogWebVo> dataLastList = getLogDataList(month, "prod", logPageNum.getAndIncrement());
+                    if (CollectionUtils.isNotEmpty(dataLastList)) {
                         totalDataList.addAll(dataLastList);
                     }
-                    for(LogWebVo logWebVo : totalDataList){
+                    for (LogWebVo logWebVo : totalDataList) {
                         yunPanLogQueue.offer(JsonUtils.object2Json(logWebVo));
                     }
                     long endTime = System.currentTimeMillis();
-                    bisLog.info("get prod log end take time="+(endTime-startTime)+" ms,get data size="+totalDataList.size());
+                    bisLog.info("get prod log end take time=" + (endTime - startTime) + " ms,get data size=" + totalDataList.size());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -283,27 +281,27 @@ public class LogServiceImpl extends AbstService implements LogService {
             public void run() {
                 try {
                     long startTime = System.currentTimeMillis();
-                    bisLog.info("get test log start starTime="+startTime);
+                    bisLog.info("get test log start starTime=" + startTime);
                     List<LogWebVo> totalDataList = new ArrayList();
                     //
-                    String month =  DateUtil.getFmt(new Date().getTime(),"yyyy.MM");
-                    List<LogWebVo> dataList = getLogDataList(month,"test",logPageNum.getAndIncrement());
-                    if(CollectionUtils.isNotEmpty(dataList)){
+                    String month = DateUtil.getFmt(new Date().getTime(), "yyyy.MM");
+                    List<LogWebVo> dataList = getLogDataList(month, "test", logPageNum.getAndIncrement());
+                    if (CollectionUtils.isNotEmpty(dataList)) {
                         totalDataList.addAll(dataList);
                     }
 
                     //last month
-                    Date lastMonthDay = DateUtil.getMonthAfter(new Date(),-1);
-                    month =  DateUtil.getFmt(lastMonthDay.getTime(),"yyyy.MM");
-                    List<LogWebVo> dataLastList = getLogDataList(month,"test",logPageNum.getAndIncrement());
-                    if(CollectionUtils.isNotEmpty(dataLastList)){
+                    Date lastMonthDay = DateUtil.getMonthAfter(new Date(), -1);
+                    month = DateUtil.getFmt(lastMonthDay.getTime(), "yyyy.MM");
+                    List<LogWebVo> dataLastList = getLogDataList(month, "test", logPageNum.getAndIncrement());
+                    if (CollectionUtils.isNotEmpty(dataLastList)) {
                         totalDataList.addAll(dataLastList);
                     }
-                    for(LogWebVo logWebVo : totalDataList){
+                    for (LogWebVo logWebVo : totalDataList) {
                         logList.offer(logWebVo);
                     }
                     long endTime = System.currentTimeMillis();
-                    bisLog.info("get test log end take time="+(endTime-startTime)+" ms,get data size="+totalDataList.size());
+                    bisLog.info("get test log end take time=" + (endTime - startTime) + " ms,get data size=" + totalDataList.size());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -317,23 +315,23 @@ public class LogServiceImpl extends AbstService implements LogService {
             public void run() {
                 try {
                     long startTime = System.currentTimeMillis();
-                    bisLog.info("upload yunPan back log starTime="+startTime);
+                    bisLog.info("upload yunPan back log starTime=" + startTime);
                     int yunPanFileSize = 5000;
                     StringBuilder sb = new StringBuilder();
-                    while(yunPanFileSize > 0 && !yunPanLogQueue.isEmpty()){
+                    while (yunPanFileSize > 0 && !yunPanLogQueue.isEmpty()) {
                         sb.append(yunPanLogQueue.poll());
                     }
-                    if(sb.length() == 0){
+                    if (sb.length() == 0) {
                         bisLog.info("upload yunPan back log end for empty");
                         return;
                     }
                     String time = DateUtil.getFmtyMdHmNoSymbol(new Date().getTime());
                     String file = time + ".txt";
-                    HttpFileUploadUtils.uploadYunPan(file,sb.toString().getBytes());
+                    HttpFileUploadUtils.uploadYunPan(file, sb.toString().getBytes());
 
                     long endTime = System.currentTimeMillis();
-                    bisLog.info("upload yunPan back log end take time="+(endTime-startTime)+" ms,fileName="+file);
-                    bisLog.info("get log size="+logList.size()+",delete log size="+yunPanLogQueue.size());
+                    bisLog.info("upload yunPan back log end take time=" + (endTime - startTime) + " ms,fileName=" + file);
+                    bisLog.info("get log size=" + logList.size() + ",delete log size=" + yunPanLogQueue.size());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -342,14 +340,15 @@ public class LogServiceImpl extends AbstService implements LogService {
 
         //删除数据任务
         final long startMainTime = System.currentTimeMillis();
-        ExecutorService ec = new ThreadPoolExecutor(4, 4, 0, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>()){
+        ExecutorService ec = new ThreadPoolExecutor(4, 4, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()) {
 
-            @Override protected void terminated() {
+            @Override
+            protected void terminated() {
                 super.terminated();
                 bisLog.info("finish, take time = " + (System.currentTimeMillis() - startMainTime));
             }
         };
-        while(true){
+        while (true) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -358,37 +357,36 @@ public class LogServiceImpl extends AbstService implements LogService {
             ec.execute(new Runnable() {
                 @Override
                 public void run() {
-                    try{
+                    try {
                         LogWebVo logWebVo = logList.poll();
-                        if(logWebVo == null){
+                        if (logWebVo == null) {
                             return;
                         }
-                        client.prepareDelete(logWebVo.getIndex(),logWebVo.getType(),logWebVo.getId())
+                        client.prepareDelete(logWebVo.getIndex(), logWebVo.getType(), logWebVo.getId())
                                 .execute().actionGet();
 //                        consumerCount.incrementAndGet();
 //                        consumerCount.set(0);
                         yunPanLogQueue.offer(JsonUtils.object2Json(logWebVo));
 
-                    }catch (Exception e){
-                        log.info("remove index failed!",e);
+                    } catch (Exception e) {
+                        log.info("remove index failed!", e);
                     }
                 }
             });
         }
     }
 
-    private List<LogWebVo> getLogDataList(String month,String model,long pageNum){
+    private List<LogWebVo> getLogDataList(String month, String model, long pageNum) {
         LogQuery logQuery = new LogQuery();
-        logQuery.setPage(true);
         logQuery.setPageNum(pageNum);
         logQuery.setMonth(month);
         logQuery.setModel(model);
-        Date hisDate = DateUtil.getDateAfter(new Date(),-7);
+        Date hisDate = DateUtil.getDateAfter(new Date(), -7);
 //        Long endTime = hisDate.getTime();
-        logQuery.setEndTime(DateFormatUtils.format(hisDate,"yyyy-MM-dd HH:mm:ss"));
+        logQuery.setEndTime(DateFormatUtils.format(hisDate, "yyyy-MM-dd HH:mm:ss"));
         int pageSize = 500;
         logQuery.setPageSize(pageSize);
-        Pagination<LogWebVo> pagination = selectList(logQuery,new LogTextQuery());
+        Pagination<LogWebVo> pagination = selectList(logQuery, new LogTextQuery());
         return pagination.getDataList();
     }
 
@@ -396,43 +394,45 @@ public class LogServiceImpl extends AbstService implements LogService {
      * 测试50秒可以处理500条数据，包括上传到云盘
      * 1w条数据分20次处理，每次500条，需要20分钟
      */
-    public void deleteHisData(String month,String model){
+    public void deleteHisData(String month, String model) {
         //删除7天前的日志
-        long startTime  = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         LogQuery logQuery = new LogQuery();
         logQuery.setMonth(month);
         logQuery.setModel(model);
-        Date hisDate = DateUtil.getDateAfter(new Date(),-7);
+        Date hisDate = DateUtil.getDateAfter(new Date(), -7);
         Long endTime = hisDate.getTime();
-        logQuery.setEndTime(DateFormatUtils.format(hisDate,"yyyy-MM-dd HH:mm:ss"));
+        logQuery.setEndTime(DateFormatUtils.format(hisDate, "yyyy-MM-dd HH:mm:ss"));
         int pageSize = 500;
         int yunPanFileSize = 5000;
         int maxCount = 10000;
         long delCount = 0;
         logQuery.setPageSize(pageSize);
-        Pagination<LogWebVo> pagination = selectList(logQuery,new LogTextQuery());
+        Pagination<LogWebVo> pagination = selectList(logQuery, new LogTextQuery());
 //        Queue<String> queue = new ConcurrentLinkedQueue<>();
         List<String> ypDataList = new ArrayList<>();
         //线程池处理删除任务
 
         final long startMainTime = System.currentTimeMillis();
-        ExecutorService ec = new ThreadPoolExecutor(4, 4, 0, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>()){
+        ExecutorService ec = new ThreadPoolExecutor(4, 4, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>()) {
 
-            @Override protected void terminated() {
+            @Override
+            protected void terminated() {
                 super.terminated();
                 bisLog.info("finish, take time = " + (System.currentTimeMillis() - startMainTime));
             }
         };
 
-        while (pagination.getTotalCount() > 0 && delCount < maxCount){
+        while (pagination.getTotalCount() > 0 && delCount < maxCount) {
             List<LogWebVo> dataList = pagination.getDataList();
-            for(final LogWebVo logWebVo : dataList) {
+            for (final LogWebVo logWebVo : dataList) {
 
                 ec.execute(new Runnable() {
 
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         try {
-                            client.prepareDelete(logWebVo.getIndex(),logWebVo.getType(),logWebVo.getId())
+                            client.prepareDelete(logWebVo.getIndex(), logWebVo.getType(), logWebVo.getId())
                                     .execute().actionGet();
                             consumerCount.incrementAndGet();
                             yunPanLogQueue.offer(JsonUtils.object2Json(logWebVo));
@@ -442,28 +442,28 @@ public class LogServiceImpl extends AbstService implements LogService {
                         }
                     }
                 });
-                try{
-                     client.prepareDelete(logWebVo.getIndex(),logWebVo.getType(),logWebVo.getId())
-                             .execute().actionGet();
+                try {
+                    client.prepareDelete(logWebVo.getIndex(), logWebVo.getType(), logWebVo.getId())
+                            .execute().actionGet();
                     ypDataList.add(JsonUtils.object2Json(logWebVo));
 //                    queue.add();
-                    if(ypDataList.size() >= yunPanFileSize){
+                    if (ypDataList.size() >= yunPanFileSize) {
                         String time = DateUtil.getFmtyMdHmNoSymbol(new Date().getTime());
                         String file = time + ".txt";
-                        String ypData = StringUtil.join(ypDataList,"\n");
-                        HttpFileUploadUtils.uploadYunPan(file,ypData.getBytes());
+                        String ypData = StringUtil.join(ypDataList, "\n");
+                        HttpFileUploadUtils.uploadYunPan(file, ypData.getBytes());
                         ypDataList.clear();
-                        bisLog.info("upload yunPan back log for fileName="+file);
+                        bisLog.info("upload yunPan back log for fileName=" + file);
                     }
                     delCount++;
-                }catch (Exception e){
-                    log.error("es prepareDelete failed!,message="+e.getMessage());
+                } catch (Exception e) {
+                    log.error("es prepareDelete failed!,message=" + e.getMessage());
                 }
             }
-            pagination = selectList(logQuery,new LogTextQuery());
+            pagination = selectList(logQuery, new LogTextQuery());
         }
-        bisLog.info("del es totalCount="+delCount);
+        bisLog.info("del es totalCount=" + delCount);
         long takeTime = System.currentTimeMillis() - startTime;
-        bisLog.info("take time="+takeTime);
+        bisLog.info("take time=" + takeTime);
     }
 }

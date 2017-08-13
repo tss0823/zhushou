@@ -285,7 +285,7 @@
                 var enums = YT.deploy.data.enums;
 
                 //modelType
-                YT.deploy.util.initEnumSelect(enums.logModel, "reqModel", data.model);
+                YT.deploy.util.initEnumSelect("logModel", "reqModel", data.model);
             });
 
 

@@ -16,15 +16,15 @@
 
             //logModel
             var logModel = enums.logModel;
-            YT.deploy.util.initEnumSelect(logModel,"model",data.model);
+            YT.deploy.util.initEnumSelect("logModel","model",data.model);
 
             //ruleType
             var ruleType = enums.paramRuleType;
-            YT.deploy.util.initEnumSelect(ruleType,"ruleType");
+            YT.deploy.util.initEnumSelect("ruleType","ruleType");
             
             //dataType
             var dataType = enums.paramDataType;
-            YT.deploy.util.initEnumSelect(dataType,"dataType");
+            YT.deploy.util.initEnumSelect("dataType","dataType");
 
             //注册事件
             $("#btnQuery").click(function(){

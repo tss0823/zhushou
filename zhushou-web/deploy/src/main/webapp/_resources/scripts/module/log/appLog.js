@@ -134,20 +134,20 @@
 
             //logLevel
             var logLevel = enums.logLevel;
-            YT.deploy.util.initEnumSelect(logLevel, "level", data.level);
+            YT.deploy.util.initEnumSelect("logLevel", "level", data.level);
 
             //urlType
             var logQueryType = enums.logQueryType;
-            YT.deploy.util.initEnumSelect(logQueryType, "urlType", data.urlType);
+            YT.deploy.util.initEnumSelect("logQueryType", "urlType", data.urlType);
 
             //userAgentType
-            YT.deploy.util.initEnumSelect(logQueryType, "userAgentType", data.userAgentType);
+            YT.deploy.util.initEnumSelect("logQueryType", "userAgentType", data.userAgentType);
 
             //text
             var logQueryTextCat = enums.logQueryTextCat;
-            YT.deploy.util.initEnumSelect(logQueryTextCat, "textCat", data.textCat);
+            YT.deploy.util.initEnumSelect("logQueryTextCat", "textCat", data.textCat);
 
-            YT.deploy.util.initEnumSelect(logQueryType, "textType", data.textType);
+            YT.deploy.util.initEnumSelect("logQueryType", "textType", data.textType);
 
 
             //ip city show

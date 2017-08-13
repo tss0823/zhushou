@@ -19,10 +19,10 @@
             var enums = YT.deploy.data.enums;
 
             //moduleType
-            YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
+            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
 
             //是否私有
-            YT.deploy.util.initEnumSelect(enums.yesNoType, "pri", data.pri);
+            YT.deploy.util.initEnumSelect("yesNoType", "pri", data.pri);
 
             if($("#resNewForm").length == 1) {  //资源文档
                 // debugger;

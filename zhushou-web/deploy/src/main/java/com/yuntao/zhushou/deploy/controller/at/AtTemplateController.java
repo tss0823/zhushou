@@ -1,14 +1,12 @@
 package com.yuntao.zhushou.deploy.controller.at;
 
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.utils.ValidateUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.AtParameter;
-import com.yuntao.zhushou.model.domain.AtVariable;
-import com.yuntao.zhushou.model.domain.Company;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AtVariableScope;
 import com.yuntao.zhushou.model.param.at.AtActiveParam;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
@@ -56,15 +54,38 @@ public class AtTemplateController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("detail")
+    @NeedLogin
+    public ResponseObject detail(@RequestParam Long id) {
+        AtTemplate atTemplate = atTemplateService.findById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(atTemplate);
+        return responseObject;
+    }
+
 
     @RequestMapping("saveTemplate")
     @NeedLogin
     public ResponseObject saveTemplate(AtTemplateVo template) {
+        ValidateUtils.notEmpty(template.getName(),"模版名称不能为空");
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         template.setUserId(user.getId());
         template.setUserName(user.getNickName());
         atTemplateService.insert(template);
+        return responseObject;
+    }
+
+    @RequestMapping("updateTemplate")
+    @NeedLogin
+    public ResponseObject updatTemplate(AtTemplateVo template) {
+        ValidateUtils.notNull(template.getId(),"模版ID不能为空");
+        ValidateUtils.notEmpty(template.getName(),"模版名称不能为空");
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        User user = userService.getCurrentUser();
+        template.setUserId(user.getId());
+        template.setUserName(user.getNickName());
+        atTemplateService.updateById(template);
         return responseObject;
     }
 
@@ -101,12 +122,13 @@ public class AtTemplateController extends BaseController {
 
     @RequestMapping("collect")
     @NeedLogin
-    public ResponseObject collect(@RequestParam  Long id,@RequestParam String model,@RequestParam String appName,
+    public ResponseObject collect(@RequestParam  Long id,@RequestParam String appName,
                                   @RequestParam String mobile, @RequestParam String startTime,@RequestParam String endTime) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         Company company = companyService.findById(user.getCompanyId());
-        atTemplateService.collect(id,company.getKey(),model,appName,mobile,startTime,endTime);
+        AtTemplate atTemplate = atTemplateService.findById(id);
+        atTemplateService.collect(id,company.getKey(),atTemplate.getModel(),appName,mobile,startTime,endTime);
         return responseObject;
     }
 

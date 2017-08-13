@@ -23,8 +23,6 @@ public class LogQuery extends BaseQuery {
 
     private boolean isMaster;
 
-    private boolean isPage;
-
     private String month;
 
     private String startTime;
@@ -91,14 +89,6 @@ public class LogQuery extends BaseQuery {
 
     public void setStackId(String stackId) {
         this.stackId = stackId;
-    }
-
-    public boolean isPage() {
-        return isPage;
-    }
-
-    public void setPage(boolean page) {
-        isPage = page;
     }
 
     public boolean isMaster() {

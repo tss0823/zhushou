@@ -199,8 +199,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
     @Override
     public void collect(Long id,String companyKey, String model,String appName, String mobile, String startTime, String endTime) {
         LogQuery logQuery = new LogQuery();
+        logQuery.setPageSize(1000);
         logQuery.setKey(companyKey);
-        logQuery.setPage(false);
         logQuery.setModel(model);
         logQuery.setAppName(appName);
         logQuery.setMaster(true);
@@ -238,7 +238,6 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 parameter.setDataType(AtParameterDataType.statics.getCode());
                 atParameterService.insert(parameter);
             }
-            break;
         }
 
     }

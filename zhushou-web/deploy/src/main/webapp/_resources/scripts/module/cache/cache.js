@@ -18,7 +18,7 @@
             var enums = YT.deploy.data.enums;
 
             //cacheType
-            YT.deploy.util.initEnumSelect(enums.cacheType, "type", data.type);
+            YT.deploy.util.initEnumSelect("cacheType", "type", data.type);
 
             $("button[id='btnSearch']").click(function () {
                 var type = $("#type").val();

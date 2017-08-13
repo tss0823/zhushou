@@ -18,7 +18,7 @@
             var enums = YT.deploy.data.enums;
 
             //moduleType
-            YT.deploy.util.initEnumSelect(enums.moduleType, "module", data.module);
+            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
 
             //tab
             $( "div[id='tabs']" ).tabs();

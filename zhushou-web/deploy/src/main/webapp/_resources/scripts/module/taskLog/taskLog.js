@@ -55,18 +55,18 @@
             var enums = YT.deploy.data.enums;
 
             //logStatus
-            var logStatus = enums.logStatus;
-            YT.deploy.util.initEnumSelect(logStatus,"success",data.success);
+            // var logStatus = enums.logStatus;
+            YT.deploy.util.initEnumSelect("logStatus","success",data.success);
 
             //batchNoType
-            var logQueryType = enums.logQueryType;
-            YT.deploy.util.initEnumSelect(logQueryType,"batchNoType",data.batchNoType);
+            // var logQueryType = enums.logQueryType;
+            YT.deploy.util.initEnumSelect("logQueryType","batchNoType",data.batchNoType);
 
             //messageType
-            YT.deploy.util.initEnumSelect(logQueryType,"messageType",data.messageType);
+            YT.deploy.util.initEnumSelect("logQueryType","messageType",data.messageType);
 
             //descType
-            YT.deploy.util.initEnumSelect(logQueryType,"descType",data.descType);
+            YT.deploy.util.initEnumSelect("logQueryType","descType",data.descType);
 
             //select change to query
             $("#appName,#month,#startTime,#endTime").change(function(){

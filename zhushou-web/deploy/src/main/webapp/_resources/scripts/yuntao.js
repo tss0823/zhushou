@@ -132,20 +132,79 @@
             }
             $("#"+selectId).append(dataArray.join(""));
         },
-        
-        initEnumSelect:function(dataList,selectId,initValue){
+
+        initEnumSelect:function(type,selectId,initValue){
             var dataArray = [];
+            var enums = YT.deploy.data.enums;
+            var dataList = enums[type];
+            if(!dataList){
+                return;
+            }
             for (var i = 0; i < dataList.length; i++) {
                 var data = dataList[i];
                 dataArray.push("<option value='" + data.code + "'");
-                if(typeof(initValue) != "undefined" && initValue == data.code){
+                if(typeof(initValue) != "undefined" && initValue !== "" && initValue == data.code){
                     dataArray.push(" selected='true' ");
                 }
                 dataArray.push(">");
                 dataArray.push(data.description);
                 dataArray.push("</option>");
             }
-            $("#"+selectId).append(dataArray.join(""));
+            if(YT.deploy.formId){
+                $("#"+YT.deploy.formId).find("#"+selectId).append(dataArray.join(""));
+            }else{
+                $("#"+selectId).append(dataArray.join(""));
+            }
+        },
+
+        initEnumRadio:function(type,chkBlockId,chkName,initValue){
+            initValue = initValue || 0;
+            var enums = YT.deploy.data.enums;
+            var dataList = enums[type];
+            if(!dataList){
+                return;
+            }
+            var dataArray = [];
+            for (var i = 0; i < dataList.length; i++) {
+                var data = dataList[i];
+                dataArray.push('<label>');
+                dataArray.push('<input type="radio" id="' + chkName+'" name="'+chkName+'" value='+data.code+' ');
+                if(data.code == initValue){
+                    dataArray.push('checked="checked" ');
+                }
+                dataArray.push('/>&nbsp;');
+                dataArray.push(data.description);
+                dataArray.push('</label>&nbsp;&nbsp;&nbsp;');
+            }
+            if(YT.deploy.formId){
+                $("#"+YT.deploy.formId).find("#"+chkBlockId).append(dataArray.join(""));
+            }else{
+                $("#"+chkBlockId).append(dataArray.join(""));
+            }
+        },
+
+        initEnumCheckBox:function(type,chkBlockId,chkId,initValueList){
+            initValueList = initValueList || [];
+            var enums = YT.deploy.data.enums;
+            var dataList = enums[type];
+            var dataArray = [];
+            for (var i = 0; i < dataList.length; i++) {
+                var data = dataList[i];
+                dataArray.push('<label>');
+                dataArray.push('<input type="checkbox" id="' + chkId+'" value='+data.code+' ');
+                var findIndex = $.inArray(data.code,initValueList);
+                if(findIndex > -1){
+                    dataArray.push('checked="checked" ');
+                }
+                dataArray.push('/>&nbsp;');
+                dataArray.push(data.description);
+                dataArray.push('</label>&nbsp;&nbsp;&nbsp;');
+            }
+            if(YT.deploy.formId){
+                $("#"+YT.deploy.formId).find("#"+chkBlockId).append(dataArray.join(""));
+            }else{
+                $("#"+chkBlockId).append(dataArray.join(""));
+            }
         },
 
         paginationInit: function (data, queryFn) {
