@@ -11,6 +11,8 @@ import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AtVariableMapper;
 import com.yuntao.zhushou.model.domain.AtVariable;
+import com.yuntao.zhushou.model.enums.AtVariableScope;
+import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.AtVariableQuery;
 import com.yuntao.zhushou.model.vo.AtVariableVo;
 import com.yuntao.zhushou.service.inter.AtVariableService;
@@ -18,9 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service("atVariable")
@@ -85,6 +85,42 @@ public class AtVariableServiceImpl extends AbstService implements AtVariableServ
     @Override
     public int deleteById(Long id) {
         return atVariableMapper.deleteById(id);
+    }
+
+    @Override
+    public List<AtVariable> getGlobalList() {
+        AtVariableQuery query = new AtVariableQuery();
+        query.setStatus(YesNoIntType.yes.getCode());
+        query.setScope(AtVariableScope.global.getCode());
+        return this.selectList(query);
+    }
+
+    @Override
+    public List<AtVariable> getPriList(Long templateId) {
+        AtVariableQuery query = new AtVariableQuery();
+        query.setStatus(YesNoIntType.yes.getCode());
+        query.setScope(AtVariableScope.global.getCode());
+        query.setTemplateId(templateId);
+        return this.selectList(query);
+    }
+
+    @Override
+    public Map<String,Object> getVariableMap(Long templateId) {
+        List<AtVariable> priList = this.getPriList(templateId);
+        List<AtVariable> globalList = this.getGlobalList();
+        Map<String,AtVariable> variableMap = new HashMap<>();
+        for (AtVariable atVariable : globalList) {
+            variableMap.put(atVariable.getKey(),atVariable);
+        }
+        for (AtVariable atVariable : priList) {
+            variableMap.put(atVariable.getKey(),atVariable);
+        }
+        Collection<AtVariable> values = variableMap.values();
+        Map<String,Object> resultMap = new HashMap<>();
+        for (AtVariable value : values) {
+            resultMap.put(value.getKey(),value.getValue());
+        }
+        return resultMap;
     }
 
 

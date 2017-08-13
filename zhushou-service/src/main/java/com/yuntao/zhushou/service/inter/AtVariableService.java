@@ -13,6 +13,7 @@ import com.yuntao.zhushou.model.query.AtVariableQuery;
 import com.yuntao.zhushou.model.vo.AtVariableVo;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,6 +81,25 @@ public interface AtVariableService {
      */
     int deleteById(Long id);
 
+    /**
+     * 获取全局变量
+     * @return
+     */
+    List<AtVariable> getGlobalList();
+
+    /**
+     * 获取私有变量
+     * @param templateId
+     * @return
+     */
+    List<AtVariable> getPriList(Long templateId);
+
+    /**
+     * 获取可用变量，私有优先替换
+     * @param templateId
+     * @return
+     */
+    Map<String,Object> getVariableMap(Long templateId) ;
 
     
 

@@ -7,15 +7,13 @@ import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.AtParameter;
 import com.yuntao.zhushou.model.domain.AtVariable;
+import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.AtVariableScope;
 import com.yuntao.zhushou.model.param.at.AtActiveParam;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
-import com.yuntao.zhushou.service.inter.AtActiveService;
-import com.yuntao.zhushou.service.inter.AtParameterService;
-import com.yuntao.zhushou.service.inter.AtTemplateService;
-import com.yuntao.zhushou.service.inter.AtVariableService;
+import com.yuntao.zhushou.service.inter.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +40,11 @@ public class AtTemplateController extends BaseController {
 
     @Autowired
     private AtVariableService atVariableService;
+
+    @Autowired
+    private CompanyService companyService;
+
+
 
 
     @RequestMapping("list")
@@ -96,6 +99,16 @@ public class AtTemplateController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("collect")
+    @NeedLogin
+    public ResponseObject collect(@RequestParam  Long id,@RequestParam String model,@RequestParam String appName,
+                                  @RequestParam String mobile, @RequestParam String startTime,@RequestParam String endTime) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        User user = userService.getCurrentUser();
+        Company company = companyService.findById(user.getCompanyId());
+        atTemplateService.collect(id,company.getKey(),model,appName,mobile,startTime,endTime);
+        return responseObject;
+    }
 
     @RequestMapping("start")
     @NeedLogin

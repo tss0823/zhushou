@@ -78,6 +78,16 @@ public interface AtTemplateService {
     AtTemplateVo getTemplateVo(Long templteId);
 
     /**
+     * 采集活动
+     * @param id
+     * @param appName
+     * @param mobile
+     * @param startTime
+     * @param endTime
+     */
+    void collect(Long id,String companyKey, String model, String appName, String mobile, String startTime, String endTime);
+
+    /**
      * 发起流程
      * @param id
      * @param user

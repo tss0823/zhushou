@@ -218,6 +218,10 @@ public class LogServiceImpl extends AbstService implements LogService {
                     Set<String> keys = beanMap.keySet();
                     for (String key : keys) {
                         Object value = searchHit.getSource().get(key);
+                        if(key.equals("key") && value != null && value instanceof ArrayList){
+                            List<String> keyList = (List<String>) value;
+                            value = keyList.get(0);
+                        }
                         beanMap.put(key, value);
                     }
                     //copy to bean

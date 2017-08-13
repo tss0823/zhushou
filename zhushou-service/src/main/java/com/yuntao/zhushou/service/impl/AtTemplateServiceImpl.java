@@ -1,26 +1,21 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
-import com.yuntao.zhushou.common.utils.BeanUtils;
-import com.yuntao.zhushou.common.utils.CollectUtils;
-import com.yuntao.zhushou.common.utils.ExceptionUtils;
-import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.*;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.mapper.AtTemplateMapper;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AtParameterDataType;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
-import com.yuntao.zhushou.model.query.AtActiveQuery;
-import com.yuntao.zhushou.model.query.AtParameterQuery;
-import com.yuntao.zhushou.model.query.AtTemplateQuery;
+import com.yuntao.zhushou.model.query.*;
 import com.yuntao.zhushou.model.vo.AtActiveVo;
 import com.yuntao.zhushou.model.vo.AtParameterVo;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
@@ -30,7 +25,6 @@ import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +68,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
     @Autowired
     private AtProcessInstService atProcessInstService;
+
+    @Autowired
+    private AtVariableService atVariableService;
 
     @Override
     public List<AtTemplate> selectList(AtTemplateQuery query) {
@@ -137,8 +134,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         for (String logId : logIds) {
             LogWebVo logWebVo = logService.findMasterByStackId(month, model, logId);
             AtActive active = new AtActive();
-//            active.setName(logWebVo.getUrl());
-            active.setUrl(logWebVo.getUrl());
+            active.setName(logWebVo.getUrl());
+            active.setUrl(logWebVo.getReqUrl());
 
             String reqHeaders = logWebVo.getReqHeaders();
             JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
@@ -198,6 +195,54 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         return templateVo;
     }
 
+    @Transactional
+    @Override
+    public void collect(Long id,String companyKey, String model,String appName, String mobile, String startTime, String endTime) {
+        LogQuery logQuery = new LogQuery();
+        logQuery.setKey(companyKey);
+        logQuery.setPage(false);
+        logQuery.setModel(model);
+        logQuery.setAppName(appName);
+        logQuery.setMaster(true);
+        logQuery.setStartTime(startTime);
+        logQuery.setEndTime(endTime);
+        LogTextQuery logTextQuery = new LogTextQuery();
+        logTextQuery.setMobile(mobile);
+        Pagination<LogWebVo> pagination = logService.selectList(logQuery, logTextQuery);
+
+        List<LogWebVo> dataList = pagination.getDataList();
+        for (LogWebVo logWebVo : dataList) {
+            //active
+            AtActive atActive = new AtActive();
+            atActive.setTemplateId(id);
+            atActive.setName(logWebVo.getUrl());
+            atActive.setUrl(logWebVo.getReqUrl());
+            String reqHeaders = logWebVo.getReqHeaders();
+//            JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
+//            String conentType = headerJsonObj.getString("Content-Type");
+            atActive.setReqContentType("application/x-www-form-urlencoded");
+            atActive.setHeaderRow(logWebVo.getReqHeaders());
+            atActive.setMethod("POST");
+            atActiveService.insert(atActive);
+
+            //处理参数模板
+            String parameters = logWebVo.getParameters();
+            JSONObject paramJsonObj = JSON.parseObject(parameters);
+            Set<String> keySet = paramJsonObj.keySet();
+            for (String key : keySet) {
+                AtParameter parameter = new AtParameter();
+                parameter.setName(key);
+                parameter.setCode(key);
+                parameter.setDataValue(paramJsonObj.getString(key));
+                parameter.setActiveId(atActive.getId());
+                parameter.setDataType(AtParameterDataType.statics.getCode());
+                atParameterService.insert(parameter);
+            }
+            break;
+        }
+
+    }
+
     @Override
     @Transactional
     public void start(Long id, User user) {
@@ -216,10 +261,14 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             return;
         }
 
+        //获取变量
+        Map<String, Object> variableMap = atVariableService.getVariableMap(id);
+
         Long companyId = user.getCompanyId();
         Company company = companyService.findById(companyId);
+
         try {
-            httpChainExecute(atProcessInst.getId(), activeVoList, company.getKey());
+            httpChainExecute(atProcessInst.getId(), company.getKey(),activeVoList, variableMap);
         } catch (Exception e) {
             atProcessInst.setStatus(YesNoIntType.no.getCode());
             atProcessInst.setErrMsg(ExceptionUtils.getPrintStackTrace(e));
@@ -228,7 +277,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
     }
 
-    private void httpChainExecute(Long processInstId, List<AtActiveVo> activeVoList, String companyKey) {
+    private void httpChainExecute(Long processInstId, String companyKey,List<AtActiveVo> activeVoList,Map<String, Object> variableMap) {
         ResponseRes lastResponseRes = null;
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             AtActiveInst atActiveInst = new AtActiveInst();
@@ -251,6 +300,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 if (CollectionUtils.isNotEmpty(parameterVoList)) {
                     Map<String, String> paramMap = new HashMap<>();
                     requestRes.setParams(paramMap);
+
+
                     for (AtParameterVo parameterVo : parameterVoList) { //每个http action 请求参数
                         String code = parameterVo.getCode();
                         //TODO file
@@ -259,11 +310,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                         Integer dataType = parameterVo.getDataType();
                         String dataValue = parameterVo.getDataValue();
                         if (dataType == AtParameterDataType.statics.getCode()) {  //静态
-//                        String[] strings = script.split("-");
-//                        Integer startNum = Integer.valueOf(strings[0].trim());
-//                        Integer endNum = Integer.valueOf(strings[1].trim());
-//                        Integer realValue = RandomUtils.nextInt(startNum, endNum);
                             value = dataValue.toString();
+                            value = TemplateUtils.render(value,variableMap);
+
                         } else if (dataType == AtParameterDataType.integer.getCode()) {  //整数
                             String[] strings = dataValue.split(",");
                             Integer startNum = Integer.valueOf(strings[0].trim());
@@ -289,29 +338,10 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                                 throw new BizException("lastResponseRes  is null,parameterId=" + parameterVo.getId());
                             }
                             String lastResult = new String(lastResponseRes.getResult());
-                            JSONObject resultJsonObj = JSON.parseObject(lastResult);
-                            //example data.records[0].id
-                            //获取上一个结果的中的值，遍历每一个属性，然后取值
-                            String[] strings = dataValue.split("\\.");
-                            for (int i = 0; i < strings.length; i++) {
-                                String propKey = strings[i];
-                                if (i == strings.length - 1) {
-                                    value = resultJsonObj.getString(propKey);
-                                    break;
-                                } else {
-                                    int startIndex = propKey.indexOf("[");
-                                    if (startIndex != -1) {
-                                        String newPropKey = propKey.substring(0, startIndex);
-                                        int endIndex = propKey.indexOf("]");
-                                        String posProp = propKey.substring(startIndex + 1, endIndex);
-                                        JSONArray jsonArray = resultJsonObj.getJSONArray(newPropKey);
-                                        int propIndex = StringUtils.equals(posProp, "first") ? 0 : jsonArray.size() - 1;
-                                        resultJsonObj = jsonArray.getJSONObject(propIndex);
-                                    } else {
-                                        resultJsonObj = resultJsonObj.getJSONObject(propKey);
-                                    }
-                                }
-                            }
+                            ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
+                            variableMap.put("responseObject",responseObject);
+                            value = dataValue.toString();
+                            value = TemplateUtils.render(value,variableMap);
                         } else if (dataType == AtParameterDataType.inter.getCode()) { //接口，主要是RPC 接口取值，后续再考虑 TODO
 
                         }
