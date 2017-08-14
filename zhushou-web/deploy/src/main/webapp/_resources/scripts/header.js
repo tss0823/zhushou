@@ -5,6 +5,7 @@ $(document).ready(function () {
     // });
 
 
+    $(document).off("click", "#btnClear");
     $(document).on("click", "#btnClear", function () {
         var jqFormObj = $("form:first");
         if (jqFormObj == null) {
@@ -36,11 +37,14 @@ $(document).ready(function () {
     // });
 
     // basePath = $("#basePath").val();
+
+    $(document).off("click", "#chkRow");
     $(document).on("click", "#chkRow", function () {
         var checked = $(this).find(":checkbox").prop("checked");
         $(this).find(":checkbox").prop("checked", !checked);
     });
 
+    $(document).off("click", "#chkFormAll");
     $(document).on("click", "#chkFormAll", function () {
         var checked = $(this).prop("checked");
         $(":checkbox[id='chkForm']").each(function (index, item) {

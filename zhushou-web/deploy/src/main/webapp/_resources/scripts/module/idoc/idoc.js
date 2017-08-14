@@ -63,6 +63,7 @@
             });
 
             //上移
+            $(document).off("click", "a[name='itemArrowUp']");
             $(document).on("click","a[name='itemArrowUp']",function(){
                 var $thisTr = $(this).parents("tr");
                 var $prevTr = $thisTr.prev();
@@ -71,6 +72,7 @@
             });
 
             //下移
+            $(document).off("click", "a[name='itemArrowDown']");
             $(document).on("click","a[name='itemArrowDown']",function(){
                 var $thisTr = $(this).parents("tr");
                 var $nextTr = $thisTr.next();
@@ -79,6 +81,7 @@
 
 
             //删除
+            $(document).off("click", "a[name='itemRemove']");
             $(document).on("click","a[name='itemRemove']",function(){
                 if (!confirm("您确要删除吗？")) {
                     return false;
@@ -89,7 +92,6 @@
                 }
                 $(this).parents("tr").remove();
             });
-
 
 
             $("button[id='btnSave']").click(function () {
