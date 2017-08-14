@@ -276,6 +276,20 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
     }
 
+    @Override
+    public void start2(Long id, User user) {
+        //执行结束，推送消息
+        Company company = companyService.findById(user.getCompanyId());
+        String sendMsg = "test msg !!!";
+        MsgResponseObject msgResponseObject = new MsgResponseObject();
+        msgResponseObject.setType(MsgConstant.ReqResType.USER);
+        msgResponseObject.setKey(company.getKey());
+        msgResponseObject.setCode(MsgConstant.ResponseCode.NORMAL);
+        msgResponseObject.setBizType(MsgConstant.ResponseBizType.TEST_ACTIVE_HTTP_EXCUTE);
+        msgResponseObject.setData(sendMsg);
+        dzMessageHelperServer.offerSendMsg(msgResponseObject);
+    }
+
     private void httpChainExecute(Long processInstId, String companyKey,List<AtActiveVo> activeVoList,Map<String, Object> variableMap) {
         ResponseRes lastResponseRes = null;
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
@@ -372,10 +386,10 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             //执行结束，推送消息
             String sendMsg = "url=" + requestRes.getUrl() + ",status=" + lastResponseRes.getStatus();
             MsgResponseObject msgResponseObject = new MsgResponseObject();
-            msgResponseObject.setType(MsgConstant.ReqResType.CORE);
+            msgResponseObject.setType(MsgConstant.ReqResType.USER);
             msgResponseObject.setKey(companyKey);
             msgResponseObject.setCode(MsgConstant.ResponseCode.NORMAL);
-            msgResponseObject.setBizType(MsgConstant.ResponseBizType.TEST_HTTP_EXCUTE);
+            msgResponseObject.setBizType(MsgConstant.ResponseBizType.TEST_ACTIVE_HTTP_EXCUTE);
             msgResponseObject.setData(sendMsg);
             dzMessageHelperServer.offerSendMsg(msgResponseObject);
         }

@@ -48,9 +48,12 @@ public class AtVariable implements Serializable {
         
     @ModelFieldComment(value = "模板id")
     private Long templateId;
-        
+
     @ModelFieldComment(value = "用户id")
     private Long userId;
+
+    @ModelFieldComment(value = "企业id")
+    private Long companyId;
         
     
     public AtVariable(){
@@ -126,8 +129,13 @@ public class AtVariable implements Serializable {
     public Long getUserId() {
         return this.userId;
     }
-    
 
 
+    public Long getCompanyId() {
+        return companyId;
+    }
 
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
 }

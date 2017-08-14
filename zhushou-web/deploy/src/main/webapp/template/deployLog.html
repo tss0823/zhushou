@@ -10,9 +10,15 @@
             <small>
                 <form id="deployLogForm" onsubmit="return false">
                     应用：
-                    <input type="text" id="appName" name="appName" value="{{appName}}" class="input-sm" />
-                    模式：
-                    <input type="text" id="model" name="model" value="{{model}}" class="input-sm" />
+                    <select id="appName" name="appName">
+                        <option value=""></option>
+                    </select>
+                    &nbsp;&nbsp;
+                    环境：
+                    <select id="model" name="model">
+                        <option value=""></option>
+                    </select>
+                    &nbsp;&nbsp;
                     操作人：
                     <input type="text" id="userName" name="userName" value="{{userName}}" class="input-sm" />
                     <button class="btn btn-white" id="btnQuery" enter="true">查询</button>
@@ -41,7 +47,7 @@
             <td>
                 <a href="#">{{bean.appName}}</a>
             </td>
-            <td>{{bean.model}}</td>
+            <td>{{bean.model | text:'logModel'}}</td>
             <td>{{bean.content}}</td>
             <td>{{bean.userName}}</td>
             <td>

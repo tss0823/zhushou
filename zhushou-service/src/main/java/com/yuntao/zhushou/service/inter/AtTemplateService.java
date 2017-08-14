@@ -94,6 +94,8 @@ public interface AtTemplateService {
      */
     void start(Long id,User user);
 
+    void start2(Long id,User user);
+
 
 
 }

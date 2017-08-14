@@ -57,9 +57,9 @@ public class AtTemplateController extends BaseController {
     @RequestMapping("detail")
     @NeedLogin
     public ResponseObject detail(@RequestParam Long id) {
-        AtTemplate atTemplate = atTemplateService.findById(id);
+        AtTemplateVo templateVo = atTemplateService.getTemplateVo(id);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.setData(atTemplate);
+        responseObject.setData(templateVo);
         return responseObject;
     }
 
@@ -72,6 +72,7 @@ public class AtTemplateController extends BaseController {
         User user = userService.getCurrentUser();
         template.setUserId(user.getId());
         template.setUserName(user.getNickName());
+        template.setCompanyId(user.getCompanyId());
         atTemplateService.insert(template);
         return responseObject;
     }
@@ -106,6 +107,7 @@ public class AtTemplateController extends BaseController {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         AtVariable atVariable = new AtVariable();
+        atVariable.setCompanyId(user.getCompanyId());
         atVariable.setKey(key);
         atVariable.setValue(value);
         atVariable.setUserId(user.getId());
@@ -141,7 +143,8 @@ public class AtTemplateController extends BaseController {
             @Override
             public void run() {
                 try{
-                    atTemplateService.start(id, user);
+                    atTemplateService.start2(id, user);
+
                 }catch (Exception e){
                     throw e;
                 }

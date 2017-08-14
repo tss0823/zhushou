@@ -1,0 +1,52 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+               {{tp_title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" id="activeStartForm" onsubmit="return false;">
+                <input type="hidden" id="id" name="id" value="{{templateId}}">
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <span style="text-align: left">
+                        模板：{{name}} [{{model | text:'logModel'}}]
+                    </span>
+                    &nbsp;&nbsp;
+                    <span style="text-align: right">
+                        <button class="btn btn-info" id="btnActiveStart"> <i class="icon-ok bigger-110"></i> 开始执行 </button>
+                    </span>
+                </div>
+                <div class="space-4"></div>
+            </form>
+
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th style="width:10%">活动</th>
+                    <th style="width:5%">状态</th>
+                </tr>
+                </thead>
+
+                <tbody id="tbContent">
+                {{each activeVoList as bean i}}
+                <tr class="selected">
+                    <td>
+                        <label>{{bean.name}}：</label>
+                        <span> {{bean.url}} </span> &nbsp;&nbsp;
+                        <span> {{bean.method}} </span> &nbsp;&nbsp;
+                        <span> {{bean.reqContentType}} </span> &nbsp;&nbsp;
+                    </td>
+                    <td id="activeExeStatus">执行中...</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->

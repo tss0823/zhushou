@@ -11,7 +11,15 @@
 
         route_callback : function (d) {
             console.log("deployLog list after render call");
+
+            var data = d.data;
             //组件初始化之后
+            var appList = YT.deploy.data.appList;
+            // var docList = YT.deploy.data.docList;
+            YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
+
+            YT.deploy.util.initEnumSelect("logModel","model",data.model);
+
             //注册事件
             $("a[id='enterView']").each(function(index,item){
                 $(this).click(function(){

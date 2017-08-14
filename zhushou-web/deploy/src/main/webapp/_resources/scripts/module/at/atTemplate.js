@@ -21,6 +21,9 @@
 
             YT.deploy.util.initEnumSelect("logModel","model",data.model);
 
+            //
+            YT.deploy.atTemplate.init();
+
             //注册事件
             $("a[id='enterView']").each(function(index,item){
                 $(this).click(function(){
@@ -47,15 +50,25 @@
             //保存
             $(document).off("click", "#btnSave");
             $(document).on("click", "#btnSave", function () {
-                // debugger;
                 YT.deploy.atTemplate.save();
             });
-            
+
             //保存活动采集
             $(document).off("click", "#btnSaveActiveCollect");
             $(document).on("click", "#btnSaveActiveCollect", function () {
-                // debugger;
                 YT.deploy.atTemplate.saveActiveCollect();
+            });
+
+            // //保存活动列表
+            // $(document).off("click", "#btnSaveActiveCollect");
+            // $(document).on("click", "#btnSaveActiveCollect", function () {
+            //     YT.deploy.atTemplate.saveActiveCollect();
+            // });
+
+            //活动执行
+            $(document).off("click", "#btnActiveStart");
+            $(document).on("click", "#btnActiveStart", function () {
+                YT.deploy.atTemplate.activeStart();
             });
 
             //取消
@@ -74,6 +87,24 @@
             $("a[id='enterActiveCollect']").click(function(){
                 var id = $(this).attr("data");
                 YT.deploy.atTemplate.openActiveCollectWin(id);
+            });
+
+            //enter active edit
+            $("a[id='enterActiveEdit']").click(function(){
+                var id = $(this).attr("data");
+                YT.deploy.atTemplate.openActiveEditWin(id);
+            });
+
+            //enter collect start
+            $("a[id='enterStart']").click(function(){
+                var id = $(this).attr("data");
+                YT.deploy.atTemplate.enterStartWin(id);
+            });
+
+            //enter active execute his
+            $("a[id='enterHis']").click(function(){
+                var id = $(this).attr("data");
+                YT.deploy.atTemplate.enterHisWin(id);
             });
 
             //分页信息init
@@ -188,6 +219,46 @@
                 YT.deploy.atTemplate.initNewEdit(param);
             });
         },
+        openActiveEditWin: function (id) {
+            var param = {tp_title: "模版修改", dataList: null};
+            var params = {id: id};
+            YT.deploy.util.reqGet("/atTemplate/detail", params, function (d) {
+                // debugger;
+                param["domain"] = d.data;
+                $.get("/at/edit.html", function (source) {
+                    var render = template.compile(source);
+                    var html = render(param);
+                    YT.deploy.atTemplate.openWinObj = bootbox.dialog({
+                        message: html,
+                        width: "800px",
+                    });
+                    $(".modal-dialog").prop("style", "width:70%;height:85%")
+                    YT.deploy.formId = "templateNewForm";
+                    YT.deploy.atTemplate.initNewEdit(d.data);
+                });
+            });
+        },
+
+        enterStartWin: function (id) {
+            var params = {id: id};
+            var ext_data = $.extend(params, {tp_title: "活动开始"});
+            YT.deploy.route("/atTemplate/detail", params, "/at/activeStart.html", ext_data);
+        },
+
+        enterHisWin: function (id) {
+            var param = {tp_title: "活动采集", templateId: id};
+            $.get("/at/activeCollect.html", function (source) {
+                var render = template.compile(source);
+                var html = render(param);
+                YT.deploy.atTemplate.openWinObj = bootbox.dialog({
+                    message: html,
+                    width: "800px",
+                });
+                $(".modal-dialog").prop("style", "width:70%;height:85%")
+                YT.deploy.formId = "activeCollectForm";
+                YT.deploy.atTemplate.initNewEdit(param);
+            });
+        },
 
         save: function () {
             var params = YT.deploy.util.getFormParams("#templateNewForm");
@@ -215,6 +286,12 @@
                 YT.deploy.atTemplate.query(1);
             });
         },
+        activeStart: function () {
+            var params = YT.deploy.util.getFormParams("#activeStartForm");
+            YT.deploy.util.reqPost("/atTemplate/start", params, function (d) {
+                alert("执行开始");
+            });
+        },
 
         /**
          * 生成结束时间
@@ -235,6 +312,16 @@
             var endTimeVal = endTimeObj.format("YYYY-MM-DD HH:mm");
             $("#endTime").val(endTimeVal);
         },
+
+        init:function(){
+            //注册服务状态监控事件
+            YT.deploy.eventProcess.addListener("test_active_http_execute", function (msgObj) {
+                debugger;
+                var dataObj = JSON.parse(msgObj.data);
+
+                //end
+            });
+        }
 
     }
 

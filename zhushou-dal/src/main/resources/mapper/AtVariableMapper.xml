@@ -16,11 +16,12 @@
         <result column="scope" property="scope"/>
         <result column="templateId" property="templateId"/>
         <result column="userId" property="userId"/>
+        <result column="companyId" property="companyId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
 	 `id`, `gmtCreate`, `gmtModify`, `delState`, `key`, `value`, `status`, `scope`,
-	 `templateId`, `userId`
+	 `templateId`, `userId`,`companyId`
 	</sql>
 
     <sql id="Base_Table_Name">
@@ -38,6 +39,7 @@
         <if test="scope != null ">and `scope` = #{scope}</if>
         <if test="templateId != null ">and `templateId` = #{templateId}</if>
         <if test="userId != null ">and `userId` = #{userId}</if>
+        <if test="companyId != null ">and `companyId` = #{companyId}</if>
     </sql>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -79,12 +81,12 @@
         <include refid="Base_Table_Name"/>
         (
         `gmtCreate`,`gmtModify`,`delState`,`key`,`value`,`status`,
-        `scope`,`templateId`,`userId`
+        `scope`,`templateId`,`userId`,`companyId`
         )
         values
         (
         now(6), now(6), 1, #{key}, #{value}, #{status}, #{scope}, #{templateId},
-        #{userId}
+        #{userId},#{companyId}
         )
     </insert>
 
@@ -99,6 +101,7 @@
             <if test="scope != null">`scope` = #{scope},</if>
             <if test="templateId != null">`templateId` = #{templateId},</if>
             <if test="userId != null">`userId` = #{userId},</if>
+            <if test="companyId != null">`companyId` = #{companyId},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}
