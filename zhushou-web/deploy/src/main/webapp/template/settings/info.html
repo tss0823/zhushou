@@ -53,8 +53,8 @@ $(document).ready(function(){
     YunTao.deploy.eventProcess.addListener("deploy_script",function(msgObj){
         console.log("enableRemoteDev msg="+msgObj.data);
     });
-    var params = {ip:returnCitySN.cip};
     $("#btnEnableRemoteDev").click(function(){
+        var params = {ip:returnCitySN.cip};
         YunTao.deploy.util.reqPost("/deploy/addWhiteList", params, function (d) {
             alert("已开启");
         });
