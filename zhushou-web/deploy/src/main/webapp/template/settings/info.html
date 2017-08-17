@@ -40,12 +40,25 @@
                 <span class="editable editable-click" >{{email}}</span>
             </div>
         </div>
-
-
+    </div>
+    <div class="profile-user-info profile-user-info-striped" style="margin-top: 10px">
+        <button class="btn btn-warning" id="btnEnableRemoteDev">开启远程开发</button>
     </div>
 
 </div><!-- /.page-content -->
 <!--<script src="/_resources/scripts/module/at/template.js?ver={{ver}}" ></script>-->
 <script>
+$(document).ready(function(){
+    YunTao.deploy.eventProcess.addListener("deploy_script",function(msgObj){
+        alert(msgObj.data);
+    });
 
+    var params = {};
+    $("#btnEnableRemoteDev").click(function(){
+        YunTao.deploy.util.reqPost("/deploy/addWhiteList", params, function (d) {
+            alert("已开启");
+        });
+
+    });
+});
 </script>

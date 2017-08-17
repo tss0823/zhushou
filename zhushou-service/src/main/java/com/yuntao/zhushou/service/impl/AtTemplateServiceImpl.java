@@ -16,10 +16,7 @@ import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AtParameterDataType;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.*;
-import com.yuntao.zhushou.model.vo.AtActiveVo;
-import com.yuntao.zhushou.model.vo.AtParameterVo;
-import com.yuntao.zhushou.model.vo.AtTemplateVo;
-import com.yuntao.zhushou.model.vo.LogWebVo;
+import com.yuntao.zhushou.model.vo.*;
 import com.yuntao.zhushou.service.inter.*;
 import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.collections4.CollectionUtils;
@@ -384,13 +381,17 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             atActiveInstService.insert(atActiveInst);
 
             //执行结束，推送消息
-            String sendMsg = "url=" + requestRes.getUrl() + ",status=" + lastResponseRes.getStatus();
+            ActiveExecuteVo activeExecuteVo = new ActiveExecuteVo();
+            activeExecuteVo.setActiveId(activeVo.getId());
+            activeExecuteVo.setSuccess(atActiveInst.getStatus().intValue() == YesNoIntType.yes.getCode());
+            activeExecuteVo.setResult(atActiveInst.getResult());
+            activeExecuteVo.setErrMsg(atActiveInst.getErrMsg());
             MsgResponseObject msgResponseObject = new MsgResponseObject();
             msgResponseObject.setType(MsgConstant.ReqResType.USER);
             msgResponseObject.setKey(companyKey);
             msgResponseObject.setCode(MsgConstant.ResponseCode.NORMAL);
             msgResponseObject.setBizType(MsgConstant.ResponseBizType.TEST_ACTIVE_HTTP_EXCUTE);
-            msgResponseObject.setData(sendMsg);
+            msgResponseObject.setData(JsonUtils.object2Json(activeExecuteVo));
             dzMessageHelperServer.offerSendMsg(msgResponseObject);
         }
     }

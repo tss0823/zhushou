@@ -724,12 +724,13 @@
 
             this.webSocket.onopen = function(event) {
                 console.log("open,data="+event.data);
+                YT.deploy.WebSocket.webSocket.send('{"type":"user","bizType":"init","message":"user client init"}');
             };
 
             this.webSocket.onmessage = function(event) {
                 YT.deploy.eventProcess.notifyEvent(event.data);
                 console.log("onmessage data="+event.data);
-                YT.deploy.WebSocket.webSocket.send('{"type":"user","bizType":"init","message":"user client init"}');
+                // YT.deploy.WebSocket.webSocket.send('{"type":"user","bizType":"init","message":"user client init"}');
             };
 
             this.webSocket.onclose = function(event) {

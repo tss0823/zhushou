@@ -24,17 +24,21 @@
             //
             YT.deploy.atTemplate.init();
 
-            //注册事件
-            $("a[id='enterView']").each(function(index,item){
-                $(this).click(function(){
-                    // var appId = $(item).attr("appId");
-                    // var model = $(item).attr("model");
-                    // var appName = $(item).attr("appName");
-                    // var data = {title:"发布节点",titleColor:$(item).attr("color"),msTitle:" 【 "+appName+" 】 > "+model};
-                    // data["model"] = model;
-                    // data["appName"] = appName;
-                    // YT.deploy.route("/host/getListByAppAndModel",{appId:appId,model:model},"appHost.html",data);
-                });
+            //tab
+            $( "div[id='tabs']" ).tabs();
+
+            //调出http 执行详情
+            $("div[name='enterHttpExecView']").click(function () {
+                var dataId = $(this).attr("data");
+                var item = $("tr[data='trChildItem_" + dataId + "']").first();
+                var state = ($(item).css("display") == "none");
+                //所有的hide
+                $("tr[name='trChildItem']").hide();
+                if (state) {
+                    $(item).show();
+                } else {
+                    $(item).hide();
+                }
             });
 
             $("#btnQuery").click(function(){
@@ -78,31 +82,31 @@
             });
 
             //enterEdit
-            $("a[id='enterEdit']").click(function(){
+            $("a[name='enterEdit']").click(function(){
                 var id = $(this).attr("data");
                 YT.deploy.atTemplate.openEditWin(id);
             });
 
             //enter collect active
-            $("a[id='enterActiveCollect']").click(function(){
+            $("a[name='enterActiveCollect']").click(function(){
                 var id = $(this).attr("data");
                 YT.deploy.atTemplate.openActiveCollectWin(id);
             });
 
             //enter active edit
-            $("a[id='enterActiveEdit']").click(function(){
+            $("a[name='enterActiveEdit']").click(function(){
                 var id = $(this).attr("data");
-                YT.deploy.atTemplate.openActiveEditWin(id);
+                YT.deploy.atTemplate.enterActiveEditWin(id);
             });
 
             //enter collect start
-            $("a[id='enterStart']").click(function(){
+            $("a[name='enterStart']").click(function(){
                 var id = $(this).attr("data");
                 YT.deploy.atTemplate.enterStartWin(id);
             });
 
             //enter active execute his
-            $("a[id='enterHis']").click(function(){
+            $("a[name='enterHis']").click(function(){
                 var id = $(this).attr("data");
                 YT.deploy.atTemplate.enterHisWin(id);
             });
@@ -168,6 +172,83 @@
                 YT.deploy.atTemplate.genEndTime($("#startTime").val());
             });
 
+            //添加
+            $("button[id='btnAddParam']").click(function () {
+                var $tr = $("#tbParamContent").find("tr[name='dataItem']").first().clone();
+                $tr.show();
+                $("#tbParamContent").append($tr) ;
+            });
+
+            //上移
+            $(document).off("click", "a[name='itemArrowUp']");
+            $(document).on("click","a[name='itemArrowUp']",function(){
+                var $thisTr = $(this).parents("tr");
+                var $prevTr = $thisTr.prev();
+                $thisTr.after($prevTr);
+                // $prevTr.before($thisTr);
+            });
+
+            //下移
+            $(document).off("click", "a[name='itemArrowDown']");
+            $(document).on("click","a[name='itemArrowDown']",function(){
+                var $thisTr = $(this).parents("tr");
+                var $nextTr = $thisTr.next();
+                $nextTr.after($thisTr);
+            });
+
+
+            //删除
+            $(document).off("click", "a[name='itemRemove']");
+            $(document).on("click","a[name='itemRemove']",function(){
+                if (!confirm("您确要删除吗？")) {
+                    return false;
+                }
+                if($("#tbContent").find("tr[name='dataItem']").length == 1){
+                    alert("必须保留一条记录");
+                    return;
+                }
+                $(this).parents("tr").remove();
+            });
+
+
+            $("button[id='btnSave']").click(function () {
+
+                var params = YT.deploy.util.getFormParams("#idocForm");
+                $("#tbReqParam").find("tr[name='dataItem']").each(function (index, item) {
+                    var code = $(item).find("input[id='code']").val();
+                    // debugger;
+                    if(!code){
+                        return true;
+                    }
+                    params["paramList[" + index + "].code"] = code;
+                    params["paramList[" + index + "].name"] = $(item).find("input[id='name']").val();
+                    params["paramList[" + index + "].memo"] = $(item).find("input[id='memo']").val();
+                    params["paramList[" + index + "].rule"] = $(item).find("input[id='rule']").val();
+                });
+
+                if(params["id"]){  //update
+                    YT.deploy.util.reqPost("/idocUrl/update", params, function (d) {
+                        if (d.success) {
+                            alert("修改成功");
+                            YT.deploy.idocList.query(1);
+                        } else {
+                            alert("修改失败,err=" + d.message);
+                        }
+                    });
+
+                }else{ //save
+                    YT.deploy.util.reqPost("/idocUrl/save", params, function (d) {
+                        if (d.success) {
+                            alert("保存成功");
+                            YT.deploy.idocList.query(1);
+                        } else {
+                            alert("保存失败,err=" + d.message);
+                        }
+                    });
+                }
+            });
+
+
         },
 
         openNewWin: function () {
@@ -219,24 +300,12 @@
                 YT.deploy.atTemplate.initNewEdit(param);
             });
         },
-        openActiveEditWin: function (id) {
-            var param = {tp_title: "模版修改", dataList: null};
+        enterActiveEditWin: function (id) {
             var params = {id: id};
-            YT.deploy.util.reqGet("/atTemplate/detail", params, function (d) {
-                // debugger;
-                param["domain"] = d.data;
-                $.get("/at/edit.html", function (source) {
-                    var render = template.compile(source);
-                    var html = render(param);
-                    YT.deploy.atTemplate.openWinObj = bootbox.dialog({
-                        message: html,
-                        width: "800px",
-                    });
-                    $(".modal-dialog").prop("style", "width:70%;height:85%")
-                    YT.deploy.formId = "templateNewForm";
-                    YT.deploy.atTemplate.initNewEdit(d.data);
-                });
-            });
+            var ext_data = $.extend(params, {tp_title: "活动编辑"});
+            YT.deploy.route("/atTemplate/detail", params, "/at/activeEdit.html", ext_data);
+            YT.deploy.formId = "activeEditForm";
+            YT.deploy.atTemplate.initNewEdit(ext_data);
         },
 
         enterStartWin: function (id) {
@@ -287,9 +356,13 @@
             });
         },
         activeStart: function () {
+            if(!confirm("您确认要执行？")){
+                return;
+            }
             var params = YT.deploy.util.getFormParams("#activeStartForm");
             YT.deploy.util.reqPost("/atTemplate/start", params, function (d) {
-                alert("执行开始");
+                $("#sample-table-1").find("td[name='activeExeStatus']").html("执行中...");
+                // alert("执行开始");
             });
         },
 
@@ -316,9 +389,16 @@
         init:function(){
             //注册服务状态监控事件
             YT.deploy.eventProcess.addListener("test_active_http_execute", function (msgObj) {
-                debugger;
+                // debugger;
                 var dataObj = JSON.parse(msgObj.data);
-
+                var activeId = dataObj.activeId;
+                var success = dataObj.success;
+                debugger;
+                var errShowHtml = "<strong style='color:red'>ERROR</strong>";
+                var successShowHtml = "<strong style='color:green'>OK</strong>";
+                $("#activeExeStatus_"+activeId).html(success?successShowHtml:errShowHtml);
+                $("#trChildItem_"+activeId).find("#result").html(dataObj.result);
+                $("#trChildItem_"+activeId).find("#errMsg").html(dataObj.errMsg);
                 //end
             });
         }

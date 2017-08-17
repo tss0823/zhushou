@@ -716,5 +716,15 @@ public class DeployController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("addWhiteList")
+    public ResponseObject addWhiteList(@RequestParam String ip) {
+        String cmd = "sh /u01/deploy/script/iptable_add.sh " + ip;
+        execShellScript(cmd, "addWhiteList");
+        offerExecMsg("执行远程开发成功！ip="+ip);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        return responseObject;
+    }
+
+
 
 }

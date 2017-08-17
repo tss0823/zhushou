@@ -143,7 +143,7 @@ public class AtTemplateController extends BaseController {
             @Override
             public void run() {
                 try{
-                    atTemplateService.start2(id, user);
+                    atTemplateService.start(id, user);
 
                 }catch (Exception e){
                     throw e;

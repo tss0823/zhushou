@@ -347,7 +347,7 @@
                 var jsonObj = JSON.parse(jsonLog);
                 var formatJsonLog = JSON.stringify(jsonObj, null, 4);
                 var param = {title: "返回结果", logText: jsonLog, formatLogText: formatJsonLog};
-                $.get("/log/msg.html", function (source) {
+                $.get("/log/msgRes.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
                     bootbox.dialog({
@@ -359,7 +359,7 @@
                     // var json = data.resFormatMsg;
                     // $("#logText").JSONView(jsonLog);
                     // with options
-                    $("#logText").JSONView(jsonLog, {collapsed: true});
+                    $("#logResText").JSONView(jsonLog, {collapsed: true});
 
                     new Clipboard("#btnCopy");
                     // new Clipboard("#btnCopy", {
@@ -373,13 +373,13 @@
 
 
                     $(document).find("#btnExpand").click(function () {
-                        $("#logText").JSONView('expand');
+                        $("#logResText").JSONView('expand');
                     });
                     $(document).find("#btnCollapse").click(function () {
-                        $("#logText").JSONView('collapse');
+                        $("#logResText").JSONView('collapse');
                     });
                     $(document).find("#btnToggle").click(function () {
-                        $("#logText").JSONView('toggle');
+                        $("#logResText").JSONView('toggle');
                     });
 
                 });

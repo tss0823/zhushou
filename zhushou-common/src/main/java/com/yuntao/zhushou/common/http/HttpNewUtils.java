@@ -5,11 +5,15 @@ import com.yuntao.zhushou.common.exception.BizException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -42,6 +46,9 @@ public class HttpNewUtils {
 
     static PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 
+    private static String userAgent = null;
+
+
     static {
         cm.setMaxTotal(20);//连接池最大并发连接数
         cm.setDefaultMaxPerRoute(5);//单路由最大并发数
@@ -49,25 +56,65 @@ public class HttpNewUtils {
 
     }
 
-//    static RequestConfig requestConfig
+    final static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(10000).setSocketTimeout(10000).build();
 
-    static CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(cm).build();
+    static CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieSpecRegistry(null).setConnectionManager(cm).build();
 
-//    static Map<Res,byte []> contentMap = new ConcurrentHashMap();
-   static CookieStore cookieStore = new BasicCookieStore();
+    static CookieStore cookieStore = new BasicCookieStore();
 
-    public static ResponseRes get(String url){
-        RequestRes requestRes = new RequestRes();
-        requestRes.setUrl(url);
-        return execute(requestRes);
+    public static ResponseRes  get(String url){
+        HttpContext httpContext = new HttpClientContext();
+        cookieStore.clear();
+        httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+        ResponseRes responseRes = new ResponseRes();
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setConfig(requestConfig);
+        CloseableHttpResponse response = null;
+        try{
+            if(StringUtils.isNotEmpty(userAgent)){
+                httpGet.setHeader("User-Agent", userAgent);
+            }
+            response = httpclient.execute(httpGet,httpContext);
+            int status = response.getStatusLine().getStatusCode();
+            responseRes.setStatus(status);
+            HttpEntity entity = response.getEntity();
+            InputStream is = entity.getContent();
+            byte[] buffer = new byte[1024 * 1024];
+            ByteArrayBuffer byteArrayBuffer = new ByteArrayBuffer(0);
+            int n = 0;
+            while ((n = is.read(buffer)) > 0) {
+                byteArrayBuffer.append(buffer, 0, n);
+            }
+            responseRes.setResult(byteArrayBuffer.toByteArray());
+            responseRes.setBodyText(new String(responseRes.getResult(),"utf-8"));
+
+            //get res header
+            Header[] resHeaders = response.getAllHeaders();
+            Map<String, String> headerMap = new HashMap<>();
+            for (Header resHeader : resHeaders) {
+                headerMap.put(resHeader.getName(), resHeader.getValue());
+            }
+            responseRes.setHeaders(headerMap);
+
+        } catch (Exception e) {
+            BizException bizException = new BizException("http execute failed!", e);
+            if(e instanceof ConnectTimeoutException || e instanceof SocketTimeoutException){
+                bizException.setCode(AppConstant.ExceptionCode.REMOTE_TIME_OUT);
+            }
+            throw bizException;
+        }finally {
+            if(response != null){
+                try {
+                    response.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return responseRes;
     }
 
-    public static ResponseRes execute(RequestRes requestRes) {
-        if (StringUtils.equals(requestRes.getMethod(),"GET")) {
-            //TODO 参数处理
-            return get(requestRes.getUrl());
-        }
 
+    public static ResponseRes execute(RequestRes requestRes) {
         HttpContext httpContext = new HttpClientContext();
         cookieStore.clear();
         httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
@@ -79,7 +126,6 @@ public class HttpNewUtils {
         if(requestRes.isProxy()){
             proxy = new HttpHost(requestRes.getProxyHost(), requestRes.getProxyPort(), "http");
         }
-        RequestConfig requestConfig = RequestConfig.custom().setProxy(proxy).setConnectTimeout(10000).setSocketTimeout(10000).build();
         httpPost.setConfig(requestConfig);
         //处理headers
         Map<String, String> headers = requestRes.getHeaders();
@@ -91,6 +137,9 @@ public class HttpNewUtils {
                 }
                 httpPost.setHeader(entry.getKey(), entry.getValue());
             }
+        }
+        if(StringUtils.isNotEmpty(userAgent)){
+            httpPost.setHeader("User-Agent", userAgent);
         }
         Map<String, String> params = requestRes.getParams();
         List<HttpParam> paramList = requestRes.getParamList();
@@ -172,6 +221,10 @@ public class HttpNewUtils {
             }
         }
         return responseRes;
+    }
+
+    public static void setUserAgent(String ua){
+        userAgent = ua;
     }
 
     public static void main(String[] args) {

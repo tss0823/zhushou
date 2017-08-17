@@ -1,5 +1,7 @@
 package com.yuntao.zhushou.deploy.controller;
 
+import com.yuntao.zhushou.common.http.HttpNewUtils;
+import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.utils.HttpUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -61,7 +64,7 @@ public class CommonController extends BaseController {
     private WarnEventResultService warnEventResultService;
 
 
-//    @PostConstruct
+    @PostConstruct
     private void init() {
 //        httpProxyServerSupport.init();
 
@@ -84,7 +87,7 @@ public class CommonController extends BaseController {
                         query.setExecTimeEnd(DateUtil.getFmtYMDHMS(new Date().getTime()));
                         List<WarnEvent> warnEventList = warnEventService.selectList(query);
                         if (CollectionUtils.isEmpty(warnEventList)) {
-                            Thread.sleep(5000);  //5秒钟
+                            Thread.sleep(DateUtil.MINITUE_5_MILLIS);  //5分钟
                         }
                         warnEventService.sendTask(warnEventList);
                     }catch (Exception e){
@@ -139,36 +142,41 @@ public class CommonController extends BaseController {
 
     @RequestMapping("getCityById")
     @ResponseBody
-    public ResponseObject getCityByIp(@RequestParam String ip) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+    public ResponseObject getCityByIp(@RequestParam final String ip) {
+        final  ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         Object value = cacheMap.get(ip);
         if(value != null){
             responseObject.setData(value);
             return responseObject;
         }
 
-        List<String> lines = HttpUtils.reqGet("http://ip.taobao.com/service/getIpInfo.php?ip="+ip);
-        String result = StringUtils.join(lines,"");
-        responseObject.setMessage(result);
-        Map map = JsonUtils.json2Object(result, HashMap.class);
-        Object code = map.get("code");
-        if(code == null || code.toString().equals("1")){
-            responseObject.setData("无");
-            cacheMap.put(ip,"无");
-            return responseObject;
-        }
-        Map childMap = (Map) map.get("data");
-        Object province = childMap.get("region");
-        Object city = childMap.get("city");
-        if (province == null || province.toString().equals("")) {
-            Object country = childMap.get("country");
-            responseObject.setData(country);
-            cacheMap.put(ip,country);
-            return responseObject;
-        }
-        String address = province + "" +city;
-        cacheMap.put(ip,address);
-        responseObject.setData(address);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpNewUtils.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
+                ResponseRes responseRes = HttpNewUtils.get("http://ip.taobao.com/service/getIpInfo.php?ip=" + ip);
+                String result = responseRes.getBodyText();
+                responseObject.setMessage(result);
+                Map map = JsonUtils.json2Object(result, HashMap.class);
+                Object code = map.get("code");
+                if(code == null || code.toString().equals("1")){
+                    responseObject.setData("无");
+                    cacheMap.put(ip,"无");
+                }else{
+                    Map childMap = (Map) map.get("data");
+                    Object province = childMap.get("region");
+                    Object city = childMap.get("city");
+                    if (province == null || province.toString().equals("")) {
+                        Object country = childMap.get("country");
+                        responseObject.setData(country);
+                        cacheMap.put(ip,country);
+                    }
+                    String address = province + "" +city;
+                    cacheMap.put(ip,address);
+                }
+            }
+        }).start();
+        responseObject.setData("无");
         return responseObject;
 
     }

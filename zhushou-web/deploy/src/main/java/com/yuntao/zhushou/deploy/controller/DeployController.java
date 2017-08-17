@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("deploy")
@@ -536,6 +538,45 @@ public class DeployController extends BaseController {
             throw new BizException("autoDeploy error",e);
         }
         return "OK";
+    }
+
+    @RequestMapping("addWhiteList")
+    @NeedLogin
+    public ResponseObject addWhiteList() {
+        User user = userService.getCurrentUser();
+        //call remote method
+        Long companyId = user.getCompanyId();
+
+        //get compnay
+        Company company = companyService.findById(companyId);
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/addWhiteList");
+        Map<String,String> params = new HashMap<>();
+        //获取request ip
+        ResponseRes ipRes = HttpNewUtils.get("http://1212.ip138.com/ic.asp");
+        String bodyText = ipRes.getBodyText();
+        String pattern = "\\[[\\w\\.]+\\]";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(bodyText);
+        boolean matches = m.matches();
+        String ip = null;
+        if(matches){
+            ip  = m.group();
+        }
+        //end
+        params.put("ip",ip);
+        requestRes.setParams(params);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String resData = new String(responseRes.getResult());
+        ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
+//        List<String> dataList = new ArrayList<>();
+//        dataList.add("test1");
+//        dataList.add("test2");
+//        dataList.add("test3");
+//        dataList.add("test4");
+//        responseObject.setData(dataList);
+        return responseObject;
     }
 
 }

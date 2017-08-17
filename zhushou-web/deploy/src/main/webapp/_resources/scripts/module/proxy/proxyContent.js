@@ -36,8 +36,8 @@
             YT.deploy.util.paginationInit(d.data, YT.deploy.proxyContent.query);
             
 
-            //tab
-            $( "div[id='tabs']" ).tabs();
+            // //tab
+            // $( "div[id='tabs']" ).tabs();
 
             //调出详情
             $("a[name='enterView']").click(function () {
