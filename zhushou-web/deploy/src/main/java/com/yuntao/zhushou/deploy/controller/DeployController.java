@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("deploy")
@@ -542,7 +540,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("addWhiteList")
     @NeedLogin
-    public ResponseObject addWhiteList() {
+    public ResponseObject addWhiteList(@RequestParam String ip) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
@@ -553,18 +551,6 @@ public class DeployController extends BaseController {
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/addWhiteList");
         Map<String,String> params = new HashMap<>();
-        //获取request ip
-        ResponseRes ipRes = HttpNewUtils.get("http://1212.ip138.com/ic.asp");
-        String bodyText = ipRes.getBodyText();
-        String pattern = "\\[[\\w\\.]+\\]";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(bodyText);
-        boolean matches = m.matches();
-        String ip = null;
-        if(matches){
-            ip  = m.group();
-        }
-        //end
         params.put("ip",ip);
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
@@ -578,5 +564,6 @@ public class DeployController extends BaseController {
 //        responseObject.setData(dataList);
         return responseObject;
     }
+
 
 }

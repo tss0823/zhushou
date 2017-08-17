@@ -47,13 +47,13 @@
 
 </div><!-- /.page-content -->
 <!--<script src="/_resources/scripts/module/at/template.js?ver={{ver}}" ></script>-->
+<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 <script>
 $(document).ready(function(){
     YunTao.deploy.eventProcess.addListener("deploy_script",function(msgObj){
-        alert(msgObj.data);
+        console.log("enableRemoteDev msg="+msgObj.data);
     });
-
-    var params = {};
+    var params = {ip:returnCitySN.cip};
     $("#btnEnableRemoteDev").click(function(){
         YunTao.deploy.util.reqPost("/deploy/addWhiteList", params, function (d) {
             alert("已开启");
