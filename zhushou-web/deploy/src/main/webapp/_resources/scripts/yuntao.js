@@ -640,8 +640,8 @@
                 }
             }
             // debugger;
-            // var extData = $.extend(params, {title: authRes.name});
-            var extData = {title: authRes.name};
+            // var extData = $.extend(params, {tp_title:authRes.name});
+            var extData = {tp_title:authRes.name};
             extData = $.extend(extData,{authRes:authRes});
             //set userData with extData
             YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_extData",extData);

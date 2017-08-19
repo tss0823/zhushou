@@ -102,8 +102,8 @@
                     //end
                     // debugger;
                     var extData = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_extData");
-                    // extData = {title: authRes.name,authRes:authRes};
-                    extData = $.extend(extData,{title: authRes.name,authRes:authRes});
+                    // extData = {tp_title:authRes.name,authRes:authRes};
+                    extData = $.extend(extData,{tp_title: authRes.name,authRes:authRes});
                     YT.deploy.route(authRes.url, queryParams, authRes.tplUrl,extData);
                     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
                     $(this).parent("li").addClass("active");

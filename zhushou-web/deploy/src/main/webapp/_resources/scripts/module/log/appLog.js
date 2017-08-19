@@ -305,7 +305,7 @@
             // var actionId = $("form:first").attr("actionId");
             // var authRes = appData.authMap[actionId];
             // // $(".nav-list").find("li").first().find("a[id='"+actionId+"']").trigger("click");
-            // var ext_data = $.extend(params, {title: "应用日志"});
+            // var ext_data = $.extend(params, {tp_title:"应用日志"});
             // ext_data = $.extend(ext_data,{authRes:authRes});
             // YT.deploy.route("/appLog/list", params, "/log/appLog.html", ext_data);
 
@@ -323,7 +323,7 @@
                     var val = jsonObj[key];
                     dataList.push({key: key, value: val});
                 }
-                var param = {title: "请求参数列表", dataList: dataList};
+                var param = {tp_title:"请求参数列表", dataList: dataList};
                 $.get("/log/msgKeyVal.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
@@ -346,7 +346,7 @@
                 var jsonLog = d.data.response;
                 var jsonObj = JSON.parse(jsonLog);
                 var formatJsonLog = JSON.stringify(jsonObj, null, 4);
-                var param = {title: "返回结果", logText: jsonLog, formatLogText: formatJsonLog};
+                var param = {tp_title:"返回结果", logText: jsonLog, formatLogText: formatJsonLog};
                 $.get("/log/msgRes.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
@@ -392,7 +392,7 @@
             var params = {stackId: id, month: $("#month").val(), model: checkState};
             YT.deploy.util.reqGet("/appLog/selectListByStackId", params, function (d) {
                 var data = d.data;
-                var param = {title: "消息"};
+                var param = {tp_title:"消息"};
                 $.get("/log/msgFormat.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
@@ -589,7 +589,7 @@
             var checked = $("#model").attr("checked");
             var model = checked ? "prod" : "test";
             var params = {stackId: id, month: $("#month").val(), model: model};
-            YT.deploy.route("/idocUrl/bind", params, "/idoc/bind.html", {title: "绑定保存"});
+            YT.deploy.route("/idocUrl/bind", params, "/idoc/bind.html", {tp_title:"绑定保存"});
         },
 
         //
@@ -631,7 +631,7 @@
             var checkState = checked ? "prod" : "test";
             var params = {stackId: id, month: $("#month").val(), model: checkState};
             YT.deploy.util.reqGet("/appLog/selectAllListByStackId", params, function (d) {
-                var param = {title: "所有消息", logText: d.data};
+                var param = {tp_title:"所有消息", logText: d.data};
                 $.get("/log/allMsg.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);

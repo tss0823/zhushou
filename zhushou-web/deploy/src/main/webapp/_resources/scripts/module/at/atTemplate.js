@@ -279,7 +279,7 @@
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["pageSize"] = pageSize;
-            var ext_data = $.extend(params, {title: "模板列表"});
+            var ext_data = $.extend(params, {tp_title:"模板列表"});
             YT.deploy.route("/atTemplate/list", params, "/at/template.html", ext_data);
         },
 

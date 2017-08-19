@@ -195,7 +195,7 @@
             //修改资源文档
             $("button[id='btnUpdateResDoc']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{title:"资源文档修改"});
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{tp_title:"资源文档修改"});
             });
 
             //删除资源文档

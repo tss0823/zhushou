@@ -64,7 +64,7 @@
             var params = YT.deploy.util.getFormParams("#proxyContentForm");
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
-            var ext_data = $.extend(params, {title: "代理列表"});
+            var ext_data = $.extend(params, {tp_title:"代理列表"});
             YT.deploy.route("/proxy/list", params, "/proxy/list.html", ext_data);
         },
 

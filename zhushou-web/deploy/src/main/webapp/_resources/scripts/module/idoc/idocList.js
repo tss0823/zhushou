@@ -137,23 +137,23 @@
 
             //创建接口
             $("#btnNewTemplate").click(function () {
-                YT.deploy.routeTpl("/idoc/bind.html",{title:"接口新建"});
+                YT.deploy.routeTpl("/idoc/bind.html",{tp_title:"接口新建"});
             });
             //创建资源文档
             $("#btnNewRes").click(function () {
-                YT.deploy.routeTpl("/idoc/newRes.html",{title:"资源文档新建"});
+                YT.deploy.routeTpl("/idoc/newRes.html",{tp_title:"资源文档新建"});
             });
 
             //提交接口
             $("#btnSubmitDoc").click(function () {
-                YT.deploy.routeTpl("/idoc/subDoc.html",{title:"接口提交"});
+                YT.deploy.routeTpl("/idoc/subDoc.html",{tp_title:"接口提交"});
             });
 
 
 
             //提交枚举
             $("#btnSubmitEnum").click(function () {
-                YT.deploy.routeTpl("/idoc/subEnum.html",{title:"枚举提交"});
+                YT.deploy.routeTpl("/idoc/subEnum.html",{tp_title:"枚举提交"});
             });
 
             //UED 上传
@@ -193,18 +193,18 @@
                 //set userData with queryParams
                 YT.deploy.userDataProcess.setValueMap(authRes.tplUrl+"_queryData",{url:data,showAll:true,model:'prod'});
                 $(".nav-list").find("#enterAppLog").trigger("click");
-                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"日志"});
+                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{tp_title:"日志"});
 
             });
 
             $("a[name='btnEnterEdit']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
+                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{tp_title:"修改文档接口"});
             });
 
             $("a[name='btnEnterAddMockData']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/addMockData.html",{title:"修改Mock数据"});
+                YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/addMockData.html",{tp_title:"修改Mock数据"});
             });
 
             $("a[name='btnHttpReq']").click(function () {
@@ -238,7 +238,7 @@
                     // YT.deploy.reqContent.initLeftPanel(newData);
                 });
 
-                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{title:"修改文档接口"});
+                // YT.deploy.route("/idocUrl/getIdocUrlVoById",{id:id},"/idoc/bind.html",{tp_title:"修改文档接口"});
             });
 
             $("a[name='btnDel']").click(function () {
@@ -319,13 +319,13 @@
             //查看资源文档
             $("a[name='btnViewResDoc']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/resDetail.html",{title:"资源文档详情"});
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/resDetail.html",{tp_title:"资源文档详情"});
             });
 
             //修改资源文档
             $("a[name='btnEditResDoc']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{title:"资源文档修改"});
+                YT.deploy.route("/idocUrl/viewResDoc",{id:id},"/idoc/editRes.html",{tp_title:"资源文档修改"});
             });
 
             //删除资源文档
@@ -363,7 +363,7 @@
                 var params = YT.deploy.util.getFormParams("#idocListForm");
                 params["pageNum"] = pageNum;
                 var pageSize = $("#pageSize").val();
-                var ext_data = $.extend(params, {title: "接口文档"});
+                var ext_data = $.extend(params, {tp_title:"接口文档"});
                 YT.deploy.route("/idocUrl/list", params, "/idoc/list.html", ext_data);
             }
         },
@@ -381,7 +381,7 @@
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["type"] = 1;
-            var ext_data = $.extend(params, {title: "枚举接口文档"});
+            var ext_data = $.extend(params, {tp_title:"枚举接口文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);
         },
         queryRes: function (pageNum) {
@@ -389,7 +389,7 @@
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["type"] = 2;
-            var ext_data = $.extend(params, {title: "资源文档"});
+            var ext_data = $.extend(params, {tp_title:"资源文档"});
             YT.deploy.route("/idocUrl/list", params, "/idoc/res.html", ext_data);
         },
 
@@ -397,7 +397,7 @@
             var params = YT.deploy.util.getFormParams("#idocListForm");
             params["pageNum"] = 1;
             params["pageSize"] = 10000; //无穷大
-            // var ext_data = $.extend(params, {title: "接口文档"});
+            // var ext_data = $.extend(params, {tp_title:"接口文档"});
             YT.deploy.util.reqGet("/idocUrl/list", params, function (d) {
                 // debugger;
                 // var jsonObj = JSON.parse(d.data.parameters);
@@ -406,7 +406,7 @@
                 //     var val = jsonObj[key];
                 //     dataList.push({key:key,value:val});
                 // }
-                var param = {title:"接口文档",dataList:d.data.dataList.reverse()};
+                var param = {tp_title:"接口文档",dataList:d.data.dataList.reverse()};
                 $.get("/idoc/listAll.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);

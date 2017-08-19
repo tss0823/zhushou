@@ -74,12 +74,12 @@
         openWinObj: null,
 
         query: function (pageNum) {
-            YT.deploy.formId = "templateForm";
-            var params = YT.deploy.util.getFormParams("#templateForm");
+            YT.deploy.formId = "variableForm";
+            var params = YT.deploy.util.getFormParams("#variableForm");
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["pageSize"] = pageSize;
-            var ext_data = $.extend(params, {title: "模板列表"});
+            var ext_data = $.extend(params, {tp_title:"变量列表"});
             YT.deploy.route("/atVariable/list", params, "/at/varList.html", ext_data);
         },
 

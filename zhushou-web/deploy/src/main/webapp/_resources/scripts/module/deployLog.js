@@ -26,7 +26,7 @@
                     // var appId = $(item).attr("appId");
                     // var model = $(item).attr("model");
                     // var appName = $(item).attr("appName");
-                    // var data = {title:"发布节点",titleColor:$(item).attr("color"),msTitle:" 【 "+appName+" 】 > "+model};
+                    // var data = {tp_title:"发布节点",titleColor:$(item).attr("color"),msTitle:" 【 "+appName+" 】 > "+model};
                     // data["model"] = model;
                     // data["appName"] = appName;
                     // YT.deploy.route("/host/getListByAppAndModel",{appId:appId,model:model},"appHost.html",data);
@@ -60,7 +60,7 @@
             var params = YT.deploy.util.getFormParams("#deployLogForm");
             params["pageNum"] = pageNum;
             params["pageSize"] = pageSize;
-            var ext_data = $.extend(params, {title:"发布日志"});
+            var ext_data = $.extend(params, {tp_title:"发布日志"});
             YT.deploy.route("/deployLog/list",params,"/deployLog.html",ext_data);
         },
 
