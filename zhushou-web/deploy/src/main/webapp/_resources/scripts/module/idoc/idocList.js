@@ -40,8 +40,6 @@
 
             // var enums = YT.deploy.data.enums;
 
-            //moduleType
-            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
 
 
             // if($("#resNewForm").length == 1) {  //资源文档
@@ -103,6 +101,10 @@
 
 
             });
+
+
+            //moduleType
+            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
 
             //json
             $("div[id='tabs-2']").each(function(){
