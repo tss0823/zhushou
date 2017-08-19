@@ -93,7 +93,7 @@ $(document).ready(function () {
         var urlType = params[0];
         var showText = params[1];
         if(urlType == "findUserById"){
-            url = "/member/findById";
+            url = "/user/findById";
         }else{
             return null;
         }

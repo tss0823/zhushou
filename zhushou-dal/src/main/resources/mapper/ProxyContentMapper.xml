@@ -136,7 +136,7 @@
     <update id="deleteById" parameterType="Long">
         update
         <include refid="Base_Table_Name"/>
-        set delStatuse = 0 where id = #{id}
+        set delStatus = 0 where id = #{id}
     </update>
 
     <!-- user definition code start -->

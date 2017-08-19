@@ -67,6 +67,10 @@
                 YT.deploy.atTemplate.openNewWin();
             });
 
+            $("#btnVarQuery").click(function () {
+                YT.deploy.atTemplate.queryVarList();
+            });
+
 
 
             //保存
@@ -130,7 +134,8 @@
             });
 
             $("a[name='btnDelTemplate']").click(function () {
-                YT.deploy.atTemplate.delTemplate();
+                var id = $(this).attr("data");
+                YT.deploy.atTemplate.delTemplate(id);
             });
 
             //分页信息init
@@ -338,6 +343,14 @@
             });
         },
 
+        queryVarList: function () {
+            var params = {};
+            var ext_data = $.extend(params, {tp_title: "变量列表"});
+            YT.deploy.route("/atVariable/list", params, "/at/varList.html", ext_data);
+            YT.deploy.formId = "variableForm";
+            // YT.deploy.atTemplate.initNewEdit(ext_data);
+        },
+
         openEditWin: function (id) {
             var param = {tp_title: "模版修改", dataList: null};
             var params = {id: id};
@@ -457,7 +470,7 @@
             }
             YT.deploy.util.reqPost("/atTemplate/deleteActive", {activeId:id}, function (d) {
                 alert("删除成功");
-                YT.deploy.atTemplate.refresh();
+                YT.deploy.routeStackProcess.refresh();
             });
         },
 

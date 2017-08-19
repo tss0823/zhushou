@@ -48,6 +48,8 @@ public class AtTemplateController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(AtTemplateQuery query) {
+        User user = userService.getCurrentUser();
+        query.setCompanyId(user.getCompanyId());
         Pagination<AtTemplateVo> pagination = atTemplateService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);

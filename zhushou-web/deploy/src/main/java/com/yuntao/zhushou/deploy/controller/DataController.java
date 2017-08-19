@@ -2,12 +2,16 @@ package com.yuntao.zhushou.deploy.controller;
 
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
+import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.dal.annotation.NeedLogin;
+import com.yuntao.zhushou.model.domain.AtTemplate;
 import com.yuntao.zhushou.model.domain.Config;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.*;
+import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
-import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.service.inter.AppService;
+import com.yuntao.zhushou.service.inter.AtTemplateService;
 import com.yuntao.zhushou.service.inter.ConfigService;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,6 +37,9 @@ public class DataController extends  BaseController {
 
     @Autowired
     private IdocUrlService idocUrlService;
+
+    @Autowired
+    private AtTemplateService atTemplateService;
 
 
     @RequestMapping("appConfigData")
@@ -85,6 +92,18 @@ public class DataController extends  BaseController {
         idocUrlQuery.setType(0);
         idocUrlQuery.setCompanyId(user.getCompanyId());
         responseObject.put("docList",idocUrlService.selectList(idocUrlQuery));
+        return responseObject;
+    }
+
+    @RequestMapping("atTemplateList")
+    @NeedLogin
+    public ResponseObject atTemplateList() {
+        ResponseObject responseObject = new ResponseObject();
+        User user = userService.getCurrentUser();
+        AtTemplateQuery query = new AtTemplateQuery();
+        query.setCompanyId(user.getCompanyId());
+        List<AtTemplate> templateList = atTemplateService.selectList(query);
+        responseObject.setData(templateList);
         return responseObject;
     }
 }

@@ -99,6 +99,16 @@ public class UserController extends BaseController {
         return ret;
     }
 
+    @RequestMapping("findById")
+    @ResponseBody
+    @NeedLogin
+    public ResponseObject findById(@RequestParam Long id) {
+        User user = userService.findById(id);
+        ResponseObject ret = new ResponseObject();
+        ret.setData(user);
+        return ret;
+    }
+
     @RequestMapping("getLoginUser")
     @NeedLogin
     public ResponseObject getLoginUser() {
