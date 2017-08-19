@@ -61,6 +61,7 @@ public class DataController extends  BaseController {
         responseObject.put("paramDataType", AtParameterDataType.values());
         responseObject.put("moduleType",ModuleType.values());
         responseObject.put("yesNoType",YesNoType.values());
+        responseObject.put("yesNoIntType",YesNoIntType.values());
         responseObject.put("logStatus",LogStatus.values());
         responseObject.put("cacheType",CacheType.values());
         return responseObject;

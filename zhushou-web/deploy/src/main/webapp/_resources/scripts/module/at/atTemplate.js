@@ -130,7 +130,7 @@
             //enter active execute his
             $("a[name='enterHis']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.atTemplate.enterHisWin(id);
+                YT.deploy.atTemplate.queryProcessInstList(id);
             });
 
             $("a[name='btnDelTemplate']").click(function () {
@@ -348,6 +348,14 @@
             var ext_data = $.extend(params, {tp_title: "变量列表"});
             YT.deploy.route("/atVariable/list", params, "/at/varList.html", ext_data);
             YT.deploy.formId = "variableForm";
+            // YT.deploy.atTemplate.initNewEdit(ext_data);
+        },
+
+        queryProcessInstList: function (id) {
+            var params = {templateId:id};
+            var ext_data = $.extend(params, {tp_title: "活动运行列表"});
+            YT.deploy.route("/atProcessInst/list", params, "/at/processInstList.html", ext_data);
+            YT.deploy.formId = "processInstForm";
             // YT.deploy.atTemplate.initNewEdit(ext_data);
         },
 

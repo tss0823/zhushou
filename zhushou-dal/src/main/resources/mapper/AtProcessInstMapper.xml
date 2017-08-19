@@ -13,12 +13,12 @@
         <result column="gmtCreate" property="gmtCreate"/>
         <result column="gmtModify" property="gmtModify"/>
         <result column="delStatus" property="delStatus"/>
+        <result column="userId" property="userId"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
-    `id`,`templateId`,`name`,`status`,`errMsg`,`gmtCreate`,`gmtModify`,`delStatus`       
-    
+    `id`,`templateId`,`name`,`status`,`errMsg`,`gmtCreate`,`gmtModify`,`delStatus`,`userId`
   </sql>
 
 
@@ -31,6 +31,7 @@
         delStatus = 1
         <if test="id != null">and `id` = #{id}</if>
         <if test="templateId != null">and `templateId` = #{templateId}</if>
+        <if test="userId != null">and `userId` = #{userId}</if>
         <if test="name != null and name != '' ">and `name` = #{name}</if>
         <if test="status != null">and `status` = #{status}</if>
         <if test="errMsg != null and errMsg != '' ">and `errMsg` = #{errMsg}</if>
@@ -79,11 +80,11 @@
         <include refid="Base_Table_Name"/>
         (
 
-        `templateId`,`name`,`status`,`errMsg`,`gmtCreate`,`gmtModify`,`delStatus`
+        `templateId`,`name`,`status`,`errMsg`,`gmtCreate`,`gmtModify`,`delStatus`,`userId`
         )
         values
         (
-        #{templateId},#{name},#{status},#{errMsg},now(6),now(6),1
+        #{templateId},#{name},#{status},#{errMsg},now(6),now(6),1,#{userId}
         )
     </insert>
 
@@ -92,6 +93,7 @@
         <include refid="Base_Table_Name"/>
         <set>
             <if test="templateId != null">`templateId` = #{templateId},</if>
+            <if test="userId != null">`userId` = #{userId},</if>
             <if test="name != null and name !=''">`name` = #{name},</if>
             <if test="status != null">`status` = #{status},</if>
             <if test="errMsg != null and errMsg !=''">`errMsg` = #{errMsg},</if>

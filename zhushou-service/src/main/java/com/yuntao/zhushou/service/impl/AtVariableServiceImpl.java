@@ -99,7 +99,7 @@ public class AtVariableServiceImpl extends AbstService implements AtVariableServ
     public List<AtVariable> getPriList(Long templateId) {
         AtVariableQuery query = new AtVariableQuery();
         query.setStatus(YesNoIntType.yes.getCode());
-        query.setScope(AtVariableScope.global.getCode());
+        query.setScope(AtVariableScope.pri.getCode());
         query.setTemplateId(templateId);
         return this.selectList(query);
     }

@@ -10,6 +10,7 @@ import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.AtVariable;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.AtVariableScope;
+import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.AtVariableQuery;
 import com.yuntao.zhushou.model.vo.AtVariableVo;
 import com.yuntao.zhushou.service.inter.*;
@@ -78,7 +79,7 @@ public class AtVariableController extends BaseController {
             }else{
                 variable.setScope(AtVariableScope.global.getCode());
             }
-            variable.setStatus(0);
+            variable.setStatus(YesNoIntType.yes.getCode());
             atVariableService.insert(variable);
         }catch (Exception e){
             throw new BizException("已存在相同的名称");

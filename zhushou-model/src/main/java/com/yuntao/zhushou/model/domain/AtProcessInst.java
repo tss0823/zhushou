@@ -10,6 +10,7 @@ package com.yuntao.zhushou.model.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+
 /**
  * 流程实例
  * @author admin
@@ -40,9 +41,14 @@ public class AtProcessInst implements Serializable {
 		
 	/**  修改时间 * */
 	private Date gmtModify;
-		
+
 	/**  是否删除（1：没有；0；已删除） * */
 	private Integer delStatus;
+
+	/**  运行用户id * */
+	private Long userId;
+
+
 		
 	
 	public AtProcessInst(){
@@ -104,9 +110,13 @@ public class AtProcessInst implements Serializable {
 	public Integer getDelStatus() {
 		return this.delStatus;
 	}
-	
 
 
+	public Long getUserId() {
+		return userId;
+	}
 
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }
-

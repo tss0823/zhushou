@@ -6,8 +6,10 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.*;
-import com.yuntao.zhushou.model.enums.AtVariableScope;
+import com.yuntao.zhushou.model.domain.AtParameter;
+import com.yuntao.zhushou.model.domain.AtTemplate;
+import com.yuntao.zhushou.model.domain.Company;
+import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.param.at.AtActiveParam;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
@@ -62,6 +64,15 @@ public class AtTemplateController extends BaseController {
         AtTemplateVo templateVo = atTemplateService.getTemplateVo(id);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(templateVo);
+        return responseObject;
+    }
+
+    @RequestMapping("findById")
+    @NeedLogin
+    public ResponseObject findById(@RequestParam Long id) {
+        AtTemplate template = atTemplateService.findById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(template);
         return responseObject;
     }
 
@@ -130,26 +141,6 @@ public class AtTemplateController extends BaseController {
         return responseObject;
     }
 
-    @RequestMapping("saveVariable")
-    @NeedLogin
-    public ResponseObject saveVariable(@RequestParam(required = false) Long templateId, @RequestParam  String key,@RequestParam  String value) {
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        User user = userService.getCurrentUser();
-        AtVariable atVariable = new AtVariable();
-        atVariable.setCompanyId(user.getCompanyId());
-        atVariable.setKey(key);
-        atVariable.setValue(value);
-        atVariable.setUserId(user.getId());
-        if(templateId != null){
-           atVariable.setTemplateId(templateId);
-           atVariable.setScope(AtVariableScope.global.getCode());
-        }else{
-            atVariable.setScope(AtVariableScope.pri.getCode());
-        }
-        int result = atVariableService.insert(atVariable);
-        responseObject.setData(result);
-        return responseObject;
-    }
 
     @RequestMapping("collect")
     @NeedLogin

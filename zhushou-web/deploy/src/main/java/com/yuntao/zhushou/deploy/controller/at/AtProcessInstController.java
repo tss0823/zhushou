@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
+import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AtProcessInstQuery;
 import com.yuntao.zhushou.model.vo.AtProcessInstVo;
 import com.yuntao.zhushou.service.inter.AtProcessInstService;
@@ -27,6 +28,8 @@ public class AtProcessInstController extends BaseController {
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(AtProcessInstQuery query) {
+        User user = userService.getCurrentUser();
+        query.setCompanyId(user.getCompanyId());
         Pagination<AtProcessInstVo> pagination = atProcessInstService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);

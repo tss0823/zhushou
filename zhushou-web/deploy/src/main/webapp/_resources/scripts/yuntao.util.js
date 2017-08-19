@@ -94,6 +94,8 @@ $(document).ready(function () {
         var showText = params[1];
         if(urlType == "findUserById"){
             url = "/user/findById";
+        }if(urlType == "findTemplateById"){
+            url = "/atTemplate/findById";
         }else{
             return null;
         }

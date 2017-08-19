@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.RequestUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.*;
@@ -540,7 +541,7 @@ public class DeployController extends BaseController {
 
     @RequestMapping("addWhiteList")
     @NeedLogin
-    public ResponseObject addWhiteList(@RequestParam String ip) {
+    public ResponseObject addWhiteList(@RequestParam String ip,HttpServletRequest request) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
@@ -548,10 +549,12 @@ public class DeployController extends BaseController {
         //get compnay
         Company company = companyService.findById(companyId);
 
+        String clientIp = RequestUtils.getClientIpAddr(request);
+
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/addWhiteList");
         Map<String,String> params = new HashMap<>();
-        params.put("ip",ip);
+        params.put("ip",clientIp);
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());

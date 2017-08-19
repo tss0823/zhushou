@@ -229,10 +229,11 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             atActive.setName(logWebVo.getUrl());
             atActive.setUrl(logWebVo.getReqUrl());
             String reqHeaders = logWebVo.getReqHeaders();
-//            JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
+            JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
+            headerJsonObj.remove("Cookie");   //去掉cookie
 //            String conentType = headerJsonObj.getString("Content-Type");
             atActive.setReqContentType("application/x-www-form-urlencoded");
-            atActive.setHeaderRow(logWebVo.getReqHeaders());
+            atActive.setHeaderRow(headerJsonObj.toString());
             atActive.setMethod("POST");
             atActiveService.insert(atActive);
 
@@ -264,6 +265,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         atProcessInst.setTemplateId(templateVo.getId());
         atProcessInst.setName(templateVo.getName());
         atProcessInst.setStatus(YesNoIntType.yes.getCode());
+        atProcessInst.setUserId(user.getId());
         atProcessInstService.insert(atProcessInst);
 
         List<AtActiveVo> activeVoList = templateVo.getActiveVoList();
@@ -317,7 +319,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 Map<String, String> headers = JsonUtils.json2Object(headerRow, HashMap.class);
                 requestRes.setHeaders(headers);
                 atActiveInst.setReqHeader(headerRow);
-                //end cookie
+
+                Map<String,String> resCookieMap = new HashMap<>();
+
 
                 //params
                 List<AtParameterVo> parameterVoList = activeVo.getParameterVoList();
@@ -361,9 +365,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                             if (lastResponseRes == null) {
                                 throw new BizException("lastResponseRes  is null,parameterId=" + parameterVo.getId());
                             }
-                            String lastResult = new String(lastResponseRes.getResult());
-                            ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
-                            variableMap.put("responseObject",responseObject);
+
                             value = dataValue.toString();
                             value = TemplateUtils.render(value,variableMap);
                         } else if (dataType == AtParameterDataType.inter.getCode()) { //接口，主要是RPC 接口取值，后续再考虑 TODO
@@ -376,8 +378,37 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 }
                 //end param
 
+                //cookie set header
+                if(headers == null){
+                    headers = new HashMap<>();
+                }
+                Set<Map.Entry<String, String>> entries = resCookieMap.entrySet();
+                for (Map.Entry<String, String> entry : entries) {
+                    headers.put(entry.getKey(),entry.getValue());
+                }
+                requestRes.setHeaders(headers);
+                //end
+
                 //execute http request
                 lastResponseRes = HttpNewUtils.execute(requestRes);
+
+                //cookie store
+                Map<String, String> resHeaderMap = lastResponseRes.getHeaders();
+                String setCookie = resHeaderMap.get("Set-Cookie");
+                if (StringUtils.isNotEmpty(setCookie)) {
+                    StringTokenizer st = new StringTokenizer(setCookie);
+                    while (st.hasMoreElements()) {
+                        String cookieEle = st.nextElement().toString();
+                        String[] cookieStrs = cookieEle.split("=");
+                        resCookieMap.put(cookieStrs[0],cookieStrs[1]);
+                    }
+                }
+                //end
+
+                String lastResult = new String(lastResponseRes.getResult());
+                ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
+                variableMap.put("responseObject",responseObject);
+                variableMap.put("responseHeader",lastResponseRes.getHeaders());
 
             } catch (Exception e) {
                 atActiveInst.setStatus(YesNoIntType.no.getCode());
