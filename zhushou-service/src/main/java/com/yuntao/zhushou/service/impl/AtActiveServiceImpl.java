@@ -9,6 +9,7 @@ import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.vo.AtActiveVo;
 import com.yuntao.zhushou.service.inter.AtActiveService;
 import com.yuntao.zhushou.service.inter.AtParameterService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,9 @@ public class AtActiveServiceImpl implements AtActiveService {
 
     @Override
     public int deleteById(Long id) {
-        return atActiveMapper.deleteById(id);
+        int result = atActiveMapper.deleteById(id);
+        atParameterService.deleteByActiveId(id);
+        return result;
     }
 
     @Transactional
@@ -98,6 +101,25 @@ public class AtActiveServiceImpl implements AtActiveService {
         for (AtParameter atParameter : parameterList) {
             atParameter.setActiveId(active.getId());
             atParameterService.insert(atParameter) ;
+        }
+        return 1;
+    }
+
+    @Transactional
+    @Override
+    public int update(Long templateId,AtActive active, List<AtParameter> parameterList) {
+        active.setTemplateId(templateId);
+        this.updateById(active);
+
+        //delete first
+        atParameterService.deleteByActiveId(active.getId());
+
+        //save parameterList
+        if(CollectionUtils.isNotEmpty(parameterList)){
+            for (AtParameter atParameter : parameterList) {
+                atParameter.setActiveId(active.getId());
+                atParameterService.insert(atParameter) ;
+            }
         }
         return 1;
     }

@@ -83,4 +83,9 @@ public class AtParameterServiceImpl implements AtParameterService {
         return atParameterMapper.deleteById(id);
     }
 
+    @Override
+    public int deleteByActiveId(Long activeId) {
+        return atParameterMapper.deleteByActiveId(activeId);
+    }
+
 }

@@ -156,7 +156,6 @@
                 $("#"+selectId).append(dataArray.join(""));
             }
         },
-
         initEnumRadio:function(type,chkBlockId,chkName,initValue){
             initValue = initValue || 0;
             var enums = YT.deploy.data.enums;

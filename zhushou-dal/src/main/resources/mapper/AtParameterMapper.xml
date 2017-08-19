@@ -102,5 +102,8 @@
    </update>  
    
      <!-- user definition code start -->
+    <update id="deleteByActiveId" parameterType="Long">
+        delete from <include refid="Base_Table_Name"/>  where activeId = #{activeId}
+    </update>
      <!-- user definition code end -->
 </mapper> 

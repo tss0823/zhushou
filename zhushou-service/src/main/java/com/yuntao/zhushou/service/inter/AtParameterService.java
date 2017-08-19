@@ -61,5 +61,13 @@ public interface AtParameterService {
     int deleteById(Long id);
 
 
+    /**
+     * 根据活动id 物理删除
+     * @param activeId
+     * @return
+     */
+    int deleteByActiveId(Long activeId);
+
+
 
 }

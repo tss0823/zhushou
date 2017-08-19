@@ -11,6 +11,13 @@ public class DataMap implements Serializable {
 
     private String value;
 
+    public DataMap() {
+    }
+
+    public DataMap(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
 
     public String getKey() {
         return key;

@@ -116,5 +116,8 @@
     </update>
 
     <!-- user definition code start -->
+    <update id="deleteByTemplateId" parameterType="Long">
+        delete from <include refid="Base_Table_Name"/>  where templateId = #{templateId}
+    </update>
     <!-- user definition code end -->
 </mapper> 

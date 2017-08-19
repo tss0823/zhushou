@@ -15,6 +15,7 @@ import com.yuntao.zhushou.dal.mapper.AtTemplateMapper;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AtParameterDataType;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
+import com.yuntao.zhushou.model.param.DataMap;
 import com.yuntao.zhushou.model.query.*;
 import com.yuntao.zhushou.model.vo.*;
 import com.yuntao.zhushou.service.inter.*;
@@ -22,6 +23,7 @@ import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,6 +181,18 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         }
         templateVo.setActiveVoList(activeVoList);
         for (AtActiveVo activeVo : activeVoList) {
+            //header
+            String headerRow = activeVo.getHeaderRow();
+            if (StringUtils.isNotEmpty(headerRow)) {
+                Map headerMap = JsonUtils.json2Object(headerRow, Map.class);
+                Set<Map.Entry<String,String>> headerSet = headerMap.entrySet();
+                List<DataMap> headerMapList = new ArrayList<>();
+                for (Map.Entry<String,String> entry : headerSet) {
+                    DataMap dataMap = new DataMap(entry.getKey(),entry.getValue());
+                    headerMapList.add(dataMap) ;
+                }
+                activeVo.setDataMapList(headerMapList);
+            }
             //
             AtParameterQuery parameterQuery = new AtParameterQuery();
             parameterQuery.setActiveId(activeVo.getId());

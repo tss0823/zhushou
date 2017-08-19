@@ -90,6 +90,14 @@ public class AtTemplateController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("deleteTemplate")
+    @NeedLogin
+    public ResponseObject deleteTemplate(@RequestParam Long id) {
+        atTemplateService.deleteById(id);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        return responseObject;
+    }
+
 
     @RequestMapping("saveActive")
     @NeedLogin
@@ -97,6 +105,25 @@ public class AtTemplateController extends BaseController {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         List<AtParameter> parameterList = active.getParameterList();
         int result = atActiveService.save(templateId,active, parameterList);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("updateActive")
+    @NeedLogin
+    public ResponseObject updateActive(@RequestParam Long templateId, AtActiveParam active) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        List<AtParameter> parameterList = active.getParameterList();
+        int result = atActiveService.update(templateId,active, parameterList);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("deleteActive")
+    @NeedLogin
+    public ResponseObject deleteActive(@RequestParam Long activeId) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        int result = atActiveService.deleteById(activeId);
         responseObject.setData(result);
         return responseObject;
     }
