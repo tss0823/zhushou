@@ -47,7 +47,7 @@
             </td>
             <td>{{bean.templateId}}</td>
             <td>{{bean.status | text :'yesNoIntType'}}</td>
-            <td>{{bean.userId | remote : 'findTemplateById,name'}}</td>
+            <td>{{bean.userId | remote : 'findUserById,userName'}}</td>
             <td>{{bean.gmtCreate | dateFormat:'yyyy-MM-dd hh:mm'}}</td>
             <td>
                 <!--<a href="javascript:void(0)" name="enterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>-->
