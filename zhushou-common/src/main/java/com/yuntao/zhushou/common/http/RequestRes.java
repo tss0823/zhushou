@@ -14,7 +14,7 @@ public class RequestRes {
 
     private Map<String, String> headers;
 
-    private Map<String, String> params;
+    private Map<String, ? extends Object> params;
 
     private List<HttpParam> paramList;
 
@@ -43,11 +43,11 @@ public class RequestRes {
         this.headers = headers;
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, ? extends Object> getParams() {
         return params;
     }
 
-    public void setParams(Map<String, String> params) {
+    public void setParams(Map<String, ? extends Object> params) {
         this.params = params;
     }
 

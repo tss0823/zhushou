@@ -76,12 +76,15 @@ public class BeanUtils {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> beanToMap(Object bean) {
         try {
-            return PropertyUtils.describe(bean);
+            Map<String, Object> objectMap = PropertyUtils.describe(bean);
+            objectMap.remove("class");
+            return objectMap;
         } catch (Exception e) {
             log.error("bean to queryMap failed! ", e);
             return null;
         }
     }
+
 
     /**
      * bean 转换 Map<String,Object>

@@ -141,7 +141,7 @@ public class HttpNewUtils {
         if(StringUtils.isNotEmpty(userAgent)){
             httpPost.setHeader("User-Agent", userAgent);
         }
-        Map<String, String> params = requestRes.getParams();
+        Map<String, String> params = (Map<String, String>) requestRes.getParams();
         List<HttpParam> paramList = requestRes.getParamList();
         CloseableHttpResponse response = null;
         try{
@@ -150,7 +150,8 @@ public class HttpNewUtils {
             if (MapUtils.isNotEmpty(params)) {
                 Set<Map.Entry<String, String>> paramEntrySet = params.entrySet();
                 for (Map.Entry<String, String> paramEntry : paramEntrySet) {
-                    nvps.add(new BasicNameValuePair(paramEntry.getKey(), paramEntry.getValue()));
+                    Object value = paramEntry.getValue();
+                    nvps.add(new BasicNameValuePair(paramEntry.getKey(), value != null ? value.toString() : null));
                 }
             }
             //针对 多个一样的name 比如 name[] name[]

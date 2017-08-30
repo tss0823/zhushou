@@ -107,6 +107,9 @@ public class Pagination<T> implements Serializable {
         this.dataList = dataList;
     }
 
+    public  Pagination(){
+    }
+
 
     public long getTotalCount() {
         return totalCount;

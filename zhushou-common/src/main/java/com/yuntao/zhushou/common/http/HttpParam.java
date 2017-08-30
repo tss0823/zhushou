@@ -11,9 +11,11 @@ public class HttpParam implements Serializable {
 
     private String value;
 
-    public HttpParam(String key, String value) {
+    public HttpParam(String key, Object value) {
         this.key = key;
-        this.value = value;
+        if(value != null){
+            this.value = value.toString();
+        }
     }
 
     public String getKey() {

@@ -1,0 +1,89 @@
+<div>
+    <form id="codeBuildPropertyForm" onsubmit="return false">
+        <input type="hidden" id="entityId" name="entityId" value="{{entityId}}">
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{tp_title}}
+            </small>
+        </h1>
+        <h1 style="text-align: right">
+            <small>
+
+                    <button class="btn btn-sm btn-yellow" id="btnAddItem">添加</button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-info" id="btnSaveProperty"> <i class="icon-ok bigger-110"></i> 保存 </button>
+                    &nbsp;&nbsp;
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th style="width:12%">英文名称</th>
+            <th style="width:26%">中文名称</th>
+            <th style="width:5%">数据类型</th>
+            <th style="width:5%">长度</th>
+            <th style="width:5%">默认值</th>
+            <th style="width:4%">许空</th>
+            <th style="width:4%">主键</th>
+            <th style="width:10%">操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbPropertyContent">
+        <tr class="selected" name="dataItem" style="display: none">
+            <td> <input type="text" id="enName" style="width:100%"/> </td>
+            <td> <input type="text" id="cnName" style="width:100%"/> </td>
+            <td> <select id="dataType_0" name="dataType" ></select> </td>
+            <td> <input type="text" id="length"  style="width:100%"/> </td>
+            <td> <input type="text" id="defaultValue"  style="width:100%"/> </td>
+            <td> <input type="checkbox" class="ace" id="isNull_0" name="isNull"  /><span class="lbl"></span> </td>
+            <td> <input type="checkbox" class="ace" id="primaryKey_0"  name="primaryKey"  /><span class="lbl"></span> </td>
+            <td>
+                <a href="javascript:void(0)" name="btnCopy" ><strong style="color:green">复制</strong></a>
+                &nbsp;
+                <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                    <i class="icon-arrow-up bigger-130"></i>
+                </a>
+                <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                    <i class="icon-arrow-down bigger-130"></i>
+                </a>
+                &nbsp;
+                <a class="red" href="javascript:void(0)" name="itemRemove">
+                    <i class="icon-trash bigger-130"></i>
+                </a>
+            </td>
+        </tr>
+        {{each propertyList as bean i}}
+        <tr class="selected" name="dataItem">
+            <td> <input type="text" id="enName" value="{{bean.enName}}" style="width:100%"/> </td>
+            <td> <input type="text" id="cnName" value="{{bean.cnName}}" style="width:100%"/> </td>
+            <td> <select id="dataType_{{bean.id}}" name="dataType" data="{{bean.dataType}}"></select> </td>
+            <td> <input type="text" id="length" value="{{bean.length}}" style="width:100%"/> </td>
+            <td> <input type="text" id="defaultValue" value="{{bean.defaultValue}}" style="width:100%"/> </td>
+            <td> <input type="checkbox" class="ace" id="isNull_{{bean.id}}" name="isNull" data="{{if bean.isNull}}1{{else}}0{{/if}}" /><span class="lbl"></span> </td>
+            <td> <input type="checkbox" class="ace" id="primaryKey_{{bean.id}}"  name="primaryKey" data="{{if bean.primaryKey}}1{{else}}0{{/if}}" /><span class="lbl"></span> </td>
+            <td>
+                <a href="javascript:void(0)" name="btnCopy"><strong style="color:green">复制</strong></a>
+                &nbsp;
+                <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
+                    <i class="icon-arrow-up bigger-130"></i>
+                </a>
+                <a class="gray" href="javascript:void(0)" name="itemArrowDown" >
+                    <i class="icon-arrow-down bigger-130"></i>
+                </a>
+                &nbsp;
+                <a class="red" href="javascript:void(0)" name="itemRemove">
+                    <i class="icon-trash bigger-130"></i>
+                </a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    </form>
+
+</div><!-- /.page-content -->
