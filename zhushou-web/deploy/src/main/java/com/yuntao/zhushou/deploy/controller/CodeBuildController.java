@@ -12,6 +12,7 @@ import com.yuntao.zhushou.model.query.codeBuild.EntityQuery;
 import com.yuntao.zhushou.model.query.codeBuild.PropertyQuery;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.CodeBuildService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,8 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("entitySave")
     @NeedLogin
     public ResponseObject entitySave(Entity entity) {
+        Assert.state(StringUtils.isNotBlank(entity.getEnName()),"英文名称不能为空");
+        Assert.state(StringUtils.isNoneBlank(entity.getCnName()),"中文名称不能为空");
         User user = userService.getCurrentUser();
         if (user.getCompanyId().longValue() == 3) {  //DF
             entity.setAppId(21L);
@@ -69,6 +72,9 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("entityUpdate")
     @NeedLogin
     public ResponseObject entityUpdate(Entity entity) {
+        Assert.notNull(entity.getId(),"id不能为空");
+        Assert.state(StringUtils.isNotBlank(entity.getEnName()),"英文名称不能为空");
+        Assert.state(StringUtils.isNoneBlank(entity.getCnName()),"中文名称不能为空");
         int result = codeBuildService.entityUpdate(entity);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
