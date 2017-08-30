@@ -11,26 +11,26 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class EntityQuery extends BaseQuery {
 
-    private String cnName;
+    private String enNameLike;
 
-    private String enName;
+    private String cnNameLike;
 
     private Long appId;
 
-    public String getCnName() {
-        return cnName;
+    public String getEnNameLike() {
+        return enNameLike;
     }
 
-    public void setCnName(String cnName) {
-        this.cnName = cnName;
+    public void setEnNameLike(String enNameLike) {
+        this.enNameLike = enNameLike;
     }
 
-    public String getEnName() {
-        return enName;
+    public String getCnNameLike() {
+        return cnNameLike;
     }
 
-    public void setEnName(String enName) {
-        this.enName = enName;
+    public void setCnNameLike(String cnNameLike) {
+        this.cnNameLike = cnNameLike;
     }
 
     public Long getAppId() {

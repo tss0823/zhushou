@@ -9,6 +9,8 @@
 
     var common = {
 
+        formId: "taskLogForm",
+
         route_callback: function (d,data) {
 
             YT.deploy.taskLog.currData = data;

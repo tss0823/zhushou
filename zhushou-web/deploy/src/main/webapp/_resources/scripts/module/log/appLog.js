@@ -9,6 +9,8 @@
 
     var common = {
 
+        formId: "appLogForm",
+
         route_callback: function (d, data) {
             console.log("app list after render call");
             //组件初始化之后

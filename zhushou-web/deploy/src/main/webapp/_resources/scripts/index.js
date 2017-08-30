@@ -108,6 +108,7 @@
                     $(YT.deploy.index.activeMenu).parent("li").removeClass("active");
                     $(this).parent("li").addClass("active");
                     YT.deploy.index.activeMenu = this;
+
                 });
             }
             

@@ -9,7 +9,7 @@
 
     var common = {
 
-        formId: null,
+        formId: "codeBuildForm",
 
         route_callback: function (d) {
             console.log("template list after render call");

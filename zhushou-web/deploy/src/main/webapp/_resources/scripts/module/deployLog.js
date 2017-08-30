@@ -9,6 +9,8 @@
 
     var common = {
 
+        formId: "deployLogForm",
+
         route_callback : function (d) {
             console.log("deployLog list after render call");
 

@@ -9,6 +9,8 @@
 
     var common = {
 
+        formId: "idocForm",
+
         route_callback: function (d, data) {
             console.log("app list after render call");
             //组件初始化之后
@@ -102,6 +104,7 @@
 
             });
 
+            debugger;
 
             //moduleType
             YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
@@ -143,6 +146,7 @@
             });
             //创建资源文档
             $("#btnNewRes").click(function () {
+                YT.deploy.formId = "resNewForm";
                 YT.deploy.routeTpl("/idoc/newRes.html",{tp_title:"资源文档新建"});
             });
 
@@ -362,7 +366,7 @@
             }else if(id == "enumsForm"){
                 YT.deploy.idocList.queryEnums(pageNum);
             }else{
-                var params = YT.deploy.util.getFormParams("#idocListForm");
+                var params = YT.deploy.util.getFormParams("#idocForm");
                 params["pageNum"] = pageNum;
                 var pageSize = $("#pageSize").val();
                 var ext_data = $.extend(params, {tp_title:"接口文档"});
@@ -379,7 +383,7 @@
         },
 
         queryEnums: function (pageNum) {
-            var params = YT.deploy.util.getFormParams("#idocListForm");
+            var params = YT.deploy.util.getFormParams("#idocForm");
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["type"] = 1;
@@ -387,7 +391,7 @@
             YT.deploy.route("/idocUrl/list", params, "/idoc/enums.html", ext_data);
         },
         queryRes: function (pageNum) {
-            var params = YT.deploy.util.getFormParams("#idocListForm");
+            var params = YT.deploy.util.getFormParams("#idocForm");
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();
             params["type"] = 2;
@@ -396,7 +400,7 @@
         },
 
         queryExport:function(){
-            var params = YT.deploy.util.getFormParams("#idocListForm");
+            var params = YT.deploy.util.getFormParams("#idocForm");
             params["pageNum"] = 1;
             params["pageSize"] = 10000; //无穷大
             // var ext_data = $.extend(params, {tp_title:"接口文档"});
