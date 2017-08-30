@@ -11,10 +11,12 @@
         <h1 style="text-align: right">
             <small>
 
-                    <button class="btn btn-sm btn-yellow" id="btnAddItem">添加</button>
-                    &nbsp;&nbsp;
-                    <button class="btn btn-info" id="btnSaveProperty"> <i class="icon-ok bigger-110"></i> 保存 </button>
-                    &nbsp;&nbsp;
+                <button class="btn btn-sm btn-grey" id="btnAddFixItem">添加固定项</button>
+                &nbsp;&nbsp;
+                <button class="btn btn-sm btn-yellow" id="btnAddItem">添加</button>
+                &nbsp;&nbsp;
+                <button class="btn btn-info" id="btnSaveProperty"> <i class="icon-ok bigger-110"></i> 保存 </button>
+                &nbsp;&nbsp;
             </small>
         </h1>
     </div><!-- /.page-header -->
@@ -42,7 +44,7 @@
             <td> <input type="checkbox" class="ace" id="isNull_0" name="isNull"  /><span class="lbl"></span> </td>
             <td> <input type="checkbox" class="ace" id="primaryKey_0"  name="primaryKey"  /><span class="lbl"></span> </td>
             <td>
-                <a href="javascript:void(0)" name="btnCopy" ><strong style="color:green">复制</strong></a>
+                <a href="javascript:void(0)" name="itemCopy" ><strong style="color:green">复制</strong></a>
                 &nbsp;
                 <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
                     <i class="icon-arrow-up bigger-130"></i>
@@ -66,7 +68,7 @@
             <td> <input type="checkbox" class="ace" id="isNull_{{bean.id}}" name="isNull" data="{{if bean.isNull}}1{{else}}0{{/if}}" /><span class="lbl"></span> </td>
             <td> <input type="checkbox" class="ace" id="primaryKey_{{bean.id}}"  name="primaryKey" data="{{if bean.primaryKey}}1{{else}}0{{/if}}" /><span class="lbl"></span> </td>
             <td>
-                <a href="javascript:void(0)" name="btnCopy"><strong style="color:green">复制</strong></a>
+                <a href="javascript:void(0)" name="itemCopy"><strong style="color:green">复制</strong></a>
                 &nbsp;
                 <a class="gray" href="javascript:void(0)" name="itemArrowUp" >
                     <i class="icon-arrow-up bigger-130"></i>

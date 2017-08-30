@@ -21,39 +21,6 @@
 
             //
 
-            //tab
-            $("div[id='tabs']").tabs();
-
-            //调出http 执行详情
-            $("a[name='enterHttpExecView']").click(function () {
-                var dataId = $(this).attr("data");
-                var item = $("tr[data='trChildItem_" + dataId + "']").first();
-                var state = ($(item).css("display") == "none");
-                //所有的hide
-                $("tr[name='trChildItem']").hide();
-                if (state) {
-                    $(item).show();
-                } else {
-                    $(item).hide();
-                }
-            });
-            $("div[name='enterHttpExecView']").click(function () {
-                var dataId = $(this).attr("data");
-                var item = $("tr[data='trChildItem_" + dataId + "']").first();
-                var state = ($(item).css("display") == "none");
-                //所有的hide
-                $("tr[name='trChildItem']").hide();
-                if (state) {
-                    $(item).show();
-                } else {
-                    $(item).hide();
-                }
-            });
-            // $("a[name='btnActiveDel']").click(function () {
-            //     var dataId = $(this).attr("data");
-            //     YT.deploy.codeBuild.delActive(dataId);
-            // });
-
             $("#btnQuery").click(function () {
                 var pageNum = 1;
                 // var pageSize = $("#pageSize").val();
@@ -65,11 +32,13 @@
             });
 
             $("#btnBuildSql").click(function () {
-                YT.deploy.codeBuild.openMsgWin("生成SQL","/codeBuild/buildSql");
+                $(this).prop("disabled",true);
+                YT.deploy.codeBuild.openMsgWin(this,"生成SQL","/codeBuild/buildSql");
             });
 
             $("#btnBuildApp").click(function () {
-                YT.deploy.codeBuild.openMsgWin("生成代码","/codeBuild/buildApp");
+                $(this).prop("disabled",true);
+                YT.deploy.codeBuild.openMsgWin(this,"生成代码","/codeBuild/buildApp");
             });
 
 
@@ -104,12 +73,17 @@
                 YT.deploy.codeBuild.openEditWin(id);
             });
 
+            $("a[name='btnCopy']").click(function () {
+                var id = $(this).attr("data");
+                YT.deploy.codeBuild.copyEntity(id);
+            });
+
             $("a[name='btnDel']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.codeBuild.delEntity(id);
             });
 
-            //enter collect active
+            //enter property edit
             $("a[name='enterPropertyEdit']").click(function () {
                 var id = $(this).attr("data");
                 YT.deploy.codeBuild.openPropertyEditWin(id);
@@ -182,6 +156,35 @@
                     // YT.deploy.util.initEnumSelect("yesNoIntType", id, value);
                 });
 
+                //添加固定项
+                $(document).off("click", "button[id='btnAddFixItem']");
+                $(document).on("click", "button[id='btnAddFixItem']", function () {
+                    // debugger;
+                    var $table = $(document).find("#tbPropertyContent");
+                    var $tr = $table.find("tr[name='dataItem']").first().clone();
+                    $tr.show();
+                    $tr.find("input[id='enName']").val("id");
+                    $tr.find("input[id='cnName']").val("ID");
+                    $tr.find("select[name='dataType']").val("java.lang.Long");
+                    $tr.find("input[id='length']").val(20);
+                    $tr.find("input[name='primaryKey']").prop("checked",true);
+                    $table.append($tr);
+
+                    var $tr = $table.find("tr[name='dataItem']").first().clone();
+                    $tr.show();
+                    $tr.find("input[id='enName']").val("gmtCreate");
+                    $tr.find("input[id='cnName']").val("创建时间");
+                    $tr.find("select[name='dataType']").val("java.util.Date");
+                    $table.append($tr);
+
+                    var $tr = $table.find("tr[name='dataItem']").first().clone();
+                    $tr.show();
+                    $tr.find("input[id='enName']").val("gmtModify");
+                    $tr.find("input[id='cnName']").val("修改时间");
+                    $tr.find("select[name='dataType']").val("java.util.Date");
+                    $table.append($tr);
+                });
+
                 //添加
                 $(document).off("click", "button[id='btnAddItem']");
                 $(document).on("click", "button[id='btnAddItem']", function () {
@@ -220,8 +223,8 @@
                 });
 
                 //复制
-                $(document).off("click", "a[name='btnCopy']");
-                $(document).on("click", "a[name='btnCopy']", function () {
+                $(document).off("click", "a[name='itemCopy']");
+                $(document).on("click", "a[name='itemCopy']", function () {
                     var $tr = $(this).parents("tr[name='dataItem']").clone();
                     var $table = $(document).find("#tbPropertyContent");
                     $tr.show();
@@ -247,7 +250,7 @@
             });
         },
 
-        openMsgWin: function (title,url) {
+        openMsgWin: function (btnObj,title,url) {
             var idArray = [];
             $(":checkbox[id='chkForm']").each(function(index,item){
                 if($(item).prop("checked")){
@@ -258,7 +261,7 @@
                 alert("请选择您要操作的项");
                 return;
             }
-            var params = {ids:idArray.join("")};
+            var params = {ids:idArray.join(",")};
             YT.deploy.util.reqPost(url, params, function (d) {
                 var param = {tp_title: title, msg: d.data};
                 $.get("/codeBuild/msg.html", function (source) {
@@ -271,6 +274,7 @@
                     $(".modal-dialog").prop("style", "width:60%;height:55%")
                     YT.deploy.formId = "codeBuildMsgForm";
                     YT.deploy.codeBuild.initNewEdit(param);
+                    $(btnObj).prop("disabled",false);
                 });
 
             });
@@ -298,6 +302,16 @@
             });
         },
 
+        copyEntity:function(id){
+            if (!confirm("您确认需要复制吗？")) {
+                return;
+            }
+
+            YT.deploy.util.reqPost("/codeBuild/entityCopy", {id:id}, function (d) {
+                alert("复制成功");
+                YT.deploy.codeBuild.query(1);
+            });
+        },
         delEntity:function(id){
             if (!confirm("您确认需要删除吗？")) {
                 return;

@@ -96,7 +96,7 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("entityCopy")
     @NeedLogin
     public ResponseObject entityCopy(@RequestParam Long id) {
-        int result = codeBuildService.entityDelete(id);
+        int result = codeBuildService.entityCopy(id);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
