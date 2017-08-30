@@ -15,6 +15,7 @@ import com.yuntao.zhushou.model.query.codeBuild.EntityQuery;
 import com.yuntao.zhushou.model.query.codeBuild.PropertyQuery;
 import com.yuntao.zhushou.model.vo.codeBuild.ResultObj;
 import com.yuntao.zhushou.service.inter.CodeBuildService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ import java.util.Map;
 @Service
 public class CodeBuildServiceImpl extends AbstService implements CodeBuildService {
 
-    //    private String domainUrl = "http://test.doublefit.cn:8083/";
-    private String domainUrl = "http://localhost:8083/";
+    @Value("${codeBuild.url}")
+    private String codeBuildUrl;
 
     @Override
     public List<Entity> selectList(EntityQuery query) {
@@ -39,7 +40,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public Pagination<Entity> selectPage(EntityQuery query) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entityList.do";
+        String url = codeBuildUrl + "api/entityList.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(query);
         requestRes.setParams(queryMap);
@@ -51,7 +52,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public int entitySave(Entity entity) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entitySave.do";
+        String url = codeBuildUrl + "api/entitySave.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
         requestRes.setParams(queryMap);
@@ -72,7 +73,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public int entityUpdate(Entity entity) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entityUpdate.do";
+        String url = codeBuildUrl + "api/entityUpdate.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
         requestRes.setParams(queryMap);
@@ -89,7 +90,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public Entity entityDetail(Long id) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entityDetail.do";
+        String url = codeBuildUrl + "api/entityDetail.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("id", id);
@@ -110,7 +111,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public int entityDelete(Long id) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entityDelete.do";
+        String url = codeBuildUrl + "api/entityDelete.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("id", id);
@@ -128,7 +129,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public int entityCopy(Long id) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/entityCopy.do";
+        String url = codeBuildUrl + "api/entityCopy.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("id", id);
@@ -146,7 +147,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public String buildSql(Long appId, String ids) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/buildSql.do";
+        String url = codeBuildUrl + "api/buildSql.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("appId", appId);
@@ -170,7 +171,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public String buildApp(Long appId, String ids) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/buildApp.do";
+        String url = codeBuildUrl + "api/buildApp.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("appId", appId);
@@ -193,7 +194,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public List<Property> propertyList(PropertyQuery query) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/propertyList.do";
+        String url = codeBuildUrl + "api/propertyList.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(query);
         requestRes.setParams(queryMap);
@@ -213,7 +214,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public Map<String, String> dataTypeEnums() {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/dataTypeEnums.do";
+        String url = codeBuildUrl + "api/dataTypeEnums.do";
         requestRes.setUrl(url);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String bodyText = responseRes.getBodyText();
@@ -223,7 +224,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     @Override
     public int propertySave(EntityParam entityParam) {
         RequestRes requestRes = new RequestRes();
-        String url = domainUrl + "api/propertySave.do";
+        String url = codeBuildUrl + "api/propertySave.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("entityId", entityParam.getId());
