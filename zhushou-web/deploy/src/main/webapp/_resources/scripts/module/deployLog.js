@@ -11,10 +11,9 @@
 
         formId: "deployLogForm",
 
-        route_callback : function (d) {
+        route_callback : function (d,data) {
             console.log("deployLog list after render call");
 
-            var data = d.data;
             //组件初始化之后
             var appList = YT.deploy.data.appList;
             // var docList = YT.deploy.data.docList;

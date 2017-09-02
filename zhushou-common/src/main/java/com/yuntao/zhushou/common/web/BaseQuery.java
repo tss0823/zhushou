@@ -26,6 +26,12 @@ public class BaseQuery implements Serializable {
 
     private String codeName;
 
+    private String orderByColumn = "id";
+
+    private String ascOrDesc = "desc";
+
+
+
     public int getPageSize() {
         return pageSize;
     }
@@ -80,5 +86,21 @@ public class BaseQuery implements Serializable {
 
     public void setCodeName(String codeName) {
         this.codeName = codeName;
+    }
+
+    public String getOrderByColumn() {
+        return orderByColumn;
+    }
+
+    public void setOrderByColumn(String orderByColumn) {
+        this.orderByColumn = orderByColumn;
+    }
+
+    public String getAscOrDesc() {
+        return ascOrDesc;
+    }
+
+    public void setAscOrDesc(String ascOrDesc) {
+        this.ascOrDesc = ascOrDesc;
     }
 }

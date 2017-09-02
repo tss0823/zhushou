@@ -5,6 +5,8 @@
 
     var common = {
 
+        formId: "reqQueryForm",
+        
         route_callback: function (d, data) {
             // debugger;
             console.log("reqContent bind  after render call");
@@ -252,6 +254,7 @@
 
 
         initLeftPanel: function (data) {
+            YT.deploy.formId = "reqContentForm";
             // debugger;
             var d = data || {};
             var reqHeaderList = [];

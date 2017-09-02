@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.MarkMapper">
+
+	<resultMap type="Mark" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="itemIndex" property="itemIndex"/>
+		<result column="periods" property="periods"/>
+		<result column="date" property="date"/>
+		<result column="type" property="type"/>
+		<result column="val" property="val"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `itemIndex`, `periods`, `date`, `type`, `val`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		mark
+	</sql>
+
+	<sql id="Base_Where">
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="itemIndex != null "> and  `itemIndex` = #{itemIndex} </if>
+		<if test="periods != null "> and  `periods` = #{periods} </if>
+		<if test="date != null "> and  `date` = #{date} </if>
+		<if test="type != null "> and  `type` = #{type} </if>
+		<if test="val != null "> and  `val` = #{val} </if>
+        <if test="startPeriods != null">periods >= #{startPeriods}</if>
+        <if test="endPeriods != null">periods >= #{endPeriods}</if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Mark">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		`itemIndex`,`periods`,
+		`date`,`type`,`val`
+		)
+		values
+		(
+		 #{itemIndex}, #{periods}, #{date}, #{type}, #{val}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="Mark">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="itemIndex != null">`itemIndex` = #{itemIndex}, </if>
+			<if test="periods != null">`periods` = #{periods}, </if>
+			<if test="date != null">`date` = #{date}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="val != null">`val` = #{val}, </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+
+	<!-- user definition code start -->
+    <select id="selectTopN" resultType="com.yuntao.zhushou.model.vo.mark.MarkTopNVo">
+        select val,count(*) num from mark
+        <where>
+            <if test="type != null">type = #{type}</if>
+            <if test="startPeriods != null">periods >= #{startPeriods}</if>
+            <if test="endPeriods != null">periods >= #{endPeriods}</if>
+        </where>
+        group by val order by num ${ascOrDesc} limit #{topN};
+    </select>
+
+    <select id="selectLastLocation" resultType="java.lang.Integer">
+        select itemIndex from mark where <![CDATA[ periods <= #{endPeriods} ]]> and val = #{val} order by itemIndex desc limit 1
+    </select>
+
+    <select id="selectLastItemIndex" resultType="java.lang.Integer">
+         select itemIndex from mark where <![CDATA[ periods <= #{endPeriods} ]]> order by itemIndex desc limit 1
+    </select>
+    <!-- user definition code end -->
+</mapper>
