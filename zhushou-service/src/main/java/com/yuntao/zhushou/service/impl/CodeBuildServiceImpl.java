@@ -8,6 +8,7 @@ import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
@@ -266,6 +267,27 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
             }
         }else{
             throw new BizException(bodyText);
+        }
+    }
+
+    @Override
+    public DbConfigure getDbConfigure(Long appId) {
+        RequestRes requestRes = new RequestRes();
+        String url = codeBuildUrl + "api/getDbConfigure.do";
+        requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("appId", appId);
+        requestRes.setParams(queryMap);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
+        if (resultObj.getResult() == 0) {
+            throw new BizException(resultObj.getData().toString());
+        } else {
+            Map<String, Object> dataMap = (Map<String, Object>) resultObj.getData();
+            DbConfigure dbConfigure = new DbConfigure();
+            BeanUtils.mapToBean(dataMap, dbConfigure);
+            return dbConfigure;
         }
     }
 }

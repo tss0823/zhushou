@@ -236,8 +236,8 @@ public class Property implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(entityId);
-        sb.append("#");
+//        sb.append(entityId);
+//        sb.append("#");
         sb.append(cnName);
         sb.append("#");
         sb.append(enName);
@@ -245,20 +245,20 @@ public class Property implements Serializable {
         sb.append(dataType);
         sb.append("#");
         sb.append(length);
-        sb.append("#");
-        sb.append(primaryKey);
-        sb.append("#");
-        sb.append(defaultValue);
-        sb.append("#");
-        sb.append(isNull);
-        sb.append("#");
-        sb.append(sourceType);
-        sb.append("#");
-        sb.append(source);
-        sb.append("#");
-        sb.append(remark);
-        sb.append("#");
-        sb.append(checkGroup);
+//        sb.append("#");
+//        sb.append(primaryKey);
+//        sb.append("#");
+//        sb.append(defaultValue);
+//        sb.append("#");
+//        sb.append(isNull);
+//        sb.append("#");
+//        sb.append(sourceType);
+//        sb.append("#");
+//        sb.append(source);
+//        sb.append("#");
+//        sb.append(remark);
+//        sb.append("#");
+//        sb.append(checkGroup);
         return sb.toString();
     }
 

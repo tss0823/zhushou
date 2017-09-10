@@ -8,5 +8,4 @@ import com.yuntao.zhushou.model.domain.Config;
  */
 public interface ConfigMapper extends BaseMapper<Config> {
 
-
 }

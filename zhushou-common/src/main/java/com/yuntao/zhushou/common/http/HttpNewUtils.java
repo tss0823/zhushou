@@ -4,6 +4,7 @@ import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.common.exception.BizException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -29,6 +30,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
@@ -229,16 +231,33 @@ public class HttpNewUtils {
     }
 
     public static void main(String[] args) {
-        RequestRes requestRes = new RequestRes();
-        requestRes.setUrl("http://user.api.mynixihongbao.com/m/login");
-        Map<String, String> headerMap = new HashMap<>();
-        requestRes.setHeaders(headerMap);
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("mobile", "15267164682");
-        paramMap.put("password", "E10ADC3949BA59ABBE56E057F20F883E");
-        requestRes.setParams(paramMap);
+//        RequestRes requestRes = new RequestRes();
+//        requestRes.setUrl("http://user.api.mynixihongbao.com/m/login");
+//        Map<String, String> headerMap = new HashMap<>();
+//        requestRes.setHeaders(headerMap);
+//        Map<String, String> paramMap = new HashMap<>();
+//        paramMap.put("mobile", "15267164682");
+//        paramMap.put("password", "E10ADC3949BA59ABBE56E057F20F883E");
+//        requestRes.setParams(paramMap);
+//
+//        ResponseRes responseRes = execute(requestRes);
+//        log.info(responseRes.getStatus().toString());
 
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl("http://test.doublefit.cn:8083/genFile/download.htm?id=208");
         ResponseRes responseRes = execute(requestRes);
         log.info(responseRes.getStatus().toString());
+        String tempPath = System.getProperty("java.io.tmpdir");
+        log.info("tempPath="+tempPath);
+        String filePath = tempPath + ""+System.currentTimeMillis()+".zip";
+        File file = new File(filePath);
+        try {
+            FileUtils.writeByteArrayToFile(file,responseRes.getResult());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

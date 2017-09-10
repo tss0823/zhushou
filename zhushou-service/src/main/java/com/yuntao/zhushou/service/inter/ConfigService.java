@@ -18,4 +18,5 @@ public interface ConfigService {
     List<Config> selectPubList();
 
     List<Config> selectPriList(Long companyId);
+
 }

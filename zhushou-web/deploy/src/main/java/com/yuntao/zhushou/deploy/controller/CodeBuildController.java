@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
@@ -12,6 +13,7 @@ import com.yuntao.zhushou.model.query.codeBuild.EntityQuery;
 import com.yuntao.zhushou.model.query.codeBuild.PropertyQuery;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.CodeBuildService;
+import com.yuntao.zhushou.service.inter.ConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -36,6 +38,9 @@ public class CodeBuildController extends BaseController {
 
     @Autowired
     private CodeBuildService codeBuildService;
+
+    @Autowired
+    private ConfigService configService;
 
     @RequestMapping("list")
     @NeedLogin
@@ -161,5 +166,20 @@ public class CodeBuildController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("getDbConfigure")
+    @NeedLogin
+    public ResponseObject getDbConfigure() {
+        Long appId = null;
+        User user = userService.getCurrentUser();
+        if (user.getCompanyId().longValue() == 3) {  //DF
+            appId = 21L;
+        } else if (user.getCompanyId().longValue() == 4) {  //zh
+            appId = 22L;
+        }
+        DbConfigure dbConfigure = codeBuildService.getDbConfigure(appId);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(dbConfigure);
+        return responseObject;
+    }
 
 }

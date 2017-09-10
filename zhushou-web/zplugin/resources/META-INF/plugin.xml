@@ -1,0 +1,67 @@
+<idea-plugin version="2">
+  <id>zhushou</id>
+  <name>zhushou</name>
+  <version>1.0</version>
+  <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">YourCompany</vendor>
+
+  <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="145.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <applicationConfigurable instance="com.yuntao.zhushou.zplugin.SettingsConfigurable" />
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <!--<action id="BootStrapAction" class="com.yuntao.zhushou.zplugin.action.BootStrapAction" text="BootStrapAction"-->
+            <!--description="BootStrapAction">-->
+      <!--<add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+      <!--<keyboard-shortcut keymap="$default" first-keystroke="meta B"/>-->
+    <!--</action>-->
+
+    <group id="popupMenuGroup" text="助手" popup="true">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <action id="newEntity" class="com.yuntao.zhushou.zplugin.action.PopAction"  text="新建实体"
+              description="BootStrapAction">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta N"/>
+      </action>
+      <action id="updateEntity" class="com.yuntao.zhushou.zplugin.action.PopAction"  text="添加属性"
+              description="BootStrapAction">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta P"/>
+      </action>
+      <action id="addProperty" class="com.yuntao.zhushou.zplugin.action.PopAction" text="删除属性"
+              description="BootStrapAction">
+        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl meta "/>-->
+      </action>
+      <action id="delProperty" class="com.yuntao.zhushou.zplugin.action.PopAction" text="删除实体"
+              description="BootStrapAction">
+        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl meta D"/>-->
+      </action>
+    </group>
+
+    <action id="MainAction" class="com.yuntao.zhushou.zplugin.action.MainAction" text="助手"
+            description="MainAction">
+      <add-to-group group-id="MainMenu" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta M"/>
+    </action>
+  </actions>
+
+</idea-plugin>

@@ -528,6 +528,14 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!--https://github.com/zeroturnaround/zt-zip-->
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-zip</artifactId>
+            <version>1.12</version>
+            <type>jar</type>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity -->
         <dependency>
             <groupId>org.apache.velocity</groupId>

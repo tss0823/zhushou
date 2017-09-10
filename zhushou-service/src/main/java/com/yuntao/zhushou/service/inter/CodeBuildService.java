@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.service.inter;
 
 import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
@@ -55,6 +56,6 @@ public interface CodeBuildService {
     
     int propertySave(EntityParam entityParam) ;
 
-
+    DbConfigure getDbConfigure(Long appId);
 
 }
