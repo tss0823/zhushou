@@ -95,6 +95,15 @@ public class CodeBuildController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("getEntityByEnName")
+    @NeedLogin
+    public ResponseObject getEntityByEnName(@RequestParam String enName) {
+        Entity entity = codeBuildService.getEntityByEnName(enName);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(entity);
+        return responseObject;
+    }
+
     @RequestMapping("entityDelete")
     @NeedLogin
     public ResponseObject entityDelete(@RequestParam Long id) {

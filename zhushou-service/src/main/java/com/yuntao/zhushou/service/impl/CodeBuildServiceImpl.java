@@ -89,6 +89,27 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     }
 
     @Override
+    public Entity getEntityByEnName(String enName) {
+        RequestRes requestRes = new RequestRes();
+        String url = codeBuildUrl + "api/getEntityByEnName.do";
+        requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("enName", enName);
+        requestRes.setParams(queryMap);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
+        if (resultObj.getResult() == 0) {
+            throw new BizException(resultObj.getData().toString());
+        } else {
+            Map<String, Object> dataMap = (Map<String, Object>) resultObj.getData();
+            Entity entity = new Entity();
+            BeanUtils.mapToBean(dataMap, entity);
+            return entity;
+        }
+    }
+
+    @Override
     public Entity entityDetail(Long id) {
         RequestRes requestRes = new RequestRes();
         String url = codeBuildUrl + "api/entityDetail.do";

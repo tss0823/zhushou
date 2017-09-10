@@ -40,6 +40,8 @@ public interface CodeBuildService {
 
     int entityUpdate(Entity entity) ;
 
+    Entity getEntityByEnName(String enName);
+
     Entity entityDetail(Long id) ;
 
     int entityDelete(Long id) ;
