@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.zplugin;
 
+import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
@@ -7,6 +8,8 @@ import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
+import com.yuntao.zhushou.model.domain.codeBuild.Property;
+import com.yuntao.zhushou.model.enums.MysqlDataTypeEnum;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -25,30 +28,83 @@ import java.util.regex.Pattern;
  */
 public class ActionManager {
 
-    public void newEntity(String projectPath, EntityParam entityParam) {
-
+    /**
+     * @param action      0 newEntity,1 addProperty 2 delProperty 3 delEntity
+     * @param entityParam
+     * @return
+     */
+    private String build(int action, EntityParam entityParam) {
         ZpluginUtils.authCheck();
 
-        //save entity
-        Entity entity = new Entity();
-        entity.setEnName(entityParam.getEnName());
-        entity.setCnName(entityParam.getCnName());
-        CodeBuildUtils.entitySave(entity);
-
-        //save properties
-        CodeBuildUtils.propertySave(entityParam);
-
         //getEntity
+//        Entity entity = new Entity();
         ResponseObject entityResObj = CodeBuildUtils.getEntityByEnName(entityParam.getEnName());
         Map<String, Object> dataMap = (Map<String, Object>) entityResObj.getData();
-        BeanUtils.mapToBean(dataMap, entity);
+        Entity entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
+
+        //save entity
+        entity.setEnName(entityParam.getEnName());
+        entity.setCnName(entityParam.getCnName());
+        if (action == 0) {  //保存实体
+            if(entity.getId() != null){
+                throw new BizException("已经存在实体，无需新建");
+            }
+            CodeBuildUtils.entitySave(entity);
+
+            //再获取一次
+            entityResObj = CodeBuildUtils.getEntityByEnName(entityParam.getEnName());
+            dataMap = (Map<String, Object>) entityResObj.getData();
+            entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
+        }else if(action == 1){
+            if(entity.getId() == null){
+                throw new BizException("实体不存在，请先新建");
+            }
+        }
+
+
+        //save properties
+        entityParam.setId(entity.getId());
+        CodeBuildUtils.propertySave(entityParam);
+
 
         //build sql
-        ResponseObject responseObject = CodeBuildUtils.buildSql(entity.getId().toString());
-        String sql = responseObject.getData().toString();
+        List<Property> propertyList = entityParam.getPropertyList();
+        String sql = null;
+        if (action == 0) {
+            ResponseObject responseObject = CodeBuildUtils.buildSql(entity.getId().toString());
+            sql = responseObject.getData().toString();
+
+        } else if (action == 1) {
+            StringBuilder sb = new StringBuilder();
+            for (Property property : propertyList) {
+                sb.append("ALTER TABLE `" + entityParam.getEnName() + "` ADD `" + property.getEnName() + "`");
+                String dataType = property.getDataType();
+                String dbType = MysqlDataTypeEnum.getDbValueByJavaValue(dataType);
+                sb.append(" "+dbType);
+                if (StringUtils.isNotEmpty(property.getLength())) {
+                    sb.append("("+property.getLength()+")");
+                }
+                if(property.getIsNull()){
+                    sb.append(" NULL");
+                }else{
+                    sb.append(" NOT NULL");
+                }
+                if(StringUtils.isNotEmpty(property.getDefaultValue())){
+                    sb.append(" DEFAULT ");
+                    if(property.getDataType().endsWith("String")){
+                        sb.append("'"+property.getDefaultValue()+"'");
+                    }else{
+                        sb.append(property.getDefaultValue());
+                    }
+                }
+                sb.append(" COMMENT '"+property.getCnName() +"';");
+            }
+            sql = sb.toString();
+        }
+
 
         //get dbConfigure
-        responseObject = CodeBuildUtils.getDbConfigure();
+        ResponseObject responseObject = CodeBuildUtils.getDbConfigure();
         dataMap = (Map<String, Object>) responseObject.getData();
         DbConfigure dbConfigure = new DbConfigure();
         BeanUtils.mapToBean(dataMap, dbConfigure);
@@ -72,12 +128,25 @@ public class ActionManager {
         }
 
         //然后解压到项目
-        ZipUtil.explode(new File(filePath));
+        String outFilePath = filePath.substring(0, filePath.length() - 4);
+        ZipUtil.unpack(new File(filePath), new File(outFilePath));
+        return outFilePath;
+    }
+
+
+    public void newEntity(String projectPath, EntityParam entityParam) {
+        String outFilePath = this.build(0, entityParam);
 
         //复制和替换文件到工作目录
-        String outFilePath = filePath.substring(0, filePath.length() - 4);
-        CodeSyncUtils.newSync(projectPath,outFilePath);
+        CodeSyncUtils.newSync(projectPath, outFilePath);
 
+    }
+
+    public void addProperty(String projectPath, EntityParam entityParam) {
+        String outFilePath = this.build(1, entityParam);
+
+        //复制和替换文件到工作目录
+        CodeSyncUtils.updateSync(projectPath, outFilePath, entityParam);
     }
 
     public static void main(String[] args) throws IOException {

@@ -70,7 +70,11 @@ public class AnalyseModelUtils {
                 property.setEnName(enName);
                 property.setDataType(dataType);
                 property.setIsNull(false);
-                property.setPrimaryKey(false);
+                if(enName.equals("id")){
+                    property.setPrimaryKey(true);
+                }else{
+                    property.setPrimaryKey(false);
+                }
                 boolean state = true;
                 for (PsiNameValuePair attribute : attributes) {
                     try{
@@ -83,9 +87,6 @@ public class AnalyseModelUtils {
                             property.setIsNull(true);
                         }else if(name.equals("maxLength")){
                             property.setLength(text);
-                        }
-                        if(name.equals("id")){
-                            property.setPrimaryKey(true);
                         }
 
                     }catch (Exception e){

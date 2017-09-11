@@ -1,17 +1,18 @@
 <idea-plugin version="2">
   <id>zhushou</id>
-  <name>zhushou</name>
+  <name>助手</name>
   <version>1.0</version>
-  <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">YourCompany</vendor>
+  <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">杭州智晗信息技术有限公司</vendor>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      代码，SQL一键生成，一键同步<br>
     ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      <b>1.0</b> (9/10/2017)
+      <ul>
+        <li>Initial release</li>
+      </ul>
     ]]>
   </change-notes>
 
@@ -61,6 +62,12 @@
             description="MainAction">
       <add-to-group group-id="MainMenu" anchor="last"/>
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta M"/>
+    </action>
+
+    <action id="deployTest" class="com.yuntao.zhushou.zplugin.action.MainAction" text="部署测试环境"
+            description="助手">
+      <add-to-group group-id="BuildMenu" anchor="after"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="shift meta F12"/>
     </action>
   </actions>
 

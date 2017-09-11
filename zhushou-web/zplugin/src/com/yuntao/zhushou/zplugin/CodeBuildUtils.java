@@ -2,7 +2,6 @@ package com.yuntao.zhushou.zplugin;
 
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.http.HttpNewUtils;
-import com.yuntao.zhushou.common.http.HttpParam;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
@@ -12,7 +11,6 @@ import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,7 +187,7 @@ public class CodeBuildUtils  {
 
     public static ResponseObject buildSql(String ids) {
         RequestRes requestRes = new RequestRes();
-        String url = zhushouUrl + "codeBuild/buildSql.do";
+        String url = zhushouUrl + "codeBuild/buildSql";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("ids", ids);
@@ -272,38 +270,51 @@ public class CodeBuildUtils  {
         String url = zhushouUrl + "codeBuild/propertySave";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
-        queryMap.put("entityId", entityParam.getId());
+        queryMap.put("id", entityParam.getId());
+        List<Property> propertyList = entityParam.getPropertyList();
+        int index = 0;
+        for (Property property : propertyList) {
+            queryMap.put("propertyList["+index+"].enName",property.getEnName());
+            queryMap.put("propertyList["+index+"].cnName",property.getCnName());
+            queryMap.put("propertyList["+index+"].dataType",property.getDataType());
+            queryMap.put("propertyList["+index+"].length",property.getLength());
+            queryMap.put("propertyList["+index+"].defaultValue",property.getDefaultValue());
+            queryMap.put("propertyList["+index+"].isNull",property.getIsNull());
+            queryMap.put("propertyList["+index+"].primaryKey",property.getPrimaryKey());
+            index++;
+        }
+
+
         requestRes.setParams(queryMap);
         //headers
         Map<String,String> headerMap = new HashMap<>();
         headerMap.put("Cookie",getLoginCookie());
         requestRes.setHeaders(headerMap);
-        List<Property> propertyList = entityParam.getPropertyList();
-        List<HttpParam> paramList = new ArrayList<>();
-        for (Property property : propertyList) {
-            HttpParam httpParam = new HttpParam("enName", property.getEnName());
-            paramList.add(httpParam);
-
-            httpParam = new HttpParam("cnName", property.getCnName());
-            paramList.add(httpParam);
-
-            httpParam = new HttpParam("dataType", property.getDataType());
-            paramList.add(httpParam);
-
-            httpParam = new HttpParam("length", property.getLength());
-            paramList.add(httpParam);
-
-
-            httpParam = new HttpParam("defaultValue", property.getDefaultValue());
-            paramList.add(httpParam);
-
-            httpParam = new HttpParam("isNull", property.getIsNull());
-            paramList.add(httpParam);
-
-            httpParam = new HttpParam("primaryKey", property.getPrimaryKey());
-            paramList.add(httpParam);
-        }
-        requestRes.setParamList(paramList);
+//        List<HttpParam> paramList = new ArrayList<>();
+//        for (Property property : propertyList) {
+//            HttpParam httpParam = new HttpParam("enName", property.getEnName());
+//            paramList.add(httpParam);
+//
+//            httpParam = new HttpParam("cnName", property.getCnName());
+//            paramList.add(httpParam);
+//
+//            httpParam = new HttpParam("dataType", property.getDataType());
+//            paramList.add(httpParam);
+//
+//            httpParam = new HttpParam("length", property.getLength());
+//            paramList.add(httpParam);
+//
+//
+//            httpParam = new HttpParam("defaultValue", property.getDefaultValue());
+//            paramList.add(httpParam);
+//
+//            httpParam = new HttpParam("isNull", property.getIsNull());
+//            paramList.add(httpParam);
+//
+//            httpParam = new HttpParam("primaryKey", property.getPrimaryKey());
+//            paramList.add(httpParam);
+//        }
+//        requestRes.setParamList(paramList);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String bodyText = responseRes.getBodyText();
         if(responseRes.getStatus() == 200){

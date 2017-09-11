@@ -8,24 +8,29 @@
     <properties/>
     <border type="line" title="属性选择" title-position="2"/>
     <children>
-      <component id="b3dc2" class="javax.swing.JList" binding="listMethod">
+      <scrollpane id="77694">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties>
-          <alignmentX value="1.0"/>
-          <alignmentY value="1.0"/>
-          <font swing-font="ColorChooser.font"/>
-          <model>
-            <item value="111"/>
-            <item value="2222"/>
-          </model>
-          <visibleRowCount value="15"/>
-        </properties>
-      </component>
-      <grid id="850ab" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="b3dc2" class="javax.swing.JList" binding="listMethod">
+            <constraints/>
+            <properties>
+              <alignmentX value="1.0"/>
+              <alignmentY value="1.0"/>
+              <font swing-font="ColorChooser.font"/>
+              <model>
+                <item value="111"/>
+                <item value="2222"/>
+              </model>
+              <visibleRowCount value="15"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="850ab" binding="jplButton" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>

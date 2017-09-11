@@ -101,7 +101,7 @@ public class CodeSyncUtils {
                         continue;
                     }
                     FileUtils.copyFile(leafFile, newFile);
-//                    System.out.println(newFilePath);
+                    System.out.println(newFilePath);
 
                 }
 
@@ -351,8 +351,8 @@ public class CodeSyncUtils {
     }
 
     public static void main(String[] args) {
-        String projectPath = "/u01/workspace/fitness/";
-        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1504864546908";
+        String projectPath = "/u01/workspace/fitness";
+        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1505026440380";
         EntityParam entityParam = new EntityParam();
         List<Property> propertyList = new ArrayList<>();
         entityParam.setPropertyList(propertyList);
@@ -362,8 +362,8 @@ public class CodeSyncUtils {
         property = new Property();
         property.setEnName("aa");
         propertyList.add(property);
-//        newSync(projectPath,filePath);
-        updateSync(projectPath,filePath,entityParam);
+        newSync(projectPath,filePath);
+//        updateSync(projectPath,filePath,entityParam);
 
     }
 }

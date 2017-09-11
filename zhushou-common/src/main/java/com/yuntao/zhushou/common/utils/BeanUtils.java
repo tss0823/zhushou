@@ -3,7 +3,7 @@
  */
 package com.yuntao.zhushou.common.utils;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -31,8 +31,10 @@ public class BeanUtils {
     private String a = "12321312";
 
     public static void main(String[] args) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        System.out.println(BeanUtilsBean.getInstance().getProperty(new BeanUtils(), "a"));
-        System.out.println(PropertyUtils.getProperty(new BeanUtils(), "a"));
+//        System.out.println(BeanUtilsBean.getInstance().getProperty(new BeanUtils(), "a"));
+//        System.out.println(PropertyUtils.getProperty(new BeanUtils(), "a"));
+//        Map<String,Object> dataMap = new HashMap<>();
+//        dataMap.put("id",12);
     }
 
     public static List<Map<String, Object>> beanListToMapLsit(List<? extends Object> beanList) {
@@ -100,6 +102,12 @@ public class BeanUtils {
         } catch (Exception e) {
             log.error("bean to queryMap failed! ", e);
         }
+    }
+
+    public static Object mapToBean(Map<String,Object> map,Class cls){
+        ObjectMapper mapper = new ObjectMapper();
+        Object instance = mapper.convertValue(map, cls);
+        return instance;
     }
 
     /**
@@ -216,4 +224,5 @@ public class BeanUtils {
         }
         return null;
     }
+
 }
