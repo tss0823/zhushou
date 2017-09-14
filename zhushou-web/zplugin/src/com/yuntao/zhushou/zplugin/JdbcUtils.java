@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.zplugin;
 
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
+import org.slf4j.Logger;
 
 import java.sql.*;
 
@@ -8,7 +9,8 @@ import java.sql.*;
  * Created by shan on 2017/9/8.
  */
 public class JdbcUtils {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(JdbcUtils.class);
     public static void execute(DbConfigure dbConfigure, String sql) {
         try {
             Class.forName(dbConfigure.getDriver());

@@ -9,6 +9,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,8 @@ import java.util.List;
  * Created by shan on 2017/9/7.
  */
 public class AnalyseModelUtils {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(AnalyseModelUtils.class);
     public AnalyseModelUtils() {
     }
 

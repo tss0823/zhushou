@@ -18,7 +18,6 @@ import java.util.Map;
 public class H5SocketClient extends WebSocketClient {
 
     private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
-
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(ZhushouComponent.class);
 
     private String fixFilePath;

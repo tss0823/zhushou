@@ -4,6 +4,7 @@ import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ import java.util.regex.Pattern;
  * Created by shan on 2017/9/9.
  */
 public class CodeSyncUtils {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(CodeSyncUtils.class);
     public static void newSync(String projectPath, String outFilePath) {
 //        String projectPath = "/u01/workspace/fitness/";
 //        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1504864546908.zip";

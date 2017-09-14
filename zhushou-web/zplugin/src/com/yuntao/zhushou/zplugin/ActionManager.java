@@ -14,6 +14,7 @@ import com.yuntao.zhushou.model.enums.MysqlDataTypeEnum;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -31,7 +32,8 @@ import static com.yuntao.zhushou.zplugin.CodeBuildUtils.getLoginCookie;
  * Created by shan on 2017/9/8.
  */
 public class ActionManager {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(ActionManager.class);
     /**
      * @param action      0 newEntity,1 addProperty 2 delProperty 3 delEntity
      * @param entityParam
@@ -121,6 +123,8 @@ public class ActionManager {
         BeanUtils.mapToBean(dataMap, dbConfigure);
         JdbcUtils.execute(dbConfigure, sql);
         CodeBuildUtils.buildSqlSave(sql);
+        bisLog.info("execute sql >>>");
+        bisLog.info(sql);
 
         //build app
         responseObject = CodeBuildUtils.buildApp(entity.getId().toString());

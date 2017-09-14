@@ -6,12 +6,14 @@ import com.yuntao.zhushou.common.utils.MD5Util;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.User;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 
 /**
  * Created by shan on 2017/9/8.
  */
 public class ZpluginUtils {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(ZpluginUtils.class);
     public static String fixFilePath;
 
     public static void setAccountInfo(String accountNo,String pwd){

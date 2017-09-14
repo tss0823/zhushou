@@ -10,6 +10,7 @@ import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,8 @@ import java.util.Map;
  * Created by shan on 2017/8/29.
  */
 public class CodeBuildUtils  {
-
+    private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
+    protected final static Logger log = org.slf4j.LoggerFactory.getLogger(CodeBuildUtils.class);
 
     private static String zhushouUrl = ZpluginConstant.zhushouUrl;
 
