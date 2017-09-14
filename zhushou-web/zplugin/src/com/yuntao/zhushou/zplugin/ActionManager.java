@@ -120,6 +120,7 @@ public class ActionManager {
         DbConfigure dbConfigure = new DbConfigure();
         BeanUtils.mapToBean(dataMap, dbConfigure);
         JdbcUtils.execute(dbConfigure, sql);
+        CodeBuildUtils.buildSqlSave(sql);
 
         //build app
         responseObject = CodeBuildUtils.buildApp(entity.getId().toString());

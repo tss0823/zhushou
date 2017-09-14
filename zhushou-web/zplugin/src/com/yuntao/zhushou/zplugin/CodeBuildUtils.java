@@ -214,6 +214,27 @@ public class CodeBuildUtils  {
         }
     }
 
+    public static ResponseObject buildSqlSave(String sql) {
+        RequestRes requestRes = new RequestRes();
+        String url = zhushouUrl + "codeBuild/buildSqlSave";
+        requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("sql", sql);
+        requestRes.setParams(queryMap);
+        //headers
+        Map<String,String> headerMap = new HashMap<>();
+        headerMap.put("Cookie",getLoginCookie());
+        requestRes.setHeaders(headerMap);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        if(responseRes.getStatus() == 200){
+            ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
+            return responseObject;
+        }else{
+            throw new BizException(bodyText);
+        }
+    }
+
     public static List<Property> propertyList(Long entityId) {
         RequestRes requestRes = new RequestRes();
         String url = zhushouUrl + "codeBuild/propertyList";

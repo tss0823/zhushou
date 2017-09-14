@@ -4,6 +4,7 @@ import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
+import com.yuntao.zhushou.model.domain.CodeBuildSql;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
@@ -13,6 +14,7 @@ import com.yuntao.zhushou.model.query.codeBuild.EntityQuery;
 import com.yuntao.zhushou.model.query.codeBuild.PropertyQuery;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.CodeBuildService;
+import com.yuntao.zhushou.service.inter.CodeBuildSqlService;
 import com.yuntao.zhushou.service.inter.ConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class CodeBuildController extends BaseController {
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private CodeBuildSqlService codeBuildSqlService;
 
     @RequestMapping("list")
     @NeedLogin
@@ -198,4 +203,17 @@ public class CodeBuildController extends BaseController {
         return responseObject;
     }
 
+    @RequestMapping("buildSqlSave")
+    @NeedLogin
+    public ResponseObject buildSqlSave(@RequestParam  String sql) {
+        User user = userService.getCurrentUser();
+        CodeBuildSql codeBuildSql = new CodeBuildSql();
+        codeBuildSql.setCompanyId(user.getCompanyId());
+        codeBuildSql.setUserId(user.getId());
+        codeBuildSql.setContent(sql);
+        int result = codeBuildSqlService.insert(codeBuildSql);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(result);
+        return responseObject;
+    }
 }
