@@ -40,7 +40,7 @@ public interface CodeBuildService {
 
     int entityUpdate(Entity entity) ;
 
-    Entity getEntityByEnName(String enName);
+    Entity getEntityByEnName(Long appId,String enName);
 
     Entity entityDetail(Long id) ;
 

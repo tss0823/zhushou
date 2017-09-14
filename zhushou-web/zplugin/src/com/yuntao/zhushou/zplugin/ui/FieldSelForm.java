@@ -9,6 +9,8 @@ import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import com.yuntao.zhushou.zplugin.ActionManager;
 import com.yuntao.zhushou.zplugin.AnalyseModelUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -30,6 +32,10 @@ import java.util.List;
  * Created by shan on 2017/9/7.
  */
 public class FieldSelForm {
+    protected final static Logger bisLog = LoggerFactory.getLogger("bis");
+
+    protected final static Logger log = LoggerFactory.getLogger(FieldSelForm.class);
+
     private JFrame frame = new JFrame();
     private JPanel mainPanel;
     private JList listMethod;
@@ -97,6 +103,7 @@ public class FieldSelForm {
                     JOptionPane.showMessageDialog(mainPanel, actionText + "执行完成！");
                     frame.setVisible(false);
                 } catch (Exception ex) {
+                    log.error("actionPerformed execute failed!", ex);
                     String message = ex.getMessage();
                     if (StringUtils.isEmpty(message)) {
                         message = ExceptionUtils.getPrintStackTrace(ex);
@@ -154,6 +161,7 @@ public class FieldSelForm {
             listMethod.setModel(listModel);
 
         } catch (Exception ex) {
+            log.error("start execute failed!", ex);
             String message = ex.getMessage();
             if (StringUtils.isEmpty(message)) {
                 message = ExceptionUtils.getPrintStackTrace(ex);

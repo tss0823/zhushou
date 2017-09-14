@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
@@ -18,10 +19,13 @@ import org.zeroturnaround.zip.ZipUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.yuntao.zhushou.zplugin.CodeBuildUtils.getLoginCookie;
 
 /**
  * Created by shan on 2017/9/8.
@@ -45,6 +49,7 @@ public class ActionManager {
         //save entity
         entity.setEnName(entityParam.getEnName());
         entity.setCnName(entityParam.getCnName());
+        List<Property> editPropertyList = null;
         if (action == 0) {  //保存实体
             if(entity.getId() != null){
                 throw new BizException("已经存在实体，无需新建");
@@ -55,16 +60,19 @@ public class ActionManager {
             entityResObj = CodeBuildUtils.getEntityByEnName(entityParam.getEnName());
             dataMap = (Map<String, Object>) entityResObj.getData();
             entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
-        }else if(action == 1){
+
+            editPropertyList = entityParam.getPropertyList();
+        }else if(action == 1){  //添加属性
             if(entity.getId() == null){
                 throw new BizException("实体不存在，请先新建");
             }
+            editPropertyList = CodeBuildUtils.propertyList(entity.getId());
         }
 
 
         //save properties
         entityParam.setId(entity.getId());
-        CodeBuildUtils.propertySave(entityParam);
+        CodeBuildUtils.propertySave(entity.getId(),editPropertyList);
 
 
         //build sql
@@ -147,6 +155,36 @@ public class ActionManager {
 
         //复制和替换文件到工作目录
         CodeSyncUtils.updateSync(projectPath, outFilePath, entityParam);
+    }
+
+    public ResponseObject deployTest(){
+        String testBranch = ZpluginUtils.getTestBranch();
+        if (StringUtils.isEmpty(testBranch)) {
+            throw new BizException("请先设置测试分支");
+        }
+        ZpluginUtils.authCheck();
+
+        RequestRes requestRes = new RequestRes();
+        requestRes.setUrl(ZpluginConstant.zhushouUrl+"deploy/compileAndDeploy");
+        //        headers
+        Map<String,String> headerMap = new HashMap<>();
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(getLoginCookie())){
+            headerMap.put("Cookie",getLoginCookie());
+        }
+        requestRes.setHeaders(headerMap);
+        Map<String,String> paramMap = new HashMap<>();
+        paramMap.put("appName","member");
+        paramMap.put("branch",testBranch);
+        paramMap.put("model","test");
+        requestRes.setParams(paramMap);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        if(responseRes.getStatus() == 200){
+            ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
+            return responseObject;
+        }else{
+            throw new BizException(bodyText);
+        }
     }
 
     public static void main(String[] args) throws IOException {

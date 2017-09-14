@@ -98,7 +98,14 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("getEntityByEnName")
     @NeedLogin
     public ResponseObject getEntityByEnName(@RequestParam String enName) {
-        Entity entity = codeBuildService.getEntityByEnName(enName);
+        Long appId = null;
+        User user = userService.getCurrentUser();
+        if (user.getCompanyId().longValue() == 3) {  //DF
+            appId = 21L;
+        } else if (user.getCompanyId().longValue() == 4) {  //zh
+            appId = 22L;
+        }
+        Entity entity = codeBuildService.getEntityByEnName(appId,enName);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(entity);
         return responseObject;

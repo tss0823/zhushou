@@ -5,7 +5,12 @@ package com.yuntao.zhushou.zplugin;
  */
 public interface ZpluginConstant {
 
+
+    String zhushouUrl = "http://zhushou.doublefit.cn/";
     String acountNo = "zhushou.accountNo";
     String pwd = "zhushou.pwd";
+    String testBranch = "zhushou.testBranch";
+    String logPath = "zhushou.logPath";
+
 
 }

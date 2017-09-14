@@ -1,6 +1,6 @@
 <idea-plugin version="2">
   <id>zhushou</id>
-  <name>助手</name>
+  <name>Zhushou</name>
   <version>1.0</version>
   <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">杭州智晗信息技术有限公司</vendor>
 
@@ -58,17 +58,23 @@
       </action>
     </group>
 
-    <action id="MainAction" class="com.yuntao.zhushou.zplugin.action.MainAction" text="助手"
-            description="MainAction">
-      <add-to-group group-id="MainMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta M"/>
-    </action>
+    <!--<action id="MainAction" class="com.yuntao.zhushou.zplugin.action.MainAction" text="助手"-->
+            <!--description="MainAction">-->
+      <!--<add-to-group group-id="MainMenu" anchor="last"/>-->
+      <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl meta M"/>-->
+    <!--</action>-->
 
     <action id="deployTest" class="com.yuntao.zhushou.zplugin.action.MainAction" text="部署测试环境"
             description="助手">
-      <add-to-group group-id="BuildMenu" anchor="after"/>
+      <add-to-group group-id="BuildMenu" anchor="last"/>
       <keyboard-shortcut keymap="$default" first-keystroke="shift meta F12"/>
     </action>
   </actions>
+
+  <application-components>
+    <component>
+      <implementation-class>com.yuntao.zhushou.zplugin.ZhushouComponent</implementation-class>
+    </component>
+  </application-components>
 
 </idea-plugin>

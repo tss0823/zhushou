@@ -89,11 +89,12 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
     }
 
     @Override
-    public Entity getEntityByEnName(String enName) {
+    public Entity getEntityByEnName(Long appId,String enName) {
         RequestRes requestRes = new RequestRes();
         String url = codeBuildUrl + "api/getEntityByEnName.do";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
+        queryMap.put("appId", appId);
         queryMap.put("enName", enName);
         requestRes.setParams(queryMap);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);

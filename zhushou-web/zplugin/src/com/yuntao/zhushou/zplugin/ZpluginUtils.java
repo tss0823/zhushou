@@ -12,10 +12,17 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ZpluginUtils {
 
+    public static String fixFilePath;
 
     public static void setAccountInfo(String accountNo,String pwd){
         PropertiesComponent.getInstance().setValue(ZpluginConstant.acountNo,accountNo);
         PropertiesComponent.getInstance().setValue(ZpluginConstant.pwd,pwd);
+    }
+    public static void setTestBranch(String testBranch){
+        PropertiesComponent.getInstance().setValue(ZpluginConstant.testBranch,testBranch);
+    }
+    public static void setLogPath(String logPath){
+        PropertiesComponent.getInstance().setValue(ZpluginConstant.logPath,logPath);
     }
 
     public static User getAccountInfo(){
@@ -25,6 +32,16 @@ public class ZpluginUtils {
         user.setAccountNo(accountNo);
         user.setPwd(pwd);
         return user;
+    }
+
+    public static String getTestBranch(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.testBranch);
+        return value;
+    }
+
+    public static String getLogPath(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.logPath);
+        return value;
     }
 
     public static ResponseObject authCheck(){
@@ -39,4 +56,5 @@ public class ZpluginUtils {
 
         return responseObject;
     }
+
 }

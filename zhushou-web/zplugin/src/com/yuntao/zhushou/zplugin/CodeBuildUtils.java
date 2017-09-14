@@ -9,8 +9,10 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
-import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
+import com.yuntao.zhushou.model.vo.codeBuild.ResultObj;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +22,20 @@ import java.util.Map;
  */
 public class CodeBuildUtils  {
 
-    private static String zhushouUrl = "http://zhushou.doublefit.cn/";
 
+    private static String zhushouUrl = ZpluginConstant.zhushouUrl;
 
     private static String loginCookie;
 
     public static String getLoginCookie(){
         return loginCookie;
+    }
+    public static String getLoginSid(){
+        if (StringUtils.isNotEmpty(loginCookie)) {
+            int index = loginCookie.indexOf(";");
+            return loginCookie.substring(4,index);
+        }
+        return "";
     }
 
 //    public static Pagination<Entity> selectPage(EntityQuery query) {
@@ -49,16 +58,22 @@ public class CodeBuildUtils  {
         queryMap.put("pwd",pwd);
         requestRes.setParams(queryMap);
 
-        //headers
-//        Map<String,String> headerMap = new HashMap<>();
-//        requestRes.setHeaders(headerMap);
+//        headers
+        Map<String,String> headerMap = new HashMap<>();
+        if(StringUtils.isNotEmpty(getLoginCookie())){
+            headerMap.put("Cookie",getLoginCookie());
+        }
+        requestRes.setHeaders(headerMap);
 
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String bodyText = responseRes.getBodyText();
         if(responseRes.getStatus() == 200){
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
             Map<String, String> headers = responseRes.getHeaders();
-            loginCookie = headers.get("Set-Cookie");
+            String resCookie = headers.get("Set-Cookie");
+            if (StringUtils.isNotEmpty(resCookie)) {
+                loginCookie = resCookie;
+            }
             return responseObject;
         }else{
             throw new BizException(bodyText);
@@ -245,33 +260,32 @@ public class CodeBuildUtils  {
         }
     }
 
-//    public static List<Property> propertyList(PropertyQuery query) {
-//        RequestRes requestRes = new RequestRes();
-//        String url = zhushouUrl + "codeBuild/propertyList.do";
-//        requestRes.setUrl(url);
-//        Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(query);
-//        requestRes.setParams(queryMap);
-//        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-//        String bodyText = responseRes.getBodyText();
-//        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
-//        List<Map<String, Object>> dataList = (List<Map<String, Object>>) resultObj.getData();
-//        List<Property> newDataList = new ArrayList<>();
-//        for (Map<String, Object> stringObjectMap : dataList) {
-//            Property property = new Property();
-//            BeanUtils.mapToBean(stringObjectMap, property);
-//            newDataList.add(property);
-//        }
-//        return newDataList;
-//    }
+    public static List<Property> propertyList(Long entityId) {
+        RequestRes requestRes = new RequestRes();
+        String url = zhushouUrl + "codeBuild/propertyList";
+        requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("entityId", entityId);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) resultObj.getData();
+        List<Property> newDataList = new ArrayList<>();
+        for (Map<String, Object> stringObjectMap : dataList) {
+            Property property = (Property) BeanUtils.mapToBean(stringObjectMap, Property.class);
+            newDataList.add(property);
+        }
+        return newDataList;
+    }
 
 
-    public static ResponseObject propertySave(EntityParam entityParam) {
+    public static ResponseObject propertySave(Long entityId,List<Property> propertyList) {
         RequestRes requestRes = new RequestRes();
         String url = zhushouUrl + "codeBuild/propertySave";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
-        queryMap.put("id", entityParam.getId());
-        List<Property> propertyList = entityParam.getPropertyList();
+        queryMap.put("id", entityId);
+//        List<Property> propertyList = entityParam.getPropertyList();
         int index = 0;
         for (Property property : propertyList) {
             queryMap.put("propertyList["+index+"].enName",property.getEnName());

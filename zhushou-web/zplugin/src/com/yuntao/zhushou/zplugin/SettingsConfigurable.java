@@ -52,6 +52,7 @@ public class SettingsConfigurable implements SearchableConfigurable {
     @Override
     public void apply() throws ConfigurationException {
         ZpluginUtils.setAccountInfo(settingsForm.getTxtAccountNo().getText(),settingsForm.getTxtPwd().getText());
+        ZpluginUtils.setTestBranch(settingsForm.getTxtTestBranch().getText());
     }
 
     @Override
