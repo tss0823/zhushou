@@ -9,7 +9,6 @@ import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
-import com.yuntao.zhushou.model.vo.codeBuild.ResultObj;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -38,16 +37,6 @@ public class CodeBuildUtils  {
         return "";
     }
 
-//    public static Pagination<Entity> selectPage(EntityQuery query) {
-//        RequestRes requestRes = new RequestRes();
-//        String url = zhushouUrl + "api/entityList.do";
-//        requestRes.setUrl(url);
-//        Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(query);
-//        requestRes.setParams(queryMap);
-//        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-//        String bodyText = responseRes.getBodyText();
-//        return JsonUtils.json2Object(bodyText, Pagination.class);
-//    }
 
     public static ResponseObject login(String accountNo,String pwd) {
         RequestRes requestRes = new RequestRes();
@@ -142,25 +131,6 @@ public class CodeBuildUtils  {
         }
     }
 
-//    public static Entity entityDetail(Long id) {
-//        RequestRes requestRes = new RequestRes();
-//        String url = zhushouUrl + "api/entityDetail.do";
-//        requestRes.setUrl(url);
-//        Map<String, Object> queryMap = new HashMap();
-//        queryMap.put("id", id);
-//        requestRes.setParams(queryMap);
-//        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-//        String bodyText = responseRes.getBodyText();
-//        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
-//        if (resultObj.getResult() == 0) {
-//            throw new BizException(resultObj.getData().toString());
-//        } else {
-//            Map<String, Object> dataMap = (Map<String, Object>) resultObj.getData();
-//            Entity entity = new Entity();
-//            BeanUtils.mapToBean(dataMap, entity);
-//            return entity;
-//        }
-//    }
 
     public static ResponseObject entityDelete(Long id) {
         RequestRes requestRes = new RequestRes();
@@ -183,22 +153,6 @@ public class CodeBuildUtils  {
         }
     }
 
-//    public static int entityCopy(Long id) {
-//        RequestRes requestRes = new RequestRes();
-//        String url = zhushouUrl + "api/entityCopy.do";
-//        requestRes.setUrl(url);
-//        Map<String, Object> queryMap = new HashMap();
-//        queryMap.put("id", id);
-//        requestRes.setParams(queryMap);
-//        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-//        String bodyText = responseRes.getBodyText();
-//        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
-//        if (resultObj.getResult() == 0) {
-//            throw new BizException(resultObj.getData().toString());
-//        } else {
-//            return 1;
-//        }
-//    }
 
     public static ResponseObject buildSql(String ids) {
         RequestRes requestRes = new RequestRes();
@@ -266,10 +220,15 @@ public class CodeBuildUtils  {
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("entityId", entityId);
+        requestRes.setParams(queryMap);
+        //headers
+        Map<String,String> headerMap = new HashMap<>();
+        headerMap.put("Cookie",getLoginCookie());
+        requestRes.setHeaders(headerMap);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String bodyText = responseRes.getBodyText();
-        ResultObj resultObj = JsonUtils.json2Object(bodyText, ResultObj.class);
-        List<Map<String, Object>> dataList = (List<Map<String, Object>>) resultObj.getData();
+        ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
+        List<Map<String, Object>> dataList = (List<Map<String, Object>>) responseObject.getData();
         List<Property> newDataList = new ArrayList<>();
         for (Map<String, Object> stringObjectMap : dataList) {
             Property property = (Property) BeanUtils.mapToBean(stringObjectMap, Property.class);
@@ -297,38 +256,11 @@ public class CodeBuildUtils  {
             queryMap.put("propertyList["+index+"].primaryKey",property.getPrimaryKey());
             index++;
         }
-
-
         requestRes.setParams(queryMap);
         //headers
         Map<String,String> headerMap = new HashMap<>();
         headerMap.put("Cookie",getLoginCookie());
         requestRes.setHeaders(headerMap);
-//        List<HttpParam> paramList = new ArrayList<>();
-//        for (Property property : propertyList) {
-//            HttpParam httpParam = new HttpParam("enName", property.getEnName());
-//            paramList.add(httpParam);
-//
-//            httpParam = new HttpParam("cnName", property.getCnName());
-//            paramList.add(httpParam);
-//
-//            httpParam = new HttpParam("dataType", property.getDataType());
-//            paramList.add(httpParam);
-//
-//            httpParam = new HttpParam("length", property.getLength());
-//            paramList.add(httpParam);
-//
-//
-//            httpParam = new HttpParam("defaultValue", property.getDefaultValue());
-//            paramList.add(httpParam);
-//
-//            httpParam = new HttpParam("isNull", property.getIsNull());
-//            paramList.add(httpParam);
-//
-//            httpParam = new HttpParam("primaryKey", property.getPrimaryKey());
-//            paramList.add(httpParam);
-//        }
-//        requestRes.setParamList(paramList);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String bodyText = responseRes.getBodyText();
         if(responseRes.getStatus() == 200){

@@ -25,6 +25,10 @@ public class SettingsForm {
         return txtPwd;
     }
 
+    public JTextField getTxtLogPath() {
+        return txtLogPath;
+    }
+
     public JTextField getTxtTestBranch() {
         return txtTestBranch;
     }

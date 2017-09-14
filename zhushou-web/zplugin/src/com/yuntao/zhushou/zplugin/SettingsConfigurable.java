@@ -41,6 +41,8 @@ public class SettingsConfigurable implements SearchableConfigurable {
         User accountInfo = ZpluginUtils.getAccountInfo();
         settingsForm.getTxtAccountNo().setText(accountInfo.getAccountNo());
         settingsForm.getTxtPwd().setText(accountInfo.getPwd());
+        String logPath = ZpluginUtils.getLogPath();
+        settingsForm.getTxtLogPath().setText(logPath);
         return settingsForm.$$$getRootComponent$$$();
     }
 
@@ -57,6 +59,10 @@ public class SettingsConfigurable implements SearchableConfigurable {
 
     @Override
     public void reset() {
-
+        User accountInfo = ZpluginUtils.getAccountInfo();
+        settingsForm.getTxtAccountNo().setText(accountInfo.getAccountNo());
+        settingsForm.getTxtPwd().setText(accountInfo.getPwd());
+        String logPath = ZpluginUtils.getLogPath();
+        settingsForm.getTxtLogPath().setText(logPath);
     }
 }

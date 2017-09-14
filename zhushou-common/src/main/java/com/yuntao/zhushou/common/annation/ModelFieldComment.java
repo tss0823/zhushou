@@ -19,6 +19,8 @@ public @interface ModelFieldComment {
 
     String regex() default "";
 
+    String defaultValue() default "";
+
 
 
 

@@ -32,7 +32,7 @@ public class ZhushouComponent implements ApplicationComponent {
 //                logFile.delete();
 //            }
 //            logFile.createNewFile();
-//            ZpluginUtils.setLogPath(logPath);
+            ZpluginUtils.setLogPath(userHomePath);
             //end
 
             final String fixFilePath = userHomePath+"/ws_console.log";

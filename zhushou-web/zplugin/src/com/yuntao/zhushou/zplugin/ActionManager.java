@@ -67,6 +67,9 @@ public class ActionManager {
                 throw new BizException("实体不存在，请先新建");
             }
             editPropertyList = CodeBuildUtils.propertyList(entity.getId());
+            for (Property property : entityParam.getPropertyList()) {
+                editPropertyList.add(property);
+            }
         }
 
 

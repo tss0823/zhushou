@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 
@@ -34,6 +35,9 @@ public class AnalyseModelUtils {
             int offset = editor.getCaretModel().getOffset();
             PsiElement elementAt = psiFile.findElementAt(offset);
             PsiClass psiClass = PsiTreeUtil.getParentOfType(elementAt, PsiClass.class);
+            if(psiClass == null){
+                throw new BizException("请选择实体类去生成");
+            }
 
             PsiAnnotation[] clsAnnotions = psiClass.getModifierList().getAnnotations();
             String clsEnName = psiClass.getName();
@@ -87,6 +91,9 @@ public class AnalyseModelUtils {
                             property.setIsNull(true);
                         }else if(name.equals("maxLength")){
                             property.setLength(text);
+                        }else if(name.equals("defaultValue")){
+                            text = text.substring(1,text.length()-1);
+                            property.setDefaultValue(text);
                         }
 
                     }catch (Exception e){
