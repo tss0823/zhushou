@@ -15,11 +15,6 @@
             <groupId>com.yuntao.zhushou</groupId>
             <artifactId>zhushou-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>com.aliyun</groupId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
         </dependency>
     </dependencies>
     <build>
