@@ -6,7 +6,8 @@
  */
 
 package com.yuntao.zhushou.model.domain;
-import com.yuntao.platform.common.annotation.ModelFieldComment;
+
+import com.yuntao.zhushou.common.annation.ModelFieldComment;
 
 import java.io.Serializable;
 import java.util.Date;
