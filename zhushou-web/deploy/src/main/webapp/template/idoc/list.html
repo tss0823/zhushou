@@ -8,19 +8,21 @@
         </h1>
         <form id="idocForm" onsubmit="return false">
             <h1 style="text-align: right;margin-top: 5px">
-            <small>
+                <small>
                     应用：
                     <select id="appName" name="appName">
                         <option value=""></option>
                     </select>
                     &nbsp;
                     模块：
-                    <select id="module" name="module">
-                        <option value=""></option>
-                    </select>
+                    <input type="text" id="module" name="module" value="{{module}}" class="input-sm"/>
+                    &nbsp;
+                    版本：
+                    <input type="text" id="version" name="version" value="{{version}}" class="input-sm"/>
                     &nbsp;
                     URL：
-                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="selName" data-placeholder="请选择接口名称">
+                    <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="selName"
+                            data-placeholder="请选择接口名称">
                         <option value=""></option>
                     </select>
                     <!--<input type="text" id="nameLike" name="nameLike" value="{{nameLike}}" class="input-sm"/>-->
@@ -30,36 +32,55 @@
                     &nbsp;
                     <!--负责人：-->
                     <!--<input type="text" id="createUerName" name="createUerName" value="{{createUserName}}" class="input-sm" />-->
-                    <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-white" id="btnClear" >清空</button>
+                    <button class="btn btn-success" id="btnQuery"><i class="icon-search align-top bigger-125"></i> 查询
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-white" id="btnClear">清空</button>
                 </small>
-        </h1>
+            </h1>
             <h1 style="text-align: right;padding-top: 10px">
                 <small>
-                    <button class="btn btn-success" id="btnQueryEnums"> <i class="icon-search align-top bigger-125"></i> 枚举状态列表 </button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-success" id="btnQueryRes"> <i class="icon-search align-top bigger-125"></i> 资源文档列表 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnQueryEnums"><i class="icon-search align-top bigger-125"></i>
+                        枚举状态列表
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnQueryRes"><i class="icon-search align-top bigger-125"></i>
+                        资源文档列表
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
                     {{if authMap.enterIdoc.child.btnNewTemplate }}
-                    <button class="btn btn-pink" id="btnNewTemplate"> <i class="icon-building align-top bigger-125"></i> 创建接口 </button>
+                    <button class="btn btn-pink" id="btnNewTemplate"><i class="icon-building align-top bigger-125"></i>
+                        创建接口
+                    </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-pink" id="btnNewRes"> <i class="icon-building align-top bigger-125"></i> 创建资源文档 </button>
+                    <button class="btn btn-pink" id="btnNewRes"><i class="icon-building align-top bigger-125"></i>
+                        创建资源文档
+                    </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-pink" id="btnSubmitDoc"> <i class="icon-building align-top bigger-125"></i> 提交接口 </button>
+                    <button class="btn btn-pink" id="btnSubmitDoc"><i class="icon-building align-top bigger-125"></i>
+                        提交接口
+                    </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-pink" id="btnSubmitEnum"> <i class="icon-building align-top bigger-125"></i> 提交枚举 </button>
+                    <button class="btn btn-pink" id="btnSubmitEnum"><i class="icon-building align-top bigger-125"></i>
+                        提交枚举
+                    </button>
                     {{/if}}
                     {{if authMap.enterIdoc.child.btnListAll }}
-                    <button class="btn btn-success" id="btnListAll"> <i class="icon-search align-top bigger-125"></i> 打印文档 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnListAll"><i class="icon-search align-top bigger-125"></i>
+                        打印文档
+                    </button>
+                    &nbsp;&nbsp;&nbsp;
                     {{/if}}
                 </small>
             </h1>
-        <!--<h1 style="text-align: right;padding-top: 10px">-->
+            <!--<h1 style="text-align: right;padding-top: 10px">-->
             <!--<small>-->
-                <!--<button class="btn btn-pink" id="btnUploadUED"> <i class="icon-building align-top bigger-125"></i> UED资源上传 </button>-->
-                <!--&nbsp;&nbsp;-->
-                <!--<button class="btn btn-pink" id="btnUploadFRD"> <i class="icon-building align-top bigger-125"></i> FRD资源上传 </button>-->
-                <!--&nbsp;&nbsp;-->
+            <!--<button class="btn btn-pink" id="btnUploadUED"> <i class="icon-building align-top bigger-125"></i> UED资源上传 </button>-->
+            <!--&nbsp;&nbsp;-->
+            <!--<button class="btn btn-pink" id="btnUploadFRD"> <i class="icon-building align-top bigger-125"></i> FRD资源上传 </button>-->
+            <!--&nbsp;&nbsp;-->
             <!--</small>-->
-        <!--</h1>-->
+            <!--</h1>-->
         </form>
     </div><!-- /.page-header -->
     <table id="sample-table-1" class="table table-striped table-bordered table-hover">
@@ -83,7 +104,7 @@
         {{each dataList as bean i}}
         <tr class="selected">
             <td>
-                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" >{{bean.appName}}</a>
+                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}">{{bean.appName}}</a>
             </td>
             <td>{{bean.module}}</td>
             <td>{{bean.version}}</td>
@@ -94,31 +115,37 @@
 
             <td class="hidden-480">
                 {{if authMap.enterIdoc.child.btnEnterEdit }}
-                <a href="javascript:void(0)" name="btnEnterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>
-                <a href="javascript:void(0)" name="btnCopy" data="{{bean.id}}" ><strong style="color:green">复制</strong></a>
+                <a href="javascript:void(0)" name="btnEnterEdit" data="{{bean.id}}"><strong
+                        style="color:green">修改</strong></a>
+                <a href="javascript:void(0)" name="btnCopy" data="{{bean.id}}"><strong
+                        style="color:green">复制</strong></a>
                 {{/if}}
-                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}" ><strong style="color:green">详细</strong></a>
-                <a href="javascript:void(0)" name="enterLogQuery" data="{{bean.url}}" ><strong style="color:green">日志</strong></a>
+                <a href="javascript:void(0)" name="enterView" data="{{bean.id}}"><strong style="color:green">详细</strong></a>
+                <a href="javascript:void(0)" name="enterLogQuery" data="{{bean.url}}"><strong
+                        style="color:green">日志</strong></a>
                 {{if bean.mockStatus == 0}}
-                <a href="javascript:void(0)" name="btnChangeMockStatus" data="{{bean.id}}" status="1" ><strong style="color:red">开启Mock</strong></a>
+                <a href="javascript:void(0)" name="btnChangeMockStatus" data="{{bean.id}}" status="1"><strong
+                        style="color:red">开启Mock</strong></a>
                 {{/if}}
                 {{if bean.mockStatus == 1}}
-                <a href="javascript:void(0)" name="btnChangeMockStatus" data="{{bean.id}}" status="0" ><strong style="color:red">关闭Mock</strong></a>
+                <a href="javascript:void(0)" name="btnChangeMockStatus" data="{{bean.id}}" status="0"><strong
+                        style="color:red">关闭Mock</strong></a>
                 {{/if}}
-                <a href="javascript:void(0)" name="btnEnterAddMockData" data="{{bean.id}}" ><strong style="color:green">修改Mock数据</strong></a>
+                <a href="javascript:void(0)" name="btnEnterAddMockData" data="{{bean.id}}"><strong style="color:green">修改Mock数据</strong></a>
                 {{if authMap.enterIdoc.child.btnDel }}
-                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
-                <a href="javascript:void(0)" name="btnHttpReq" data="{{bean.id}}" ><strong style="color:red">执行Http</strong></a>
+                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}"><strong style="color:red">删除</strong></a>
+                <a href="javascript:void(0)" name="btnHttpReq" data="{{bean.id}}"><strong
+                        style="color:red">执行Http</strong></a>
                 {{/if}}
             </td>
         </tr>
-        <tr  name="trChildItem" data="trChildItem_{{bean.id}}" style="display: none">
+        <tr name="trChildItem" data="trChildItem_{{bean.id}}" style="display: none">
             <td colspan="7">
                 <div id="tabs">
                     <ul>
-                        <li> <a href="#tabs-1">请求参数列表</a> </li>
-                        <li> <a href="#tabs-2">返回数据结果</a> </li>
-                        <li> <a href="#tabs-3">静态示例</a> </li>
+                        <li><a href="#tabs-1">请求参数列表</a></li>
+                        <li><a href="#tabs-2">返回数据结果</a></li>
+                        <li><a href="#tabs-3">静态示例</a></li>
                     </ul>
 
                     <div id="tabs-1">
@@ -163,7 +190,7 @@
                 </div>
 
                 <!--<div>-->
-                    <!--请求参数列表：-->
+                <!--请求参数列表：-->
                 <!--</div>-->
             </td>
         </tr>
@@ -175,7 +202,8 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="dataTables_info" id="sample-table-2_info">
-                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong class="pageCount"></strong>】页
+                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong
+                    class="pageCount"></strong>】页
                 当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
             </div>
         </div>
@@ -190,5 +218,5 @@
 
 </div><!-- /.page-content -->
 <link rel="stylesheet" href="/_resources/scripts/json/jquery.jsonview.min.css"/>
-<script src="/_resources/scripts/module/idoc/idocList.js?ver{{ver}}" ></script>
-<script src="/_resources/scripts/json/jquery.jsonview.min.js" ></script>
+<script src="/_resources/scripts/module/idoc/idocList.js?ver{{ver}}"></script>
+<script src="/_resources/scripts/json/jquery.jsonview.min.js"></script>
