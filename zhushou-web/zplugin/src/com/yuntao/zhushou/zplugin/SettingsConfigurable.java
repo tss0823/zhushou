@@ -43,6 +43,8 @@ public class SettingsConfigurable implements SearchableConfigurable {
         settingsForm.getTxtPwd().setText(accountInfo.getPwd());
         String logPath = ZpluginUtils.getLogPath();
         settingsForm.getTxtLogPath().setText(logPath);
+        String testBranch = ZpluginUtils.getTestBranch();
+        settingsForm.getTxtTestBranch().setText(testBranch);
         return settingsForm.$$$getRootComponent$$$();
     }
 
@@ -55,6 +57,7 @@ public class SettingsConfigurable implements SearchableConfigurable {
     public void apply() throws ConfigurationException {
         ZpluginUtils.setAccountInfo(settingsForm.getTxtAccountNo().getText(),settingsForm.getTxtPwd().getText());
         ZpluginUtils.setTestBranch(settingsForm.getTxtTestBranch().getText());
+        ZpluginUtils.setLogPath(settingsForm.getTxtLogPath().getText());
     }
 
     @Override
@@ -64,5 +67,7 @@ public class SettingsConfigurable implements SearchableConfigurable {
         settingsForm.getTxtPwd().setText(accountInfo.getPwd());
         String logPath = ZpluginUtils.getLogPath();
         settingsForm.getTxtLogPath().setText(logPath);
+        String testBranch = ZpluginUtils.getTestBranch();
+        settingsForm.getTxtTestBranch().setText(testBranch);
     }
 }

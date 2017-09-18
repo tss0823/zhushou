@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
+import com.yuntao.zhushou.common.utils.MD5Util;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.codeBuild.Entity;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
@@ -46,7 +47,7 @@ public class CodeBuildUtils  {
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap<>();
         queryMap.put("accountNo",accountNo);
-        queryMap.put("pwd",pwd);
+        queryMap.put("pwd", MD5Util.MD5Encode(pwd));
         requestRes.setParams(queryMap);
 
 //        headers

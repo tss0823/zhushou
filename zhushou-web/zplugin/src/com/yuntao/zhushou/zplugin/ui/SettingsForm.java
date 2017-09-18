@@ -3,9 +3,13 @@ package com.yuntao.zhushou.zplugin.ui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.zplugin.CodeBuildUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by shan on 2017/9/7.
@@ -13,15 +17,41 @@ import java.awt.*;
 public class SettingsForm {
     private JPanel mainPanel;
     private JTextField txtAccountNo;
-    private JTextField txtPwd;
+    private JPasswordField txtPwd;
     private JTextField txtTestBranch;
     private JTextField txtLogPath;
+    private JButton btnCheckValid;
+    private JButton btnShow;
+
+    public SettingsForm() {
+        btnCheckValid.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ResponseObject responseObject = CodeBuildUtils.login(txtAccountNo.getText(), txtPwd.getText());
+                if (responseObject.isSuccess()) {
+                    JOptionPane.showMessageDialog(mainPanel, "账号检测合法！");
+                } else {
+                    JOptionPane.showMessageDialog(mainPanel, "账号检测不合法", "错误", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        btnShow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (txtPwd.echoCharIsSet()) {
+                    txtPwd.setEchoChar('\0');
+                } else {
+                    txtPwd.setEchoChar((char) 9679);
+                }
+            }
+        });
+    }
 
     public JTextField getTxtAccountNo() {
         return txtAccountNo;
     }
 
-    public JTextField getTxtPwd() {
+    public JPasswordField getTxtPwd() {
         return txtPwd;
     }
 
@@ -51,7 +81,7 @@ public class SettingsForm {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 2, new Insets(10, 5, 10, 5), -1, -1));
+        panel1.setLayout(new GridLayoutManager(3, 3, new Insets(10, 5, 10, 5), -1, -1));
         mainPanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel1.setBorder(BorderFactory.createTitledBorder("账号设置"));
         final JLabel label1 = new JLabel();
@@ -66,6 +96,12 @@ public class SettingsForm {
         panel1.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         txtPwd = new JPasswordField();
         panel1.add(txtPwd, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, -1), null, 0, false));
+        btnCheckValid = new JButton();
+        btnCheckValid.setText("账号检测");
+        panel1.add(btnCheckValid, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnShow = new JButton();
+        btnShow.setText("显示");
+        panel1.add(btnShow, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 2, new Insets(15, 5, 5, 5), -1, -1));
         mainPanel.add(panel2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

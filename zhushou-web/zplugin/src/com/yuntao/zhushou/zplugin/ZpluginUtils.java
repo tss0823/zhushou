@@ -2,7 +2,6 @@ package com.yuntao.zhushou.zplugin;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.yuntao.zhushou.common.exception.BizException;
-import com.yuntao.zhushou.common.utils.MD5Util;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.User;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +50,7 @@ public class ZpluginUtils {
         if(StringUtils.isBlank(user.getAccountNo()) || StringUtils.isBlank(user.getPwd())){
             throw new BizException("请先设置好账号和密码");
         }
-        ResponseObject responseObject = CodeBuildUtils.login(user.getAccountNo(), MD5Util.MD5Encode(user.getPwd()));
+        ResponseObject responseObject = CodeBuildUtils.login(user.getAccountNo(), user.getPwd());
         if(!responseObject.isSuccess()){
             throw new BizException(responseObject.getMessage());
         }
