@@ -40,8 +40,10 @@ public class SettingsForm {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (txtPwd.echoCharIsSet()) {
                     txtPwd.setEchoChar('\0');
+                    btnShow.setText("隐藏");
                 } else {
                     txtPwd.setEchoChar((char) 9679);
+                    btnShow.setText("显示");
                 }
             }
         });

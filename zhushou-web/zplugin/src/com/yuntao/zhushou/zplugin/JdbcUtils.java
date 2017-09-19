@@ -12,6 +12,7 @@ public class JdbcUtils {
     private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(JdbcUtils.class);
     public static void execute(DbConfigure dbConfigure, String sql) {
+        bisLog.info("sql="+sql);
         try {
             Class.forName(dbConfigure.getDriver());
             // 获取数据库连接
@@ -22,10 +23,10 @@ public class JdbcUtils {
 
             // 执行DDL,创建数据表
             int result = stmt.executeUpdate(sql);
-
-            System.out.printf("result="+result);
+            bisLog.info("result="+result);
 
         } catch (Exception e) {
+            log.error("sql="+sql);
             throw new RuntimeException("execute sql failed!",e);
         }
     }

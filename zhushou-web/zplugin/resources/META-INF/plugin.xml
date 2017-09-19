@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>zhushou</id>
   <name>Zhushou</name>
-  <version>1.0</version>
+  <version>2.0</version>
   <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">杭州智晗信息技术有限公司</vendor>
 
   <description><![CDATA[
@@ -12,6 +12,13 @@
       <b>1.0</b> (9/10/2017)
       <ul>
         <li>Initial release</li>
+        <li>add entity</li>
+        <li>add property</li>
+      </ul>
+      <b>2.0</b> (9/18/2017)
+      <ul>
+        <li>add del property</li>
+        <li>add del entity</li>
       </ul>
     ]]>
   </change-notes>

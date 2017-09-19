@@ -19,10 +19,7 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +49,7 @@ public class ActionManager {
         entity.setEnName(entityParam.getEnName());
         entity.setCnName(entityParam.getCnName());
         List<Property> editPropertyList = null;
+        List<Property> selectPropertyList = entityParam.getPropertyList();
         if (action == 0) {  //保存实体
             if(entity.getId() != null){
                 throw new BizException("已经存在实体，无需新建");
@@ -63,25 +61,45 @@ public class ActionManager {
             dataMap = (Map<String, Object>) entityResObj.getData();
             entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
 
-            editPropertyList = entityParam.getPropertyList();
+            editPropertyList = selectPropertyList;
         }else if(action == 1){  //添加属性
             if(entity.getId() == null){
                 throw new BizException("实体不存在，请先新建");
             }
             editPropertyList = CodeBuildUtils.propertyList(entity.getId());
-            for (Property property : entityParam.getPropertyList()) {
+            for (Property property : selectPropertyList) {
                 editPropertyList.add(property);
+            }
+        }else if(action == 2) {
+            if(entity.getId() == null){
+                throw new BizException("实体不存在，请先新建");
+            }
+            editPropertyList = CodeBuildUtils.propertyList(entity.getId());
+            for (Property selectProperty : selectPropertyList) {
+                for (Property editProperty : editPropertyList) {
+                    if(selectProperty.getEnName().equals(editProperty.getEnName())){
+                        editPropertyList.remove(editProperty);
+                        break;
+                    }
+                }
+            }
+
+        }else if(action == 3){
+            if(entity.getId() == null){
+                throw new BizException("实体不存在，请先新建");
             }
         }
 
 
         //save properties
         entityParam.setId(entity.getId());
-        CodeBuildUtils.propertySave(entity.getId(),editPropertyList);
+        if(action != 3){
+            CodeBuildUtils.propertySave(entity.getId(),editPropertyList);
+        }
 
 
         //build sql
-        List<Property> propertyList = entityParam.getPropertyList();
+//        List<Property> propertyList = entityParam.getPropertyList();
         String sql = null;
         if (action == 0) {
             ResponseObject responseObject = CodeBuildUtils.buildSql(entity.getId().toString());
@@ -89,7 +107,7 @@ public class ActionManager {
 
         } else if (action == 1) {
             StringBuilder sb = new StringBuilder();
-            for (Property property : propertyList) {
+            for (Property property : selectPropertyList) {
                 sb.append("ALTER TABLE `" + entityParam.getEnName() + "` ADD `" + property.getEnName() + "`");
                 String dataType = property.getDataType();
                 String dbType = MysqlDataTypeEnum.getDbValueByJavaValue(dataType);
@@ -113,6 +131,14 @@ public class ActionManager {
                 sb.append(" COMMENT '"+property.getCnName() +"';");
             }
             sql = sb.toString();
+        }else if(action == 2){
+            StringBuilder sb = new StringBuilder();
+            for (Property property : selectPropertyList) {
+                sb.append("ALTER TABLE `"+entityParam.getEnName()+"` DROP `"+property.getEnName()+"`;");
+            }
+            sql = sb.toString();
+        }else if(action == 3){
+            sql = "DROP TABLE `"+entityParam.getEnName()+"`;";
         }
 
 
@@ -127,25 +153,32 @@ public class ActionManager {
         bisLog.info(sql);
 
         //build app
-        responseObject = CodeBuildUtils.buildApp(entity.getId().toString());
-        String downloadUrl = responseObject.getData().toString();
+        String outFilePath = null;
+        if(action != 2){  //删除property 不需要
+            responseObject = CodeBuildUtils.buildApp(entity.getId().toString());
+            String downloadUrl = responseObject.getData().toString();
 
-        //下载到临时目录
-        RequestRes requestRes = new RequestRes();
-        requestRes.setUrl(downloadUrl);
-        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-        String tempPath = System.getProperty("java.io.tmpdir");
-        String filePath = tempPath + "" + System.currentTimeMillis() + ".zip";
-        File file = new File(filePath);
-        try {
-            FileUtils.writeByteArrayToFile(file, responseRes.getResult());
-        } catch (IOException e) {
-            e.printStackTrace();
+            //下载到临时目录
+            RequestRes requestRes = new RequestRes();
+            requestRes.setUrl(downloadUrl);
+            ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+            String tempPath = System.getProperty("java.io.tmpdir");
+            String filePath = tempPath + "" + System.currentTimeMillis() + ".zip";
+            File file = new File(filePath);
+            try {
+                FileUtils.writeByteArrayToFile(file, responseRes.getResult());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //然后解压到项目
+            outFilePath = filePath.substring(0, filePath.length() - 4);
+            ZipUtil.unpack(new File(filePath), new File(outFilePath));
         }
 
-        //然后解压到项目
-        String outFilePath = filePath.substring(0, filePath.length() - 4);
-        ZipUtil.unpack(new File(filePath), new File(outFilePath));
+        if(action == 3){  //删除实体最后操作
+            CodeBuildUtils.entityDelete(entity.getId());
+        }
         return outFilePath;
     }
 
@@ -163,6 +196,20 @@ public class ActionManager {
 
         //复制和替换文件到工作目录
         CodeSyncUtils.updateSync(projectPath, outFilePath, entityParam);
+    }
+
+    public void delProperty(String projectPath, EntityParam entityParam) {
+        this.build(2, entityParam);
+
+        //复制和替换文件到工作目录
+        CodeSyncUtils.delPropertySync(projectPath,  entityParam);
+    }
+
+    public void delEntity(String projectPath, EntityParam entityParam) {
+        String outFilePath = this.build(3, entityParam);
+
+        //复制和替换文件到工作目录
+        CodeSyncUtils.delEntitySync(projectPath, outFilePath,entityParam.getEnName());
     }
 
     public ResponseObject deployTest(){

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,6 +18,7 @@ import java.util.regex.Pattern;
 public class CodeSyncUtils {
     private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(CodeSyncUtils.class);
+
     public static void newSync(String projectPath, String outFilePath) {
 //        String projectPath = "/u01/workspace/fitness/";
 //        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1504864546908.zip";
@@ -28,7 +28,7 @@ public class CodeSyncUtils {
             String[] extensions = {"java", "xml"};
             Collection<File> files = FileUtils.listFiles(new File(outFilePath), extensions, true);
             for (File leafFile : files) {
-                String newFilePath = leafFile.getPath().replace(outFilePath, projectPath);
+                String newFilePath = leafFile.getPath().replaceAll(outFilePath, projectPath);
                 File newFile = new File(newFilePath);
                 if (leafFile.getName().endsWith("DalConfig.java")) {  //提取字符复制
                     String fileContent = FileUtils.readFileToString(leafFile);
@@ -122,7 +122,7 @@ public class CodeSyncUtils {
             String[] extensions = {"java", "xml"};
             Collection<File> files = FileUtils.listFiles(new File(outFilePath), extensions, true);
             for (File leafFile : files) {
-                String newFilePath = leafFile.getPath().replace(outFilePath, projectPath);
+                String newFilePath = leafFile.getPath().replaceAll(outFilePath, projectPath);
                 File newFile = new File(newFilePath);//
 
                 if (leafFile.getName().endsWith("Mapper.xml")) {
@@ -226,14 +226,14 @@ public class CodeSyncUtils {
                             //add new content
                             xmlSb.delete(xmlSb.length() - 1, xmlSb.length());  //先删除/n
                             for (Property property : propertyList) {
-                                String value = "#{"+property.getEnName()+"}";
-                                if(StringUtils.isNotEmpty(property.getDefaultValue())){
+                                String value = "#{" + property.getEnName() + "}";
+                                if (StringUtils.isNotEmpty(property.getDefaultValue())) {
                                     value = property.getDefaultValue();
-                                    if(property.getDataType().equals("java.lang.String")){
-                                        value = "'"+value+"'";
+                                    if (property.getDataType().equals("java.lang.String")) {
+                                        value = "'" + value + "'";
                                     }
                                 }
-                                xmlSb.append(","+value);
+                                xmlSb.append("," + value);
                             }
                             xmlSb.append("\n");
                             insertValueMatch = false;
@@ -280,20 +280,154 @@ public class CodeSyncUtils {
 
     }
 
+    public static void delPropertySync(String projectPath, EntityParam entityParam) {
+        List<Property> propertyList = entityParam.getPropertyList();
+        try {
+            String[] extensions = {"xml"};
+            Collection<File> files = FileUtils.listFiles(new File(projectPath), extensions, true);
+            String mapperFileName = StringUtils.capitalize(entityParam.getEnName()) + "Mapper.xml";
+            for (File leafFile : files) {
+                if (!leafFile.getName().endsWith(mapperFileName)) {
+                    continue;
+                }
+
+                List<String> lines = FileUtils.readLines(leafFile);
+                StringBuilder sb = new StringBuilder();
+                boolean columnListMatch = false;
+                boolean insertColumnMatch = false;
+                boolean insertValueMatch = false;
+                for (String line : lines) {
+                    boolean contains = false;
+                    for (Property property : propertyList) {
+                        if (StringUtils.contains(line, "<result column=\"" + property.getEnName() + "\"")) {
+                            contains = true;
+                            break;
+                        } else if (StringUtils.contains(line, "<if test=\"" + property.getEnName() + " !=")) {
+                            contains = true;
+                            break;
+                        } else if (columnListMatch || insertColumnMatch) {
+                            String pattern = ",?\\s*`" + property.getEnName() + "`";
+                            Pattern r = Pattern.compile(pattern);
+                            Matcher m = r.matcher(line);
+                            if (m.find()) {
+                                String replaceStr = "";
+                                line = line.replaceAll(pattern, replaceStr);
+                                String group = m.group();
+                                if (group.indexOf(",") == -1) {
+                                    //前面那个删掉最后一个，
+                                    int lastIndex = sb.lastIndexOf(",");
+                                    sb.delete(lastIndex, sb.length());
+                                }
+//                                if (line.indexOf(",") == -1 || line.indexOf(")") == -1) {
+//                                    contains = true;
+//                                    break;
+//                                }
+                            }
+
+                        } else if (insertValueMatch) {
+                            String pattern = ",?\\s*\\#\\{" + property.getEnName() + "\\}";
+                            Pattern r = Pattern.compile(pattern);
+                            Matcher m = r.matcher(line);
+                            if (m.find()) {
+                                String replaceStr = "";
+                                line = line.replaceAll(pattern, replaceStr);
+                                String group = m.group();
+                                if (group.indexOf(",") == -1) {
+                                    //前面那个删掉最后一个，
+                                    int lastIndex = sb.lastIndexOf(",");
+                                    sb.delete(lastIndex, sb.length());
+                                }
+//                                if (line.indexOf(",") == -1 || line.indexOf(")") == -1) {
+//                                    contains = true;
+//                                    break;
+//                                }
+                            }
+                        }
+                    }
+
+                    if (StringUtils.contains(line, "id=\"Base_Column_List\">")) {
+                        columnListMatch = true;
+                    } else if (StringUtils.contains(line, "</sql>")) {
+                        columnListMatch = false;
+                    } else if (StringUtils.contains(line, "insert into")) {
+                        insertColumnMatch = true;
+                    } else if (insertColumnMatch && StringUtils.contains(line, ")")) {
+                        insertColumnMatch = false;
+                        insertValueMatch = true;
+                    } else if (insertValueMatch && StringUtils.contains(line, "</insert>")) {
+                        insertValueMatch = false;
+                    }
+                    if (!contains) {
+                        sb.append(line);
+                        sb.append("\n");
+                    }
+
+
+                }
+                FileUtils.write(leafFile, sb.toString());
+
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("delPropertySync sync failed!", e);
+        }
+
+    }
+
+    public static void delEntitySync(String projectPath, String outFilePath, String enName) {
+        try {
+            String javaEnName = StringUtils.capitalize(enName);
+            String[] extensions = {"java", "xml"};
+            Collection<File> files = FileUtils.listFiles(new File(outFilePath), extensions, true);
+            for (File leafFile : files) {
+                String newFilePath = leafFile.getPath().replaceAll(outFilePath, projectPath);
+                File newFile = new File(newFilePath);//
+                String fileContent = FileUtils.readFileToString(newFile);
+                if (newFile.getName().endsWith("DalConfig.java")) {
+                    String pattern = "@Bean[^" + javaEnName + "Mapper]*public " + javaEnName + "Mapper[^\\}]*\\}\\s*\\n?\\s?\\t?";
+                    fileContent = fileContent.replaceAll(pattern, "");
+                    FileUtils.write(newFile, fileContent);
+                    continue;
+                } else if (newFile.getName().endsWith("mybatis-config.xml")) {
+                    String pattern = "<typeAlias alias=\"" + javaEnName + "\"[^/>]+/>\\s*\\n?\\s?\\t?";
+                    fileContent = fileContent.replaceAll(pattern, "");
+                    pattern = "<mapper resource=\"mapper/" + javaEnName + "Mapper\\.xml[^/>]+/>\\s*\\n?\\s?\\t?";
+                    fileContent = fileContent.replaceAll(pattern, "");
+                    FileUtils.write(newFile, fileContent);
+                    continue;
+                } else if (StringUtils.contains(leafFile.getPath(), "/model/domain/")) { //自身跳过 TODO
+                    continue;
+                }
+                FileUtils.forceDelete(newFile);
+            }
+
+        } catch (
+                Exception e)
+
+        {
+            throw new RuntimeException("delEntitySync failed!", e);
+        }
+
+    }
+
     public static void main(String[] args) {
-        String projectPath = "/u01/workspace/fitness";
-        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1505026440380";
-        EntityParam entityParam = new EntityParam();
-        List<Property> propertyList = new ArrayList<>();
-        entityParam.setPropertyList(propertyList);
-        Property property = new Property();
-        property.setEnName("gmtModify");
-        propertyList.add(property);
-        property = new Property();
-        property.setEnName("aa");
-        propertyList.add(property);
-        newSync(projectPath, filePath);
+//        String projectPath = "/u01/workspace/fitness";
+//        String filePath = "/private/var/folders/7r/bl7hlc351dg1vfpdclb7r7bc0000gn/T/1505026440380";
+//        EntityParam entityParam = new EntityParam();
+//        List<Property> propertyList = new ArrayList<>();
+//        entityParam.setPropertyList(propertyList);
+//        Property property = new Property();
+//        property.setEnName("gmtModify");
+//        propertyList.add(property);
+//        property = new Property();
+//        property.setEnName("aa");
+//        propertyList.add(property);
+//        newSync(projectPath, filePath);
 //        updateSync(projectPath,filePath,entityParam);
 
+        String pattern = ",?\\s*\\#\\{abc\\}";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher("aaa, #{abc},222");
+        System.out.printf("find="+m.find());
     }
 }
