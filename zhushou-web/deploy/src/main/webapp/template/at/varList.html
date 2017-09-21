@@ -30,10 +30,10 @@
         <thead>
         <tr>
             <th style="width:5%">名称</th>
-            <th style="width:10%">值</th>
-            <th style="width:3%">模板</th>
-            <th style="width:5%">创建人</th>
-            <th style="width:10%">操作</th>
+            <th style="width:12%">值</th>
+            <th style="width:8%">模板</th>
+            <th style="width:3%">创建人</th>
+            <th style="width:6%">操作</th>
         </tr>
         </thead>
 
@@ -44,8 +44,8 @@
                 <a href="#">{{bean.key}}</a>
             </td>
             <td>{{bean.value}}</td>
-            <td>{{bean.templateId}}</td>
-            <td>{{bean.userId | remote : 'findUserById,userName'}}</td>
+            <td>{{bean.templateId | remote : 'findTemplateById,name'}}</td>
+            <td>{{bean.userId | remote : 'findUserById,nickName'}}</td>
             <td>
                 <a href="javascript:void(0)" name="enterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>
                 <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>

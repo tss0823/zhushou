@@ -44,6 +44,14 @@ public class ZpluginUtils {
         String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.logPath);
         return value;
     }
+    public static void setWsLogPath(String wsLogPath){
+        PropertiesComponent.getInstance().setValue(ZpluginConstant.wsLogPath,wsLogPath);
+    }
+
+    public static String getWsLogPath(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.wsLogPath);
+        return value;
+    }
 
     public static ResponseObject authCheck(){
         User user = ZpluginUtils.getAccountInfo();
@@ -56,6 +64,15 @@ public class ZpluginUtils {
         }
 
         return responseObject;
+    }
+
+    public static boolean isLogin(){
+        User user = ZpluginUtils.getAccountInfo();
+        if(StringUtils.isBlank(user.getAccountNo()) || StringUtils.isBlank(user.getPwd())){
+            return false;
+        }
+        ResponseObject responseObject = CodeBuildUtils.login(user.getAccountNo(), user.getPwd());
+        return responseObject.isSuccess();
     }
 
 }

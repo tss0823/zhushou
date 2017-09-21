@@ -189,7 +189,7 @@ public class AppLogController extends BaseController {
 
     @RequestMapping("findMasterByStackId")
     @NeedLogin
-    public ResponseObject findMasterByStackId(@RequestParam String month, @RequestParam String model, @RequestParam String stackId) {
+    public ResponseObject findMasterByStackId(@RequestParam(required = false) String month, @RequestParam String model, @RequestParam String stackId) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         LogVo logVo = logService.findMasterByStackId(month, model, stackId);
         LogWebVo logWebVo = BeanUtils.beanCopy(logVo, LogWebVo.class);

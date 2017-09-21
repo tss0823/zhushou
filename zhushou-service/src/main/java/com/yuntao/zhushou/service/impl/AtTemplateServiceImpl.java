@@ -71,6 +71,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
     @Autowired
     private AtVariableService atVariableService;
 
+
     @Override
     public List<AtTemplate> selectList(AtTemplateQuery query) {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
@@ -222,10 +223,27 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         Pagination<LogWebVo> pagination = logService.selectList(logQuery, logTextQuery);
 
         List<LogWebVo> dataList = pagination.getDataList();
+        List<String> savedKeyList = new ArrayList<>();
         for (LogWebVo logWebVo : dataList) {
+            String url = logWebVo.getUrl();
+            if (!logWebVo.getStatus().toString().startsWith("2") && !logWebVo.getStatus().toString().startsWith("3")) { //2xxx and 3xxx is ok
+                continue;
+            }
+            if (url.endsWith(".png") || url.endsWith(".css") || url.endsWith(".js") || url.contains(".woff") || url.endsWith(".xml")) { //资源文件过滤调
+                continue;
+            }
+            String parameters = logWebVo.getParameters();
+            String saveKey = url.trim()+"_"+parameters.trim();
+            if(savedKeyList.contains(saveKey)){  //自动过滤调重复的req
+                continue;
+            }
+            //add
+            savedKeyList.add(saveKey);
+
             //active
             AtActive atActive = new AtActive();
             atActive.setTemplateId(id);
+            atActive.setLogStackId(logWebVo.getStackId());
             atActive.setName(logWebVo.getUrl());
             atActive.setUrl(logWebVo.getReqUrl());
             String reqHeaders = logWebVo.getReqHeaders();
@@ -238,7 +256,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             atActiveService.insert(atActive);
 
             //处理参数模板
-            String parameters = logWebVo.getParameters();
+            parameters = logWebVo.getParameters();
             JSONObject paramJsonObj = JSON.parseObject(parameters);
             Set<String> keySet = paramJsonObj.keySet();
             for (String key : keySet) {
@@ -305,6 +323,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
     private void httpChainExecute(Long processInstId, String companyKey,List<AtActiveVo> activeVoList,Map<String, Object> variableMap) {
         ResponseRes lastResponseRes = null;
+        Map<String,String> resCookieMap = new HashMap<>();
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             AtActiveInst atActiveInst = new AtActiveInst();
             atActiveInst.setStatus(YesNoIntType.yes.getCode());
@@ -320,7 +339,6 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 requestRes.setHeaders(headers);
                 atActiveInst.setReqHeader(headerRow);
 
-                Map<String,String> resCookieMap = new HashMap<>();
 
 
                 //params
@@ -391,6 +409,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
                 //execute http request
                 lastResponseRes = HttpNewUtils.execute(requestRes);
+                if(lastResponseRes.getStatus() != 200){
+                   throw new BizException("活动栈执行失败");
+                }
 
                 //cookie store
                 Map<String, String> resHeaderMap = lastResponseRes.getHeaders();
@@ -407,8 +428,11 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
                 String lastResult = new String(lastResponseRes.getResult());
                 ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
-                variableMap.put("responseObject",responseObject);
-                variableMap.put("responseHeader",lastResponseRes.getHeaders());
+                atActiveInst.setStatus(responseObject.isSuccess() ? YesNoIntType.yes.getCode() : YesNoIntType.no.getCode());
+                String resObjKey = activeVo.getName().substring(1).replaceAll("/","_");
+                variableMap.put(resObjKey,responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
+                variableMap.put("prevResponseObject",responseObject);
+                variableMap.put("prevResponseHeader",lastResponseRes.getHeaders());
 
             } catch (Exception e) {
                 atActiveInst.setStatus(YesNoIntType.no.getCode());
@@ -438,6 +462,10 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             msgResponseObject.setBizType(MsgConstant.ResponseBizType.TEST_ACTIVE_HTTP_EXCUTE);
             msgResponseObject.setData(JsonUtils.object2Json(activeExecuteVo));
             dzMessageHelperServer.offerSendMsg(msgResponseObject);
+
+            if(!activeExecuteVo.isSuccess()){  //只要其中一个活动栈失败，就终止
+                break;
+            }
         }
     }
 

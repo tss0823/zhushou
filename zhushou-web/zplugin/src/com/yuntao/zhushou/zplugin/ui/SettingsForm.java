@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.zplugin.CodeBuildUtils;
+import com.yuntao.zhushou.zplugin.WsUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +30,7 @@ public class SettingsForm {
             public void actionPerformed(ActionEvent actionEvent) {
                 ResponseObject responseObject = CodeBuildUtils.login(txtAccountNo.getText(), txtPwd.getText());
                 if (responseObject.isSuccess()) {
+                    WsUtils.openWsConnect();
                     JOptionPane.showMessageDialog(mainPanel, "账号检测合法！");
                 } else {
                     JOptionPane.showMessageDialog(mainPanel, "账号检测不合法", "错误", JOptionPane.ERROR_MESSAGE);

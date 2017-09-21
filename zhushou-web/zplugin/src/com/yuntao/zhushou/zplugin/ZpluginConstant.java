@@ -11,6 +11,7 @@ public interface ZpluginConstant {
     String pwd = "zhushou.pwd";
     String testBranch = "zhushou.testBranch";
     String logPath = "zhushou.logPath";
+    String wsLogPath = "zhushou.wsLogPath";
 
 
 }

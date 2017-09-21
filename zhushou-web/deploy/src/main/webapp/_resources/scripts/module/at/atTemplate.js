@@ -52,6 +52,16 @@
                     $(item).hide();
                 }
             });
+            $("a[name='btnResDataView']").click(function () {
+                var dataId = $(this).attr("data");
+                if(!dataId){
+                    alert("没有返回数据");
+                    return;
+                }
+                var month = moment().format("YYYY.MM");
+                YT.deploy.appLog.openResponseDialog(dataId,month,$("#model").val());
+            });
+
             $("a[name='btnActiveDel']").click(function () {
                 var dataId = $(this).attr("data");
                 YT.deploy.atTemplate.delActive(dataId);
@@ -299,13 +309,13 @@
 
             $("#" + YT.deploy.formId).find("#startTime").datetimepicker({
                 lang: 'ch',
-                format: 'Y-m-d H:i',
+                format: 'Y-m-d H:i:s',
                 todayBtn: true,
                 autoclose: true,
             });
             $("#" + YT.deploy.formId).find("#endTime").datetimepicker({
                 lang: 'ch',
-                format: 'Y-m-d H:i',
+                format: 'Y-m-d H:i:s',
                 todayBtn: true,
                 autoclose: true,
             });
@@ -487,8 +497,8 @@
          * @param startTimeVal
          */
         genEndTime: function (startTimeVal) {
-            // debugger;
-            if (startTimeVal.length != 16) {
+            debugger;
+            if (startTimeVal.length != 19) {
                 return;
             }
             var rangeMinute = $("#rangeMinute").val();
@@ -497,7 +507,7 @@
             }
             // var hour = startTimeVal.substr(11,2);
             // var minute = startTimeVal.substr(14,2);
-            var endTimeObj = moment(startTimeVal, "YYYY-MM-DD HH:mm").add(rangeMinute, "m");
+            var endTimeObj = moment(startTimeVal, "YYYY-MM-DD HH:mm").add(rangeMinute,"m");
             var endTimeVal = endTimeObj.format("YYYY-MM-DD HH:mm");
             $("#endTime").val(endTimeVal);
         },

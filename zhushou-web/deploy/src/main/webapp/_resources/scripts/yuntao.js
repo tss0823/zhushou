@@ -580,7 +580,7 @@
                     var render = template.compile(source);
                     var html = render(data);
                     $(".page-content").html(html);
-                    debugger;
+                    // debugger;
                     YT.deploy.route_callback(d,data);
                     YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, extData);
 

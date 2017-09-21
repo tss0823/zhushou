@@ -15,12 +15,13 @@
         <result column="gmtCreate" property="gmtCreate"/>
         <result column="gmtModify" property="gmtModify"/>
         <result column="delStatus" property="delStatus"/>
+        <result column="logStackId" property="logStackId"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
     `id`,`templateId`,`name`,`url`,`method`,`reqContentType`,`headerRow`,`gmtCreate`,       
-    `gmtModify`,`delStatus`       
+    `gmtModify`,`delStatus`,`logStackId`
     
   </sql>
 
@@ -39,6 +40,7 @@
         <if test="method != null and method != '' ">and `method` = #{method}</if>
         <if test="reqContentType != null and reqContentType != '' ">and `reqContentType` = #{reqContentType}</if>
         <if test="headerRow != null and headerRow != '' ">and `headerRow` = #{headerRow}</if>
+        <if test="logStackId != null and logStackId != '' ">and `logStackId` = #{logStackId}</if>
     </sql>
 
 
@@ -84,12 +86,12 @@
         <include refid="Base_Table_Name"/>
         (
         `templateId`,`name`,`url`,`method`,`reqContentType`,`headerRow`,
-        `gmtCreate`,`gmtModify`,`delStatus`
+        `gmtCreate`,`gmtModify`,`delStatus`,`logStackId`
         )
         values
         (
         #{templateId},#{name},#{url},#{method},#{reqContentType},#{headerRow},now(6),now(6),
-        1
+        1,#{logStackId}
         )
     </insert>
 
@@ -103,6 +105,7 @@
             <if test="method != null and method !=''">`method` = #{method},</if>
             <if test="reqContentType != null and reqContentType !=''">`reqContentType` = #{reqContentType},</if>
             <if test="headerRow != null and headerRow !=''">`headerRow` = #{headerRow},</if>
+            <if test="logStackId != null and logStackId !=''">`logStackId` = #{logStackId},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

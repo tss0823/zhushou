@@ -72,7 +72,7 @@ public class FieldSelForm {
                         try {
                             if (!actionText.equals("删除实体")) {
                                 if (actionText.equals("新建实体")) {
-                                    int seleSize = listMethod.getLastVisibleIndex()+1;
+                                    int seleSize = listMethod.getLastVisibleIndex() + 1;
 
                                     int selectArray[] = new int[seleSize];
                                     for (int i = 0; i < seleSize; i++) {
@@ -87,6 +87,7 @@ public class FieldSelForm {
                                 entityParam.setPropertyList(selectedValuesList);
                             }
 
+                            frame.setCanClose(false);
                             btnExecute.setEnabled(false);
                             txtPalProcess.setVisible(true);
                             txtPalProcess.setText("执行中，请稍后...");
@@ -95,9 +96,9 @@ public class FieldSelForm {
                             btnExecute.setEnabled(false);
                             txtPalProcess.setVisible(true);
                             txtPalProcess.setText("执行中，请稍后...");
-                            Thread.sleep(5000);
+//                            Thread.sleep(5000);
                             if (actionText.equals("新建实体")) {
-                                //actionManager.newEntity(projectFilePath, entityParam);
+                                actionManager.newEntity(projectFilePath, entityParam);
                             } else if (actionText.equals("添加属性")) {
                                 actionManager.addProperty(projectFilePath, entityParam);
 
@@ -121,6 +122,7 @@ public class FieldSelForm {
                             btnExecute.setEnabled(true);
                             txtPalProcess.setText("执行出错了...");
                         }
+                        frame.setCanClose(true);
 
                     }
                 }).start();
@@ -133,7 +135,9 @@ public class FieldSelForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //close hide
-                frame.setVisible(false);
+                if (frame.isCanClose()) {
+                    frame.setVisible(false);
+                }
 
             }
         });

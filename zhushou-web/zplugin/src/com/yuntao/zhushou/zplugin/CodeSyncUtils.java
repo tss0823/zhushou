@@ -384,14 +384,14 @@ public class CodeSyncUtils {
                 File newFile = new File(newFilePath);//
                 String fileContent = FileUtils.readFileToString(newFile);
                 if (newFile.getName().endsWith("DalConfig.java")) {
-                    String pattern = "@Bean[^" + javaEnName + "Mapper]*public " + javaEnName + "Mapper[^\\}]*\\}\\s*\\n?\\s?\\t?";
+                    String pattern = "@Bean[^" + javaEnName + "Mapper]*public " + javaEnName + "Mapper[^\\}]*\\}\\s*\\n?\\s*\\t?";
                     fileContent = fileContent.replaceAll(pattern, "");
                     FileUtils.write(newFile, fileContent);
                     continue;
                 } else if (newFile.getName().endsWith("mybatis-config.xml")) {
-                    String pattern = "<typeAlias alias=\"" + javaEnName + "\"[^/>]+/>\\s*\\n?\\s?\\t?";
+                    String pattern = "<typeAlias alias=\"" + javaEnName + "\"[^/>]+/>\\s*\\n?\\s*\\t?";
                     fileContent = fileContent.replaceAll(pattern, "");
-                    pattern = "<mapper resource=\"mapper/" + javaEnName + "Mapper\\.xml[^/>]+/>\\s*\\n?\\s?\\t?";
+                    pattern = "<mapper resource=\"mapper/" + javaEnName + "Mapper\\.xml[^/>]+/>\\s*\\n?\\s*\\t?";
                     fileContent = fileContent.replaceAll(pattern, "");
                     FileUtils.write(newFile, fileContent);
                     continue;

@@ -4,7 +4,9 @@
  */
 (function (YT) {
     if (!YT.deploy.appLog) {
-        YT.deploy.appLog = {};
+        YT.deploy.appLog = {
+           needLoad : true
+        };
     }
 
     var common = {
@@ -12,7 +14,11 @@
         formId: "appLogForm",
 
         route_callback: function (d, data) {
-            console.log("app list after render call");
+            // debugger;
+            if(!YT.deploy.appLog.needLoad){
+                return;
+            }
+            console.log("appLog list after render call");
             //组件初始化之后
             var appList = YT.deploy.data.appList;
             var docList = YT.deploy.data.docList;
@@ -120,14 +126,16 @@
             var enums = YT.deploy.data.enums;
 
             $("#startTime").datetimepicker({
-                showSecond: true,
-                // showMillisec: true,
-                // timeFormat: 'hh:mm:ss:l'
+                lang: 'ch',
+                format: 'Y-m-d H:i:s',
+                todayBtn: true,
+                autoclose: true,
             });
             $("#endTime").datetimepicker({
-                showSecond: true,
-                // showMillisec: true,
-                // timeFormat: 'hh:mm:ss:l'
+                lang: 'ch',
+                format: 'Y-m-d H:i:s',
+                todayBtn: true,
+                autoclose: true,
             });
 
             // //logModel
@@ -226,7 +234,10 @@
             //btnResponse
             $("a[id='btnResponse']").click(function () {
                 var id = $(this).attr("data");
-                YT.deploy.appLog.openResponseDialog(id);
+                var month = $("#month").val();
+                var checked = $("#model").attr("checked");
+                var model = checked ? "prod" : "test";
+                YT.deploy.appLog.openResponseDialog(id,month,model);
             });
 
             //msg
@@ -289,7 +300,7 @@
     $.extend(YT.deploy, common);
 
 
-    YT.deploy.appLog = {
+    var functions = {
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
@@ -340,10 +351,8 @@
 
         },
 
-        openResponseDialog: function (id) {
-            var checked = $("#model").attr("checked");
-            var checkState = checked ? "prod" : "test";
-            var params = {stackId: id, month: $("#month").val(), model: checkState};
+        openResponseDialog: function (id,month,model) {
+            var params = {stackId: id, month: month, model: model};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
                 var jsonLog = d.data.response;
                 var jsonObj = JSON.parse(jsonLog);
@@ -723,5 +732,7 @@
 
 
     }
+
+    $.extend(YT.deploy.appLog, functions);
 
 })(window.YunTao);

@@ -22,9 +22,12 @@ public class AtActive implements Serializable {
 	
 	/**  ID * */
 	private Long id;
-		
+
 	/**  模板ID * */
 	private Long templateId;
+
+	/**  日志栈id * */
+	private String logStackId;
 		
 	/**  名称 * */
 	private String name;
@@ -124,9 +127,13 @@ public class AtActive implements Serializable {
 	public Integer getDelStatus() {
 		return this.delStatus;
 	}
-	
 
 
+	public String getLogStackId() {
+		return logStackId;
+	}
 
+	public void setLogStackId(String logStackId) {
+		this.logStackId = logStackId;
+	}
 }
-

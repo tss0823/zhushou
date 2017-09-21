@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.yuntao.zhushou.common.utils.ExceptionUtils;
+import com.yuntao.zhushou.zplugin.WsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -25,6 +26,10 @@ public class MainAction extends DumbAwareAction {
         // TODO: insert action logic here
         try {
             if (e.getPresentation().getText().equals("部署测试环境")) {
+                //启动ws
+                if (WsUtils.isClose()) {
+                   WsUtils.openWsConnect();
+                }
                 ActionManager inst = ActionManager.getInstance();
                 AnAction other = inst.getAction("OpenFixFileConsoleAction");  // another plugin's action
 //                if(other.getTemplatePresentation().isVisible()){

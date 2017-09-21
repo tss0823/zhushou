@@ -177,7 +177,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         }
         if (StringUtils.isNotEmpty(query.getStartTime())) {
             try {
-                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm");
+                Date startTime = DateUtils.parseDate(query.getStartTime(), "yyyy-MM-dd HH:mm:ss");
                 queryBuilder.must(QueryBuilders.rangeQuery("timeLong").gte(startTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);
@@ -185,7 +185,7 @@ public class LogServiceImpl extends AbstService implements LogService {
         }
         if (StringUtils.isNotEmpty(query.getEndTime())) {
             try {
-                Date endTime = DateUtils.parseDate(query.getEndTime(), "yyyy-MM-dd HH:mm");
+                Date endTime = DateUtils.parseDate(query.getEndTime(), "yyyy-MM-dd HH:mm:ss");
                 queryBuilder.must(QueryBuilders.rangeQuery("timeLong").lte(endTime.getTime()));
             } catch (ParseException e) {
                 throw new RuntimeException(e);

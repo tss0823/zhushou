@@ -20,6 +20,11 @@
         <li>add del property</li>
         <li>add del entity</li>
       </ul>
+      <b>2.1</b> (9/20/2017)
+      <ul>
+        <li>fix some bug</li>
+        <li>ws client improved</li>
+      </ul>
     ]]>
   </change-notes>
 
