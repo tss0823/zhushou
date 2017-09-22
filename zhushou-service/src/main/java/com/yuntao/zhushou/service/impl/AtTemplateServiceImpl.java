@@ -13,6 +13,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.mapper.AtTemplateMapper;
 import com.yuntao.zhushou.model.domain.*;
+import com.yuntao.zhushou.model.enums.AtActiveCollectType;
 import com.yuntao.zhushou.model.enums.AtParameterDataType;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.param.DataMap;
@@ -175,6 +176,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         //
         AtActiveQuery activeQuery = new AtActiveQuery();
         activeQuery.setTemplateId(templteId);
+        activeQuery.setOrderByColumn("orderIndex");
+        activeQuery.setAscOrDesc("asc");
         List<AtActive> activeList = atActiveService.selectList(activeQuery);
         List<AtActiveVo> activeVoList = CollectUtils.transList(activeList, AtActiveVo.class);
         if (CollectionUtils.isEmpty(activeVoList)) {
@@ -186,11 +189,11 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             String headerRow = activeVo.getHeaderRow();
             if (StringUtils.isNotEmpty(headerRow)) {
                 Map headerMap = JsonUtils.json2Object(headerRow, Map.class);
-                Set<Map.Entry<String,String>> headerSet = headerMap.entrySet();
+                Set<Map.Entry<String, String>> headerSet = headerMap.entrySet();
                 List<DataMap> headerMapList = new ArrayList<>();
-                for (Map.Entry<String,String> entry : headerSet) {
-                    DataMap dataMap = new DataMap(entry.getKey(),entry.getValue());
-                    headerMapList.add(dataMap) ;
+                for (Map.Entry<String, String> entry : headerSet) {
+                    DataMap dataMap = new DataMap(entry.getKey(), entry.getValue());
+                    headerMapList.add(dataMap);
                 }
                 activeVo.setDataMapList(headerMapList);
             }
@@ -209,21 +212,47 @@ public class AtTemplateServiceImpl implements AtTemplateService {
 
     @Transactional
     @Override
-    public void collect(Long id,String companyKey, String model,String appName, String mobile, String startTime, String endTime) {
-        LogQuery logQuery = new LogQuery();
-        logQuery.setPageSize(1000);
-        logQuery.setKey(companyKey);
-        logQuery.setModel(model);
-        logQuery.setAppName(appName);
-        logQuery.setMaster(true);
-        logQuery.setStartTime(startTime);
-        logQuery.setEndTime(endTime);
-        LogTextQuery logTextQuery = new LogTextQuery();
-        logTextQuery.setMobile(mobile);
-        Pagination<LogWebVo> pagination = logService.selectList(logQuery, logTextQuery);
+    public void collect(Long id, String companyKey, String model, Integer type, String appName, String mobile, String startTime, String endTime,
+                        List<String> logStackIds, Integer orderIndex) {
+        List<LogWebVo> dataList = new ArrayList<>();
+        if (AtActiveCollectType.ids.getCode() == type) {
+            for (String logStackId : logStackIds) {
+                LogWebVo logWebVo = logService.findMasterByStackId(null, model, logStackId);
+                dataList.add(logWebVo);
+            }
+        } else {
+            LogQuery logQuery = new LogQuery();
+            logQuery.setPageSize(1000);
+            logQuery.setKey(companyKey);
+            logQuery.setModel(model);
+            logQuery.setAppName(appName);
+            logQuery.setMaster(true);
+            logQuery.setStartTime(startTime);
+            logQuery.setEndTime(endTime);
+            LogTextQuery logTextQuery = new LogTextQuery();
+            logTextQuery.setMobile(mobile);
+            Pagination<LogWebVo> pagination = logService.selectList(logQuery, logTextQuery);
+            dataList = pagination.getDataList();
 
-        List<LogWebVo> dataList = pagination.getDataList();
+        }
         List<String> savedKeyList = new ArrayList<>();
+        //获取最后一个active
+        int lastOrderIndex = 0;
+        if (orderIndex != null) {
+            lastOrderIndex = orderIndex - 1;
+        } else {
+            AtActiveQuery activeQuery = new AtActiveQuery();
+            activeQuery.setTemplateId(id);
+            activeQuery.setOrderByColumn("orderIndex");
+            activeQuery.setAscOrDesc("desc");
+            activeQuery.setLimit(1);
+            List<AtActive> activeList = atActiveService.selectList(activeQuery);
+            if (CollectionUtils.isNotEmpty(activeList)) {
+                lastOrderIndex = NumberUtil.getNumber(activeList.get(0).getOrderIndex());
+            }
+        }
+
+
         for (LogWebVo logWebVo : dataList) {
             String url = logWebVo.getUrl();
             if (!logWebVo.getStatus().toString().startsWith("2") && !logWebVo.getStatus().toString().startsWith("3")) { //2xxx and 3xxx is ok
@@ -233,8 +262,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 continue;
             }
             String parameters = logWebVo.getParameters();
-            String saveKey = url.trim()+"_"+parameters.trim();
-            if(savedKeyList.contains(saveKey)){  //自动过滤调重复的req
+            String saveKey = url.trim() + "_" + parameters.trim();
+            if (savedKeyList.contains(saveKey)) {  //自动过滤调重复的req
                 continue;
             }
             //add
@@ -253,6 +282,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             atActive.setReqContentType("application/x-www-form-urlencoded");
             atActive.setHeaderRow(headerJsonObj.toString());
             atActive.setMethod("POST");
+            atActive.setOrderIndex(++lastOrderIndex);
             atActiveService.insert(atActive);
 
             //处理参数模板
@@ -268,6 +298,20 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 parameter.setDataType(AtParameterDataType.statics.getCode());
                 atParameterService.insert(parameter);
             }
+        }
+
+    }
+
+    @Transactional
+    public void saveActiveSort(Long templateId, List<Long> activeIds) {
+        int orderIndex = 1;
+        for (Long activeId : activeIds) {
+            AtActive atActive = atActiveService.findById(activeId);
+            atActive.setOrderIndex(orderIndex);
+            atActiveService.updateById(atActive);
+            orderIndex++;
+
+
         }
 
     }
@@ -298,7 +342,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         Company company = companyService.findById(companyId);
 
         try {
-            httpChainExecute(atProcessInst.getId(), company.getKey(),activeVoList, variableMap);
+            httpChainExecute(atProcessInst.getId(), company.getKey(), activeVoList, variableMap);
         } catch (Exception e) {
             atProcessInst.setStatus(YesNoIntType.no.getCode());
             atProcessInst.setErrMsg(ExceptionUtils.getPrintStackTrace(e));
@@ -321,9 +365,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         dzMessageHelperServer.offerSendMsg(msgResponseObject);
     }
 
-    private void httpChainExecute(Long processInstId, String companyKey,List<AtActiveVo> activeVoList,Map<String, Object> variableMap) {
+    private void httpChainExecute(Long processInstId, String companyKey, List<AtActiveVo> activeVoList, Map<String, Object> variableMap) {
         ResponseRes lastResponseRes = null;
-        Map<String,String> resCookieMap = new HashMap<>();
+        Map<String, String> resCookieMap = new HashMap<>();
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             AtActiveInst atActiveInst = new AtActiveInst();
             atActiveInst.setStatus(YesNoIntType.yes.getCode());
@@ -338,7 +382,6 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 Map<String, String> headers = JsonUtils.json2Object(headerRow, HashMap.class);
                 requestRes.setHeaders(headers);
                 atActiveInst.setReqHeader(headerRow);
-
 
 
                 //params
@@ -357,7 +400,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                         String dataValue = parameterVo.getDataValue();
                         if (dataType == AtParameterDataType.statics.getCode()) {  //静态
                             value = dataValue.toString();
-                            value = TemplateUtils.render(value,variableMap);
+                            value = TemplateUtils.render(value, variableMap);
 
                         } else if (dataType == AtParameterDataType.integer.getCode()) {  //整数
                             String[] strings = dataValue.split(",");
@@ -385,7 +428,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                             }
 
                             value = dataValue.toString();
-                            value = TemplateUtils.render(value,variableMap);
+                            value = TemplateUtils.render(value, variableMap);
                         } else if (dataType == AtParameterDataType.inter.getCode()) { //接口，主要是RPC 接口取值，后续再考虑 TODO
 
                         }
@@ -397,20 +440,20 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 //end param
 
                 //cookie set header
-                if(headers == null){
+                if (headers == null) {
                     headers = new HashMap<>();
                 }
                 Set<Map.Entry<String, String>> entries = resCookieMap.entrySet();
                 for (Map.Entry<String, String> entry : entries) {
-                    headers.put(entry.getKey(),entry.getValue());
+                    headers.put(entry.getKey(), entry.getValue());
                 }
                 requestRes.setHeaders(headers);
                 //end
 
                 //execute http request
                 lastResponseRes = HttpNewUtils.execute(requestRes);
-                if(lastResponseRes.getStatus() != 200){
-                   throw new BizException("活动栈执行失败");
+                if (lastResponseRes.getStatus() != 200) {
+                    throw new BizException("活动栈执行失败");
                 }
 
                 //cookie store
@@ -421,7 +464,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                     while (st.hasMoreElements()) {
                         String cookieEle = st.nextElement().toString();
                         String[] cookieStrs = cookieEle.split("=");
-                        resCookieMap.put(cookieStrs[0],cookieStrs[1]);
+                        resCookieMap.put(cookieStrs[0], cookieStrs[1]);
                     }
                 }
                 //end
@@ -429,10 +472,10 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 String lastResult = new String(lastResponseRes.getResult());
                 ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
                 atActiveInst.setStatus(responseObject.isSuccess() ? YesNoIntType.yes.getCode() : YesNoIntType.no.getCode());
-                String resObjKey = activeVo.getName().substring(1).replaceAll("/","_");
-                variableMap.put(resObjKey,responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
-                variableMap.put("prevResponseObject",responseObject);
-                variableMap.put("prevResponseHeader",lastResponseRes.getHeaders());
+                String resObjKey = activeVo.getName().substring(1).replaceAll("/", "_");
+                variableMap.put(resObjKey, responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
+                variableMap.put("prevResponseObject", responseObject);
+                variableMap.put("prevResponseHeader", lastResponseRes.getHeaders());
 
             } catch (Exception e) {
                 atActiveInst.setStatus(YesNoIntType.no.getCode());
@@ -463,7 +506,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             msgResponseObject.setData(JsonUtils.object2Json(activeExecuteVo));
             dzMessageHelperServer.offerSendMsg(msgResponseObject);
 
-            if(!activeExecuteVo.isSuccess()){  //只要其中一个活动栈失败，就终止
+            if (!activeExecuteVo.isSuccess()) {  //只要其中一个活动栈失败，就终止
                 break;
             }
         }

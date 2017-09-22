@@ -84,8 +84,17 @@ public interface AtTemplateService {
      * @param mobile
      * @param startTime
      * @param endTime
+     * @param logStackIds
      */
-    void collect(Long id,String companyKey, String model, String appName, String mobile, String startTime, String endTime);
+    void collect(Long id,String companyKey, String model,Integer type, String appName, String mobile, String startTime,
+                 String endTime,List<String> logStackIds,Integer orderIndex);
+
+    /**
+     * 保存活动排序
+     * @param templateId
+     * @param activeIds
+     */
+    void saveActiveSort(Long templateId, List<Long> activeIds);
 
     /**
      * 发起流程

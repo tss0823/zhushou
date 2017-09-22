@@ -146,7 +146,6 @@
             });
             //创建资源文档
             $("#btnNewRes").click(function () {
-                YT.deploy.formId = "resNewForm";
                 YT.deploy.routeTpl("/idoc/newRes.html",{tp_title:"资源文档新建"});
             });
 
@@ -256,7 +255,7 @@
                 YT.deploy.util.reqPost("/idocUrl/deleteById", {id:id}, function (d) {
                     if (d.success) {
                         alert("删除成功");
-                        YT.deploy.idocList.queryEnums(1);
+                        YT.deploy.idocList.query(1);
                     } else {
                         alert("删除失败,err=" + d.message);
                     }
@@ -296,7 +295,7 @@
                 if (!confirm("您确认需要同步创建吗？")) {
                     return;
                 }
-                YT.deploy.util.reqPbtnSyncUpdateost("/idocUrl/syncNew", {appName:"member"}, function (d) {
+                YT.deploy.util.reqPost("/idocUrl/syncNew", {appName:"member"}, function (d) {
                     if (d.success) {
                         alert("同步创建成功");
                     } else {

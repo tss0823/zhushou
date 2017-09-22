@@ -144,13 +144,22 @@ public class AtTemplateController extends BaseController {
 
     @RequestMapping("collect")
     @NeedLogin
-    public ResponseObject collect(@RequestParam  Long id,@RequestParam String appName,
-                                  @RequestParam String mobile, @RequestParam String startTime,@RequestParam String endTime) {
+    public ResponseObject collect(@RequestParam  Long id,@RequestParam Integer type,@RequestParam(required = false) String appName,
+                                  @RequestParam String mobile, @RequestParam String startTime,@RequestParam String endTime,
+                                  @RequestParam List<String> logStackIds, @RequestParam(required = false) Integer orderIndex) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         Company company = companyService.findById(user.getCompanyId());
         AtTemplate atTemplate = atTemplateService.findById(id);
-        atTemplateService.collect(id,company.getKey(),atTemplate.getModel(),appName,mobile,startTime,endTime);
+        atTemplateService.collect(id,company.getKey(),atTemplate.getModel(),type,appName,mobile,startTime,endTime,logStackIds,orderIndex);
+        return responseObject;
+    }
+
+    @RequestMapping("saveActiveSort")
+    @NeedLogin
+    public ResponseObject saveActiveSort(@RequestParam Long templateId,@RequestParam List<Long> activeIds) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        atTemplateService.saveActiveSort(templateId,activeIds);
         return responseObject;
     }
 

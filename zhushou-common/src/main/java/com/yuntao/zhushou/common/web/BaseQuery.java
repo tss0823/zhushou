@@ -30,6 +30,8 @@ public class BaseQuery implements Serializable {
 
     private String ascOrDesc = "desc";
 
+    private Integer limit;
+
 
 
     public int getPageSize() {
@@ -102,5 +104,13 @@ public class BaseQuery implements Serializable {
 
     public void setAscOrDesc(String ascOrDesc) {
         this.ascOrDesc = ascOrDesc;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

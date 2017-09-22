@@ -9,6 +9,8 @@
 
     var common = {
 
+        formId: "idocNewForm",
+
         route_callback: function (d, data) {
             console.log("idoc bind  after render call");
             //组件初始化之后
@@ -18,13 +20,17 @@
 
             var enums = YT.deploy.data.enums;
 
-            //moduleType
-            YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
-
-            //是否私有
-            YT.deploy.util.initEnumSelect("yesNoType", "pri", data.pri);
 
             if($("#resNewForm").length == 1) {  //资源文档
+
+                YT.deploy.formId = "resNewForm";
+
+                //moduleType
+                YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
+
+                //是否私有
+                YT.deploy.util.initEnumSelect("yesNoType", "pri", data.pri);
+
                 // debugger;
                 YT.deploy.idoc.resDocMDE = new SimpleMDE({
                     element: document.getElementById("resDoc"),
@@ -35,9 +41,7 @@
                         table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
                     },
                 });
-            }
-
-            if($("#resViewForm").length == 1) {  //资源文档
+            }else if($("#resViewForm").length == 1) {  //资源文档
                 // debugger;
                 YT.deploy.idoc.resDocMDE = new SimpleMDE({
                     toolbar: false,
@@ -53,7 +57,6 @@
                 $(".CodeMirror").hide();
             }
 
-            // initialValue: "Hello world!",
 
             //添加
             $("button[id='btnAdd']").click(function () {
@@ -94,9 +97,10 @@
             });
 
 
-            $("button[id='btnSave']").click(function () {
 
-                var params = YT.deploy.util.getFormParams("#idocForm");
+            $("#idocNewForm").find("button[id='btnSave']").click(function () {
+
+                var params = YT.deploy.util.getFormParams("#idocNewForm");
                 $("#tbReqParam").find("tr[name='dataItem']").each(function (index, item) {
                     var code = $(item).find("input[id='code']").val();
                     // debugger;

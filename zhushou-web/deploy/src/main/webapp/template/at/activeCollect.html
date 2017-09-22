@@ -11,6 +11,7 @@
         <div class="col-xs-12">
             <form class="form-horizontal" role="form" id="activeCollectForm" onsubmit="return false;">
                 <input type="hidden" id="id" name="id" value="{{templateId}}">
+                <input type="hidden" id="orderIndex" name="orderIndex" value="{{orderIndex}}">
                 <div class="space-4"></div>
                 <div class="form-group" style="padding-left: 50px">
                     <label>应用：</label>
@@ -27,8 +28,21 @@
                         <input type="text" id="mobile" name="mobile" value="{{mobile}}" placeholder="请输入账号" class="input-xlarge">
                     </span>
                 </div>
-                <div class="space-4"></div>
                 <div class="form-group" style="padding-left: 50px">
+                    <label>采集类型：</label>
+                    <span>
+                        <select id="type" name="type">
+                        </select>
+                    </span>
+                </div>
+                <div class="form-group" style="padding-left: 50px" id="blockLogIds">
+                    <label>LogIds：</label>
+                    <span>
+                        <textarea id="logStackIds" name="logStackIds" style="width:700px;height:80px"></textarea>
+                    </span>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px;display:none" id="blockTime">
                     <label>采集时间：</label>
                     <span>
                         <input type="text" id="startTime" name="startTime" value="{{startTime}}" placeholder="请输入开始时间" style="width:180px">

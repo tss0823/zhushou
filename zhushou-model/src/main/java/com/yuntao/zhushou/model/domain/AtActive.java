@@ -49,9 +49,12 @@ public class AtActive implements Serializable {
 		
 	/**  修改时间 * */
 	private Date gmtModify;
-		
+
 	/**  是否删除（1：没有；0；已删除） * */
 	private Integer delStatus;
+
+	/**  排序 * */
+	private Integer orderIndex;
 		
 	
 	public AtActive(){
@@ -135,5 +138,13 @@ public class AtActive implements Serializable {
 
 	public void setLogStackId(String logStackId) {
 		this.logStackId = logStackId;
+	}
+
+	public Integer getOrderIndex() {
+		return orderIndex;
+	}
+
+	public void setOrderIndex(Integer orderIndex) {
+		this.orderIndex = orderIndex;
 	}
 }

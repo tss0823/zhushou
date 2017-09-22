@@ -67,6 +67,13 @@
                 YT.deploy.atTemplate.delActive(dataId);
             });
 
+            $("a[name='btnActiveInsert']").click(function () {
+                var id = $("#templateId").val();
+                var orderIndex = $(this).attr("orderIndex");
+                // debugger;
+                YT.deploy.atTemplate.openActiveCollectWin(id,parseInt(orderIndex)-1);
+            });
+
             $("#btnQuery").click(function () {
                 var pageNum = 1;
                 // var pageSize = $("#pageSize").val();
@@ -160,6 +167,47 @@
                     var value = $(this).attr("data");
                     YT.deploy.util.initEnumSelect("paramDataType", id, value);
                 });
+
+                //list start
+                //添加
+                $(document).off("click", "button[id='btnAddActive']");
+                $(document).on("click", "button[id='btnAddActive']", function () {
+                    // debugger;
+                    var id = $("#templateId").val();
+                    var orderIndex = 1;
+                    if(data.activeVoList){
+                        orderIndex = data.activeVoList.length+1;
+                    }
+                    // debugger;
+                    YT.deploy.atTemplate.openActiveCollectWin(id,orderIndex);
+                });
+
+                //上移
+                $(document).off("click", "a[name='itemArrowUpList']");
+                $(document).on("click", "a[name='itemArrowUpList']", function () {
+                    var $thisTr = $(this).parents("tbody[name='tbContent']");
+                    // debugger;
+                    var $prevTr = $thisTr.prev();
+                    $thisTr.after($prevTr);
+                    // $prevTr.before($thisTr);
+                });
+
+                //下移
+                $(document).off("click", "a[name='itemArrowDownList']");
+                $(document).on("click", "a[name='itemArrowDownList']", function () {
+                    var $thisTr = $(this).parents("tbody[name='tbContent']");
+                    var $nextTr = $thisTr.next();
+                    $nextTr.after($thisTr);
+                });
+
+                //保存排序
+                $(document).off("click", "button[id='btnActiveOrderSave']");
+                $(document).on("click", "button[id='btnActiveOrderSave']", function () {
+                    // debugger;
+                    var id = $("#templateId").val();
+                    YT.deploy.atTemplate.saveActiveSort(id);
+                });
+                //list end
 
                 //添加
                 $(document).off("click", "button[id='btnAddParam']");
@@ -300,11 +348,22 @@
             var $form = $("#" + YT.deploy.formId);
 
             YT.deploy.util.initEnumSelect("logModel", "model", data.model);
+            YT.deploy.util.initEnumSelect("collectType", "type", data.type);
 
             //组件初始化之后
             var appList = YT.deploy.data.appList;
             // var docList = YT.deploy.data.docList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
+
+            $("#type").change(function(){
+                if ($(this).val() == 0) {
+                    $("#blockLogIds").show();
+                    $("#blockTime").hide();
+                }else{
+                    $("#blockLogIds").hide();
+                    $("#blockTime").show();
+                }
+            });
 
 
             $("#" + YT.deploy.formId).find("#startTime").datetimepicker({
@@ -400,8 +459,8 @@
             });
         },
 
-        openActiveCollectWin: function (id) {
-            var param = {tp_title: "活动采集", templateId: id};
+        openActiveCollectWin: function (id,orderIndex) {
+            var param = {tp_title: "活动采集", templateId: id,orderIndex:orderIndex};
             $.get("/at/activeCollect.html", function (source) {
                 var render = template.compile(source);
                 var html = render(param);
@@ -468,7 +527,11 @@
             YT.deploy.util.reqPost("/atTemplate/collect", params, function (d) {
                 alert("保存成功");
                 $(".bootbox-close-button").trigger("click");
-                YT.deploy.atTemplate.query(1);
+                if($("#orderIndex").val()){
+                    YT.deploy.atTemplate.enterActiveEditWin(params["id"]);
+                }else{
+                    YT.deploy.atTemplate.query(1);
+                }
             });
         },
         activeStart: function () {
@@ -489,6 +552,20 @@
             YT.deploy.util.reqPost("/atTemplate/deleteActive", {activeId:id}, function (d) {
                 alert("删除成功");
                 YT.deploy.routeStackProcess.refresh();
+            });
+        },
+
+        saveActiveSort: function (templateId) {
+            var activeIds = [];
+            $("input[id='orderActiveId']").each(function(){
+                var val = $(this).val();
+                activeIds.push(val);
+            });
+
+            YT.deploy.util.reqPost("/atTemplate/saveActiveSort", {templateId:templateId,activeIds:activeIds.join(",")}, function (d) {
+                alert("保存排序成功");
+                YT.deploy.atTemplate.enterActiveEditWin(templateId);
+
             });
         },
 
