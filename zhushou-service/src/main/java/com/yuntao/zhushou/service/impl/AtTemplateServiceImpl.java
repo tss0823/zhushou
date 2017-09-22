@@ -72,6 +72,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
     @Autowired
     private AtVariableService atVariableService;
 
+    @Autowired
+    private IdocUrlService idocUrlService;
+
 
     @Override
     public List<AtTemplate> selectList(AtTemplateQuery query) {
@@ -252,6 +255,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             }
         }
 
+        Company company = companyService.findByKey(companyKey);
+
 
         for (LogWebVo logWebVo : dataList) {
             String url = logWebVo.getUrl();
@@ -273,7 +278,12 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             AtActive atActive = new AtActive();
             atActive.setTemplateId(id);
             atActive.setLogStackId(logWebVo.getStackId());
-            atActive.setName(logWebVo.getUrl());
+            IdocUrl idocUrl = idocUrlService.findNewsDocByUrl(company.getId(),logWebVo.getAppName(), logWebVo.getUrl());
+            if(idocUrl != null){
+                atActive.setName(idocUrl.getName());
+            }else{
+                atActive.setName(logWebVo.getUrl());
+            }
             atActive.setUrl(logWebVo.getReqUrl());
             String reqHeaders = logWebVo.getReqHeaders();
             JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
@@ -472,7 +482,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 String lastResult = new String(lastResponseRes.getResult());
                 ResponseObject responseObject = JsonUtils.json2Object(lastResult, ResponseObject.class);
                 atActiveInst.setStatus(responseObject.isSuccess() ? YesNoIntType.yes.getCode() : YesNoIntType.no.getCode());
-                String resObjKey = activeVo.getName().substring(1).replaceAll("/", "_");
+                String url = activeVo.getUrl();
+                String urlPath = UrlUtils.buildURL(url).getPath();
+                String resObjKey = urlPath.substring(1).replaceAll("/", "_");
                 variableMap.put(resObjKey, responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
                 variableMap.put("prevResponseObject", responseObject);
                 variableMap.put("prevResponseHeader", lastResponseRes.getHeaders());

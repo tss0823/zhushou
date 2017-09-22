@@ -225,7 +225,8 @@ public class IdocUrlController extends BaseController {
     @RequestMapping("getMockData")
     public ResponseObject getMockData(@RequestParam String appName,@RequestParam String pathUrl) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        IdocUrl newsDocByUrl = idocUrlService.findNewsDocByUrl(appName, pathUrl);
+        User user = userService.getCurrentUser();
+        IdocUrl newsDocByUrl = idocUrlService.findNewsDocByUrl(user.getCompanyId(),appName, pathUrl);
         if(newsDocByUrl != null && newsDocByUrl.getMockStatus() == YesNoIntType.yes.getCode()){
             responseObject.setData(newsDocByUrl.getResultMockData());
         }else{

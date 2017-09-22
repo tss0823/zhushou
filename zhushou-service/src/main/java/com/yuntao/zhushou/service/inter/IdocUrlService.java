@@ -54,7 +54,7 @@ public interface IdocUrlService {
      * @param url
      * @return
      */
-    IdocUrl findNewsDocByUrl(String appName,String url);
+    IdocUrl findNewsDocByUrl(Long companyId,String appName,String url);
 
 
     IdocUrl findEnumByUrl(String appName,String url);

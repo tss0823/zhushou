@@ -124,8 +124,9 @@ public class IdocUrlServiceImpl implements IdocUrlService {
     }
 
     @Override
-    public IdocUrl findNewsDocByUrl(String appName, String url) {
+    public IdocUrl findNewsDocByUrl(Long companyId,String appName, String url) {
         IdocUrlQuery idocUrlQuery = new IdocUrlQuery();
+        idocUrlQuery.setCompanyId(companyId);
         idocUrlQuery.setAppName(appName);
         idocUrlQuery.setType(IdocUrlType.inters.getCode());
         idocUrlQuery.setUrl(url);

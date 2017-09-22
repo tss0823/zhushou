@@ -1,7 +1,9 @@
 package com.yuntao.zhushou.common.utils;
 
+import com.yuntao.zhushou.common.exception.BizException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -32,5 +34,19 @@ public class UrlUtils {
             sb.append("/");
         }
         return sb.toString();
+    }
+
+    public static URL buildURL(String reqUrl){
+        try {
+            return new URL(reqUrl);
+        } catch (MalformedURLException e) {
+            throw new BizException("url地址不合法 ，reqUrl="+reqUrl);
+        }
+    }
+
+    public static void main(String[] args) {
+        String queryUrl = buildURL("http://aaa.wwwba.com/aa/bb.hjtm").getPath();
+        System.out.printf("queryUrl="+queryUrl);
+
     }
 }
