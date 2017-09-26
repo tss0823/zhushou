@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.yuntao.zhushou.zplugin.CodeBuildUtils.getLoginCookie;
+import static com.yuntao.zhushou.zplugin.ZhushouRpcUtils.getLoginCookie;
 
 /**
  * Created by shan on 2017/9/8.
@@ -41,7 +41,7 @@ public class ActionManager {
 
         //getEntity
 //        Entity entity = new Entity();
-        ResponseObject entityResObj = CodeBuildUtils.getEntityByEnName(entityParam.getEnName());
+        ResponseObject entityResObj = ZhushouRpcUtils.getEntityByEnName(entityParam.getEnName());
         Map<String, Object> dataMap = (Map<String, Object>) entityResObj.getData();
         Entity entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
 
@@ -54,10 +54,10 @@ public class ActionManager {
             if(entity.getId() != null){
                 throw new BizException("已经存在实体，无需新建");
             }
-            CodeBuildUtils.entitySave(entity);
+            ZhushouRpcUtils.entitySave(entity);
 
             //再获取一次
-            entityResObj = CodeBuildUtils.getEntityByEnName(entityParam.getEnName());
+            entityResObj = ZhushouRpcUtils.getEntityByEnName(entityParam.getEnName());
             dataMap = (Map<String, Object>) entityResObj.getData();
             entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
 
@@ -66,7 +66,7 @@ public class ActionManager {
             if(entity.getId() == null){
                 throw new BizException("实体不存在，请先新建");
             }
-            editPropertyList = CodeBuildUtils.propertyList(entity.getId());
+            editPropertyList = ZhushouRpcUtils.propertyList(entity.getId());
             for (Property property : selectPropertyList) {
                 editPropertyList.add(property);
             }
@@ -74,7 +74,7 @@ public class ActionManager {
             if(entity.getId() == null){
                 throw new BizException("实体不存在，请先新建");
             }
-            editPropertyList = CodeBuildUtils.propertyList(entity.getId());
+            editPropertyList = ZhushouRpcUtils.propertyList(entity.getId());
             for (Property selectProperty : selectPropertyList) {
                 for (Property editProperty : editPropertyList) {
                     if(selectProperty.getEnName().equals(editProperty.getEnName())){
@@ -94,7 +94,7 @@ public class ActionManager {
         //save properties
         entityParam.setId(entity.getId());
         if(action != 3){
-            CodeBuildUtils.propertySave(entity.getId(),editPropertyList);
+            ZhushouRpcUtils.propertySave(entity.getId(),editPropertyList);
         }
 
 
@@ -102,7 +102,7 @@ public class ActionManager {
 //        List<Property> propertyList = entityParam.getPropertyList();
         String sql = null;
         if (action == 0) {
-            ResponseObject responseObject = CodeBuildUtils.buildSql(entity.getId().toString());
+            ResponseObject responseObject = ZhushouRpcUtils.buildSql(entity.getId().toString());
             sql = responseObject.getData().toString();
 
         } else if (action == 1) {
@@ -143,19 +143,19 @@ public class ActionManager {
 
 
         //get dbConfigure
-        ResponseObject responseObject = CodeBuildUtils.getDbConfigure();
+        ResponseObject responseObject = ZhushouRpcUtils.getDbConfigure();
         dataMap = (Map<String, Object>) responseObject.getData();
         DbConfigure dbConfigure = new DbConfigure();
         BeanUtils.mapToBean(dataMap, dbConfigure);
         JdbcUtils.execute(dbConfigure, sql);
-        CodeBuildUtils.buildSqlSave(sql);
+        ZhushouRpcUtils.buildSqlSave(sql);
         bisLog.info("execute sql >>>");
         bisLog.info(sql);
 
         //build app
         String outFilePath = null;
         if(action != 2){  //删除property 不需要
-            responseObject = CodeBuildUtils.buildApp(entity.getId().toString());
+            responseObject = ZhushouRpcUtils.buildApp(entity.getId().toString());
             String downloadUrl = responseObject.getData().toString();
 
             //下载到临时目录
@@ -177,7 +177,7 @@ public class ActionManager {
         }
 
         if(action == 3){  //删除实体最后操作
-            CodeBuildUtils.entityDelete(entity.getId());
+            ZhushouRpcUtils.entityDelete(entity.getId());
         }
         return outFilePath;
     }

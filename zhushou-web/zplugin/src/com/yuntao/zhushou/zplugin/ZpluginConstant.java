@@ -12,6 +12,9 @@ public interface ZpluginConstant {
     String testBranch = "zhushou.testBranch";
     String logPath = "zhushou.logPath";
     String wsLogPath = "zhushou.wsLogPath";
+    String userInfo = "zhushou.userInfo";
+    String appPorts = "zhushou.appPorts";
+    String currentAppName = "zhushou.currentAppName";
 
 
 }

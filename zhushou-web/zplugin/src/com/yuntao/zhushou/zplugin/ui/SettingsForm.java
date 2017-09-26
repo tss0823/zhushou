@@ -2,15 +2,19 @@ package com.yuntao.zhushou.zplugin.ui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
+import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
-import com.yuntao.zhushou.zplugin.CodeBuildUtils;
+import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.zplugin.WsUtils;
+import com.yuntao.zhushou.zplugin.ZhushouRpcUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by shan on 2017/9/7.
@@ -23,12 +27,14 @@ public class SettingsForm {
     private JTextField txtLogPath;
     private JButton btnCheckValid;
     private JButton btnShow;
+    private JTextField txtAppPorts;
+    private JButton btnResetAppPort;
 
     public SettingsForm() {
         btnCheckValid.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ResponseObject responseObject = CodeBuildUtils.login(txtAccountNo.getText(), txtPwd.getText());
+                ResponseObject responseObject = ZhushouRpcUtils.login(txtAccountNo.getText(), txtPwd.getText());
                 if (responseObject.isSuccess()) {
                     WsUtils.openWsConnect();
                     JOptionPane.showMessageDialog(mainPanel, "账号检测合法！");
@@ -49,6 +55,21 @@ public class SettingsForm {
                 }
             }
         });
+        btnResetAppPort.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ResponseObject responseObject = ZhushouRpcUtils.appUserDataList();
+                Map<String, Object> dataMap = (Map<String, Object>) responseObject.getData();
+                java.util.List<Map<String, Object>> dataList = (java.util.List<Map<String, Object>>) dataMap.get("appList");
+                Map<String, Integer> portMap = new HashMap<>();
+                for (Map<String, Object> stringObjectMap : dataList) {
+                    App app = (App) BeanUtils.mapToBean(stringObjectMap, App.class);
+                    portMap.put(app.getName(), app.getPort());
+                }
+                String appPortsJson = JsonUtils.object2Json(portMap);
+                txtAppPorts.setText(appPortsJson);
+            }
+        });
     }
 
     public JTextField getTxtAccountNo() {
@@ -65,6 +86,10 @@ public class SettingsForm {
 
     public JTextField getTxtTestBranch() {
         return txtTestBranch;
+    }
+
+    public JTextField getTxtAppPorts() {
+        return txtAppPorts;
     }
 
     {
@@ -116,17 +141,23 @@ public class SettingsForm {
         txtLogPath = new JTextField();
         panel2.add(txtLogPath, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(2, 2, new Insets(10, 5, 0, 5), -1, -1));
-        mainPanel.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel3.setLayout(new GridLayoutManager(2, 3, new Insets(10, 5, 3, 5), -1, -1));
+        mainPanel.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel3.setBorder(BorderFactory.createTitledBorder("部署设置"));
-        final Spacer spacer1 = new Spacer();
-        panel3.add(spacer1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        txtAppPorts = new JTextField();
+        panel3.add(txtAppPorts, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label4 = new JLabel();
-        label4.setText("测试分支");
-        panel3.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label4.setText("应用端口");
+        panel3.add(label4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("测试分支");
+        panel3.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtTestBranch = new JTextField();
         txtTestBranch.setText("");
-        panel3.add(txtTestBranch, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel3.add(txtTestBranch, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        btnResetAppPort = new JButton();
+        btnResetAppPort.setText("重置");
+        panel3.add(btnResetAppPort, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

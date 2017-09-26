@@ -45,6 +45,13 @@ public class ZhushouComponent implements ApplicationComponent {
 
             if (ZpluginUtils.isLogin()) {
                 WsUtils.openWsConnect();
+
+                //设置app ports
+//                String appPorts = ZpluginUtils.getValue(ZpluginConstant.appPorts);
+//                if(StringUtils.isEmpty(appPorts)){
+//
+//                }
+
             }
 
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.yuntao.zhushou.common.utils.ExceptionUtils;
 import com.yuntao.zhushou.zplugin.WsUtils;
+import com.yuntao.zhushou.zplugin.ui.HotAppSelForm;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -20,6 +21,7 @@ public class MainAction extends DumbAwareAction {
     protected final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
 
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(MainAction.class);
+
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -46,6 +48,9 @@ public class MainAction extends DumbAwareAction {
 
                 //fire GrepConsole action
 
+            }else if(e.getPresentation().getText().equals("资源文件热部署")){
+                HotAppSelForm hotAppSelForm = new HotAppSelForm();
+                hotAppSelForm.start("资源文件热部署");
             }
         } catch (Exception ex) {
             log.error("mainAction execute failed!",ex);

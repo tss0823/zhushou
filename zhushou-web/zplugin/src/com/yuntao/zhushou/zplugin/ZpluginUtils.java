@@ -52,13 +52,30 @@ public class ZpluginUtils {
         String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.wsLogPath);
         return value;
     }
+    public static void setUserInfo(String userInfo){
+        PropertiesComponent.getInstance().setValue(ZpluginConstant.userInfo,userInfo);
+    }
+
+    public static String getUserInfo(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.userInfo);
+        return value;
+    }
+
+    public static void setValue(String key,String userInfo){
+        PropertiesComponent.getInstance().setValue(key,userInfo);
+    }
+
+    public static String getValue(String key){
+        String value = PropertiesComponent.getInstance().getValue(key);
+        return value;
+    }
 
     public static ResponseObject authCheck(){
         User user = ZpluginUtils.getAccountInfo();
         if(StringUtils.isBlank(user.getAccountNo()) || StringUtils.isBlank(user.getPwd())){
             throw new BizException("请先设置好账号和密码");
         }
-        ResponseObject responseObject = CodeBuildUtils.login(user.getAccountNo(), user.getPwd());
+        ResponseObject responseObject = ZhushouRpcUtils.login(user.getAccountNo(), user.getPwd());
         if(!responseObject.isSuccess()){
             throw new BizException(responseObject.getMessage());
         }
@@ -71,7 +88,7 @@ public class ZpluginUtils {
         if(StringUtils.isBlank(user.getAccountNo()) || StringUtils.isBlank(user.getPwd())){
             return false;
         }
-        ResponseObject responseObject = CodeBuildUtils.login(user.getAccountNo(), user.getPwd());
+        ResponseObject responseObject = ZhushouRpcUtils.login(user.getAccountNo(), user.getPwd());
         return responseObject.isSuccess();
     }
 
