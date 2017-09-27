@@ -384,7 +384,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             atActiveInst.setActiveId(activeVo.getId());
             RequestRes requestRes = new RequestRes();
             requestRes.setMethod(activeVo.getMethod());
-            requestRes.setUrl(activeVo.getUrl());
+            String reqUrl = activeVo.getUrl();
+            reqUrl = TemplateUtils.render(reqUrl, variableMap);  //替换url 有变量的地方
+            requestRes.setUrl(reqUrl);
             try {
 //            requestResList.add(requestRes);
                 //headers

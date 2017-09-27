@@ -40,18 +40,18 @@
                     $(item).hide();
                 }
             });
-            $("div[name='enterHttpExecView']").click(function () {
-                var dataId = $(this).attr("data");
-                var item = $("tr[data='trChildItem_" + dataId + "']").first();
-                var state = ($(item).css("display") == "none");
-                //所有的hide
-                $("tr[name='trChildItem']").hide();
-                if (state) {
-                    $(item).show();
-                } else {
-                    $(item).hide();
-                }
-            });
+            // $("div[name='enterHttpExecView']").click(function () {
+            //     var dataId = $(this).attr("data");
+            //     var item = $("tr[data='trChildItem_" + dataId + "']").first();
+            //     var state = ($(item).css("display") == "none");
+            //     //所有的hide
+            //     $("tr[name='trChildItem']").hide();
+            //     if (state) {
+            //         $(item).show();
+            //     } else {
+            //         $(item).hide();
+            //     }
+            // });
             $("a[name='btnResDataView']").click(function () {
                 var dataId = $(this).attr("data");
                 if(!dataId){
@@ -60,6 +60,25 @@
                 }
                 var month = moment().format("YYYY.MM");
                 YT.deploy.appLog.openResponseDialog(dataId,month,$("#model").val());
+            });
+
+            $("a[name='btnEditUrl']").click(function () {
+                var model = $(this).attr("model");
+                var $urlBlock = $(this).parent("div[name='enterHttpExecView']").find("span[name='editUrl']");
+                if(model == "0"){  //编辑
+                    $(this).text("保存")
+                    $(this).attr("model","1");
+                    var reqUrl = $urlBlock.text();
+                    $urlBlock.html("<input type='text' style='width: 400px' value='"+reqUrl+"' />");
+
+                }else{  //保存
+                    $(this).text("编辑");
+                    $(this).attr("model","0");
+                    var reqUrl = $urlBlock.find("input").val();
+                    var dataId = $(this).attr("data");
+                    YT.deploy.atTemplate.saveActiveUrl(dataId,reqUrl);
+                    $urlBlock.html(reqUrl);
+                }
             });
 
             $("a[name='btnActiveDel']").click(function () {
@@ -545,6 +564,12 @@
             });
         },
 
+        saveActiveUrl: function (id,url) {
+            YT.deploy.util.reqPost("/atTemplate/updateSingleActive", {activeId:id,url:url}, function (d) {
+                alert("保存成功");
+                YT.deploy.routeStackProcess.refresh();
+            });
+        },
         delActive: function (id) {
             if (!confirm("您确认需要删除吗？")) {
                 return;

@@ -25,7 +25,7 @@
         <li>fix some bug</li>
         <li>ws client improved</li>
       </ul>
-      <b>2.2</b> (9/25/2017)
+      <b>3.0</b> (9/25/2017)
       <ul>
         <li>res (xml,properties) hot reload</li>
       </ul>

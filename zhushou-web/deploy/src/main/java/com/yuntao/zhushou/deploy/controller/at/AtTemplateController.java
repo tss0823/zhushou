@@ -6,10 +6,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
-import com.yuntao.zhushou.model.domain.AtParameter;
-import com.yuntao.zhushou.model.domain.AtTemplate;
-import com.yuntao.zhushou.model.domain.Company;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.param.at.AtActiveParam;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
@@ -128,6 +125,17 @@ public class AtTemplateController extends BaseController {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         List<AtParameter> parameterList = active.getParameterList();
         int result = atActiveService.update(templateId,active, parameterList);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("updateSingleActive")
+    @NeedLogin
+    public ResponseObject updateSingleActive(@RequestParam Long activeId, @RequestParam  String url) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        AtActive active = atActiveService.findById(activeId);
+        active.setUrl(url);
+        int result = atActiveService.updateById(active);
         responseObject.setData(result);
         return responseObject;
     }

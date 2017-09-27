@@ -9,6 +9,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public class AnalyseModelUtils {
 
             PsiAnnotation[] clsAnnotions = psiClass.getModifierList().getAnnotations();
             String clsEnName = psiClass.getName();
-            entityParam.setEnName(clsEnName);
+            String entityEnName = StringUtils.uncapitalize(clsEnName);
+            entityParam.setEnName(entityEnName);
 
             if(clsAnnotions == null || clsAnnotions.length == 0){
                 throw new RuntimeException("实体注解不能为空");
