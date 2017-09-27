@@ -40,18 +40,18 @@
                     $(item).hide();
                 }
             });
-            // $("div[name='enterHttpExecView']").click(function () {
-            //     var dataId = $(this).attr("data");
-            //     var item = $("tr[data='trChildItem_" + dataId + "']").first();
-            //     var state = ($(item).css("display") == "none");
-            //     //所有的hide
-            //     $("tr[name='trChildItem']").hide();
-            //     if (state) {
-            //         $(item).show();
-            //     } else {
-            //         $(item).hide();
-            //     }
-            // });
+            $("div[detail='enterHttpExecView']").click(function () {
+                var dataId = $(this).attr("data");
+                var item = $("tr[data='trChildItem_" + dataId + "']").first();
+                var state = ($(item).css("display") == "none");
+                //所有的hide
+                $("tr[name='trChildItem']").hide();
+                if (state) {
+                    $(item).show();
+                } else {
+                    $(item).hide();
+                }
+            });
             $("a[name='btnResDataView']").click(function () {
                 var dataId = $(this).attr("data");
                 if(!dataId){

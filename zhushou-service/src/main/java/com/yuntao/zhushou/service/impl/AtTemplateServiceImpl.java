@@ -457,6 +457,9 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 }
                 Set<Map.Entry<String, String>> entries = resCookieMap.entrySet();
                 for (Map.Entry<String, String> entry : entries) {
+                    if(entry.getKey().equalsIgnoreCase("content-length") || entry.getKey().equalsIgnoreCase("content-type")){
+                        continue;
+                    }
                     headers.put(entry.getKey(), entry.getValue());
                 }
                 requestRes.setHeaders(headers);
