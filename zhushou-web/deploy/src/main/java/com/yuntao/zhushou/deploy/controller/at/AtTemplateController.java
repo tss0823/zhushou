@@ -124,7 +124,17 @@ public class AtTemplateController extends BaseController {
     public ResponseObject updateActive(@RequestParam Long templateId, AtActiveParam active) {
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         List<AtParameter> parameterList = active.getParameterList();
-        int result = atActiveService.update(templateId,active, parameterList);
+        int result = atActiveService.update(templateId,active);
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("updateActiveParamList")
+    @NeedLogin
+    public ResponseObject updateActiveParamList(@RequestParam Long activeId,AtActiveParam active) {
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        List<AtParameter> parameterList = active.getParameterList();
+        int result = atParameterService.updateParamList(activeId,parameterList);
         responseObject.setData(result);
         return responseObject;
     }

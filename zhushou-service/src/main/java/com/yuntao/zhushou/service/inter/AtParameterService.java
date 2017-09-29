@@ -69,5 +69,12 @@ public interface AtParameterService {
     int deleteByActiveId(Long activeId);
 
 
+    /**
+     * 修改参数列表
+     * @param activeId
+     * @param parameterList
+     * @return
+     */
+    int updateParamList(Long activeId,List<AtParameter> parameterList);
 
 }

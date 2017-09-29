@@ -1,17 +1,17 @@
 package com.yuntao.zhushou.service.impl;
 
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AtParameterMapper;
 import com.yuntao.zhushou.model.domain.AtParameter;
 import com.yuntao.zhushou.model.query.AtParameterQuery;
 import com.yuntao.zhushou.model.vo.AtParameterVo;
-import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.AtParameterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +86,21 @@ public class AtParameterServiceImpl implements AtParameterService {
     @Override
     public int deleteByActiveId(Long activeId) {
         return atParameterMapper.deleteByActiveId(activeId);
+    }
+
+    @Override
+    public int updateParamList(Long activeId, List<AtParameter> parameterList) {
+        //delete first
+        this.deleteByActiveId(activeId);
+
+        //save parameterList
+        if(CollectionUtils.isNotEmpty(parameterList)){
+            for (AtParameter atParameter : parameterList) {
+                atParameter.setActiveId(activeId);
+                this.insert(atParameter) ;
+            }
+        }
+        return 1;
     }
 
 }

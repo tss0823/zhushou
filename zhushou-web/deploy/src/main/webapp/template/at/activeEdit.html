@@ -51,7 +51,9 @@
                         <td>
                             <div name="enterHttpExecView" data="{{bean.id}}">
                                 <input type="hidden" id="orderActiveId" value="{{bean.id}}">
-                                <label>{{bean.name}}：</label>
+                                <a href="javascript:void(0)" name="enterHttpExecView" data="{{bean.id}}"><strong
+                                        style="color:green">{{bean.name}}：</strong></a>
+                                <!--<label>{{bean.name}}：</label>-->
                                 <span name="editUrl">{{bean.url}}</span> &nbsp;&nbsp;
                                 <a href="javascript:void(0)" name="btnEditUrl" data="{{bean.id}}" model="0"><strong
                                         style="color:darkseagreen">编辑</strong></a>  &nbsp;&nbsp;

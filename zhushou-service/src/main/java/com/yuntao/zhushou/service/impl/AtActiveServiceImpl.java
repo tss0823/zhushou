@@ -9,7 +9,6 @@ import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.vo.AtActiveVo;
 import com.yuntao.zhushou.service.inter.AtActiveService;
 import com.yuntao.zhushou.service.inter.AtParameterService;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,21 +106,9 @@ public class AtActiveServiceImpl implements AtActiveService {
 
     @Transactional
     @Override
-    public int update(Long templateId,AtActive active, List<AtParameter> parameterList) {
+    public int update(Long templateId,AtActive active) {
         active.setTemplateId(templateId);
-        this.updateById(active);
-
-        //delete first
-        atParameterService.deleteByActiveId(active.getId());
-
-        //save parameterList
-        if(CollectionUtils.isNotEmpty(parameterList)){
-            for (AtParameter atParameter : parameterList) {
-                atParameter.setActiveId(active.getId());
-                atParameterService.insert(atParameter) ;
-            }
-        }
-        return 1;
+        return this.updateById(active);
     }
 
 }

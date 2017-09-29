@@ -378,6 +378,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
     private void httpChainExecute(Long processInstId, String companyKey, List<AtActiveVo> activeVoList, Map<String, Object> variableMap) {
         ResponseRes lastResponseRes = null;
         Map<String, String> resCookieMap = new HashMap<>();
+        String globalCookie = null;
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             AtActiveInst atActiveInst = new AtActiveInst();
             atActiveInst.setStatus(YesNoIntType.yes.getCode());
@@ -392,6 +393,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 //headers
                 String headerRow = activeVo.getHeaderRow();
                 Map<String, String> headers = JsonUtils.json2Object(headerRow, HashMap.class);
+
                 requestRes.setHeaders(headers);
                 atActiveInst.setReqHeader(headerRow);
 
@@ -455,12 +457,14 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 if (headers == null) {
                     headers = new HashMap<>();
                 }
-                Set<Map.Entry<String, String>> entries = resCookieMap.entrySet();
-                for (Map.Entry<String, String> entry : entries) {
+                Set<Map.Entry<String, String>> entries1 = headers.entrySet();
+                for (Map.Entry<String, String> entry : entries1) {
                     if(entry.getKey().equalsIgnoreCase("content-length") || entry.getKey().equalsIgnoreCase("content-type")){
-                        continue;
+                        entries1.remove(entry.getKey());
                     }
-                    headers.put(entry.getKey(), entry.getValue());
+                }
+                if(StringUtils.isNotEmpty(globalCookie)){
+                    headers.put("Cookie",globalCookie);
                 }
                 requestRes.setHeaders(headers);
                 //end
@@ -475,12 +479,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 Map<String, String> resHeaderMap = lastResponseRes.getHeaders();
                 String setCookie = resHeaderMap.get("Set-Cookie");
                 if (StringUtils.isNotEmpty(setCookie)) {
-                    StringTokenizer st = new StringTokenizer(setCookie);
-                    while (st.hasMoreElements()) {
-                        String cookieEle = st.nextElement().toString();
-                        String[] cookieStrs = cookieEle.split("=");
-                        resCookieMap.put(cookieStrs[0], cookieStrs[1]);
-                    }
+                    globalCookie = setCookie;
                 }
                 //end
 

@@ -279,7 +279,7 @@
                     var id = $(this).attr("data");
                     var $table = $("#paramBlock_" + id).find("#tbParamContent");
                     var templateId = $("#templateId").val();
-                    var params = {templateId:templateId,id:id};
+                    var params = {templateId:templateId,activeId:id};
                     var arrIndex = 0;
                     $table.find("tr[name='dataItem']").each(function (index, item) {
                         var code = $(item).find("input[id='code']").val();
@@ -293,7 +293,7 @@
                         arrIndex++;
                     });
 
-                    YT.deploy.util.reqPost("/atTemplate/updateActive", params, function (d) {
+                    YT.deploy.util.reqPost("/atTemplate/updateActiveParamList", params, function (d) {
                         alert("保存成功");
                     });
                 });

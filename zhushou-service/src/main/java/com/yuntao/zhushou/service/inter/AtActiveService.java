@@ -73,10 +73,11 @@ public interface AtActiveService {
     /***
      * 修改活动模版
      * @param active
-     * @param parameterList
      * @return
      */
-    int update(Long templateId,AtActive active, List<AtParameter> parameterList);
+    int update(Long templateId,AtActive active);
+
+
 
 
 
