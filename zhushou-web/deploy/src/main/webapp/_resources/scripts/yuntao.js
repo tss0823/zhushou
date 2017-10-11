@@ -714,8 +714,12 @@
         errMaxTry : 5,
         init : function(){
             // var webSocket = YT.deploy.WebSocket.webSocket;
-            // var hostname = location.hostname;
-            this.webSocket = new WebSocket('wss://zhushou.doublefit.cn:9004/index.index?platform=user&token='+$.cookie("sid"));
+            var hostname = location.hostname;
+            var websocketProtocol = "ws";
+            if(location.protocol == "https"){
+                websocketProtocol = "wss"
+            }
+            this.webSocket = new WebSocket(websocketProtocol+'://'+hostname+'/index.index?platform=user&token='+$.cookie("sid"));
             // var sendJson = {}
 
             this.webSocket.onerror = function(event) {
