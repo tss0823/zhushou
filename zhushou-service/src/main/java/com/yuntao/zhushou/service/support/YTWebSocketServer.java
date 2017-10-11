@@ -29,6 +29,7 @@ public class YTWebSocketServer extends WebSocketServer implements InitializingBe
     @Autowired
     public YTWebSocketServer(@Value("${webSocket.port}") int port) {
         super(new InetSocketAddress(port));
+        bisLog.info("init webSocket! port="+port);
     }
 
     @Override
