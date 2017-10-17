@@ -368,6 +368,7 @@ public class DeployController extends BaseController {
                             deploy(userId, nickname, appName, codeName, model, ip);
                             checkServerStatusIsOK = false;
                             lastHost = ip;
+                            Thread.sleep(15000);//休眠15秒，重启需要一个缓冲时间,checkServerStatus 立马检测还是未启动状态的。
 
                         }
                     }
