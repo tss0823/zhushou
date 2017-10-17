@@ -341,7 +341,7 @@ public class DeployController extends BaseController {
                         String appName = appNames.get(i);
                         String port = ports.get(i);
                         String ipStr = ipsList.get(i);
-                        String[] ips = ipStr.split("|");
+                        String[] ips = ipStr.split("\\|");
                         String lastHost = null;
                         Integer lastPort = Integer.valueOf(port);
                         boolean checkServerStatusIsOK = true;  //默认上次ok
