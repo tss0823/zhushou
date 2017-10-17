@@ -161,7 +161,7 @@ public class DeployController extends BaseController {
             for (Host host : hostList) {
                 ipList.add(host.getEth0());
             }
-            httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, ","));
+            httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, "|"));
             paramList.add(httpParam);
         }
 
@@ -219,7 +219,7 @@ public class DeployController extends BaseController {
             for (Host host : hostList) {
                 ipList.add(host.getEth0());
             }
-            httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, ","));
+            httpParam = new HttpParam("ipList[]", StringUtils.join(ipList, "|"));
             paramList.add(httpParam);
 //        }
 
