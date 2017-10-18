@@ -98,6 +98,12 @@ public class AtVariableController extends BaseController {
         variable.setUserId(user.getId());
         variable.setCompanyId(user.getCompanyId());
         try{
+            if(variable.getTemplateId() != null){
+                variable.setScope(AtVariableScope.pri.getCode());
+            }else{
+                variable.setScope(AtVariableScope.global.getCode());
+            }
+            variable.setStatus(YesNoIntType.yes.getCode());
             atVariableService.updateById(variable);
         }catch (Exception e){
             throw new BizException("已存在相同的名称");
