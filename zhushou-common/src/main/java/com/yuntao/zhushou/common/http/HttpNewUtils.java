@@ -73,7 +73,7 @@ public class HttpNewUtils {
         httpGet.setConfig(requestConfig);
         CloseableHttpResponse response = null;
         try{
-            if(StringUtils.isNotEmpty(userAgent)){
+            if(StringUtils.isNotEmpty(userAgent) && httpGet.getHeaders("user-agent") != null){
                 httpGet.setHeader("User-Agent", userAgent);
             }
             response = httpclient.execute(httpGet,httpContext);
@@ -140,7 +140,7 @@ public class HttpNewUtils {
                 httpPost.setHeader(entry.getKey(), entry.getValue());
             }
         }
-        if(StringUtils.isNotEmpty(userAgent)){
+        if(StringUtils.isNotEmpty(userAgent) && httpPost.getHeaders("user-agent") != null){
             httpPost.setHeader("User-Agent", userAgent);
         }
         Map<String, String> params = (Map<String, String>) requestRes.getParams();
