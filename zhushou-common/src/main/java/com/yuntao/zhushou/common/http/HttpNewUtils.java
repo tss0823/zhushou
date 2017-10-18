@@ -140,7 +140,7 @@ public class HttpNewUtils {
                 httpPost.setHeader(entry.getKey(), entry.getValue());
             }
         }
-        if(StringUtils.isNotEmpty(userAgent) && httpPost.getHeaders("user-agent") != null){
+        if(StringUtils.isNotEmpty(userAgent) && httpPost.getHeaders("user-agent") == null){
             httpPost.setHeader("User-Agent", userAgent);
         }
         Map<String, String> params = (Map<String, String>) requestRes.getParams();
