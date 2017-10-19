@@ -98,7 +98,7 @@ public class AtVariableController extends BaseController {
         variable.setUserId(user.getId());
         variable.setCompanyId(user.getCompanyId());
         try{
-            if(variable.getTemplateId() != null){
+            if(variable.getTemplateId() != null || variable.getTemplateId() == -1){
                 variable.setScope(AtVariableScope.pri.getCode());
             }else{
                 variable.setScope(AtVariableScope.global.getCode());
