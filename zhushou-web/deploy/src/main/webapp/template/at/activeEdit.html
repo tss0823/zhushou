@@ -59,6 +59,8 @@
                                         style="color:darkseagreen">编辑</strong></a>  &nbsp;&nbsp;
                                 <span> {{bean.method}} </span> &nbsp;&nbsp;
                                 <span> {{bean.reqContentType}} </span> &nbsp;&nbsp;
+                                <a href="javascript:void(0)" name="enterHttpExecView" data="{{bean.id}}"><strong
+                                        style="color:green">详细</strong></a>
                             </div>
                         </td>
                         <td>
@@ -79,8 +81,6 @@
                                     style="color:lightcoral">插入活动</strong></a>
                             <a href="javascript:void(0)" name="btnResDataView" data="{{bean.logStackId}}"><strong
                                     style="color:lightblue">返回结果</strong></a>
-                            <a href="javascript:void(0)" name="enterHttpExecView" data="{{bean.id}}"><strong
-                                    style="color:green">详细</strong></a>
                         </td>
                     </tr>
                     <tr name="trChildItem" id="trChildItem_{{bean.id}}" data="trChildItem_{{bean.id}}"

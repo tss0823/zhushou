@@ -716,10 +716,13 @@
             // var webSocket = YT.deploy.WebSocket.webSocket;
             var hostname = location.hostname;
             var websocketProtocol = "ws";
+            var port = "";
             if(location.protocol == "https:"){
                 websocketProtocol = "wss"
+            }else{
+                port = ":9003";
             }
-            this.webSocket = new WebSocket(websocketProtocol+'://'+hostname+'/index.index?platform=user&token='+$.cookie("sid"));
+            this.webSocket = new WebSocket(websocketProtocol+'://'+hostname+port+'/index.index?platform=user&token='+$.cookie("sid"));
             // var sendJson = {}
 
             this.webSocket.onerror = function(event) {

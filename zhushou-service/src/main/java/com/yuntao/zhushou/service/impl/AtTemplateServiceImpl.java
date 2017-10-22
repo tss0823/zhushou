@@ -288,6 +288,8 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             String reqHeaders = logWebVo.getReqHeaders();
             JSONObject headerJsonObj = JSON.parseObject(reqHeaders);
             headerJsonObj.remove("Cookie");   //去掉cookie
+            headerJsonObj.remove("cookie");   //去掉cookie
+            headerJsonObj.put("content-type","application/x-www-form-urlencoded");
 //            String conentType = headerJsonObj.getString("Content-Type");
             atActive.setReqContentType("application/x-www-form-urlencoded");
             atActive.setHeaderRow(headerJsonObj.toString());
@@ -379,6 +381,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
         ResponseRes lastResponseRes = null;
         Map<String, String> resCookieMap = new HashMap<>();
         String globalCookie = null;
+        int index = 1;
         for (AtActiveVo activeVo : activeVoList) {   //每一个 http action
             AtActiveInst atActiveInst = new AtActiveInst();
             atActiveInst.setStatus(YesNoIntType.yes.getCode());
@@ -490,6 +493,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
                 String urlPath = UrlUtils.buildURL(url).getPath();
                 String resObjKey = urlPath.substring(1).replaceAll("/", "_");
                 variableMap.put(resObjKey, responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
+                variableMap.put("item_"+index, responseObject);  //每个栈的http返回对象 /user/getRegisterSMSCode > user_getRegisterSMSCode
                 variableMap.put("prevResponseObject", responseObject);
                 variableMap.put("prevResponseHeader", lastResponseRes.getHeaders());
 
@@ -525,6 +529,7 @@ public class AtTemplateServiceImpl implements AtTemplateService {
             if (!activeExecuteVo.isSuccess()) {  //只要其中一个活动栈失败，就终止
                 break;
             }
+            index++;
         }
     }
 

@@ -374,6 +374,34 @@
             // var docList = YT.deploy.data.docList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
+            YT.deploy.util.reqGet("/atTemplate/activeList",{},function(d){
+                var activeDataList = d.data;
+                var branchValArray = [];
+                for (var i = 0; i < activeDataList.length; i++) {
+                    var activeData = activeDataList[i];
+                    branchValArray.push("<option value='" + activeData.logStackId + "'>");
+                    branchValArray.push(activeData.name);
+                    branchValArray.push("\n");
+                    branchValArray.push(activeData.url);
+                    branchValArray.push("</option>");
+                }
+                $("#takeLogIds").append(branchValArray.join(""));
+                $('#takeLogIds').chosen({
+                    search_contains: true,
+                    // disable_search_threshold: 10
+                });
+                $('#takeLogIds').change(function () {
+                    var val = $(this).val();
+                    var oldVal = $("#logStackIds").val();
+                    if(oldVal){
+                        val = oldVal+","+val;
+                    }
+                    $("#logStackIds").val(val);
+                    // $("#btnQuery").trigger("click");
+                });
+
+            });
+
             $("#type").change(function(){
                 if ($(this).val() == 0) {
                     $("#blockLogIds").show();

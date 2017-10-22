@@ -8,6 +8,7 @@ import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.deploy.controller.BaseController;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.param.at.AtActiveParam;
+import com.yuntao.zhushou.model.query.AtActiveQuery;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.vo.AtTemplateVo;
 import com.yuntao.zhushou.service.inter.*;
@@ -197,6 +198,16 @@ public class AtTemplateController extends BaseController {
                 }
             }
         }).start();
+        return responseObject;
+    }
+
+    @RequestMapping("activeList")
+    @NeedLogin
+    public ResponseObject activeList() {
+//        AtActiveQuery atActiveQuery = new AtActiveQuery();
+        List<AtActive> activeList = atActiveService.selectList(new AtActiveQuery());
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(activeList);
         return responseObject;
     }
 }
