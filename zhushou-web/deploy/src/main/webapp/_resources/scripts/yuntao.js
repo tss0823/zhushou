@@ -549,7 +549,7 @@
                         }
                         isLogin = true;
                     } else {
-                        alert(d.message);
+                        //alert(d.message);
                         if (d.code == "01") {
                             YT.deploy.goLoginPage();
                         }
