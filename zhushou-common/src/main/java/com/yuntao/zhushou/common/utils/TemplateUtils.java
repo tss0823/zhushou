@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Velocity 模版处理
+ * Velocity 模板处理
  * Created by shan on 2017/8/12.
  */
 public class TemplateUtils {

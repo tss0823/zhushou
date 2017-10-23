@@ -78,7 +78,7 @@ public class AtTemplateController extends BaseController {
     @RequestMapping("saveTemplate")
     @NeedLogin
     public ResponseObject saveTemplate(AtTemplateVo template) {
-        ValidateUtils.notEmpty(template.getName(),"模版名称不能为空");
+        ValidateUtils.notEmpty(template.getName(),"模板名称不能为空");
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         template.setUserId(user.getId());
@@ -91,8 +91,8 @@ public class AtTemplateController extends BaseController {
     @RequestMapping("updateTemplate")
     @NeedLogin
     public ResponseObject updatTemplate(AtTemplateVo template) {
-        ValidateUtils.notNull(template.getId(),"模版ID不能为空");
-        ValidateUtils.notEmpty(template.getName(),"模版名称不能为空");
+        ValidateUtils.notNull(template.getId(),"模板ID不能为空");
+        ValidateUtils.notEmpty(template.getName(),"模板名称不能为空");
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         User user = userService.getCurrentUser();
         template.setUserId(user.getId());

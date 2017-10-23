@@ -63,7 +63,7 @@ public interface AtActiveService {
     int deleteById(Long id);
 
     /***
-     * 保存活动模版
+     * 保存活动模板
      * @param active
      * @param parameterList
      * @return
@@ -71,7 +71,7 @@ public interface AtActiveService {
     int save(Long templateId,AtActive active, List<AtParameter> parameterList);
 
     /***
-     * 修改活动模版
+     * 修改活动模板
      * @param active
      * @return
      */

@@ -110,8 +110,8 @@
 
 
             //保存
-            $(document).off("click", "#btnSave");
-            $(document).on("click", "#btnSave", function () {
+            $("#templateNewForm").off("click", "#btnSave");
+            $("#templateNewForm").on("click", "#btnSave", function () {
                 YT.deploy.atTemplate.save();
             });
 
@@ -374,34 +374,6 @@
             // var docList = YT.deploy.data.docList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
-            YT.deploy.util.reqGet("/atTemplate/activeList",{},function(d){
-                var activeDataList = d.data;
-                var branchValArray = [];
-                for (var i = 0; i < activeDataList.length; i++) {
-                    var activeData = activeDataList[i];
-                    branchValArray.push("<option value='" + activeData.logStackId + "'>");
-                    branchValArray.push(activeData.name);
-                    branchValArray.push("\n");
-                    branchValArray.push(activeData.url);
-                    branchValArray.push("</option>");
-                }
-                $("#takeLogIds").append(branchValArray.join(""));
-                $('#takeLogIds').chosen({
-                    search_contains: true,
-                    // disable_search_threshold: 10
-                });
-                $('#takeLogIds').change(function () {
-                    var val = $(this).val();
-                    var oldVal = $("#logStackIds").val();
-                    if(oldVal){
-                        val = oldVal+","+val;
-                    }
-                    $("#logStackIds").val(val);
-                    // $("#btnQuery").trigger("click");
-                });
-
-            });
-
             $("#type").change(function(){
                 if ($(this).val() == 0) {
                     $("#blockLogIds").show();
@@ -441,11 +413,44 @@
 
             ;
 
+            YT.deploy.util.reqGet("/atTemplate/activeList",{},function(d){
+                var activeDataList = d.data;
+                debugger;
+                var branchValArray = [];
+                for (var i = 0; i < activeDataList.length; i++) {
+                    var activeData = activeDataList[i];
+                    if(!activeData.logStackId){
+                        continue;
+                    }
+                    branchValArray.push("<option value='" + activeData.logStackId + "'>");
+                    branchValArray.push(activeData.name);
+                    branchValArray.push("\n");
+                    branchValArray.push(activeData.url);
+                    branchValArray.push("</option>");
+                }
+
+                $("#takeLogIds").append(branchValArray.join(""));
+                $('#takeLogIds').chosen({
+                    search_contains: true,
+                    // disable_search_threshold: 10
+                });
+                $('#takeLogIds').change(function () {
+                    var val = $(this).val();
+                    var oldVal = $("#logStackIds").val();
+                    if(oldVal){
+                        val = oldVal+","+val;
+                    }
+                    $("#logStackIds").val(val);
+                    // $("#btnQuery").trigger("click");
+                });
+
+            });
+
 
         },
 
         openNewWin: function () {
-            var param = {tp_title: "模版创建", dataList: null};
+            var param = {tp_title: "模板创建", dataList: null};
             $.get("/at/new.html", function (source) {
                 var render = template.compile(source);
                 var html = render(param);
@@ -476,7 +481,7 @@
         },
 
         openEditWin: function (id) {
-            var param = {tp_title: "模版修改", dataList: null};
+            var param = {tp_title: "模板修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/atTemplate/detail", params, function (d) {
                 // debugger;
@@ -513,11 +518,13 @@
                 var html = render(param);
                 YT.deploy.atTemplate.openWinObj = bootbox.dialog({
                     message: html,
-                    width: "800px",
+                    width: "800px"
                 });
+
                 $(".modal-dialog").prop("style", "width:70%;height:85%")
                 YT.deploy.formId = "activeCollectForm";
                 YT.deploy.atTemplate.initNewEdit(param);
+
             });
         },
         enterActiveEditWin: function (id) {

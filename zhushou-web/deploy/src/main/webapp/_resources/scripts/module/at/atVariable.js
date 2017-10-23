@@ -149,7 +149,7 @@
         },
 
         openEditWin: function (id) {
-            var param = {tp_title: "模版修改", dataList: null};
+            var param = {tp_title: "模板修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/atVariable/detail", params, function (d) {
                 // debugger;
