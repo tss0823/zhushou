@@ -11,7 +11,7 @@ public @interface ModelFieldComment {
 
     String value() default  "";
 
-    boolean required() default true;
+    boolean required() default false;
 
     int maxLength() default 0;
 
