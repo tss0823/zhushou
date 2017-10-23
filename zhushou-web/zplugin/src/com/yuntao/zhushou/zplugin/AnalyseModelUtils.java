@@ -77,7 +77,7 @@ public class AnalyseModelUtils {
                 Property property = new Property();
                 property.setEnName(enName);
                 property.setDataType(dataType);
-                property.setIsNull(false);
+                property.setIsNull(true);
                 if(enName.equals("id")){
                     property.setPrimaryKey(true);
                 }else{
@@ -91,8 +91,8 @@ public class AnalyseModelUtils {
                         if(name.equals("value")){
                             text = text.substring(1,text.length()-1);
                             property.setCnName(text);
-                        }else if(name.equals("required") && text.equals("false")){
-                            property.setIsNull(true);
+                        }else if(name.equals("required") && text.equals("true")){
+                            property.setIsNull(false);
                         }else if(name.equals("maxLength")){
                             property.setLength(text);
                         }else if(name.equals("defaultValue")){
