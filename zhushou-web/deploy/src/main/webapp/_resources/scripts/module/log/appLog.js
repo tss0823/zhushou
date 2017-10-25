@@ -182,6 +182,12 @@
                 YT.deploy.appLog.query(pageNum, pageSize);
             });
 
+            $("#btnClearAndQuery").click(function () {
+                // clearForm();
+                $("#btnclear").trigger("click");
+                $("#btnQuery").trigger("click");
+            });
+
 
             $("button[id='btnMore']").click(function () {
                 var dataId = $(this).attr("data");

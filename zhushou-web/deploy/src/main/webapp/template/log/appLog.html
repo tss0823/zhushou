@@ -89,7 +89,22 @@
                     <input type="text" id="endTime" name="endTime" value="{{endTime}}" class="input-sm"/>
                     <i class="icon-calendar"></i>
                     &nbsp;
-                    <button class="btn btn-white" id="btnQuery" enter="true">查询</button>&nbsp;&nbsp;
+
+                    <div class="btn-group">
+                        <button class="btn btn-white" id="btnQuery" enter="true">查询</button>&nbsp;&nbsp;
+                        <!--<button class="btn btn-inverse">Inverse</button>-->
+
+                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle">
+                            <span class="icon-caret-down icon-only"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-white pull-right" style="min-width:0">
+                            <li>
+                                <a href="#" id="btnClearAndQuery">清空查询</a>
+                            </li>
+                        </ul>
+                    </div><!-- /btn-group -->
+
                     <button class="btn btn-white" id="btnClear" >清空</button>
                 </small>
         </h1>

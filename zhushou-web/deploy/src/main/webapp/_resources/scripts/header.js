@@ -7,25 +7,7 @@ $(document).ready(function () {
 
     $(document).off("click", "#btnClear");
     $(document).on("click", "#btnClear", function () {
-        var jqFormObj = $("form:first");
-        if (jqFormObj == null) {
-            jqFormObj = $(this).attr("form-id");
-        }
-        $(jqFormObj).find(":text").each(function (index, item) {
-            $(item).val("");
-        });
-        $(jqFormObj).find(":hidden").each(function (index, item) {
-            $(item).val("");
-        });
-        $(jqFormObj).find("select").each(function (index, item) {
-            $(item).find("option:first").prop("selected", true);
-        });
-        //清空个性数据 //TODO 目前只针对查询
-        var actionId = jqFormObj.attr("actionId");
-        // debugger;
-        var authRes = appData.authMap[actionId];
-        YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");
-
+        clearForm();
     });
 
 
@@ -55,6 +37,26 @@ $(document).ready(function () {
 
 });
 
+function clearForm(){
+    var jqFormObj = $("form:first");
+    if (jqFormObj == null) {
+        jqFormObj = $(this).attr("form-id");
+    }
+    $(jqFormObj).find(":text").each(function (index, item) {
+        $(item).val("");
+    });
+    $(jqFormObj).find(":hidden").each(function (index, item) {
+        $(item).val("");
+    });
+    $(jqFormObj).find("select").each(function (index, item) {
+        $(item).find("option:first").prop("selected", true);
+    });
+    //清空个性数据 //TODO 目前只针对查询
+    var actionId = jqFormObj.attr("actionId");
+    // debugger;
+    var authRes = appData.authMap[actionId];
+    YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");
+}
 
 //获得提交表单数据
 function getFormParams(id) {
