@@ -184,7 +184,7 @@
 
             $("#btnClearAndQuery").click(function () {
                 // clearForm();
-                $("#btnclear").trigger("click");
+                $("#btnClear").trigger("click");
                 $("#btnQuery").trigger("click");
             });
 
