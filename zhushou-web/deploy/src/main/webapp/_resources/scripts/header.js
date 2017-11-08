@@ -7,7 +7,8 @@ $(document).ready(function () {
 
     $(document).off("click", "#btnClear");
     $(document).on("click", "#btnClear", function () {
-        clearForm();
+        var formId = $(this).attr("formId");
+        clearForm(formId);
     });
 
 
@@ -37,11 +38,14 @@ $(document).ready(function () {
 
 });
 
-function clearForm(){
+function clearForm(formId){
     var jqFormObj = $("form:first");
-    if (jqFormObj == null) {
-        jqFormObj = $(this).attr("form-id");
+    if(formId){
+        jqFormObj = $("#"+formId);
     }
+    // if (jqFormObj == null) {
+    //     jqFormObj = $(this).attr("form-id");
+    // }
     $(jqFormObj).find(":text").each(function (index, item) {
         $(item).val("");
     });
@@ -55,7 +59,9 @@ function clearForm(){
     var actionId = jqFormObj.attr("actionId");
     // debugger;
     var authRes = appData.authMap[actionId];
-    YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");
+    if(authRes){
+        YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");
+    }
 }
 
 //获得提交表单数据

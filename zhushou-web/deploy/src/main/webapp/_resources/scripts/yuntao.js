@@ -587,6 +587,32 @@
                 });
             });
         },
+        routeOpenWin: function (url, param, tpl_url, extData,callback) {
+            YT.deploy.util.reqGet(url, param, function (d) {
+                var data = d.data;
+                data = data || {};
+                if (extData) {
+                    for (var key in extData) {
+                        data[key] = extData[key];
+                    }
+                }
+                $.extend(data,appData);
+                $.extend(data,param);
+
+                $.get(tpl_url, function (source) {
+                    var render = template.compile(source);
+                    var html = render(data);
+                    $(".bootbox-body").html(html);
+                    if(typeof(callback) == "function"){
+                        callback(data);
+                    }
+                    // debugger;
+                    // YT.deploy.route_callback(d,data);
+                    // YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, extData);
+
+                });
+            });
+        },
         
         //只跳转模板，不请求数据
         routeTpl: function (tpl_url, data) {

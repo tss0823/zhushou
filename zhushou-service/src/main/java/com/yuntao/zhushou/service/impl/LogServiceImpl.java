@@ -133,6 +133,9 @@ public class LogServiceImpl extends AbstService implements LogService {
 
 
     public Pagination<LogWebVo> selectList(LogQuery query, LogTextQuery logTextQuery) {
+        if(StringUtils.equals(query.getModel(),"on")){
+            query.setModel("test");
+        }
         if (StringUtils.isEmpty(query.getMonth())) {
             query.setMonth(DateUtil.getFmt(new Date().getTime(), "yyyy.MM"));
         }

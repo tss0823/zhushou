@@ -3,12 +3,11 @@ package com.yuntao.zhushou.service.impl;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.DateUtil;
-import com.yuntao.zhushou.service.support.bis.QueryBuilderUtils;
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.query.TaskLogQuery;
 import com.yuntao.zhushou.model.vo.TaskLogVo;
-import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.service.inter.TaskLogService;
-import org.apache.commons.collections4.CollectionUtils;
+import com.yuntao.zhushou.service.support.bis.QueryBuilderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -107,6 +106,9 @@ public class TaskLogServiceImpl implements TaskLogService {
 
 
     public Pagination<TaskLogVo> selectList(TaskLogQuery query) {
+        if(StringUtils.equals(query.getModel(),"on")){
+            query.setModel("test");
+        }
         if(StringUtils.isEmpty(query.getMonth())){
             query.setMonth(DateUtil.getFmt(new Date().getTime(),"yyyy.MM"));
         }
