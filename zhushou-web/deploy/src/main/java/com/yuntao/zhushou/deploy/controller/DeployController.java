@@ -550,11 +550,15 @@ public class DeployController extends BaseController {
         Company company = companyService.findById(companyId);
 
         String clientIp = RequestUtils.getClientIpAddr(request);
+        if(StringUtils.isNotEmpty(clientIp)){
+            String[] split = clientIp.split(",");
+            ip = split[0].trim();
+        }
 
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/addWhiteList");
         Map<String,String> params = new HashMap<>();
-        params.put("ip",clientIp);
+        params.put("ip",ip);
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
