@@ -64,7 +64,7 @@
                 authMap[authRes.actionId] = authRes;
             }
 
-            // debugger;
+            // //debugger;
             appData.authMap = authMap;
 
             //end
@@ -100,7 +100,7 @@
                     var queryParams = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_queryData");
                     queryParams = queryParams || {};
                     //end
-                    // debugger;
+                    // //debugger;
                     var extData = YT.deploy.userDataProcess.getValueMap(authRes.tplUrl+"_extData");
                     // extData = {tp_title:authRes.name,authRes:authRes};
                     extData = $.extend(extData,{tp_title: authRes.name,authRes:authRes});
@@ -153,7 +153,7 @@
                     var hostStatusMsg = dataObj[appName];
                     var errArray = [];
                     var hostSize = 0;
-                    // debugger;
+                    // //debugger;
                     for(var hostName in hostStatusMsg){
                         var hostStatus = hostStatusMsg[hostName];
                         if(!hostStatus["success"]){
@@ -188,11 +188,11 @@
                 //end
 
                 //host table row
-                // debugger;
+                // //debugger;
                 var appName = $("#appName").val();
                 var hostStatusMsg = dataObj[appName];
                 $("#tbContentHost").find("tr").each(function (index, item) {
-                    // debugger;
+                    // //debugger;
                     var $tdServerStatusText = $(item).find("td[name='serverStatusText']");
                     var hostName = $tdServerStatusText.attr("data");
                     var hostStatus = hostStatusMsg[hostName];

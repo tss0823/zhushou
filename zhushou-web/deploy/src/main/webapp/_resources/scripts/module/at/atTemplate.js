@@ -89,7 +89,7 @@
             $("a[name='btnActiveInsert']").click(function () {
                 var id = $("#templateId").val();
                 var orderIndex = $(this).attr("orderIndex");
-                // debugger;
+                // //debugger;
                 YT.deploy.atTemplate.openActiveCollectWin(id,parseInt(orderIndex)-1);
             });
 
@@ -191,13 +191,13 @@
                 //添加
                 $(document).off("click", "button[id='btnAddActive']");
                 $(document).on("click", "button[id='btnAddActive']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $("#templateId").val();
                     var orderIndex = 1;
                     if(data.activeVoList){
                         orderIndex = data.activeVoList.length+1;
                     }
-                    // debugger;
+                    // //debugger;
                     YT.deploy.atTemplate.openActiveCollectWin(id,orderIndex);
                 });
 
@@ -205,7 +205,7 @@
                 $(document).off("click", "a[name='itemArrowUpList']");
                 $(document).on("click", "a[name='itemArrowUpList']", function () {
                     var $thisTr = $(this).parents("tbody[name='tbContent']");
-                    // debugger;
+                    // //debugger;
                     var $prevTr = $thisTr.prev();
                     $thisTr.after($prevTr);
                     // $prevTr.before($thisTr);
@@ -222,7 +222,7 @@
                 //保存排序
                 $(document).off("click", "button[id='btnActiveOrderSave']");
                 $(document).on("click", "button[id='btnActiveOrderSave']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $("#templateId").val();
                     YT.deploy.atTemplate.saveActiveSort(id);
                 });
@@ -231,7 +231,7 @@
                 //添加
                 $(document).off("click", "button[id='btnAddParam']");
                 $(document).on("click", "button[id='btnAddParam']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $(this).attr("data");
                     var $table = $("#paramBlock_" + id).find("#tbParamContent");
                     var $tr = $table.find("tr[name='dataItem']").first().clone();
@@ -275,7 +275,7 @@
 
                 $(document).off("click", "button[id='btnParamSave']");
                 $(document).on("click", "button[id='btnParamSave']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $(this).attr("data");
                     var $table = $("#paramBlock_" + id).find("#tbParamContent");
                     var templateId = $("#templateId").val();
@@ -302,7 +302,7 @@
                 //添加 header
                 $(document).off("click", "button[id='btnAddHeader']");
                 $(document).on("click", "button[id='btnAddHeader']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $(this).attr("data");
                     var $table = $("#headerBlock_" + id).find("#tbParamContent");
                     var $tr = $table.find("tr[name='dataItem']").first().clone();
@@ -312,14 +312,14 @@
 
                 $(document).off("click", "button[id='btnHeaderSave']");
                 $(document).on("click", "button[id='btnHeaderSave']", function () {
-                    // debugger;
+                    // //debugger;
                     var id = $(this).attr("data");
                     var $table = $("#headerBlock_" + id).find("#tbParamContent");
                     var templateId = $("#templateId").val();
                     var params = {templateId:templateId,id:id};
                     var arrIndex = 0;
                     var headerObj = {};
-                    // debugger;
+                    // //debugger;
                     $table.find("tr[name='dataItem']").each(function (index, item) {
                         var key = $(item).find("input[id='key']").val();
                         if (!key) {
@@ -415,7 +415,7 @@
 
             YT.deploy.util.reqGet("/atTemplate/activeList",{},function(d){
                 var activeDataList = d.data;
-                debugger;
+                //debugger;
                 var branchValArray = [];
                 for (var i = 0; i < activeDataList.length; i++) {
                     var activeData = activeDataList[i];
@@ -484,7 +484,7 @@
             var param = {tp_title: "模板修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/atTemplate/detail", params, function (d) {
-                // debugger;
+                // //debugger;
                 param["domain"] = d.data;
                 $.get("/at/edit.html", function (source) {
                     var render = template.compile(source);
@@ -634,7 +634,7 @@
          * @param startTimeVal
          */
         genEndTime: function (startTimeVal) {
-            debugger;
+            //debugger;
             if (startTimeVal.length != 19) {
                 return;
             }
@@ -652,11 +652,11 @@
         init: function () {
             //注册服务状态监控事件
             YT.deploy.eventProcess.addListener("test_active_http_execute", function (msgObj) {
-                // debugger;
+                // //debugger;
                 var dataObj = JSON.parse(msgObj.data);
                 var activeId = dataObj.activeId;
                 var success = dataObj.success;
-                debugger;
+                //debugger;
                 var errShowHtml = "<strong style='color:red'>ERROR</strong>";
                 var successShowHtml = "<strong style='color:green'>OK</strong>";
                 $("#activeExeStatus_" + activeId).html(success ? successShowHtml : errShowHtml);

@@ -379,7 +379,7 @@
 
         //下一个路由
         nextRoute: function () {
-            //debugger;
+            ////debugger;
             var currentIndex = YT.deploy.routeStackProcess.currentIndex;
             var rsArray = YT.deploy.routeStackProcess.rsArray;
             if(rsArray.length == 0){
@@ -424,7 +424,7 @@
             }
             var moduleData = this.userDataMap[nameSpace];  //this == userDataProcess 作用域
             moduleData = moduleData || {};
-            // debugger;
+            // //debugger;
             for(var key in dataMap){
                moduleData[key] = dataMap[key]; 
             }
@@ -435,7 +435,7 @@
         
         getValueMap : function(nameSpace){
             var userDataString = $.cookie(YT.deploy.constant.C_USER_DATA);
-            // debugger;
+            // //debugger;
             if(!userDataString){
                 return {};
             }
@@ -543,7 +543,7 @@
                         var configData = d.data.configData;
                         if(configData){
                             for(var key in configData){
-                                // debugger;
+                                // //debugger;
                                 appData[key] = configData[key];
                             }
                         }
@@ -580,7 +580,7 @@
                     var render = template.compile(source);
                     var html = render(data);
                     $(".page-content").html(html);
-                    // debugger;
+                    // //debugger;
                     YT.deploy.route_callback(d,data);
                     YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, extData);
 
@@ -606,7 +606,7 @@
                     if(typeof(callback) == "function"){
                         callback(data);
                     }
-                    // debugger;
+                    // //debugger;
                     // YT.deploy.route_callback(d,data);
                     // YT.deploy.routeStackProcess.doRoute(url, param, tpl_url, extData);
 
@@ -666,7 +666,7 @@
                     queryParams[key] = extData[key];
                 }
             }
-            // debugger;
+            // //debugger;
             // var extData = $.extend(params, {tp_title:authRes.name});
             var extData = {tp_title:authRes.name};
             extData = $.extend(extData,{authRes:authRes});

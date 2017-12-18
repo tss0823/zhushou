@@ -14,7 +14,7 @@
         formId: "appLogForm",
 
         route_callback: function (d, data) {
-            // debugger;
+            // //debugger;
             if(!YT.deploy.appLog.needLoad){
                 return;
             }
@@ -310,11 +310,11 @@
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             var checkState = checked ? "prod" : "test";
-            // debugger;
+            // //debugger;
             YT.deploy.goSearchPage("appLogForm", pageNum, pageSize, {model: checkState});
             // YT.deploy.goSearchPage("appLogForm",pageNum,pageSize);
             // var params = YT.deploy.util.getFormParams("#appLogForm");
-            // //debugger;
+            // ////debugger;
             // // var checked = $("#chkShowAll").attr("checked");
             // // checked = checked ? "1" : "0";
             // // params["showAll"] = checked ;
@@ -335,7 +335,7 @@
             var checkState = checked ? "prod" : "test";
             var params = {stackId: id, month: $("#month").val(), model: checkState};
             YT.deploy.util.reqGet("/appLog/findMasterByStackId", params, function (d) {
-                // debugger;
+                // //debugger;
                 var jsonObj = JSON.parse(d.data.parameters);
                 var dataList = [];
                 for (var key in jsonObj) {
@@ -517,7 +517,7 @@
                             $(this).html("显示结果");
                         });
                         if (state) {
-                            // debugger;
+                            // //debugger;
                             var $dbResult = $(this).parent().next().next();
                             $dbResult.show();
                             var jsonText = $dbResult.html();
@@ -627,7 +627,7 @@
                     var val = jsonObjRes[key];
                     resDataList.push({key: key, value: val});
                 }
-                // debugger;
+                // //debugger;
                 var param = {reqTitle: "请求头列表", reqDataList: reqDataList, resTitle: "返回头列表", resDataList: resDataList};
                 $.get("/log/msgHeader.html", function (source) {
                     var render = template.compile(source);

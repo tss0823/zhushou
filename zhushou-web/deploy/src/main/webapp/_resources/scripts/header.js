@@ -57,7 +57,7 @@ function clearForm(formId){
     });
     //清空个性数据 //TODO 目前只针对查询
     var actionId = jqFormObj.attr("actionId");
-    // debugger;
+    // //debugger;
     var authRes = appData.authMap[actionId];
     if(authRes){
         YunTao.deploy.userDataProcess.clear(authRes.tplUrl+"_queryData");

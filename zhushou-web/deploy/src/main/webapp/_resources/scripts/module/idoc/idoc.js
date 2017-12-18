@@ -31,7 +31,7 @@
                 //是否私有
                 YT.deploy.util.initEnumSelect("yesNoType", "pri", data.pri);
 
-                // debugger;
+                // //debugger;
                 YT.deploy.idoc.resDocMDE = new SimpleMDE({
                     element: document.getElementById("resDoc"),
                     insertTexts: {
@@ -42,7 +42,7 @@
                     },
                 });
             }else if($("#resViewForm").length == 1) {  //资源文档
-                // debugger;
+                // //debugger;
                 YT.deploy.idoc.resDocMDE = new SimpleMDE({
                     toolbar: false,
                     toolbarTips: false,
@@ -52,7 +52,7 @@
                 // YT.deploy.idoc.resDocMDE = new SimpleMDE({ // element: document.getElementById("resDoc"),
                 // });
                 var resDocHtmls = YT.deploy.idoc.resDocMDE.options.previewRender(data.resultData);
-                // debugger;
+                // //debugger;
                 $("#resDocHtml").html(resDocHtmls);
                 $(".CodeMirror").hide();
             }
@@ -103,7 +103,7 @@
                 var params = YT.deploy.util.getFormParams("#idocNewForm");
                 $("#tbReqParam").find("tr[name='dataItem']").each(function (index, item) {
                     var code = $(item).find("input[id='code']").val();
-                    // debugger;
+                    // //debugger;
                     if(!code){
                         return true;
                     }

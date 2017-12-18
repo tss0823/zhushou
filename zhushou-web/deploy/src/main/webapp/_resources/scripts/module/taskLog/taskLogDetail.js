@@ -110,7 +110,7 @@
         query: function (pageNum, pageSize) {
             var checked = $("#model").attr("checked");
             // var checkState = checked ? "prod" : "test";
-            // debugger;
+            // //debugger;
             var params = YT.deploy.util.getFormParams("#taskLogDetailListForm");
             params["pageNum"] = pageNum;
             var pageSize = $("#pageSize").val();

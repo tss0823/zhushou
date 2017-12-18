@@ -77,14 +77,14 @@ jQuery.extend({
 
         // Watch for a new set of requests
         if (s.global && !jQuery.active++) {
-            debugger;
+            // //debugger;
             jQuery.event.trigger("ajaxStart");
         }
         var requestDone = false;
         // Create the request object
         var xml = {}
         if (s.global){
-            debugger;
+            // //debugger;
             jQuery.event.trigger("ajaxSend", [xml, s]);
         }
 

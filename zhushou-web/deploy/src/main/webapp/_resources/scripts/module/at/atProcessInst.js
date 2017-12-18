@@ -152,7 +152,7 @@
             var param = {tp_title: "模板修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/atProcessInst/detail", params, function (d) {
-                // debugger;
+                // //debugger;
                 param["domain"] = d.data;
                 $.get("/at/varEdit.html", function (source) {
                     var render = template.compile(source);

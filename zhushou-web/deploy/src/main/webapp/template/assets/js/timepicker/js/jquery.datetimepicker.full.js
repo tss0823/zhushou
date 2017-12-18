@@ -19,8 +19,8 @@ var DateFormatter;
     _compare = function (str1, str2) {
         return typeof(str1) === 'string' && typeof(str2) === 'string' && str1.toLowerCase() === str2.toLowerCase();
     };
-    _lpad = function (value, length, char) {
-        var chr = char || '0', val = value.toString();
+    _lpad = function (value, length, chr) {
+        var chr = chr || '0', val = value.toString();
         return val.length < length ? _lpad(chr + val, length) : val;
     };
     _extend = function (out) {

@@ -10,7 +10,7 @@
     $.extend(YT.deploy,{
         route_callback : function (d,data) {
             console.log("appHost list after render call");
-            //debugger;
+            ////debugger;
             //组件初始化之后
             var appName = YT.deploy.appHost.appName;
 

@@ -25,7 +25,7 @@ $(document).ready(function () {
             return null;
         }
 
-        //debugger;
+        ////debugger;
         var date = parseInt(time);
 
         date = new Date(date); //新建日期对象
@@ -112,7 +112,7 @@ $(document).ready(function () {
     });
 
     // window.alert = function(msg,fun,closeAll){
-    //     debugger;
+    //     //debugger;
     //     // closeAll = closeAll | false;
     //     bootbox.alert({
     //         message: msg,

@@ -159,7 +159,7 @@
                 //添加固定项
                 $(document).off("click", "button[id='btnAddFixItem']");
                 $(document).on("click", "button[id='btnAddFixItem']", function () {
-                    // debugger;
+                    // //debugger;
                     var $table = $(document).find("#tbPropertyContent");
                     var $tr = $table.find("tr[name='dataItem']").first().clone();
                     $tr.show();
@@ -188,7 +188,7 @@
                 //添加
                 $(document).off("click", "button[id='btnAddItem']");
                 $(document).on("click", "button[id='btnAddItem']", function () {
-                    // debugger;
+                    // //debugger;
                     var $table = $(document).find("#tbPropertyContent");
                     var $tr = $table.find("tr[name='dataItem']").first().clone();
                     $tr.show();
@@ -286,7 +286,7 @@
             var param = {tp_title: "实体修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/codeBuild/entityDetail", params, function (d) {
-                // debugger;
+                // //debugger;
                 param["domain"] = d.data;
                 $.get("/codeBuild/edit.html", function (source) {
                     var render = template.compile(source);
@@ -326,7 +326,7 @@
         openPropertyEditWin: function (id) {
             var param = {tp_title: "属性列表编辑", entityId: id};
             YT.deploy.util.reqGet("/codeBuild/propertyList", param, function (d) {
-                // debugger;
+                // //debugger;
                 param["propertyList"] = d.data;
                 $.get("/codeBuild/propertyEdit.html", function (source) {
                     var render = template.compile(source);

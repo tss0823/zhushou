@@ -229,7 +229,7 @@
                     var extData = {tp_title: "【" + message + "】task日志详细列表", msTitle: " 【 " + appName + " 】 > " + model};
                     YT.deploy.taskLog.detailExtData = extData;
                     var param = $.extend(d.data, extData);
-                    // debugger;
+                    // //debugger;
                     $.get("/taskLog/detailList.html", function (source) {
                         var render = template.compile(source);
                         var html = render(param);

@@ -69,7 +69,7 @@
             var params = {id:id};
             YT.deploy.util.reqGet("/deployLog/getDetail", params, function (d) {
                 var data = d.data;
-                //debugger;
+                ////debugger;
                 $.get("/viewDetail.html", function (source) {
                     var render = template.compile(source);
                     var html = render(data);

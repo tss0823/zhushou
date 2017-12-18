@@ -8,7 +8,7 @@
         formId: "reqQueryForm",
         
         route_callback: function (d, data) {
-            // debugger;
+            // //debugger;
             console.log("reqContent bind  after render call");
             //组件初始化之后
 
@@ -17,7 +17,7 @@
 
             //初始化右侧栏
             var reqContentInitData = YT.deploy.data.reqContentInitData;
-            // debugger;
+            // //debugger;
             if(reqContentInitData){
                 //ajax同步
                 $.ajaxSetup({async: false});
@@ -36,7 +36,7 @@
             $(document).off("change", "#paramType");
             $(document).on("change", "#paramType", function () {
                 var type = $(this).val();
-                // debugger;
+                // //debugger;
                 $(this).parent().find("input[id='paramValue']").attr("data", 0);
                 $(this).parent().find("input[type='" + type + "']").attr("data", 1);
                 if (type == "file") {
@@ -53,7 +53,7 @@
             //文件选择
             $(document).off("change", ":file[id='paramValue']");
             $(document).on("change", ":file[id='paramValue']", function () {
-                // debugger;
+                // //debugger;
                 var file = $(this).prop("files")[0];
                 $(this).parent().next("#fileNameText").html(file.name);
             });
@@ -96,7 +96,7 @@
             //删除
             $(document).off("click", "a[name='itemRemove']");
             $(document).on("click", "a[name='itemRemove']", function () {
-                // debugger;
+                // //debugger;
                 // if (!confirm("您确要删除吗？")) {
                 //     return false;
                 // }
@@ -116,7 +116,7 @@
                     var data = dataList[key];
                     if (data.id == dataId) {
                         YT.deploy.reqContent.initLeftPanel(data);
-                        // debugger;
+                        // //debugger;
                         break;
                     }
                 }
@@ -148,7 +148,7 @@
     YT.deploy.reqContent = {
 
         success_register: function (param) {
-            debugger;
+            //debugger;
         },
 
         query: function (pageNum, pageSize) {
@@ -163,12 +163,12 @@
             var formData = new FormData();
             $("#tbReqHeader").find("tr[name='dataItem']").each(function (index, item) {
                 var code = $(item).find("input[id='headerKey']").val();
-                // debugger;
+                // //debugger;
                 if (!code) {
                     return true;
                 }
                 var value = $(item).find("input[id='headerValue']").val();
-                // debugger;
+                // //debugger;
                 formData.append("headerList[" + (index - 1) + "].key", code);
                 formData.append("headerList[" + (index - 1) + "].value", value);
                 // formData.append("headerList[0]."+code, value);
@@ -183,7 +183,7 @@
             var itemIndex = 0;
             $("#tbReqData").find("tr[name='dataItem']").each(function (index, item) {
                 var code = $(item).find("input[id='paramKey']").val();
-                // debugger;
+                // //debugger;
                 if (!code) {
                     return true;
                 }
@@ -208,11 +208,11 @@
             formData.append("appName", $("#reqAppName").val());
             formData.append("model", $("#reqModel").val());
             formData.append("companyId", appData["companyId"]);
-            debugger;
+            //debugger;
             // formData.append("headerList",headerList);
             // formData.append("dataList",dataList);
             var data = {url: reqUrl, headerList: headerList, dataList: dataList};
-            debugger;
+            //debugger;
             // jQuery.ajaxSettings.traditional = true;
             $.ajax({
                 url: '/reqContent/execute',
@@ -242,10 +242,10 @@
                         var html = render(d);
                         $("#resBlock").html(html);
                     });
-                    // debugger;
+                    // //debugger;
                 },
                 error: function (xhr, status, err) {
-                    debugger;
+                    //debugger;
                 },
 
             });
@@ -255,7 +255,7 @@
 
         initLeftPanel: function (data) {
             YT.deploy.formId = "reqContentForm";
-            // debugger;
+            // //debugger;
             var d = data || {};
             var reqHeaderList = [];
             if (d.reqHeader) {

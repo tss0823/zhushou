@@ -33,10 +33,42 @@
         </testResources>
         <plugins>
             <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <jswarn>false</jswarn>
+                    <nosuffix>true</nosuffix>
+                    <linebreakpos>-1</linebreakpos>
+                    <sourceDirectory>src/main/webapp</sourceDirectory>
+                    <includes>
+                        <include>_resources/**/*.js</include>
+                        <include>_resources/**/*.css</include>
+                        <include>template/**/*.js</include>
+                        <include>template/**/*.css</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*min.js</exclude>
+                        <exclude>**/*min.css</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
+                    <warSourceIncludes>**</warSourceIncludes>
+                    <warSourceExcludes>_resources/**/*.js,_resources/**/*.css,template/**/*.js,template/**/*.css</warSourceExcludes>
                 </configuration>
             </plugin>
         </plugins>

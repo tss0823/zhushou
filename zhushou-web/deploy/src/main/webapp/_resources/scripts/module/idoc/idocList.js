@@ -57,7 +57,7 @@
             // }
             //
             // if($("#resViewForm").length == 1) {  //资源文档
-            //     debugger;
+            //     //debugger;
             //     YT.deploy.idoc.resDocMDE = new SimpleMDE({
             //         element: document.getElementById("resDoc"),
             //     });
@@ -84,13 +84,13 @@
 
 
             $("#btnQueryEnums").click(function () {
-                //debugger;
+                ////debugger;
                 var pageNum = 1;
                 YT.deploy.idocList.queryEnums(pageNum);
             });
 
             $("#btnQueryRes").click(function () {
-                //debugger;
+                ////debugger;
                 var pageNum = 1; 
                 YT.deploy.idocList.queryRes(pageNum);
             });
@@ -104,7 +104,7 @@
 
             });
 
-            debugger;
+            //debugger;
 
             //moduleType
             YT.deploy.util.initEnumSelect("moduleType", "module", data.module);
@@ -221,7 +221,7 @@
                     data = data || {};
 
                     //渲染左侧栏
-                    // debugger;
+                    // //debugger;
                     var paramList = data.paramList;
                     var paramObj = {};
                     if(paramList){
@@ -404,7 +404,7 @@
             params["pageSize"] = 10000; //无穷大
             // var ext_data = $.extend(params, {tp_title:"接口文档"});
             YT.deploy.util.reqGet("/idocUrl/list", params, function (d) {
-                // debugger;
+                // //debugger;
                 // var jsonObj = JSON.parse(d.data.parameters);
                 // var dataList = [];
                 // for(var key in jsonObj){
@@ -509,7 +509,7 @@
                     'FilesAdded': function (up, files) {
                         plupload.each(files, function (file) {
                             // 文件添加进队列后,处理相关的事情
-                            // debugger;
+                            // //debugger;
                         });
                     },
                     'BeforeUpload': function (up, file) {
@@ -523,7 +523,7 @@
                         progress.setProgress(file.percent + "%", file.speed, chunk_size);
                     },
                     'FileUploaded': function (up, file, info) {
-                        // debugger;
+                        // //debugger;
                         // 每个文件上传成功后,处理相关的事情
                         // 其中 info 是文件上传成功后，服务端返回的json，形式如
                         // {
@@ -535,7 +535,7 @@
                         var domain = up.getOption('domain');
                         var res = JSON.parse(info);
                         var sourceLink = domain + res.key; // 获取上传成功后的文件的Url
-                        debugger;
+                        //debugger;
                         $("#fileRes").val(sourceLink);
                         // $("#imgView").show().attr("src",sourceLink+"?imageView2/1/w/200/h/200");
 
@@ -549,13 +549,13 @@
                     },
                     'UploadComplete': function () {
                         //队列文件处理完毕后,处理相关的事情
-                        debugger;
+                        //debugger;
                     },
                     'Key': function (up, file) {
                         // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
                         // 该配置必须要在 unique_names: false , save_key: false 时才生效
 
-                        debugger;
+                        //debugger;
                         var key = "";
                         // do something with key here
                         return key
