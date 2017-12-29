@@ -80,6 +80,7 @@ public class AnalyseModelUtils {
                 property.setIsNull(true);
                 if(enName.equals("id")){
                     property.setPrimaryKey(true);
+                    property.setIsNull(false);
                 }else{
                     property.setPrimaryKey(false);
                 }
