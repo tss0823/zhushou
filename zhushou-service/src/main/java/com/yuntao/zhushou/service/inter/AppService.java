@@ -1,9 +1,9 @@
 package com.yuntao.zhushou.service.inter;
 
+import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.vo.AppVo;
-import com.yuntao.zhushou.common.web.Pagination;
 
 import java.util.List;
 
@@ -24,6 +24,30 @@ public interface AppService {
     List<App> selectList(AppQuery query);
 
     List<App> selectByCompanyId(Long companyId);
+
+    /**
+     * 新增
+     *
+     * @param project
+     * @return
+     */
+    int insert(App project);
+
+    /**
+     * 根据id修改
+     *
+     * @param project
+     * @return
+     */
+    int updateById(App project);
+
+    /**
+     * 根据id删除
+     *
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
 
 
 

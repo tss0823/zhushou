@@ -7,6 +7,8 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class DeployLogQuery extends BaseQuery {
 
+    private Long projectId;
+
     private String appName;
 
     private String model;
@@ -75,5 +77,13 @@ public class DeployLogQuery extends BaseQuery {
 
     public void setTopNum(Integer topNum) {
         this.topNum = topNum;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

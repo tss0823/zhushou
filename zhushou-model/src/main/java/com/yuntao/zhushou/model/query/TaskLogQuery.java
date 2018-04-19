@@ -7,6 +7,8 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class TaskLogQuery extends BaseQuery {
 
+    private Long projectId;
+
     private String model;
 
     private String appName;
@@ -185,5 +187,13 @@ public class TaskLogQuery extends BaseQuery {
 
     public void setDescType(String descType) {
         this.descType = descType;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

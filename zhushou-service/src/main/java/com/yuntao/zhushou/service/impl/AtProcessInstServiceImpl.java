@@ -50,7 +50,7 @@ public class AtProcessInstServiceImpl implements AtProcessInstService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = atProcessInstMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AtProcessInst> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

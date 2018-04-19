@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.BuildRecordMapper">
+
+	<resultMap type="BuildRecord" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="gmtCreate" property="gmtCreate"/>
+		<result column="gmtModify" property="gmtModify"/>
+		<result column="delState" property="delState"/>
+		<result column="projectId" property="projectId"/>
+		<result column="name" property="name"/>
+		<result column="attachmentId" property="attachmentId"/>
+		<result column="downloadUrl" property="downloadUrl"/>
+		<result column="companyId" property="companyId"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `projectId`, `name`, `attachmentId`, `downloadUrl`,
+	 `companyId`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		buildRecord
+	</sql>
+
+	<sql id="Base_Where">
+		delState = 1
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
+		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
+		<if test="projectId != null "> and  `projectId` = #{projectId} </if>
+		<if test="name != null  and name != ''"> and  `name` = #{name} </if>
+		<if test="attachmentId != null"> and  `attachmentId` = #{attachmentId} </if>
+		<if test="downloadUrl != null  and downloadUrl != ''"> and  `downloadUrl` = #{downloadUrl} </if>
+		<if test="companyId != null "> and  `companyId` = #{companyId} </if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="BuildRecord">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		`gmtCreate`,`gmtModify`,`delState`,`projectId`,`name`,`attachmentId`,`downloadUrl`,
+		`companyId`
+		)
+		values
+		(
+		 now(6), now(6), 1, #{projectId}, #{name}, #{attachmentId}, #{downloadUrl}, #{companyId}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="BuildRecord">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="delState != null">`delState` = #{delState}, </if>
+			<if test="projectId != null">`projectId` = #{projectId}, </if>
+			<if test="name != null and name != ''">`name` = #{name}, </if>
+			<if test="attachmentId != null">`attachmentId` = #{attachmentId}, </if>
+			<if test="downloadUrl != null and downloadUrl != ''">`downloadUrl` = #{downloadUrl}, </if>
+			<if test="companyId != null">`companyId` = #{companyId}, </if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+
+	<!-- user definition code start -->
+	<!-- user definition code end -->
+</mapper>

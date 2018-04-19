@@ -17,9 +17,13 @@ public class Config implements Serializable {
      */
     private Long companyId;
 
+    private Long projectId;
+
+    private Integer orderBy;
+
 
     /**
-     * 类型(0 私有;1 共有)
+     * 类型(0 系统;1 公司, 2 项目)
      */
     private Integer type;
 
@@ -84,5 +88,21 @@ public class Config implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Integer getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(Integer orderBy) {
+        this.orderBy = orderBy;
     }
 }

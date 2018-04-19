@@ -1,5 +1,6 @@
 package com.yuntao.zhushou.common.utils;
 
+import com.yuntao.zhushou.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,9 @@ public class ResponseHolderFilter implements Filter {
         try {
             ResponseHolder.set(response);
             chain.doFilter(request, response);
-        } finally {
+        } catch (Exception e){
+            throw new BizException("system error    ",e);
+        }finally {
             ResponseHolder.clear();
 //            log.info("reponse clear1 ...");
         }

@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.service.inter;
 
 import com.yuntao.zhushou.model.domain.Config;
+import com.yuntao.zhushou.model.query.ConfigQuery;
 
 import java.util.List;
 
@@ -15,8 +16,16 @@ public interface ConfigService {
 
     List<Config> selectList();
 
+    List<Config> selectList(ConfigQuery query);
+
     List<Config> selectPubList();
 
     List<Config> selectPriList(Long companyId);
+
+    List<Config> selectProjectList(Long projectId);
+
+    int saveCompanyConfig(Long companyId,List<Config> dataList);
+
+    int saveProjectConfig(Long projectId,List<Config> dataList);
 
 }

@@ -24,6 +24,12 @@
             var docList = YT.deploy.data.docList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
+
+
             //month select init
             var nowDate = new Date();
             var year = nowDate.getFullYear();

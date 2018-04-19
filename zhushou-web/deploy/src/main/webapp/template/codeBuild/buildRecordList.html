@@ -1,0 +1,77 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{tp_title}}
+            </small>
+        </h1>
+        <h1 style="text-align: right">
+            <small>
+                <form id="buildRecordForm" onsubmit="return false">
+                    项目：
+                    <select id="projectId" name="projectId">
+                        <option></option>
+                    </select>
+                    &nbsp;&nbsp;
+                    名称：
+                    <input type="text" id="name" name="name" value="{{name}}" class="input-sm" />
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnNew"> <i class="icon-building align-top bigger-125"></i> 创建 </button>
+                    <!--<button class="btn btn-pink" id="btnNewTemplate">创建模板</button>-->
+                </form>
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th style="width:8%">项目</th>
+            <th style="width:12%">名称</th>
+            <th style="width:12%">时间</th>
+            <th style="width:6%">操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbContent">
+        {{each dataList as bean i}}
+        <tr class="selected">
+            <td>
+                <a href="#">{{bean.projectId | remote:'findProjectById,name'}}</a>
+            </td>
+            <td>{{bean.name}}</td>
+            <td>{{bean.gmtCreate | dateFormat:'yyyy-MM-dd hh:mm:ss' }}</td>
+            <td>
+                <a href="javascript:void(0)" name="btnDownload" data="{{bean.attachmentId}}" ><strong style="color:green">下载</strong></a>
+                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <!--page start-->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="sample-table-2_info">
+                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong class="pageCount"></strong>】页
+                当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_bootstrap">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--page end-->
+
+</div><!-- /.page-content -->
+<!--<script src="/assets/js/date-time/moment.min.js?ver={{ver}}" ></script>-->
+<script src="/_resources/scripts/module/codeBuild/buildRecord.js?ver={{ver}}" ></script>
+<script>
+
+</script>

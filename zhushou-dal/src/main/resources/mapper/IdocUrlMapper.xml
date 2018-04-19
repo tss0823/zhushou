@@ -7,6 +7,7 @@
     <resultMap type="IdocUrl" id="BaseResultMap">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="companyId" property="companyId" jdbcType="BIGINT" />
+        <result column="projectId" property="projectId" jdbcType="BIGINT" />
         <result column="url" property="url"/>
         <result column="name" property="name"/>
         <result column="appName" property="appName"/>
@@ -29,7 +30,7 @@
 
 
     <sql id="Base_Column_List">
-    `id`,`companyId`,`url`,`name`,`appName`,`module`,`version`,`resultMockData`,`resultData`,`status`,
+    `id`,`companyId`,`projectId`,`url`,`name`,`appName`,`module`,`version`,`resultMockData`,`resultData`,`status`,
     `gmtCreate`,`gmtModify`,`delStatus`,`memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`,
     `mockStatus`
     
@@ -47,6 +48,7 @@
         <!--<if test="companyId != null">and companyId = #{companyId}</if>-->
         <if test="type != null and type == 2 and companyId != null">and (companyId = #{companyId} or companyId = -1)</if>
         <if test="type != null and type != 2 and companyId != null">and companyId = #{companyId} </if>
+        <if test="projectId != null">and `projectId` = #{projectId}</if>
         <if test="url != null and url != '' ">and `url` = #{url}</if>
         <if test="name != null and name != '' ">and `name` = #{name}</if>
         <if test="appName != null and appName != '' ">and `appName` = #{appName}</if>
@@ -111,12 +113,13 @@
         (
         `companyId`,`url`,`name`, `appName`,`module`,`version`,`resultData`,`resultMockData`,`status`,
         `gmtCreate`,`gmtModify`,`delStatus`, `memo`,`createUserId`,`createUserName`,`type`,`showResId`,`mockDataId`,
-        `mockStatus`
+        `mockStatus`,`projectId`
         )
         values
         (
         #{companyId},#{url},#{name},#{appName},#{module},#{version},#{resultData},#{resultMockData},#{status},
-        now(6), now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId},#{mockDataId},#{mockStatus}
+        now(6), now(6),1,#{memo},#{createUserId},#{createUserName},#{type},#{showResId},#{mockDataId},#{mockStatus},
+        #{projectId}
         )
     </insert>
 
@@ -125,6 +128,7 @@
         <include refid="Base_Table_Name"/>
         <set>
             <if test="companyId != null">`companyId`=#{companyId},</if>
+            <if test="projectId != null">`projectId`=#{projectId},</if>
             <if test="url != null and url !=''">`url` = #{url},</if>
             <if test="name != null and name !=''">`name` = #{name},</if>
             <if test="appName != null and appName !=''">`appName` = #{appName},</if>

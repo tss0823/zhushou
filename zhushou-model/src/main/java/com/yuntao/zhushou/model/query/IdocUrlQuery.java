@@ -11,6 +11,8 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class IdocUrlQuery extends BaseQuery {
 
+    private Long projectId;
+
     /**  URL * */
     private String url;
 
@@ -106,5 +108,13 @@ public class IdocUrlQuery extends BaseQuery {
 
     public void setNameLike(String nameLike) {
         this.nameLike = nameLike;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

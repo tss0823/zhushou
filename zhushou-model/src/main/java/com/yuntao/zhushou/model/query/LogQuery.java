@@ -7,6 +7,8 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class LogQuery extends BaseQuery {
 
+    private Long projectId;
+
     private String model;
 
     private String appName;
@@ -137,5 +139,13 @@ public class LogQuery extends BaseQuery {
 
     public void setShowAll(Boolean showAll) {
         this.showAll = showAll;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

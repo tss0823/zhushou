@@ -49,7 +49,7 @@ public class AtActiveServiceImpl implements AtActiveService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = atActiveMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AtActive> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

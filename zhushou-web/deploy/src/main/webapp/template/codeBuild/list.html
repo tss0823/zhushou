@@ -9,11 +9,16 @@
         <h1 style="text-align: right">
             <small>
                 <form id="codeBuildForm" onsubmit="return false">
+                    项目：
+                    <select id="projectId" name="projectId">
+                        <option></option>
+                    </select>
+                    &nbsp;&nbsp;
                     英文名称：
-                    <input type="text" id="enNameLike" name="enNameLike" value="{{enNameLike}}" class="input-sm" />
+                    <input type="text" id="enName" name="enName" value="{{enName}}" class="input-sm" />
                     &nbsp;&nbsp;
                     中文名称：
-                    <input type="text" id="cnNameLike" name="cnNameLike" value="{{cnNameLike}}" class="input-sm" />
+                    <input type="text" id="cnName" name="cnName" value="{{cnName}}" class="input-sm" />
                     &nbsp;&nbsp;
                     <!--<input type="text" id="model" name="model" value="{{model}}" class="input-sm" />-->
                     &nbsp;&nbsp;
@@ -24,7 +29,19 @@
                     &nbsp;&nbsp;
                     <button class="btn btn-primary" id="btnBuildApp"> <i class="icon-building align-top bigger-125"></i> 构建代码 </button>
                     &nbsp;&nbsp;
+                    <!--&nbsp;&nbsp;-->
+                    <!--<button class="btn btn-pink" id="btnTemplateQuery"> <i class="icon-building align-top bigger-125"></i> 模版列表 </button>-->
+                    <!--&nbsp;&nbsp;-->
+                    <!--<button class="btn btn-pink" id="btnBuildRecordQuery"> <i class="icon-building align-top bigger-125"></i> 构建记录 </button>-->
                 </form>
+            </small>
+        </h1>
+        <h1 style="text-align: right">
+            <small>
+                    <!--&nbsp;&nbsp;-->
+                    <button class="btn btn-pink" id="btnTemplateQuery"> <i class="icon-building align-top bigger-125"></i> 模版列表 </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnBuildRecordQuery"> <i class="icon-building align-top bigger-125"></i> 构建记录 </button>
             </small>
         </h1>
     </div><!-- /.page-header -->
@@ -37,6 +54,8 @@
                     <span class="lbl"></span>
                 </label>
             </th>
+            <th style="width:8%">项目</th>
+            <!--<th style="width:10%">应用</th>-->
             <th style="width:8%">英文名称</th>
             <th style="width:10%">中文名称</th>
             <th style="width:12%">创建时间</th>
@@ -55,8 +74,9 @@
                 </label>
             </td>
             <td>
-                <a href="#">{{bean.enName}}</a>
+                <a href="#">{{bean.projectId | remote:'findProjectById,name'}}</a>
             </td>
+            <td>{{bean.enName}}</td>
             <td>{{bean.cnName}}</td>
             <td>{{bean.gmtCreate | dateFormat:'yyyy-MM-dd hh:mm' }}</td>
             <td>{{bean.gmtModify | dateFormat:'yyyy-MM-dd hh:mm' }}</td>

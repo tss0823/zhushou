@@ -96,6 +96,10 @@ $(document).ready(function () {
             url = "/user/findById";
         }else if(urlType == "findTemplateById"){
             url = "/atTemplate/findById";
+        }else if(urlType == "findProjectById") {
+            url = "/project/detail";
+        }else if(urlType == "findCodeTemplateById") {
+            url = "/template/detail";
         }else{
             return null;
         }

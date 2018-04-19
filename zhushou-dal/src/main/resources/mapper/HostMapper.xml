@@ -13,10 +13,12 @@
         <result column="delStatus" property="delStatus" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`name`,`eth0`,`eth1`,`gmtCreate`,`gmtModify`,`type`,`status`
+        `id`,`name`,`eth0`,`eth1`,`gmtCreate`,`gmtModify`,`type`,`status`,`username`,`pwd`
     </sql>
     <sql id="Base_Table_Name">
         host
@@ -28,7 +30,8 @@
         <if test="name != null and name != ''">and name = #{name}</if>
         <if test="type != null">and type = #{type}</if>
         <if test="status != null">and status = #{status}</if>
-
+        <if test="username != null and username != ''">and username = #{username}</if>
+        <if test="pwd != null and pwd != ''">and pwd = #{pwd}</if>
     </sql>
 
     <select id="findById" parameterType="Long" resultMap="BaseResultMap">
@@ -79,9 +82,9 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`companyId`,`name`,`eth0`,`eth1`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`)
+        (`companyId`,`name`,`eth0`,`eth1`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`username`,`pwd`)
         values
-        (#{companyId},#{name},#{eth0},#{eth1},now(6),now(6),1,#{type},#{status})
+        (#{companyId},#{name},#{eth0},#{eth1},now(6),now(6),1,#{type},#{status},#{username},#{pwd})
     </insert>
 
     <update id="updateById">
@@ -94,6 +97,8 @@
             <if test="eth1 != null and eth1 !=''">`eth1`=#{eth1},</if>
             <if test="type != null and type !=''">`type`=#{type},</if>
             <if test="status != null and status !=''">`status`=#{status},</if>
+            <if test="username != null and username !=''">`username`=#{username},</if>
+            <if test="pwd != null and pwd !=''">`pwd`=#{pwd},</if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

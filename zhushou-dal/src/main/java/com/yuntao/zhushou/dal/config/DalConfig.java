@@ -185,6 +185,32 @@ public class DalConfig implements ApplicationContextAware {
     public CodeBuildSqlMapper codeBuildSqlMapper() throws Exception {
         return newMapperFactoryBean(CodeBuildSqlMapper.class).getObject();
     }
+
+    @Bean
+    public ProjectMapper projectMapper() throws Exception {
+        return newMapperFactoryBean(ProjectMapper.class).getObject();
+    }
+    @Bean
+    public EntityMapper entityMapper() throws Exception {
+        return newMapperFactoryBean(EntityMapper.class).getObject();
+    }
+    @Bean
+    public PropertyMapper propertyMapper() throws Exception {
+        return newMapperFactoryBean(PropertyMapper.class).getObject();
+    }
+    @Bean
+    public TemplateMapper templateMapper() throws Exception {
+        return newMapperFactoryBean(TemplateMapper.class).getObject();
+    }
+    @Bean
+    public BuildRecordMapper buildRecordMapper() throws Exception {
+        return newMapperFactoryBean(BuildRecordMapper.class).getObject();
+    }
+    @Bean
+    public AttachmentMapper attachmentMapper() throws Exception {
+        return newMapperFactoryBean(AttachmentMapper.class).getObject();
+    }
+
     <T> MapperFactoryBean<T> newMapperFactoryBean(Class<T> clazz)
             throws Exception {
         MapperFactoryBean<T> b = new MapperFactoryBean<T>();

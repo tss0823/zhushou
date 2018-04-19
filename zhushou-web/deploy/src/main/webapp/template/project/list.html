@@ -1,0 +1,102 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+                {{tp_title}}
+            </small>
+        </h1>
+        <h1 style="text-align: right">
+            <small>
+                <form id="projectForm" onsubmit="return false">
+                    名称：
+                    <input type="text" id="name" name="name" value="{{name}}" class="input-sm" />
+                    &nbsp;&nbsp;
+                    英文名称：
+                    <input type="text" id="enName" name="enName" value="{{enName}}" class="input-sm" />
+                    &nbsp;&nbsp;
+                    <!--<input type="text" id="model" name="model" value="{{model}}" class="input-sm" />-->
+                    &nbsp;&nbsp;
+                    <button class="btn btn-success" id="btnQuery"> <i class="icon-search align-top bigger-125"></i> 查询 </button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnNew"> <i class="icon-building align-top bigger-125"></i> 创建 </button>
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnHostQuery"> <i class="icon-building align-top bigger-125"></i> 主机列表 </button>
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <button class="btn btn-pink" id="btnAppQuery"> <i class="icon-building align-top bigger-125"></i> 应用列表 </button>
+                </form>
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th style="width:5%;text-align: center" align="center">
+                <label>
+                    <input id="chkFormAll" type="checkbox" class="ace"/>
+                    <span class="lbl"></span>
+                </label>
+            </th>
+            <th style="width:8%">名称</th>
+            <th style="width:8%">英文名称</th>
+            <th style="width:8%">模版名称</th>
+            <th style="width:8%">包名</th>
+            <th style="width:18%">描述</th>
+            <th style="width:12%">创建时间</th>
+            <th style="width:12%">修改时间</th>
+            <th style="width:10%">操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbContent">
+        {{each dataList as bean i}}
+        <tr class="selected">
+            <td style="text-align: center">
+                <label>
+                    <input id="chkForm" type="checkbox" class="ace" value="{{bean.id}}"  />
+                    <span class="lbl"></span>
+                </label>
+            </td>
+            <td>
+                <a href="#">{{bean.name}}</a>
+            </td>
+            <td>{{bean.enName}}</td>
+            <td>{{bean.templateId | remote:'findCodeTemplateById,name'}}    </td>
+            <td>{{bean.packageName}}</td>
+            <td>{{bean.desc}}</td>
+            <td>{{bean.gmtCreate | dateFormat:'yyyy-MM-dd hh:mm' }}</td>
+            <td>{{bean.gmtModify | dateFormat:'yyyy-MM-dd hh:mm' }}</td>
+            <td>
+                <a href="javascript:void(0)" name="enterEdit" data="{{bean.id}}" ><strong style="color:green">修改</strong></a>
+                <a href="javascript:void(0)" name="enterProjectConfigEdit" data="{{bean.id}}" ><strong style="color:green">配置项</strong></a>
+                <a href="javascript:void(0)" name="btnDel" data="{{bean.id}}" ><strong style="color:red">删除</strong></a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <!--page start-->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="sample-table-2_info">
+                总共【<strong class="totalCount"></strong>】条记录，第【<strong class="pageNum"></strong>】页，共【<strong class="pageCount"></strong>】页
+                当前展示【<strong class="startRow"></strong> - <strong class="endRow"></strong>】
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_bootstrap">
+                <ul class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--page end-->
+
+</div><!-- /.page-content -->
+<script src="/assets/js/date-time/moment.min.js?ver={{ver}}" ></script>
+<script src="/_resources/scripts/module/project/project.js?ver={{ver}}" ></script>
+<script>
+
+</script>

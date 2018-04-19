@@ -9,6 +9,10 @@
         <form id="idocForm" onsubmit="return false">
             <h1 style="text-align: right;margin-top: 5px">
                 <small>
+                    项目：
+                    <select id="projectId" name="projectId">
+                    </select>
+                    &nbsp;
                     应用：
                     <select id="appName" name="appName">
                         <option value=""></option>
@@ -20,6 +24,9 @@
                     版本：
                     <input type="text" id="version" name="version" value="{{version}}" class="input-sm" style="width:60px"/>
                     &nbsp;
+                </small>
+            </h1>  <h1 style="text-align: right;margin-top: 5px">
+                <small>
                     URL：
                     <select class="form-control" style="width:230px;height:40px;line-height: 40px" id="selName"
                             data-placeholder="请选择接口名称">

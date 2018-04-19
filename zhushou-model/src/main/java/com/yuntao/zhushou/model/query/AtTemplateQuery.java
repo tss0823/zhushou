@@ -11,6 +11,8 @@ import com.yuntao.zhushou.common.web.BaseQuery;
  */
 public class AtTemplateQuery extends BaseQuery {
 
+    private Long projectId;
+
     private String name;
 
     private String model;
@@ -39,5 +41,13 @@ public class AtTemplateQuery extends BaseQuery {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

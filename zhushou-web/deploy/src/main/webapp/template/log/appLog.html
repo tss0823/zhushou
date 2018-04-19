@@ -26,6 +26,11 @@
                     <select id="month" name="month">
                     </select>
                     &nbsp;
+                    项目：
+                    <select id="projectId" name="projectId">
+                        <option></option>
+                    </select>
+                    &nbsp;
                     应用：
                     <select id="appName" name="appName">
                         <option value=""></option>
@@ -36,13 +41,13 @@
                     </select>
                     手机账号：
                     <input type="text" id="mobile" name="mobile" value="{{mobile}}" class="input-sm"/>
-                    &nbsp;
-                    用户ID：
-                    <input type="text" id="userId" name="userId" value="{{userId}}" class="input-small"/>
                 </small>
             </h1>
         <h1 style="text-align: right;padding-top: 5px">
                 <small>
+                    用户ID：
+                    <input type="text" id="userId" name="userId" value="{{userId}}" class="input-small"/>
+                    &nbsp;
                     级别：
                     <select id="level" name="level">
                         <option value=""></option>
@@ -60,7 +65,6 @@
                         <option value=""></option>
                     </select>
                     <input type="text" id="url" name="url" value="{{url}}" class="input-sm" style="width:310px"/>
-                    &nbsp;
                 </small>
             </h1>
             <h1 style="text-align: right;margin-top: 5px">
@@ -72,15 +76,15 @@
                     <select id="textType" name="textType">
                     </select>
                     <input type="text" id="logText" name="logText" value="{{logText}}" class="input-group-lg" style="width:280px"/>
-                </small>
-            </h1>
-            <h1 style="text-align: right;margin-top: 5px">
-                <small>
+                    &nbsp;
                     客户端：
                     <select id="userAgentType" name="userAgentType">
                     </select>
                     <input type="text" id="userAgent" name="userAgent" value="{{userAgent}}" class="input-sm" style="width: 380px"/>
-                    &nbsp;
+                </small>
+            </h1>
+            <h1 style="text-align: right;margin-top: 5px">
+                <small>
 
                     时间：
                     <input type="text" id="startTime" name="startTime" value="{{startTime}}" class="input-sm"/>

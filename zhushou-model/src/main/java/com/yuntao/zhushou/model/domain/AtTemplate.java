@@ -31,6 +31,9 @@ public class AtTemplate implements Serializable {
 
 	/**  企业ID * */
 	private Long companyId;
+
+	/**  项目ID * */
+	private Long projectId;
 		
 	/**  用户名称 * */
 	private String userName;
@@ -117,5 +120,13 @@ public class AtTemplate implements Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
 	}
 }

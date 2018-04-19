@@ -22,6 +22,8 @@ public class BaseQuery implements Serializable {
 
     private Long companyId;
 
+    private Long projectId;
+
     private String key;
 
     private String codeName;
@@ -31,6 +33,7 @@ public class BaseQuery implements Serializable {
     private String ascOrDesc = "desc";
 
     private Integer limit;
+
 
 
 
@@ -112,5 +115,13 @@ public class BaseQuery implements Serializable {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

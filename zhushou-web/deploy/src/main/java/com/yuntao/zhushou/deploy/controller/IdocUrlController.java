@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.IdocUrl;
+import com.yuntao.zhushou.model.domain.Project;
 import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.enums.IdocUrlType;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
@@ -13,6 +14,7 @@ import com.yuntao.zhushou.model.param.IdocDataParam;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
 import com.yuntao.zhushou.model.vo.IdocUrlVo;
 import com.yuntao.zhushou.service.inter.IdocUrlService;
+import com.yuntao.zhushou.service.inter.ProjectService;
 import com.yuntao.zhushou.service.inter.ProxyResRewriteService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class IdocUrlController extends BaseController {
     @Autowired
     private ProxyResRewriteService proxyResRewriteService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(IdocUrlQuery query) {
@@ -45,6 +50,12 @@ public class IdocUrlController extends BaseController {
         query.setCompanyId(user.getCompanyId());
         if (query.getType() == null) {
             query.setType(IdocUrlType.inters.getCode());
+        }
+        if(query.getProjectId() == null){
+            Project project = projectService.getFirst(user.getCompanyId());
+            if (project != null) {
+                query.setProjectId(project.getId());
+            }
         }
         Pagination<IdocUrlVo> pagination = idocUrlService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
@@ -217,7 +228,7 @@ public class IdocUrlController extends BaseController {
     public ResponseObject copyDoc(@RequestParam Long id) {
         User user = userService.getCurrentUser();
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-//        idocUrlService.updateResDoc(id,pri,user,appName,name,resDocText);
+//        idocUrlService.updateResDoc(id,system,user,appName,name,resDocText);
         idocUrlService.copyDoc(id);
         return responseObject;
     }

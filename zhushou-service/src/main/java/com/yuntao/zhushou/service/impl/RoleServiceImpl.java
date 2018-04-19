@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = roleMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<Role> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

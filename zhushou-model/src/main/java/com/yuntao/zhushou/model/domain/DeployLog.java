@@ -21,6 +21,11 @@ public class DeployLog implements Serializable {
     private Long companyId;
 
     /**
+     * 项目id
+     */
+    private Long projectId;
+
+    /**
      * 内容
      */
     private String content;
@@ -171,5 +176,13 @@ public class DeployLog implements Serializable {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

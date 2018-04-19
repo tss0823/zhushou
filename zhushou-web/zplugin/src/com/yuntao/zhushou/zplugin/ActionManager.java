@@ -7,9 +7,9 @@ import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.model.domain.Entity;
+import com.yuntao.zhushou.model.domain.Property;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
-import com.yuntao.zhushou.model.domain.codeBuild.Entity;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.enums.MysqlDataTypeEnum;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import org.apache.commons.io.FileUtils;
@@ -19,7 +19,10 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

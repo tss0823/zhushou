@@ -1,7 +1,8 @@
 package com.yuntao.zhushou.model.param.codeBuild;
 
-import com.yuntao.zhushou.model.domain.codeBuild.Entity;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
+
+import com.yuntao.zhushou.model.domain.Entity;
+import com.yuntao.zhushou.model.domain.Property;
 
 import java.util.List;
 

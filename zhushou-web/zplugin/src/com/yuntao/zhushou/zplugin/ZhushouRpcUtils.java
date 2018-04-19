@@ -8,9 +8,9 @@ import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.MD5Util;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.model.domain.Entity;
+import com.yuntao.zhushou.model.domain.Property;
 import com.yuntao.zhushou.model.domain.User;
-import com.yuntao.zhushou.model.domain.codeBuild.Entity;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 

@@ -1,0 +1,77 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+               {{tp_title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" id="projectNewForm" onsubmit="return false;">
+                <input type="hidden" id="id" name="id" value="{{domain.id}}">
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>名称：</label>
+                    <span>
+                        <input type="text" id="name" name="name" value="{{domain.name}}" placeholder="请输入名称" class="input-xlarge">
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>英文名称：</label>
+                    <span>
+                        <input type="text" id="enName" name="enName" value="{{domain.enName}}" placeholder="请输入英文名称" class="input-xlarge">
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>代码模版：</label>
+                    <span>
+                        <select id="templateId" name="templateId">
+                            <option></option>
+                        </select>
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>git代码名称：</label>
+                    <span>
+                        <input type="text" id="codeName" name="codeName" value="{{domain.codeName}}" placeholder="请输入git代码名称" class="input-xlarge">
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>包名：</label>
+                    <span>
+                        <input type="text" id="packageName" name="packageName" value="{{domain.packageName}}" placeholder="请输入包名" class="input-xlarge">
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>描述：</label>
+                    <span>
+                        <textarea  id="desc" name="desc" style="width:650px;height: 150px">{{domain.desc}}</textarea>
+                    </span>
+                    &nbsp;&nbsp;
+                </div>
+                <div class="space-4"></div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" id="btnSave"> <i class="icon-ok bigger-110"></i> 保存 </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset" id="btnCancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->

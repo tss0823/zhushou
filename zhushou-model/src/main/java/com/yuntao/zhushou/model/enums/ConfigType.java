@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ConfigType {
 
-    pri(0, "私有"),
+    system(0, "系统"),
 
-    pub(1, "公共"),
+    company(1, "公司"),
+
+    project(2, "项目"),
 
     ;
 

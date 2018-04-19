@@ -130,7 +130,11 @@
                 dataArray.push(data[val]);
                 dataArray.push("</option>");
             }
-            $("#"+selectId).append(dataArray.join(""));
+            if(YT.deploy.formId){
+                $("#"+YT.deploy.formId).find("#"+selectId).append(dataArray.join(""));
+            }else{
+                $("#"+selectId).append(dataArray.join(""));
+            }
         },
 
         initEnumSelect:function(type,selectId,initValue){
@@ -218,6 +222,7 @@
             $(".endRow").html(data.endRow);
 
             var pageArray = [];
+            //pageNum,pageSize 必须定义好！
             pageArray.push('<input type="hidden" id="pageNum" value="' + data.pageNum + '" />');
             pageArray.push('<input type="hidden" id="pageSize" value="' + data.pageSize + '" />');
             pageArray.push('<li class="prev');

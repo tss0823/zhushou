@@ -15,9 +15,11 @@ public enum JavaDataType {
 
     TIME("java.util.Date","java.util.Date"),
 
-    BIGDECIMAL("java.math.BigDecimal","java.math.BigDecimal"),
+    DOUBLE("java.lang.Double","java.lang.Double"),
 
-    BOOLEAN("java.lang.Boolean","java.lang.Boolean");
+    BOOLEAN("java.lang.Boolean","java.lang.Boolean"),
+
+    BYTE("java.lang.Byte","java.lang.Byte");
 
 
     ;

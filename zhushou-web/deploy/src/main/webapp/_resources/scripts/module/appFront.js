@@ -9,7 +9,7 @@
 
     var common = {
 
-        route_callback: function () {
+        route_callback: function (d,data) {
             console.log("appFront list after render call");
             //组件初始化之后
 
@@ -17,6 +17,12 @@
             YT.deploy.eventProcess.addListener("deploy_script",function(msgObj){
                 YT.deploy.appFront.writeMsg(msgObj.data+"\r\n", true);
             });
+
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
+
             //end
 
             //注册事件

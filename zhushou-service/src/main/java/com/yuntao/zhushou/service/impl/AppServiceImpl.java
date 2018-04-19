@@ -8,6 +8,7 @@ import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AppMapper;
 import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.vo.AppVo;
 import com.yuntao.zhushou.service.inter.AppService;
@@ -64,7 +65,7 @@ public class AppServiceImpl extends AbstService implements AppService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = appMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<App> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
@@ -93,7 +94,7 @@ public class AppServiceImpl extends AbstService implements AppService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = appMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<App> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
@@ -156,5 +157,22 @@ public class AppServiceImpl extends AbstService implements AppService {
         AppQuery appQuery = new AppQuery();
         appQuery.setCompanyId(companyId);
         return selectList(appQuery);
+    }
+
+    @Override
+    public int insert(App app) {
+        app.setType(YesNoIntType.yes.getCode());
+        app.setStatus(YesNoIntType.yes.getCode());
+        return appMapper.insert(app);
+    }
+
+    @Override
+    public int updateById(App app) {
+        return appMapper.updateById(app);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return appMapper.deleteById(id);
     }
 }

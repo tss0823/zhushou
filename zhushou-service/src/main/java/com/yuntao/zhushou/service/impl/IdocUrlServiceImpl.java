@@ -66,7 +66,7 @@ public class IdocUrlServiceImpl implements IdocUrlService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = idocUrlMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<IdocUrl> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

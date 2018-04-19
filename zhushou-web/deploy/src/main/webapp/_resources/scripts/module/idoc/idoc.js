@@ -20,6 +20,11 @@
 
             var enums = YT.deploy.data.enums;
 
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
+
 
             if($("#resNewForm").length == 1) {  //资源文档
 

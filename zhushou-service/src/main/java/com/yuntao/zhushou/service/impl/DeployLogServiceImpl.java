@@ -47,7 +47,7 @@ public class DeployLogServiceImpl extends AbstService implements DeployLogServic
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = deployLogMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<DeployLog> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

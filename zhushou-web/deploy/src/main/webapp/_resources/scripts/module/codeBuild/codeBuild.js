@@ -11,15 +11,19 @@
 
         formId: "codeBuildForm",
 
-        route_callback: function (d) {
+        route_callback: function (d,data) {
             console.log("template list after render call");
             //组件初始化之后
 
-            var data = d.data;
+            // var data = d.data;
 
             this.formId = $("form:first").attr("id");
 
             //
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
 
             $("#btnQuery").click(function () {
                 var pageNum = 1;
@@ -40,6 +44,15 @@
                 $(this).prop("disabled",true);
                 YT.deploy.codeBuild.openMsgWin(this,"生成代码","/codeBuild/buildApp");
             });
+
+            $("#btnTemplateQuery").click(function () {
+                YT.deploy.codeBuild.queryTemplateList();
+            });
+
+            $("#btnBuildRecordQuery").click(function () {
+                YT.deploy.codeBuild.queryBuildRecordList();
+            });
+
 
 
             //保存
@@ -126,12 +139,32 @@
             YT.deploy.route("/codeBuild/list", params, "/codeBuild/list.html", ext_data);
         },
 
+        queryTemplateList: function () {
+            var params = {};
+            var ext_data = $.extend(params, {tp_title: "模版列表"});
+            YT.deploy.route("/template/list", params, "/codeBuild/templateList.html", ext_data);
+            YT.deploy.formId = "templateForm";
+            // YT.deploy.atTemplate.initNewEdit(ext_data);
+        },
+
+        queryBuildRecordList: function () {
+            var params = {};
+            var ext_data = $.extend(params, {tp_title: "构建记录列表"});
+            YT.deploy.route("/buildRecord/list", params, "/codeBuild/buildRecordList.html", ext_data);
+            YT.deploy.formId = "buildRecordForm";
+            // YT.deploy.atTemplate.initNewEdit(ext_data);
+        },
+
         initNewEdit: function (data) {
             //type
             // var enums = YT.deploy.data.enums;
 
             var $form = $("#" + YT.deploy.formId);
 
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
 
             if (YT.deploy.formId == "codeBuildMsgForm") {
 
@@ -182,6 +215,13 @@
                     $tr.find("input[id='enName']").val("gmtModify");
                     $tr.find("input[id='cnName']").val("修改时间");
                     $tr.find("select[name='dataType']").val("java.util.Date");
+                    $table.append($tr);
+
+                    var $tr = $table.find("tr[name='dataItem']").first().clone();
+                    $tr.show();
+                    $tr.find("input[id='enName']").val("delState");
+                    $tr.find("input[id='cnName']").val("删除状态（0：已删除；1：未删除）");
+                    $tr.find("select[name='dataType']").val("java.lang.Boolean");
                     $table.append($tr);
                 });
 
@@ -245,7 +285,7 @@
                     width: "800px",
                 });
                 $(".modal-dialog").prop("style", "width:70%;height:85%")
-                YT.deploy.formId = "codeBuildForm";
+                YT.deploy.formId = "codeBuildNewForm";
                 YT.deploy.codeBuild.initNewEdit(param);
             });
         },
@@ -261,7 +301,7 @@
                 alert("请选择您要操作的项");
                 return;
             }
-            var params = {ids:idArray.join(",")};
+            var params = {projectId:$("#projectId").val(),entityIds:idArray.join(",")};
             YT.deploy.util.reqPost(url, params, function (d) {
                 var param = {tp_title: title, msg: d.data};
                 $.get("/codeBuild/msg.html", function (source) {
@@ -296,7 +336,7 @@
                         width: "800px",
                     });
                     $(".modal-dialog").prop("style", "width:70%;height:85%")
-                    YT.deploy.formId = "codeBuildForm";
+                    YT.deploy.formId = "codeBuildNewForm";
                     YT.deploy.codeBuild.initNewEdit(d.data);
                 });
             });

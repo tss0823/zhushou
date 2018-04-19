@@ -1,0 +1,104 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <small>
+                <i class="icon-double-angle-right"></i>
+               {{tp_title}}
+            </small>
+        </h1>
+    </div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" role="form" id="templateNewForm" onsubmit="return false;">
+                <input type="hidden" id="id" name="id" value="{{id}}">
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>名称：</label>
+                    <span>
+                        <input type="text" id="name" name="name" value="{{name}}" placeholder="请输入名称" class="input-xlarge">
+                    </span>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>类型：</label>
+                    <span>
+                    <select id="type" name="type">
+                        <option></option>
+                    </select>
+                    </span>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>文件模版：</label>
+                    <input type="hidden" id="attachmentId" name="attachmentId" />
+                       <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择模版</span>
+                                                    <!-- The file input field used as target for the file upload widget -->
+                            <!--<input id="fileupload" type="file" name="files[]" multiple>-->
+                            <input type="file" id="fileupload"  name="tplFile" multiple>
+                        </span>
+                    <br>
+                    <br>
+                    <!-- The global progress bar -->
+                    <div id="progress" class="progress">
+                        <div class="progress-bar progress-bar-success"></div>
+                    </div>
+                    <!-- The container for the uploaded files -->
+                    <div id="files" class="files"></div>
+                    <br>
+                </div>
+                <div class="space-4"></div>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" id="btnSave"> <i class="icon-ok bigger-110"></i> 保存 </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset" id="btnCancel"> <i class="icon-undo bigger-110"></i> 取消 </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.page-content -->
+<link rel="stylesheet" type="text/css" href="/_resources/scripts/upload/jquery.fileupload.css">
+<script src="/_resources/scripts/upload/jquery.fileupload.js?ver={{ver}}" ></script>
+<!--<script src="/_resources/scripts/upload/jquery.fileupload-ui.js?ver={{ver}}" ></script>-->
+<script src="/_resources/scripts/upload/jquery.ui.widget.js?ver={{ver}}" ></script>
+<script src="/_resources/scripts/upload/jquery.iframe-transport.js?ver={{ver}}" ></script>
+
+<!--<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>-->
+<!--<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+
+<script>
+// 示例   http://www.jq22.com/jquery-info230
+    $(function () {
+
+        $('#fileupload').fileupload({
+            url:'/attachment/save',
+            dataType: 'json',
+//            add: function (e, data) {
+//                $("<p/>").text(data.files[0].name).append("#files");
+//            },
+
+
+            done: function (e, data) {
+                     $("#attachmentId").val(data.result.data.id);
+                     $("#files").text(data.result.data.name);
+//                $("<p/>").text(data.files[0].name).append("#files");
+//                $.each(data.result.files, function (index, file) {
+//                    $('<p/>').text(file.name).appendTo('#files');
+//                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        });
+
+
+    });
+</script>

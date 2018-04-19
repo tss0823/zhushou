@@ -27,7 +27,9 @@ public class IdocUrl implements Serializable {
 	 * 企业id
 	 */
 	private Long companyId;
-		
+
+	private Long projectId;
+
 	/**  URL * */
 	private String url;
 		
@@ -239,5 +241,13 @@ public class IdocUrl implements Serializable {
 
 	public void setMockStatus(Integer mockStatus) {
 		this.mockStatus = mockStatus;
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
 	}
 }

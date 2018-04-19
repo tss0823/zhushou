@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server>
+    <Service name="Catalina">
+        <Connector port="28081" protocol="org.apache.coyote.http11.Http11NioProtocol" URIEncoding="UTF-8" useBodyEncodingForURI="true" minSpareThreads="25"  connectionTimeout="20000" acceptCount="300" maxThreads="300"
+        />
+        <Engine name="Catalina" defaultHost="localhost">
+            <Host name="localhost"  appBase="webapps"
+                  unpackWARs="false" autoDeploy="false">
+            </Host>
+        </Engine>
+    </Service>
+</Server>

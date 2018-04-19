@@ -20,6 +20,11 @@ public class App implements Serializable {
     private Long companyId;
 
     /**
+     * 企业id
+     */
+    private Long projectId;
+
+    /**
      * 名称
      */
     private String name;
@@ -88,6 +93,7 @@ public class App implements Serializable {
      * 编译变量
      */
     private String compileProperty;
+
 
     public Long getId() {
         return id;
@@ -215,5 +221,13 @@ public class App implements Serializable {
 
     public void setCompileProperty(String compileProperty) {
         this.compileProperty = compileProperty;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

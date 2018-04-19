@@ -27,7 +27,9 @@ public class ReqContent implements Serializable {
 	 * 企业id
 	 */
 	private Long companyId;
-		
+
+	private Long projectId;
+
 	/**  URL * */
 	private String url;
 		
@@ -207,5 +209,13 @@ public class ReqContent implements Serializable {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
 	}
 }

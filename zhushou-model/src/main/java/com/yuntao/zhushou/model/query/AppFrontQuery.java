@@ -13,6 +13,7 @@ public class AppFrontQuery extends BaseQuery {
 
     private Integer front;
 
+
     public Long getId() {
         return id;
     }

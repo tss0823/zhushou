@@ -14,11 +14,12 @@
         <result column="gmtModify" property="gmtModify"/>
         <result column="delStatus" property="delStatus"/>
         <result column="companyId" property="companyId"/>
+        <result column="projectId" property="projectId"/>
     </resultMap>
 
 
     <sql id="Base_Column_List">
-    `id`,`name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`,`companyId`
+    `id`,`name`,`userId`,`userName`,`model`,`gmtCreate`,`gmtModify`,`delStatus`,`companyId`,`projectId`
   </sql>
 
 
@@ -33,6 +34,7 @@
         <if test="name != null and name != '' ">and `name` = #{name}</if>
         <if test="userId != null">and `userId` = #{userId}</if>
         <if test="companyId != null">and `companyId` = #{companyId}</if>
+        <if test="projectId != null">and `projectId` = #{projectId}</if>
         <if test="userName != null and userName != '' ">and `userName` = #{userName}</if>
         <if test="model != null and model != '' ">and `model` = #{model}</if>
     </sql>

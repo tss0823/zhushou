@@ -64,7 +64,7 @@ public class AppFrontServiceImpl extends AbstService implements AppFrontService 
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = appFrontMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AppFront> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
@@ -93,7 +93,7 @@ public class AppFrontServiceImpl extends AbstService implements AppFrontService 
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = appFrontMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AppFront> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

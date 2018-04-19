@@ -44,7 +44,7 @@ public class IdocParamServiceImpl implements IdocParamService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = idocParamMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<IdocParam> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

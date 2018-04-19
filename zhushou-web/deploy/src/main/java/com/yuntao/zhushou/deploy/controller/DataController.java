@@ -5,18 +5,14 @@ import com.yuntao.zhushou.common.utils.CollectUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.domain.AtTemplate;
-import com.yuntao.zhushou.model.domain.Config;
-import com.yuntao.zhushou.model.domain.IdocUrl;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.*;
 import com.yuntao.zhushou.model.query.AtTemplateQuery;
 import com.yuntao.zhushou.model.query.IdocUrlQuery;
+import com.yuntao.zhushou.model.query.ProjectQuery;
+import com.yuntao.zhushou.model.query.TemplateQuery;
 import com.yuntao.zhushou.model.vo.IdocUrlFrontVo;
-import com.yuntao.zhushou.service.inter.AppService;
-import com.yuntao.zhushou.service.inter.AtTemplateService;
-import com.yuntao.zhushou.service.inter.ConfigService;
-import com.yuntao.zhushou.service.inter.IdocUrlService;
+import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +40,11 @@ public class DataController extends  BaseController {
     @Autowired
     private AtTemplateService atTemplateService;
 
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private TemplateService templateService;
 
     @RequestMapping("appConfigData")
     public ResponseObject appConfigData() {
@@ -69,6 +70,7 @@ public class DataController extends  BaseController {
         responseObject.put("logStatus",LogStatus.values());
         responseObject.put("cacheType",CacheType.values());
         responseObject.put("javaDataType",JavaDataType.values());
+        responseObject.put("templateType",TemplateType.values());
         return responseObject;
     }
 
@@ -112,6 +114,30 @@ public class DataController extends  BaseController {
         query.setCompanyId(user.getCompanyId());
         List<AtTemplate> templateList = atTemplateService.selectList(query);
         responseObject.setData(templateList);
+        return responseObject;
+    }
+
+    @RequestMapping("projectList")
+    @NeedLogin
+    public ResponseObject projectList() {
+        ResponseObject responseObject = new ResponseObject();
+        User user = userService.getCurrentUser();
+        ProjectQuery query = new ProjectQuery();
+        query.setCompanyId(user.getCompanyId());
+        List<Project> projectList = projectService.selectList(query);
+        responseObject.setData(projectList);
+        return responseObject;
+    }
+
+    @RequestMapping("templateList")
+    @NeedLogin
+    public ResponseObject templateList() {
+        ResponseObject responseObject = new ResponseObject();
+        User user = userService.getCurrentUser();
+        TemplateQuery query = new TemplateQuery();
+        query.setCompanyId(user.getCompanyId());
+        List<Template> dataList = templateService.selectList(query);
+        responseObject.setData(dataList);
         return responseObject;
     }
 }

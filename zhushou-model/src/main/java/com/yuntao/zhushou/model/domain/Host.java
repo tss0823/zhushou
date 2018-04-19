@@ -60,6 +60,10 @@ public class Host implements Serializable {
      */
     private Integer status;
 
+    private String username;
+
+    private String pwd;
+
     public Long getId() {
         return id;
     }
@@ -138,5 +142,21 @@ public class Host implements Serializable {
 
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 }

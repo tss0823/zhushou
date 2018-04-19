@@ -6,6 +6,7 @@ import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.HostMapper;
 import com.yuntao.zhushou.model.domain.Host;
+import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.HostQuery;
 import com.yuntao.zhushou.service.inter.HostService;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,7 +40,7 @@ public class HostServiceImpl extends AbstService implements HostService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = hostMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<Host> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());
@@ -89,6 +90,23 @@ public class HostServiceImpl extends AbstService implements HostService {
         //set to cache
         cacheService.set(key,dataList);
         return dataList;
+    }
+
+    @Override
+    public int insert(Host host) {
+        host.setType(YesNoIntType.yes.getCode());
+        host.setStatus(YesNoIntType.yes.getCode());
+        return hostMapper.insert(host);
+    }
+
+    @Override
+    public int updateById(Host host) {
+        return hostMapper.updateById(host);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return hostMapper.deleteById(id);
     }
 
 }

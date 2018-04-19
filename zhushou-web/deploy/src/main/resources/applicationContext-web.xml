@@ -18,7 +18,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="maxUploadSize">
-            <!-- 设置上传文件的最大尺寸为8MB -->
+            <!-- 设置上传文件的最大尺寸为16MB -->
             <value>16777216</value>
         </property>
     </bean>

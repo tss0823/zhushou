@@ -9,6 +9,8 @@ public class AppQuery  extends BaseQuery {
 
     private Long id;
 
+    private Long projectId;
+
     private String name;
 
     private Integer front;
@@ -35,5 +37,13 @@ public class AppQuery  extends BaseQuery {
 
     public void setFront(Integer front) {
         this.front = front;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

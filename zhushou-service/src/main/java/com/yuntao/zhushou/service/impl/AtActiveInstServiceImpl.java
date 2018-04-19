@@ -44,7 +44,7 @@ public class AtActiveInstServiceImpl implements AtActiveInstService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = atActiveInstMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AtActiveInst> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

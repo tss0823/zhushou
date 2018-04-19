@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yuntao.zhushou.dal.mapper.PropertyMapper">
+
+	<resultMap type="Property" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="gmtCreate" property="gmtCreate"/>
+		<result column="gmtModify" property="gmtModify"/>
+		<result column="delState" property="delState"/>
+		<result column="entityId" property="entityId"/>
+		<result column="enName" property="enName"/>
+		<result column="cnName" property="cnName"/>
+		<result column="dataType" property="dataType"/>
+		<result column="length" property="length"/>
+		<result column="primaryKey" property="primaryKey"/>
+		<result column="defaultValue" property="defaultValue"/>
+		<result column="isNull" property="isNull"/>
+		<result column="orderBy" property="orderBy"/>
+		<result column="remark" property="remark"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `entityId`, `enName`, `cnName`, `dataType`,
+	 `length`, `primaryKey`, `defaultValue`, `isNull`, `orderBy`, `remark`
+	</sql>
+
+	<sql id="Base_Table_Name">
+		property
+	</sql>
+
+	<sql id="Base_Where">
+		delState = 1
+		<if test="id != null "> and  `id` = #{id} </if>
+		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
+		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
+		<if test="entityId != null "> and  `entityId` = #{entityId} </if>
+		<if test="enName != null  and enName != ''"> and  `enName` = #{enName} </if>
+		<if test="cnName != null  and cnName != ''"> and  `cnName` = #{cnName} </if>
+		<if test="dataType != null  and dataType != ''"> and  `dataType` = #{dataType} </if>
+		<if test="length != null  and length != ''"> and  `length` = #{length} </if>
+		<if test="primaryKey != null "> and  `primaryKey` = #{primaryKey} </if>
+		<if test="defaultValue != null  and defaultValue != ''"> and  `defaultValue` = #{defaultValue} </if>
+		<if test="isNull != null "> and  `isNull` = #{isNull} </if>
+		<if test="orderBy != null "> and  `orderBy` = #{orderBy} </if>
+		<if test="remark != null  and remark != ''"> and  `remark` = #{remark} </if>
+	</sql>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/> WHERE id = #{id}
+    </select>
+
+    <select id="selectList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+        order by id desc
+        <if test="pagination != null ">
+            limit #{pagination.startRow}, #{pagination.pageSize}
+        </if>
+    </select>
+
+    <select id="selectListCount" parameterType="Map" resultType="java.lang.Long">
+        SELECT count(*) from <include refid="Base_Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Property">
+        <selectKey keyProperty="id" resultType="Long">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into
+        <include refid="Base_Table_Name"/>
+        (
+		`gmtCreate`,`gmtModify`,
+		`delState`,`entityId`,`enName`,`cnName`,`dataType`,`length`,`primaryKey`,`defaultValue`,
+		`isNull`,`orderBy`,`remark`
+		)
+		values
+		(
+		 now(6), now(6), 1, #{entityId}, #{enName}, #{cnName}, #{dataType}, #{length}, 
+		 #{primaryKey}, #{defaultValue}, #{isNull}, #{orderBy}, #{remark}
+		)
+    </insert>
+
+    <update id="updateById" parameterType="Property">
+        update <include refid="Base_Table_Name"/>
+        <set>
+			<if test="delState != null">`delState` = #{delState}, </if>
+			<if test="entityId != null">`entityId` = #{entityId}, </if>
+			<if test="enName != null and enName != ''">`enName` = #{enName}, </if>
+			<if test="cnName != null and cnName != ''">`cnName` = #{cnName}, </if>
+			<if test="dataType != null and dataType != ''">`dataType` = #{dataType}, </if>
+			<if test="length != null and length != ''">`length` = #{length}, </if>
+			<if test="primaryKey != null">`primaryKey` = #{primaryKey}, </if>
+			<if test="defaultValue != null and defaultValue != ''">`defaultValue` = #{defaultValue}, </if>
+			<if test="isNull != null">`isNull` = #{isNull}, </if>
+			<if test="orderBy != null">`orderBy` = #{orderBy}, </if>
+			<if test="remark != null and remark != ''">`remark` = #{remark}, </if>
+        </set>
+        ,gmtModify = now(6)
+        where id = #{id}
+    </update>
+
+    <update id="deleteById" parameterType="Long">
+        update <include refid="Base_Table_Name"/> set delState = 0 where id = #{id}
+    </update>
+
+
+	<!-- user definition code start -->
+	<update id="deleteByEntityId" parameterType="Long">
+		delete from <include refid="Base_Table_Name"/> where entityId = #{entityId}
+	</update>
+	<insert id="insertBatch">
+		insert into
+		<include refid="Base_Table_Name"/>
+		(
+		`gmtCreate`,`gmtModify`,
+		`delState`,`entityId`,`enName`,`cnName`,`dataType`,`length`,`primaryKey`,`defaultValue`,
+		`isNull`,`orderBy`,`remark`
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			now(6), now(6), 1, #{item.entityId}, #{item.enName}, #{item.cnName}, #{item.dataType}, #{item.length},
+			#{item.primaryKey}, #{item.defaultValue}, #{item.isNull}, #{item.orderBy}, #{item.remark}
+			)
+		</foreach>
+	</insert>
+	<!-- user definition code end -->
+</mapper>

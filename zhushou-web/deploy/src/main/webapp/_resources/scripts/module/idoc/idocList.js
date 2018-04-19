@@ -17,6 +17,11 @@
             var appList = YT.deploy.data.appList;
             YT.deploy.util.initSelect(appList, "name", "name", "appName", data.appName);
 
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
+
             var docList = YT.deploy.data.docList;
 
             //doc select init

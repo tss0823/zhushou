@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="DeployLog">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="companyId" property="companyId" jdbcType="BIGINT"/>
+        <result column="projectId" property="projectId" jdbcType="BIGINT"/>
         <result column="appName" property="appName" jdbcType="VARCHAR"/>
         <result column="model" property="model" jdbcType="VARCHAR"/>
         <result column="content" property="content" jdbcType="VARCHAR"/>
@@ -20,6 +21,7 @@
     <resultMap id="BaseResultDetailMap" type="DeployLogVo">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="companyId" property="companyId" jdbcType="BIGINT"/>
+        <result column="projectId" property="projectId" jdbcType="BIGINT"/>
         <result column="appName" property="appName" jdbcType="VARCHAR"/>
         <result column="model" property="model" jdbcType="VARCHAR"/>
         <result column="content" property="content" jdbcType="VARCHAR"/>
@@ -34,12 +36,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,
+        `id`,`companyId`,`projectId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,
         `type`
     </sql>
 
     <sql id="Log_Column_list">
-        `id`,`companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`,
+        `id`,`companyId`,`projectId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`backVer`,`log`,
         `type`
     </sql>
 
@@ -50,6 +52,7 @@
         delStatus = 1
         <if test="id != null">and id = #{id}</if>
         <if test="companyId != null">and companyId = #{companyId}</if>
+        <if test="projectId != null">and projectId = #{projectId}</if>
         <if test="appName != null and appName != ''">and appName = #{appName}</if>
         <if test="model != null and model != ''">and model = #{model}</if>
         <if test="userName != null and userName != ''">and userName = #{userName}</if>
@@ -119,12 +122,12 @@
         insert into
         <include refid="Base_Table_Name"/>
         (
-        `companyId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`,
+        `companyId`,`projectId`,`appName`,`model`,`content`,`userId`,`userName`,`gmtCreate`,`gmtModify`,`delStatus`,`log`,`backVer`,
         `type`
         )
         values
         (
-        #{companyId},#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer},#{type}
+        #{companyId},#{projectId},#{appName},#{model},#{content},#{userId},#{userName},now(6),now(6),1,#{log},#{backVer},#{type}
         )
     </insert>
 
@@ -133,6 +136,7 @@
         <include refid="Base_Table_Name"/>
         <set>
             <if test="companyId != null">`companyId`=#{companyId},</if>
+            <if test="projectId != null">`projectId`=#{projectId},</if>
             <if test="content != null and content !=''">`content`=#{content},</if>
             <if test="userId != null">`userId`=#{userId},</if>
             <if test="userName != null and userName !=''">`userName`=#{userName},</if>

@@ -44,7 +44,7 @@ public class AtParameterServiceImpl implements AtParameterService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = atParameterMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<AtParameter> pagination = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

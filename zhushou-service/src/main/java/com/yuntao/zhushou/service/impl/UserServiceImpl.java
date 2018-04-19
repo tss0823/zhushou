@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         long totalCount = userMapper.selectListCount(queryMap);
         if (totalCount == 0) {
-            return null;
+            return new Pagination<>();
         }
         Pagination<UserVo> pageInfo = new Pagination<>(totalCount,
                 query.getPageSize(), query.getPageNum());

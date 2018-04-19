@@ -41,6 +41,12 @@
         <typeAlias alias="AtVariable" type="com.yuntao.zhushou.model.domain.AtVariable"/>
         <typeAlias alias="Mark" type="com.yuntao.zhushou.model.domain.Mark"/>
         <typeAlias alias="CodeBuildSql" type="com.yuntao.zhushou.model.domain.CodeBuildSql"/>
+        <typeAlias alias="Project" type="com.yuntao.zhushou.model.domain.Project"/>
+        <typeAlias alias="Entity" type="com.yuntao.zhushou.model.domain.Entity"/>
+        <typeAlias alias="Property" type="com.yuntao.zhushou.model.domain.Property"/>
+        <typeAlias alias="Template" type="com.yuntao.zhushou.model.domain.Template"/>
+        <typeAlias alias="BuildRecord" type="com.yuntao.zhushou.model.domain.BuildRecord"/>
+        <typeAlias alias="Attachment" type="com.yuntao.zhushou.model.domain.Attachment"/>
     </typeAliases>
 
     <mappers>
@@ -74,6 +80,12 @@
         <mapper resource="mapper/AtVariableMapper.xml"/>
         <mapper resource="mapper/MarkMapper.xml"/>
         <mapper resource="mapper/CodeBuildSqlMapper.xml"/>
+        <mapper resource="mapper/ProjectMapper.xml"/>
+        <mapper resource="mapper/EntityMapper.xml"/>
+        <mapper resource="mapper/PropertyMapper.xml"/>
+        <mapper resource="mapper/TemplateMapper.xml"/>
+        <mapper resource="mapper/BuildRecordMapper.xml"/>
+        <mapper resource="mapper/AttachmentMapper.xml"/>
     </mappers>
 
 </configuration>

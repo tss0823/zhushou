@@ -11,12 +11,13 @@
 		<result column="gmtModify" property="gmtModify"/>
 		<result column="delState" property="delState"/>
 		<result column="companyId" property="companyId"/>
+        <result column="projectId" property="projectId"/>
 		<result column="content" property="content"/>
 		<result column="userId" property="userId"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
-	 `id`, `gmtCreate`, `gmtModify`, `delState`, `companyId`, `content`, `userId`
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `companyId`, `content`, `userId`,`projectId`
 	</sql>
 
 	<sql id="Base_Table_Name">
@@ -29,6 +30,7 @@
 		<if test="gmtCreate != null "> and  `gmtCreate` = #{gmtCreate} </if>
 		<if test="gmtModify != null "> and  `gmtModify` = #{gmtModify} </if>
 		<if test="companyId != null "> and  `companyId` = #{companyId} </if>
+        <if test="projectId != null "> and  `projectId` = #{projectId} </if>
 		<if test="content != null  and content != ''"> and  `content` = #{content} </if>
 		<if test="userId != null "> and  `userId` = #{userId} </if>
 	</sql>
@@ -64,11 +66,11 @@
         <include refid="Base_Table_Name"/>
         (
 		`gmtCreate`,
-		`gmtModify`,`delState`,`companyId`,`content`,`userId`
+		`gmtModify`,`delState`,`companyId`,`content`,`userId`,`projectId`
 		)
 		values
 		(
-		 now(6), now(6), 1, #{companyId}, #{content}, #{userId}
+		 now(6), now(6), 1, #{companyId}, #{content}, #{userId},#{projectId}
 		)
     </insert>
 
@@ -77,6 +79,7 @@
         <set>
 			<if test="delState != null">`delState` = #{delState}, </if>
 			<if test="companyId != null">`companyId` = #{companyId}, </if>
+            <if test="projectId != null">`projectId` = #{projectId}, </if>
 			<if test="content != null and content != ''">`content` = #{content}, </if>
 			<if test="userId != null">`userId` = #{userId}, </if>
         </set>

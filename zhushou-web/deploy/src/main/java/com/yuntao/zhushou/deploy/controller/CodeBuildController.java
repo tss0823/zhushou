@@ -4,18 +4,13 @@ import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
-import com.yuntao.zhushou.model.domain.CodeBuildSql;
-import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
-import com.yuntao.zhushou.model.domain.codeBuild.Entity;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
-import com.yuntao.zhushou.model.query.codeBuild.EntityQuery;
-import com.yuntao.zhushou.model.query.codeBuild.PropertyQuery;
-import com.yuntao.zhushou.service.inter.AppService;
-import com.yuntao.zhushou.service.inter.CodeBuildService;
-import com.yuntao.zhushou.service.inter.CodeBuildSqlService;
-import com.yuntao.zhushou.service.inter.ConfigService;
+import com.yuntao.zhushou.model.query.EntityQuery;
+import com.yuntao.zhushou.model.query.PropertyQuery;
+import com.yuntao.zhushou.model.vo.EntityVo;
+import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -47,16 +42,31 @@ public class CodeBuildController extends BaseController {
     @Autowired
     private CodeBuildSqlService codeBuildSqlService;
 
+    @Autowired
+    private EntityService entityService;
+
+    @Autowired
+    private PropertyService propertyService;
+
+    @Autowired
+    private TemplateService templateService;
+
+    @Autowired
+    private BuildRecordService buildRecordService;
+
+    @Autowired
+    private ProjectService projectService;
+
     @RequestMapping("list")
     @NeedLogin
     public ResponseObject list(EntityQuery query) {
         User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            query.setAppId(21L);
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            query.setAppId(22L);
-        }
-        Pagination<Entity> pagination = codeBuildService.selectPage(query);
+        query.setCompanyId(user.getCompanyId());
+//        Project project = projectService.getFirst(user.getCompanyId());
+//        if(project != null){
+//            query.setProjectId(project.getId());
+//        }
+        Pagination<EntityVo> pagination = entityService.selectPage(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(pagination);
         return responseObject;
@@ -67,13 +77,8 @@ public class CodeBuildController extends BaseController {
     public ResponseObject entitySave(Entity entity) {
         Assert.state(StringUtils.isNotBlank(entity.getEnName()),"英文名称不能为空");
         Assert.state(StringUtils.isNoneBlank(entity.getCnName()),"中文名称不能为空");
-        User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            entity.setAppId(21L);
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            entity.setAppId(22L);
-        }
-        int result = codeBuildService.entitySave(entity);
+//        User user = userService.getCurrentUser();
+        int result = entityService.insert(entity);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
@@ -85,7 +90,7 @@ public class CodeBuildController extends BaseController {
         Assert.notNull(entity.getId(),"id不能为空");
         Assert.state(StringUtils.isNotBlank(entity.getEnName()),"英文名称不能为空");
         Assert.state(StringUtils.isNoneBlank(entity.getCnName()),"中文名称不能为空");
-        int result = codeBuildService.entityUpdate(entity);
+        int result = entityService.updateById(entity);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
@@ -94,7 +99,7 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("entityDetail")
     @NeedLogin
     public ResponseObject entityDetail(@RequestParam Long id) {
-        Entity entity = codeBuildService.entityDetail(id);
+        Entity entity = entityService.findById(id);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(entity);
         return responseObject;
@@ -102,15 +107,12 @@ public class CodeBuildController extends BaseController {
 
     @RequestMapping("getEntityByEnName")
     @NeedLogin
-    public ResponseObject getEntityByEnName(@RequestParam String enName) {
-        Long appId = null;
-        User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            appId = 21L;
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            appId = 22L;
-        }
-        Entity entity = codeBuildService.getEntityByEnName(appId,enName);
+    public ResponseObject getEntityByEnName(@RequestParam Long projectId,@RequestParam String enName) {
+//        User user = userService.getCurrentUser();
+        EntityQuery query = new EntityQuery();
+        query.setProjectId(projectId);
+        query.setEnName(enName);
+        Entity entity = entityService.selectOne(query);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(entity);
         return responseObject;
@@ -119,7 +121,7 @@ public class CodeBuildController extends BaseController {
     @RequestMapping("entityDelete")
     @NeedLogin
     public ResponseObject entityDelete(@RequestParam Long id) {
-        int result = codeBuildService.entityDelete(id);
+        int result = entityService.deleteById(id);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
@@ -136,15 +138,9 @@ public class CodeBuildController extends BaseController {
 
     @RequestMapping("buildSql")
     @NeedLogin
-    public ResponseObject buildSql(@RequestParam String ids) {
-        Long appId = null;
+    public ResponseObject buildSql(@RequestParam Long projectId, @RequestParam List<Long> entityIds) {
         User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            appId = 21L;
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            appId = 22L;
-        }
-        String result = codeBuildService.buildSql(appId, ids);
+        String result = codeBuildService.buildSql(user, projectId, entityIds);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
@@ -152,54 +148,10 @@ public class CodeBuildController extends BaseController {
 
     @RequestMapping("buildApp")
     @NeedLogin
-    public ResponseObject buildApp( @RequestParam String ids) {
-        Long appId = null;
+    public ResponseObject buildApp(@RequestParam Long projectId, @RequestParam List<Long> entityIds) {
         User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            appId = 21L;
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            appId = 22L;
-        }
-        String result = codeBuildService.buildApp(appId, ids);
+        codeBuildService.buildApp(true,user,projectId,entityIds);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.setData(result);
-        return responseObject;
-    }
-
-
-    @RequestMapping("propertyList")
-    @NeedLogin
-    public ResponseObject propertyList(PropertyQuery query) {
-        List<Property> propertyList = codeBuildService.propertyList(query);
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.setData(propertyList);
-        return responseObject;
-    }
-
-    @RequestMapping("propertySave")
-    @NeedLogin
-    public ResponseObject propertySave(EntityParam entityParam) {
-        Assert.notNull(entityParam.getId(),"实体id不能为空");
-        Assert.notEmpty(entityParam.getPropertyList(),"属性项不能为空");
-        int result = codeBuildService.propertySave(entityParam);
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.setData(result);
-        return responseObject;
-    }
-
-    @RequestMapping("getDbConfigure")
-    @NeedLogin
-    public ResponseObject getDbConfigure() {
-        Long appId = null;
-        User user = userService.getCurrentUser();
-        if (user.getCompanyId().longValue() == 3) {  //DF
-            appId = 21L;
-        } else if (user.getCompanyId().longValue() == 4) {  //zh
-            appId = 22L;
-        }
-        DbConfigure dbConfigure = codeBuildService.getDbConfigure(appId);
-        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
-        responseObject.setData(dbConfigure);
         return responseObject;
     }
 
@@ -216,4 +168,35 @@ public class CodeBuildController extends BaseController {
         responseObject.setData(result);
         return responseObject;
     }
+
+    @RequestMapping("propertyList")
+    @NeedLogin
+    public ResponseObject propertyList(PropertyQuery query) {
+        List<Property> propertyList = propertyService.selectList(query);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(propertyList);
+        return responseObject;
+    }
+
+    @RequestMapping("propertySave")
+    @NeedLogin
+    public ResponseObject propertySave(EntityParam entityParam) {
+        Assert.notNull(entityParam.getId(),"实体id不能为空");
+        Assert.notEmpty(entityParam.getPropertyList(),"属性项不能为空");
+        int result = propertyService.insertBatch(entityParam.getId(),entityParam.getPropertyList());
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(result);
+        return responseObject;
+    }
+
+    @RequestMapping("getDbConfigure")
+    @NeedLogin
+    public ResponseObject getDbConfigure(@RequestParam Long projectId) {
+        DbConfigure dbConfigure = codeBuildService.getDbConfigure(projectId);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(dbConfigure);
+        return responseObject;
+    }
+
+
 }

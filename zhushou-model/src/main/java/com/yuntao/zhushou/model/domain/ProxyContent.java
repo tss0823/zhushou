@@ -28,6 +28,8 @@ public class ProxyContent implements Serializable {
 	 */
 	private Long companyId;
 
+	private Long projectId;
+
 	/**  port * */
 	private Integer port;
 
@@ -265,5 +267,13 @@ public class ProxyContent implements Serializable {
 
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
+	}
+
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
 	}
 }

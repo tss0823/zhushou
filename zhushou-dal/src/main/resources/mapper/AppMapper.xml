@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="App">
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="companyId" property="companyId" jdbcType="BIGINT" />
+        <result column="projectId" property="projectId" jdbcType="BIGINT" />
         <result column="userId" property="userId" jdbcType="BIGINT" />
         <result column="gmtCreate" property="gmtCreate" jdbcType="TIMESTAMP" />
         <result column="gmtModify" property="gmtModify" jdbcType="TIMESTAMP" />
@@ -21,7 +22,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`,`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,
+        `id`,`name`,`companyId`,`projectId`,`userId`,`gmtCreate`,`gmtModify`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,
         `front`,`compileProperty`
     </sql>
     <sql id="Base_Table_Name">
@@ -31,6 +32,7 @@
         delStatus = 1
         <if test="id != null">and id = #{id}</if>
         <if test="companyId != null">and companyId = #{companyId}</if>
+        <if test="projectId != null">and projectId = #{projectId}</if>
         <if test="name != null and name != ''">and name = #{name}</if>
         <if test="codeName != null and codeName != ''">and codeName = #{codeName}</if>
         <if test="type != null">and type = #{type}</if>
@@ -87,9 +89,9 @@
         </selectKey>
         insert into
         <include refid="Base_Table_Name"/>
-        (`name`,`companyId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`front`,`compileProperty`)
+        (`name`,`companyId`,`projectId`,`userId`,`gmtCreate`,`gmtModify`,`delStatus`,`type`,`status`,`log`,`desc`,`codeName`,`domain`,`port`,`front`,`compileProperty`)
         values
-        (#{name},#{companyId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{front},#{compileProperty})
+        (#{name},#{companyId},#{projectId},#{userId},now(6),now(6),1,#{type},#{status},#{log},#{desc},#{codeName},#{domain},#{port},#{front},#{compileProperty})
     </insert>
 
     <update id="updateById">
@@ -98,6 +100,7 @@
         <set>
             <if test="name != null and name !=''">`name`=#{name},</if>
             <if test="companyId != null">`companyId`=#{companyId},</if>
+            <if test="projectId != null">`projectId`=#{projectId},</if>
             <if test="userId != null">`userId`=#{userId},</if>
             <if test="type != null and type !=''">`type`=#{type},</if>
             <if test="status != null and status !=''">`status`=#{status},</if>
@@ -116,7 +119,7 @@
     <update id="updateLog">
         update
         <include refid="Base_Table_Name"/>
-        set log = #{log} ,gmtModify = now(6) where companyId = #{companyId} and name = #{name}
+        set log = #{log} ,gmtModify = now(6) where projectId = #{projectId} and name = #{name}
     </update>
 
     <update id="deleteById">

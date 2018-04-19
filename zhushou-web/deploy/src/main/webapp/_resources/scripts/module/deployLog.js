@@ -21,6 +21,12 @@
 
             YT.deploy.util.initEnumSelect("logModel","model",data.model);
 
+            YT.deploy.util.reqGet("/data/projectList",{},function(d){
+                var projectList = d.data;
+                YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
+            });
+
+
             //注册事件
             $("a[id='enterView']").each(function(index,item){
                 $(this).click(function(){

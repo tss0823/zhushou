@@ -8,6 +8,7 @@ import com.yuntao.zhushou.model.domain.User;
 import com.yuntao.zhushou.model.query.AppFrontQuery;
 import com.yuntao.zhushou.model.vo.AppFrontVo;
 import com.yuntao.zhushou.service.inter.AppFrontService;
+import com.yuntao.zhushou.service.inter.ProjectService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,9 @@ public class AppFrontController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @RequestMapping("list")
     @NeedLogin
