@@ -54,7 +54,7 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisSe
         config.setMaxWaitMillis(1000 * 30);
         //在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
         config.setTestOnBorrow(true);
-        shardedJedisPool = new ShardedJedisPool(new JedisPoolConfig(), shards);
+        shardedJedisPool = new ShardedJedisPool(config, shards);
     }
 
     @Override
