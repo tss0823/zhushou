@@ -16,7 +16,7 @@
 * 自动化测试
 * Http工具
 
-![首页](../res/index.png)
+![首页](res/index.png)
 
 ## 使用说明
 
