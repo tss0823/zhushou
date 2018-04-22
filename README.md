@@ -45,11 +45,23 @@ redis.namespace=zhushou_dev
 mysql,redis 根据自己环境来配置，其他的默认就好
 
 ### 编译 AND 运行
-1. ./compile.sh 
-2. ./run.sh
+1. sh compile.sh 
+2. sh run.sh deploy
+3. sh run.sh client
+
+admin 表示管理，管理端负责用户的交互。client 表示客户端，客户端主要管理服务器节点。
 
 ## 详细使用流程
 
+### 登录
+#### 用户账号
+* 管理员 admin/123456
+* 开发   dev/123456
+* 前端   front/123456
+* 测试   test/123456
+
+默认deploy的访问地址
+[http://localhost:1027/index.html](http://localhost:1027/index.html)
 
 
 ### 项目管理
@@ -69,6 +81,7 @@ mysql,redis 根据自己环境来配置，其他的默认就好
 ![](res/p_c3.png)
 
 #### 主机
+主机的元素包括
 
 #### 应用
 
