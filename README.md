@@ -30,8 +30,19 @@
 * redis 3.x
 * mysql 5.6 或以上
 * git clone git@github.com:tss0823/zhushou.git
-* 将项目根目录[数据库脚本](zhushou_init.sql)导入数据库中
-* 配置好配置文件 
+* 将项目根目录数据库脚本[/zhushou_init.sql](zhushou_init.sql)导入数据库(自己创建一个库)中
+* 配置好配置文件[/conf/config.properties](conf/config.properties)
+```
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/zhushou_init
+jdbc.username=root
+jdbc.password=123456
+redis.host=localhost
+redis.port=6389
+redis.pwd=zhushou123
+redis.namespace=zhushou_dev
+```
+mysql,redis 根据自己环境来配置，其他的默认就好
 
 ### 编译 AND 运行
 1. ./compile.sh 

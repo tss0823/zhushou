@@ -13,7 +13,6 @@ import com.yuntao.zhushou.service.support.codeBuild.ApplicationBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +29,6 @@ import java.util.Map;
 @Service
 public class CodeBuildServiceImpl extends AbstService implements CodeBuildService {
 
-    @Value("${codeBuild.url}")
-    private String codeBuildUrl;
 
     @Autowired
     private ConfigService configService;
