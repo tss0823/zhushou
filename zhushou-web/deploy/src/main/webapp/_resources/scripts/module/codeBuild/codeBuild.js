@@ -37,12 +37,12 @@
 
             $("#btnBuildSql").click(function () {
                 $(this).prop("disabled",true);
-                YT.deploy.codeBuild.openMsgWin(this,"生成SQL","/codeBuild/buildSql");
+                YT.deploy.codeBuild.openMsgWin(0,this,"生成SQL","/codeBuild/buildSql");
             });
 
             $("#btnBuildApp").click(function () {
                 $(this).prop("disabled",true);
-                YT.deploy.codeBuild.openMsgWin(this,"生成代码","/codeBuild/buildApp");
+                YT.deploy.codeBuild.openMsgWin(1,this,"生成代码","/codeBuild/buildApp");
             });
 
             $("#btnTemplateQuery").click(function () {
@@ -290,7 +290,7 @@
             });
         },
 
-        openMsgWin: function (btnObj,title,url) {
+        openMsgWin: function (type,btnObj,title,url) {
             var idArray = [];
             $(":checkbox[id='chkForm']").each(function(index,item){
                 if($(item).prop("checked")){
@@ -299,23 +299,48 @@
             });
             if(idArray.length == 0){
                 alert("请选择您要操作的项");
+                $(btnObj).prop("disabled",false);
                 return;
             }
             var params = {projectId:$("#projectId").val(),entityIds:idArray.join(",")};
             YT.deploy.util.reqPost(url, params, function (d) {
-                var param = {tp_title: title, msg: d.data};
-                $.get("/codeBuild/msg.html", function (source) {
-                    var render = template.compile(source);
-                    var html = render(param);
+                $(btnObj).prop("disabled",false);
+                if(type == 0){
+                    var param = {tp_title: title, msg: d.data};
+                    $.get("/codeBuild/msg.html", function (source) {
+                        var render = template.compile(source);
+                        var html = render(param);
+                        YT.deploy.codeBuild.openWinObj = bootbox.dialog({
+                            message: html,
+                            width: "800px",
+                        });
+                        $(".modal-dialog").prop("style", "width:60%;height:55%")
+                        YT.deploy.formId = "codeBuildMsgForm";
+                        YT.deploy.codeBuild.initNewEdit(param);
+                    });
+                }else{
                     YT.deploy.codeBuild.openWinObj = bootbox.dialog({
-                        message: html,
+                        message: '<div>构建成功！请<a id="btnDownload" data="'+d.data+'">下载</a>代码到本地</div>',
                         width: "800px",
                     });
-                    $(".modal-dialog").prop("style", "width:60%;height:55%")
-                    YT.deploy.formId = "codeBuildMsgForm";
-                    YT.deploy.codeBuild.initNewEdit(param);
-                    $(btnObj).prop("disabled",false);
-                });
+                    $(".modal-dialog").prop("style", "width:50%;height:35%")
+
+                    $(document).off("click", "#btnDownload");
+                    $(document).on("click", "#btnDownload", function () {
+                        jQuery.download = function(url, id){
+                            $('<form action="'+url+'" method="post">' +  // action请求路径及推送方法
+                                '<input type="text" name="id" id="id" value="'+id+'"/>' + //
+                                '</form>')
+                                .appendTo('body').submit().remove();
+                        };
+                        $.download("/attachment/download",d.data);
+                    });
+                    // YT.deploy.formId = "codeBuildMsgForm";
+                    // YT.deploy.codeBuild.initNewEdit(param);
+                    // $(btnObj).prop("disabled",false);
+
+
+                }
 
             });
         },

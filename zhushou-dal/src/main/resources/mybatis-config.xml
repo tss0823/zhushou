@@ -39,7 +39,6 @@
         <typeAlias alias="ProxyReqFilterItem" type="com.yuntao.zhushou.model.domain.ProxyReqFilterItem"/>
         <typeAlias alias="ProxyResRewrite" type="com.yuntao.zhushou.model.domain.ProxyResRewrite"/>
         <typeAlias alias="AtVariable" type="com.yuntao.zhushou.model.domain.AtVariable"/>
-        <typeAlias alias="Mark" type="com.yuntao.zhushou.model.domain.Mark"/>
         <typeAlias alias="CodeBuildSql" type="com.yuntao.zhushou.model.domain.CodeBuildSql"/>
         <typeAlias alias="Project" type="com.yuntao.zhushou.model.domain.Project"/>
         <typeAlias alias="Entity" type="com.yuntao.zhushou.model.domain.Entity"/>
@@ -78,7 +77,6 @@
         <mapper resource="mapper/ProxyReqFilterItemMapper.xml"/>
         <mapper resource="mapper/ProxyResRewriteMapper.xml"/>
         <mapper resource="mapper/AtVariableMapper.xml"/>
-        <mapper resource="mapper/MarkMapper.xml"/>
         <mapper resource="mapper/CodeBuildSqlMapper.xml"/>
         <mapper resource="mapper/ProjectMapper.xml"/>
         <mapper resource="mapper/EntityMapper.xml"/>

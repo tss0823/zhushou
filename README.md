@@ -30,11 +30,15 @@
 * redis 3.x
 * mysql 5.6 或以上
 * git clone git@github.com:tss0823/zhushou.git
-* 将项目根目录数据脚本导入数据库中
+* 将项目根目录[数据库脚本](zhushou_init.sql)导入数据库中
 * 配置好配置文件 
 
 ### 编译 AND 运行
 1. ./compile.sh 
 2. ./run.sh
+
+## 功能详解
+
+### 代码构建
 
 

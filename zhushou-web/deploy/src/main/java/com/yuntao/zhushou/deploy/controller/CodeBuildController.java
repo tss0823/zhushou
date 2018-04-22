@@ -140,7 +140,8 @@ public class CodeBuildController extends BaseController {
     @NeedLogin
     public ResponseObject buildSql(@RequestParam Long projectId, @RequestParam List<Long> entityIds) {
         User user = userService.getCurrentUser();
-        String result = codeBuildService.buildSql(user, projectId, entityIds);
+        Entity entity = entityService.findById(entityIds.get(0));
+        String result = codeBuildService.buildSql(user, entity.getProjectId(), entityIds);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         responseObject.setData(result);
         return responseObject;
@@ -150,8 +151,10 @@ public class CodeBuildController extends BaseController {
     @NeedLogin
     public ResponseObject buildApp(@RequestParam Long projectId, @RequestParam List<Long> entityIds) {
         User user = userService.getCurrentUser();
-        codeBuildService.buildApp(true,user,projectId,entityIds);
+        Entity entity = entityService.findById(entityIds.get(0));
+        Long attachmentId = codeBuildService.buildApp(true, user, entity.getProjectId(), entityIds);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(attachmentId);
         return responseObject;
     }
 

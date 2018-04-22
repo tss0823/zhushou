@@ -175,11 +175,6 @@ public class DalConfig implements ApplicationContextAware {
         return newMapperFactoryBean(AtVariableMapper.class).getObject();
     }
 
-    @Bean
-    public MarkMapper markMapper() throws Exception {
-        return newMapperFactoryBean(MarkMapper.class).getObject();
-    }
-
 
     @Bean
     public CodeBuildSqlMapper codeBuildSqlMapper() throws Exception {

@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+
+import java.io.File;
 
 /**
  * 等价于spring-config.xml
@@ -46,8 +49,10 @@ public class ApplicationConfig {
     @Bean(name = "propertyPlaceholderConfigurer")
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerDev() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("env/config-dev.properties"));
-        LOG.info("env/config-dev.properties loaded");
+        String projectDir = System.getProperty("user.dir");
+        String path = projectDir+ File.separator+"conf/config.properties";
+        ppc.setLocation(new FileSystemResource(path));
+        LOG.info("config.properties loaded");
         return ppc;
     }
 

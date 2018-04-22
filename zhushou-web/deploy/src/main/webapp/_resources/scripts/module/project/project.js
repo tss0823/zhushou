@@ -270,7 +270,7 @@
         },
 
         openNewWin: function () {
-            var param = {tp_title: "实体创建", dataList: null};
+            var param = {tp_title: "项目创建", dataList: null};
             $.get("/project/new.html", function (source) {
                 var render = template.compile(source);
                 var html = render(param);
@@ -290,7 +290,7 @@
         
 
         openEditWin: function (id) {
-            var param = {tp_title: "实体修改", dataList: null};
+            var param = {tp_title: "项目修改", dataList: null};
             var params = {id: id};
             YT.deploy.util.reqGet("/project/detail", params, function (d) {
                 // //debugger;

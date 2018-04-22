@@ -70,7 +70,7 @@ public class ApplicationBuilder extends AbstService {
     private Logger log = LoggerFactory.getLogger(ApplicationBuilder.class);
 
     private String getTemplatePath(Template template) {
-        String templateDir = System.getProperty("java.io.tmpdir") + File.separator + template.getName();
+        String templateDir = System.getProperty("java.io.tmpdir") + File.separator + template.getName()+File.separator+template.getGmtModify().getTime();
 //        String templateDir = basePath + File.separator + templateFileName;
         File templateDirFile = new File(templateDir);
         if (!templateDirFile.exists()) { // 不存在解压
@@ -126,7 +126,7 @@ public class ApplicationBuilder extends AbstService {
         globalParamMap.put("packagePath", packagePath);
 //        globalParamMap.put("dbType", appBo.getDbConfigure().getType());
 //        globalParamMap.put("tableSpace", appBo.getDbConfigure().getTableSpace());
-//        globalParamMap.put("jdbc", appBo.getDbConfigure());
+        globalParamMap.put("jdbc", projectBo.getDbConfigure());
 
 
         List<Map<String, Object>> paramList = new ArrayList<Map<String, Object>>();

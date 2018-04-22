@@ -57,7 +57,7 @@
         <where>
             <include refid="Base_Where"/>
         </where>
-        order by id desc
+        order by orderBy asc
         <if test="pagination != null ">
             limit #{pagination.startRow}, #{pagination.pageSize}
         </if>

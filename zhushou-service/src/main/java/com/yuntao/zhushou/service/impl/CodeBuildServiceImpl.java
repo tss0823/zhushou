@@ -151,8 +151,8 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
         attachment.setCompanyId(user.getCompanyId());
         try {
             File genZipFile = new File(genZipPath);
-            attachment.setName(genZipFile.getName());
-            byte[] contents = FileUtils.readFileToByteArray(new File(genZipPath));
+            attachment.setName(projectBo.getEnName()+"_"+genZipFile.getName());
+            byte[] contents = FileUtils.readFileToByteArray(genZipFile);
             attachment.setContent(contents);
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,7 +161,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
 
         buildRecord.setAttachmentId(attachment.getId());
         buildRecordService.insert(buildRecord);
-        return buildRecord.getId();
+        return attachment.getId();
     }
 
 
