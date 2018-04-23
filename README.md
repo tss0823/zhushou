@@ -81,11 +81,53 @@ admin 表示管理，管理端负责用户的交互。client 表示客户端，�
 ![](res/p_c3.png)
 
 #### 主机
-主机的元素包括
+主机的元素包括名称，内网地址，外网地址
 
 #### 应用
 
+应用的名称用英文，涉及到后面的代码构建，调用域名和端口组成对外提供的接口地址，编译参数作为隐藏开发的配置（json格式）。
+![](res/a_c1.png)
+
 ### 代码构建
+流程
+> 上传模版 > 创建实体 > 生成SQL OR 构建代码
+
+![](res/c_1.png)
+
+#### 代码模版
+![](res/t_2.png)
+
+创建模版，选择模版文件，模版资源下载地址 [https://github.com/tss0823/template](https://github.com/tss0823/template)
+[https://github.com/tss0823/template_single](https://github.com/tss0823/template_single)
+
+现在到本地，执行 sh compress.sh 获取xxx.zip ，然后把它上传到模版库中，当然用户也可以根据自己的业务项目构建属于自己的模版
+![](res/t_1.png)
+
+创建实体后，选择属性列表，添加实体的属性，每个属性对于数据库表中的一个字段，添加固定项是默认的属性，最好把默认都加进去。
+![](res/c_2.png)
+
+构建SQL,选择要构建的实体会弹出所选实体的表结构SQL,我们将sql复制导入到我们要创建的项目数据库中即可。
+![](res/c_3.png)
+![](res/c_7.png)
+
+构建代码，在构建前，我们先必须保证项目中必须设置好了模版，通过修改项目可以设置。完成后，选择您要构建的实体，点 "构建代码"，构建需要耗点时间，成功后将弹出如下图，我们可以下载项目，当然我们在构建记录中
+也可以找到。
+![](res/c_4.png)
+
+下载解压后，我们获取如下目录构建的文件，这样一个包含实体的完整项目就生成好了，我们把它导入到IDE(idea or eclipse)中就可以运行了
+![](res/c_5.png)
+
+我这里用idea,找到 `EmbeddedServer2`这个类，如下图所示，设置好对应的端口和webapp路径，就可以通过嵌入式tomcat执行了。
+![](res/c_6.png)
+
+然后我们通过curl 来测试服务器状态接口，通过执行返回是`checkServerStatusIsOK,说明是Ok的。
+```
+Apr 22, 2018 5:32:22 PM org.apache.coyote.AbstractProtocol start
+信息: Starting ProtocolHandler ["http-nio-1024"]
+pili:test1 shan$ curl http://localhost:1024/checkServerStatus
+checkServerStatusIsOK
+pili:test1 shan$
+```
 
 ### 编译部署
 
