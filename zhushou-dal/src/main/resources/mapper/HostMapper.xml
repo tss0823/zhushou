@@ -132,4 +132,21 @@
          and t1.hostId = t2.id and t2.delStatus = 1
     </select>
 
+    <update id="deleteAppHostByAppId">
+        delete from appHost where appId = #{appId}
+    </update>
+
+    <insert id="insertAppHostBatch">
+        insert into appHost
+        (
+        `appId`,`hostId`,`model`
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.appId}, #{item.hostId}, #{item.model}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

@@ -33,6 +33,7 @@ public interface AppService {
      */
     int insert(App project);
 
+
     /**
      * 根据id修改
      *
@@ -50,5 +51,6 @@ public interface AppService {
     int deleteById(Long id);
 
 
+    int saveOrUpdate(App app,List<Long> testHostIds,List<Long> prodHostIds);
 
 }

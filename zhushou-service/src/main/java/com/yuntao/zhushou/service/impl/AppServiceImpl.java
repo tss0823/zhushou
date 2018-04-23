@@ -7,16 +7,20 @@ import com.yuntao.zhushou.common.utils.DateUtil;
 import com.yuntao.zhushou.common.web.Pagination;
 import com.yuntao.zhushou.dal.mapper.AppMapper;
 import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.AppHost;
 import com.yuntao.zhushou.model.domain.User;
+import com.yuntao.zhushou.model.enums.LogModel;
 import com.yuntao.zhushou.model.enums.YesNoIntType;
 import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.model.vo.AppVo;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.AppVersionService;
+import com.yuntao.zhushou.service.inter.HostService;
 import com.yuntao.zhushou.service.inter.UserService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +45,9 @@ public class AppServiceImpl extends AbstService implements AppService {
     @Autowired
     private AppVersionService appVersionService;
 
+    @Autowired
+    private HostService hostService;
+
     @Override
     public App findById(Long id) {
         return appMapper.findById(id);
@@ -51,13 +58,13 @@ public class AppServiceImpl extends AbstService implements AppService {
         AppQuery query = new AppQuery();
         query.setCompanyId(companyId);
         query.setName(name);
-        Map<String,Object> queryMap = BeanUtils.beanToMap(query);
+        Map<String, Object> queryMap = BeanUtils.beanToMap(query);
         return appMapper.findByCondition(queryMap);
     }
 
     @Override
-    public int updateLog(Long companyId,String appName,String log) {
-        return appMapper.updateLog(companyId,appName,log);
+    public int updateLog(Long companyId, String appName, String log) {
+        return appMapper.updateLog(companyId, appName, log);
     }
 
     @Override
@@ -73,16 +80,16 @@ public class AppServiceImpl extends AbstService implements AppService {
         List<AppVo> resultDataList = new ArrayList();
         Pagination<AppVo> newPageInfo = new Pagination<>(pageInfo);
         newPageInfo.setDataList(resultDataList);
-        for(App app : dataList){
-            AppVo appVo = BeanUtils.beanCopy(app,AppVo.class);
+        for (App app : dataList) {
+            AppVo appVo = BeanUtils.beanCopy(app, AppVo.class);
             resultDataList.add(appVo);
-            if(appVo.getUserId() != null){
+            if (appVo.getUserId() != null) {
                 User user = userService.findById(appVo.getUserId());
-                if(user != null){
+                if (user != null) {
                     appVo.setUserName(user.getNickName());
                 }
             }
-            String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(),"yyyy-MM-dd HH:mm:ss");
+            String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(), "yyyy-MM-dd HH:mm:ss");
             appVo.setLastTime(lastTime);
 
         }
@@ -102,16 +109,16 @@ public class AppServiceImpl extends AbstService implements AppService {
         List<AppVo> resultDataList = new ArrayList();
         Pagination<AppVo> newPageInfo = new Pagination<>(pageInfo);
         newPageInfo.setDataList(resultDataList);
-        for(App app : dataList){
-            AppVo appVo = BeanUtils.beanCopy(app,AppVo.class);
+        for (App app : dataList) {
+            AppVo appVo = BeanUtils.beanCopy(app, AppVo.class);
             resultDataList.add(appVo);
-            if(appVo.getUserId() != null){
+            if (appVo.getUserId() != null) {
                 User user = userService.findById(appVo.getUserId());
-                if(user != null){
+                if (user != null) {
                     appVo.setUserName(user.getNickName());
                 }
             }
-            String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(),"yyyy-MM-dd HH:mm:ss");
+            String lastTime = DateUtil.getRangeTime(appVo.getGmtModify(), "yyyy-MM-dd HH:mm:ss");
             appVo.setLastTime(lastTime);
 
 //            //appVersion
@@ -135,13 +142,13 @@ public class AppServiceImpl extends AbstService implements AppService {
         //get form cache
         String key = CacheConstant.App.selectAllList;
         List<App> dataList = (List<App>) cacheService.get(key);
-        if(CollectionUtils.isNotEmpty(dataList)){
+        if (CollectionUtils.isNotEmpty(dataList)) {
             return dataList;
         }
         dataList = appMapper.selectList(new HashMap<String, Object>());
 
         //set to cache
-        cacheService.set(key,dataList);
+        cacheService.set(key, dataList);
         return dataList;
 
     }
@@ -174,5 +181,36 @@ public class AppServiceImpl extends AbstService implements AppService {
     @Override
     public int deleteById(Long id) {
         return appMapper.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public int saveOrUpdate(App app, List<Long> testHostIds, List<Long> prodHostIds) {
+        if (app.getId() != null) { //update
+            this.updateById(app);
+            //
+            hostService.deleteAppHostByAppId(app.getId());
+
+        } else { //new
+            this.insert(app);
+        }
+        //add appHost list
+        List<AppHost> dataList = new ArrayList<>();
+        for (Long testHostId : testHostIds) {
+            AppHost appHost = new AppHost();
+            appHost.setAppId(app.getId());
+            appHost.setHostId(testHostId);
+            appHost.setModel(LogModel.TEST.getCode());
+            dataList.add(appHost);
+        }
+        for (Long prodHostId : prodHostIds) {
+            AppHost appHost = new AppHost();
+            appHost.setAppId(app.getId());
+            appHost.setHostId(prodHostId);
+            appHost.setModel(LogModel.PROD.getCode());
+            dataList.add(appHost);
+        }
+        hostService.insertAppHostBatch(dataList);
+        return 1;
     }
 }

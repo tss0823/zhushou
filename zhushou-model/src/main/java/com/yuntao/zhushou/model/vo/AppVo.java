@@ -1,6 +1,9 @@
 package com.yuntao.zhushou.model.vo;
 
 import com.yuntao.zhushou.model.domain.App;
+import com.yuntao.zhushou.model.domain.Host;
+
+import java.util.List;
 
 /**
  * Created by shengshan.tang on 2015/12/26 at 22:13
@@ -18,6 +21,11 @@ public class AppVo extends App {
     private String testDeployVersion;
 
     private String prodDeployVersion;
+
+
+    private List<Host> testHostList;
+
+    private List<Host> prodHostList;
 
     public String getUserName() {
         return userName;
@@ -65,5 +73,21 @@ public class AppVo extends App {
 
     public void setProdDeployVersion(String prodDeployVersion) {
         this.prodDeployVersion = prodDeployVersion;
+    }
+
+    public List<Host> getTestHostList() {
+        return testHostList;
+    }
+
+    public void setTestHostList(List<Host> testHostList) {
+        this.testHostList = testHostList;
+    }
+
+    public List<Host> getProdHostList() {
+        return prodHostList;
+    }
+
+    public void setProdHostList(List<Host> prodHostList) {
+        this.prodHostList = prodHostList;
     }
 }

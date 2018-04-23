@@ -34,21 +34,47 @@
                     &nbsp;&nbsp;
                     <label>端口：</label>
                     <span>
-                        <input type="text" id="port" name="port" value="{{domain.port}}" placeholder="请输入端口" class="input-xlarge">
+                        <input type="text" id="port" name="port" value="{{domain.port}}" placeholder="请输入端口">
                     </span>
                 </div>
                 <div class="space-4"></div>
                 <div class="form-group" style="padding-left: 50px">
                     <label>编译参数：</label>
                     <span>
-                        <input type="text" id="compileProperty" name="compileProperty" value="{{domain.compileProperty}}" placeholder="请输入编译参数" class="input-xlarge">
+                        <input type="text" id="compileProperty" name="compileProperty" value="{{domain.compileProperty}}" placeholder="请输入编译参数" style="width:550px" >
+                    </span>
+                </div>
+                <div class="form-group" style="padding-left: 50px">
+                    <label>测试主机列表：</label>
+                    <span>
+                     {{each hostList as item i}}
+                        <br>
+                          <label>
+                            <input id="chkTestHost" type="checkbox" class="ace" value="{{item.id}}"  />
+                            <span class="lbl">&nbsp;{{item.name}}&nbsp;&nbsp;[{{item.eth0}}]&nbsp;[{{item.eth1}}]</span>
+                        </label>
+                      {{/each}}
                     </span>
                 </div>
                 <div class="space-4"></div>
                 <div class="form-group" style="padding-left: 50px">
+                    <label>正式主机列表：</label>
+                    <span>
+                     {{each hostList as item i}}
+                        <br>
+                          <label>
+                            <input id="chkProdHost" type="checkbox" class="ace" value="{{item.id}}"  />
+                            <span class="lbl">&nbsp;{{item.name}}&nbsp;&nbsp;[{{item.eth0}}]&nbsp;[{{item.eth1}}]</span>
+                        </label>
+                      {{/each}}
+                    </span>
+                </div>
+                <div class="space-4"></div>
+                <div class="space-4"></div>
+                <div class="form-group" style="padding-left: 50px">
                     <label>描述：</label>
                     <span>
-                        <input type="text" id="desc" name="desc" value="{{domain.desc}}" placeholder="请输入描述" class="input-xlarge">
+                        <input type="text" id="desc" name="desc" value="{{domain.desc}}" placeholder="请输入描述" style="width:550px">
                     </span>
                 </div>
                 <div class="space-4"></div>

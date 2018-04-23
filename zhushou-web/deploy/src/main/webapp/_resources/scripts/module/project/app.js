@@ -24,6 +24,9 @@
                 YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
             });
 
+            YT.deploy.util.reqGet("/data/hostList",{},function(d){
+                YT.deploy.app.hostList = d.data;
+            });
 
             $("a[name='btnDel']").click(function () {
                 var dataId = $(this).attr("data");
@@ -76,6 +79,8 @@
 
         openWinObj: null,
 
+        hostList:null,
+
         query: function (pageNum) {
             YT.deploy.formId = "appForm";
             var params = YT.deploy.util.getFormParams("#appForm");
@@ -102,6 +107,8 @@
                 var projectList = d.data;
                 YT.deploy.util.initSelect(projectList,"id","name","projectId",data.projectId);
             });
+
+
 
 
             $("#" + YT.deploy.formId).find("#startTime").datetimepicker({
@@ -139,6 +146,7 @@
             var param = {tp_title: "应用创建", dataList: null};
             $.get("/project/appNew.html", function (source) {
                 var render = template.compile(source);
+                param["hostList"] = YT.deploy.app.hostList;
                 var html = render(param);
                 YT.deploy.app.openWinObj = bootbox.dialog({
                     message: html,
@@ -156,16 +164,34 @@
             YT.deploy.util.reqGet("/app/detail", params, function (d) {
                 // //debugger;
                 param["domain"] = d.data;
+                param["hostList"] = YT.deploy.app.hostList;
                 $.get("/project/appEdit.html", function (source) {
                     var render = template.compile(source);
                     var html = render(param);
                     YT.deploy.app.openWinObj = bootbox.dialog({
                         message: html,
                         width: "800px",
+                    }).on('shown.bs.modal', function (e) {
+                        $(".modal-dialog").prop("style", "width:70%;height:85%")
+                        YT.deploy.formId = "appNewForm";
+                        YT.deploy.app.initNewEdit(d.data);
+                        $("input[id='chkTestHost']").each(function(index,item){
+                            for(var key in d.data.testHostList){
+                                var dbData = d.data.testHostList[key];
+                                if(dbData.id == $(item).val()){
+                                    $(item).prop("checked",true);
+                                }
+                            }
+                        });
+                        $("input[id='chkProdHost']").each(function(index,item){
+                            for(var key in d.data.prodHostList){
+                                var dbData = d.data.prodHostList[key];
+                                if(dbData.id == $(item).val()){
+                                    $(item).prop("checked",true);
+                                }
+                            }
+                        });
                     });
-                    $(".modal-dialog").prop("style", "width:70%;height:85%")
-                    YT.deploy.formId = "appNewForm";
-                    YT.deploy.app.initNewEdit(d.data);
                 });
             });
         },
@@ -174,6 +200,21 @@
 
         save: function () {
             var params = YT.deploy.util.getFormParams("#appNewForm");
+            //get hostIds
+            var testHostIds = [];
+            var prodHostIds = [];
+            $("input[id='chkTestHost']").each(function(index,item){
+                if($(item).prop("checked")){
+                    testHostIds.push($(item).val());
+                }
+            });
+            $("input[id='chkProdHost']").each(function(index,item){
+                if($(item).prop("checked")){
+                    prodHostIds.push($(item).val());
+                }
+            });
+            params["testHostIds"] = testHostIds.join(",");
+            params["prodHostIds"] = prodHostIds.join(",");
             if (params["id"]) {  //update
                 YT.deploy.util.reqPost("/app/update", params, function (d) {
                     alert("修改成功");

@@ -7,10 +7,7 @@ import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.*;
-import com.yuntao.zhushou.model.query.AtTemplateQuery;
-import com.yuntao.zhushou.model.query.IdocUrlQuery;
-import com.yuntao.zhushou.model.query.ProjectQuery;
-import com.yuntao.zhushou.model.query.TemplateQuery;
+import com.yuntao.zhushou.model.query.*;
 import com.yuntao.zhushou.model.vo.IdocUrlFrontVo;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -45,6 +42,9 @@ public class DataController extends  BaseController {
 
     @Autowired
     private TemplateService templateService;
+
+    @Autowired
+    private HostService hostService;
 
     @RequestMapping("appConfigData")
     public ResponseObject appConfigData() {
@@ -126,6 +126,17 @@ public class DataController extends  BaseController {
         query.setCompanyId(user.getCompanyId());
         List<Project> projectList = projectService.selectList(query);
         responseObject.setData(projectList);
+        return responseObject;
+    }
+    @RequestMapping("hostList")
+    @NeedLogin
+    public ResponseObject hostList() {
+        ResponseObject responseObject = new ResponseObject();
+        User user = userService.getCurrentUser();
+        HostQuery query = new HostQuery();
+        query.setCompanyId(user.getCompanyId());
+        List<Host> dataList = hostService.selectList(query);
+        responseObject.setData(dataList);
         return responseObject;
     }
 

@@ -1,6 +1,7 @@
 package com.yuntao.zhushou.service.inter;
 
 import com.yuntao.zhushou.common.web.Pagination;
+import com.yuntao.zhushou.model.domain.AppHost;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.query.HostQuery;
 
@@ -41,6 +42,10 @@ public interface HostService {
      * @return
      */
     int deleteById(Long id);
+
+    int deleteAppHostByAppId(Long appId);
+
+    int insertAppHostBatch(List<AppHost> dataList);
 
 
 }
