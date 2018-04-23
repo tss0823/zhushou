@@ -53,8 +53,8 @@
 				<button class="btn btn-xs btn-green"  id="btnRefreshBranch">刷新分支</button>
 
 
-				<button class="btn btn-warning" id="btncompile">编译</button>
-				<button class="btn btn-danger" id="btnBtachDeploy">批量发布</button>
+				<button class="btn btn-warning" id="btnCompile">编译</button>
+				<button class="btn btn-danger" id="btnBatchDeploy">批量发布</button>
 				<button class="btn btn-pink" id="btnBatchRestart">批量重启</button>
 				<button class="btn btn-info" id="btnBatchRollback">批量回滚</button>
 				<button class="btn btn-danger" id="btnCompileAndDeploy">编译并发布[ALL]</button>
@@ -111,6 +111,8 @@
 			{{/each}}
 		</tbody>
 	</table>
+	<input type="hidden" id="projectId" value="{{projectId}}" />
+	<input type="hidden" id="appId" value="{{appId}}" />
 	<input type="hidden" id="appName" value="{{appName}}" />
 	<input type="hidden" id="model" value="{{model}}" />
 	<div>

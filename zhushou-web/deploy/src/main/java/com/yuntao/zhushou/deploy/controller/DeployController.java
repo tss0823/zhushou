@@ -11,6 +11,7 @@ import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.dal.annotation.NeedLogin;
 import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.enums.AppVerionStatus;
+import com.yuntao.zhushou.model.query.AppQuery;
 import com.yuntao.zhushou.service.inter.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,24 +56,28 @@ public class DeployController extends BaseController {
     @Autowired
     private HostService hostService;
 
+    @Autowired
+    private ProjectService projectService;
+
 
     @RequestMapping("branchList")
     @NeedLogin
-    public ResponseObject branchList(@RequestParam String appName) {
+    public ResponseObject branchList(@RequestParam Long projectId) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
-        //get app
-        App app = appService.findByName(companyId, appName);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(projectId);
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
         requestRes.setUrl("http://"+company.getIp()+":"+company.getPort()+"/deploy/branchList");
         Map<String,String> params = new HashMap<>();
-        params.put("codeName",app.getCodeName());
+        params.put("codeName",project.getCodeName());
         requestRes.setParams(params);
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
@@ -89,15 +94,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("compile")
     @NeedLogin
-    public ResponseObject compile(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
+    public ResponseObject compile(final @RequestParam Long appId,final @RequestParam String branch,final @RequestParam String model) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -105,7 +113,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("codeName",app.getCodeName());
+        params.put("codeName",project.getCodeName());
         params.put("branch",branch);
         params.put("model",model);
         String compilePropertyJson = app.getCompileProperty();
@@ -127,15 +135,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("compileAndDeploy")
     @NeedLogin
-    public ResponseObject compileAndDeploy(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
+    public ResponseObject compileAndDeploy(final @RequestParam Long appId,final @RequestParam String branch,final @RequestParam String model) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -143,13 +154,16 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("codeName",app.getCodeName());
+        params.put("codeName",project.getCodeName());
         params.put("branch",branch);
         params.put("model",model);
 
         List<HttpParam> paramList = new ArrayList<>();
 
-        List<App> appList = appService.selectByCompanyId(companyId);
+        //获取该项目下的所有应用列表
+        AppQuery appQuery = new AppQuery();
+        appQuery.setProjectId(app.getProjectId());
+        List<App> appList = appService.selectList(appQuery);
         for (App thisApp : appList) {
             HttpParam httpParam = new HttpParam("appNames[]", thisApp.getName());
             paramList.add(httpParam);
@@ -185,15 +199,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("singleCompileAndDeploy")
     @NeedLogin
-    public ResponseObject singleCompileAndDeploy(final @RequestParam String appName,final @RequestParam String branch,final @RequestParam String model) {
+    public ResponseObject singleCompileAndDeploy(final @RequestParam Long appId,final @RequestParam String branch,final @RequestParam String model) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -246,20 +263,23 @@ public class DeployController extends BaseController {
      * 发布
      * 流程控制，1：对应正确是编译模式，不能出现编译test,prod 发布
      * 2：不能跟别的发布流程冲突，比如，编译中，或者重启中
-     * @param appName
+     * @param appId
      * @param ipList
      * @return
      */
     @RequestMapping("deploy")
     @NeedLogin
-    public ResponseObject deploy(final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject deploy(final @RequestParam Long appId,final @RequestParam String model,
                                  final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
+
+        //get project
+        Project project = projectService.findById(app.getProjectId());
 
         //get compnay
         Company company = companyService.findById(companyId);
@@ -269,8 +289,8 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
-        params.put("codeName",app.getCodeName());
+        params.put("appName",app.getName());
+        params.put("codeName",project.getCodeName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -285,22 +305,25 @@ public class DeployController extends BaseController {
      * 静态发布
      * 流程控制，1：对应正确是编译模式，不能出现编译test,prod 发布
      * 2：不能跟别的发布流程冲突，比如，编译中，或者重启中
-     * @param appName
+     * @param appId
      * @param ipList
      * @return
      */
     @RequestMapping("deployStatic")
     @NeedLogin
-    public ResponseObject deployStatic(final @RequestParam String appName,final @RequestParam String model,
+    public ResponseObject deployStatic(final @RequestParam Long appId,final @RequestParam String model,
                                        final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -308,8 +331,8 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
-        params.put("codeName",app.getCodeName());
+        params.put("appName",app.getName());
+        params.put("codeName",project.getCodeName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -321,15 +344,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("start")
     @NeedLogin
-    public ResponseObject start(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+    public ResponseObject start(final @RequestParam Long appId,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -337,7 +363,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",app.getName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -349,15 +375,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("stop")
     @NeedLogin
-    public ResponseObject stop(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+    public ResponseObject stop(final @RequestParam Long appId,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -365,7 +394,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",app.getName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -377,15 +406,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("restart")
     @NeedLogin
-    public ResponseObject restart(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+    public ResponseObject restart(final @RequestParam Long appId,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -393,7 +425,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",app.getName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -405,15 +437,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("debug")
     @NeedLogin
-    public ResponseObject debug(final @RequestParam String appName,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
+    public ResponseObject debug(final @RequestParam Long appId,final @RequestParam String model,final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -421,7 +456,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",app.getName());
         params.put("model",model);
         params.put("ipList",StringUtils.join(ipList,","));
         requestRes.setParams(params);
@@ -433,16 +468,19 @@ public class DeployController extends BaseController {
 
     @RequestMapping("rollback")
     @NeedLogin
-    public ResponseObject rollback(final @RequestParam String appName,final @RequestParam String model, final @RequestParam String backVer,
+    public ResponseObject rollback(final @RequestParam Long appId,final @RequestParam String model, final @RequestParam String backVer,
                                    final @RequestParam("ipList[]") List<String> ipList) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        App app = appService.findByName(companyId, appName);
+        App app = appService.findById(appId);
 
-        //get compnay
+        //get project
+        Project project = projectService.findById(app.getProjectId());
+
+        //get company
         Company company = companyService.findById(companyId);
 
         RequestRes requestRes = new RequestRes();
@@ -450,7 +488,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",app.getName());
         params.put("model",model);
         params.put("backVer",backVer);
         params.put("ipList",StringUtils.join(ipList,","));
@@ -464,16 +502,18 @@ public class DeployController extends BaseController {
 
     @RequestMapping("deployFront")
     @NeedLogin
-    public ResponseObject deployFront( @RequestParam String appName, @RequestParam String model,@RequestParam String version,
+    public ResponseObject deployFront( @RequestParam Long appId, @RequestParam String model,@RequestParam String version,
                                        @RequestParam String type,@RequestParam Boolean forceUpdate,@RequestParam String updateLog) {
         User user = userService.getCurrentUser();
         //call remote method
         Long companyId = user.getCompanyId();
 
         //get app
-        AppFront appFront = appFrontService.findByName(companyId, appName);
+        AppFront appFront = appFrontService.findById(appId);
 
-        //get compnay
+
+        
+        //get company
         Company company = companyService.findById(companyId);
 
 //        if (StringUtils.isEmpty(version)) {
@@ -485,7 +525,7 @@ public class DeployController extends BaseController {
         //save appVersion
         AppVersion appVersion = new AppVersion();
         appVersion.setCompanyId(companyId);
-        appVersion.setAppName(appName);
+        appVersion.setAppName(appFront.getName());
         appVersion.setModel(model);
 //        appVersion.setAppUrl(appUrl.toString());
         appVersion.setType(type);
@@ -508,7 +548,7 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("userId",user.getId().toString());
         params.put("nickname",user.getNickName());
-        params.put("appName",appName);
+        params.put("appName",appFront.getName());
         params.put("br",branch);
         params.put("model",model);
         params.put("version",version);

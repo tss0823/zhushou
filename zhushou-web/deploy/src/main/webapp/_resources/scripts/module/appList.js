@@ -34,7 +34,8 @@
                     };
                     data["model"] = model;
                     data["appName"] = appName;
-                    YT.deploy.route("/host/getListByAppAndModel", {appId: appId, model: model}, "appHost.html", data);
+                    data["appId"] = appId;
+                    YT.deploy.route("/host/getListByAppAndModel", {appId: appId, model: model,appName:appName,projectId:projectId}, "appHost.html", data);
                 });
             });
 

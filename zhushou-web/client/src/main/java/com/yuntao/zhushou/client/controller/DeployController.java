@@ -4,10 +4,7 @@ import com.yuntao.zhushou.client.support.CDWebSocketMsgHandler;
 import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.exception.BizException;
-import com.yuntao.zhushou.common.utils.JsonUtils;
-import com.yuntao.zhushou.common.utils.QiNiuTools;
-import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.common.utils.ServerCheckUtils;
+import com.yuntao.zhushou.common.utils.*;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.common.web.ShellExecObject;
 import com.yuntao.zhushou.model.domain.AppVersion;
@@ -19,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -144,7 +142,7 @@ public class DeployController extends BaseController {
             reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
             String result;
             while ((result = reader.readLine()) != null) {
-                if(cancelExecute){  //取消执行
+                if (cancelExecute) {  //取消执行
 
                 }
                 if (method.equals("compile") && result.indexOf("编译打包失败") != -1) {
@@ -175,9 +173,19 @@ public class DeployController extends BaseController {
 
     }
 
+    private String getShellPath(String fileName) {
+        String deployShellBaseBir = AppConfigUtils.getValue("deploy_shell_baseBir");
+        if (StringUtils.isEmpty(deployShellBaseBir)) {
+            ClassPathResource resource = new ClassPathResource("script");
+            deployShellBaseBir = resource.getPath();
+        }
+        return deployShellBaseBir + File.separator + fileName;
+    }
+
     @RequestMapping("branchList")
     public ResponseObject branchList(@RequestParam String codeName) {
-        String cmd = "sh /u01/deploy/script/branch_list.sh " + codeName;
+        String filePath = getShellPath("branch_list.sh  ");
+        String cmd = "sh " + filePath + codeName;
         execShellScript(cmd, "branchList");
         String msg = null;
         Set<String> resultSet = new TreeSet<>();
@@ -235,7 +243,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
                 } catch (Exception e) {
@@ -278,7 +287,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
                     execRun.set(false);  //完成，恢复初始状态
@@ -332,7 +342,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
                     execRun.set(false);  //完成，恢复初始状态
@@ -428,7 +439,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh run," + codeName + " " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " run," + codeName + " " + appName + " " + ipList;
                     execShellScript(cmd, "deploy");
                 } catch (Exception e) {
                     throw e;
@@ -480,7 +492,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh install," + codeName + " " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " install," + codeName + " " + appName + " " + ipList;
                     execShellScript(cmd, "deployStatic");
                 } catch (Exception e) {
                     throw e;
@@ -510,7 +523,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh stop " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " stop " + appName + " " + ipList;
                     execShellScript(cmd, "stop");
 //                    deployExecuteService.stop(user,appName,model,ipList);
                 } catch (Exception e) {
@@ -541,7 +555,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh start " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " start " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 } catch (Exception e) {
                     throw e;
@@ -571,7 +586,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh restart " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " restart " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 } catch (Exception e) {
                     throw e;
@@ -601,7 +617,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh debug " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " debug " + appName + " " + ipList;
                     execShellScript(cmd, "debug");
                 } catch (Exception e) {
                     throw e;
@@ -631,7 +648,8 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String cmd = "sh /u01/deploy/script/deploy.sh rollback," + backVer + " " + appName + " " + ipList;
+                    String filePath = getShellPath("deploy.sh");
+                    String cmd = "sh " + filePath + " rollback," + backVer + " " + appName + " " + ipList;
                     execShellScript(cmd, "rollback");
                 } catch (Exception e) {
                     throw e;
@@ -674,7 +692,8 @@ public class DeployController extends BaseController {
             public void run() {
                 boolean execState = true;
                 try {
-                    String cmd = "sh /u01/deploy/script/front/deploy_" + type + ".sh " + appName + " " + br + " " + frontModel + " " + version + " " + outputPath + " " + fileName;
+                    String exeFilePath = getShellPath("front");
+                    String cmd = "sh "+exeFilePath+"/deploy_" + type + ".sh " + appName + " " + br + " " + frontModel + " " + version + " " + outputPath + " " + fileName;
                     execShellScript(cmd, "deployFront");
 
                     //上传app,只处理android,ios 暂时不管
@@ -698,7 +717,7 @@ public class DeployController extends BaseController {
                     appVersion.setId(appVersionId);
                     if (type.endsWith(DeployLogType.android.getDescription())) {
                         appVersion.setAppUrl(appDownloadUrl);
-                    }else{
+                    } else {
                         appVersion.setAppUrl("itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1220281086");
                     }
                     if (execState) {
@@ -719,13 +738,13 @@ public class DeployController extends BaseController {
 
     @RequestMapping("addWhiteList")
     public ResponseObject addWhiteList(@RequestParam String ip) {
-        String cmd = "sh /u01/deploy/script/iptable_add.sh " + ip;
+        String filePath = getShellPath("iptable_add.sh");
+        String cmd = "sh "+filePath+" " + ip;
         execShellScript(cmd, "addWhiteList");
-        offerExecMsg("执行远程开发成功！ip="+ip);
+        offerExecMsg("执行远程开发成功！ip=" + ip);
         ResponseObject responseObject = ResponseObjectUtils.buildResObject();
         return responseObject;
     }
-
 
 
 }

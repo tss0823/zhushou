@@ -38,7 +38,7 @@
             });
 
             //注册事件
-            $("#btncompile").click(function () {
+            $("#btnCompile").click(function () {
                 YT.deploy.appHost.compile();
             });
             $("#btnCompileAndDeploy").click(function () {
@@ -48,7 +48,7 @@
                 YT.deploy.appHost.singleCompileAndDeploy();
             });
 
-            $("#btnBtachDeploy").click(function () {
+            $("#btnBatchDeploy").click(function () {
                 YT.deploy.appHost.batchDeploy();
             });
 
@@ -154,6 +154,8 @@
 
         model : $("#model").val(),
         appName : $("#appName").val(),
+        appId : $("#appId").val(),
+        projectId : $("#projectId").val(),
 
         writeMsg: function (msg, flag) {
             if (!msg) {
@@ -188,13 +190,13 @@
         },
 
         refreshBranch: function (syncRemote) {
-            var appName = YT.deploy.appHost.appName;
+            var projectId = YT.deploy.appHost.projectId;
             var branchList;
             if(syncRemote){
                 $.ajax({
                     // type:"POST",
                     url: "/deploy/branchList",
-                    data: {"appName": appName},
+                    data: {"projectId": projectId},
                     async: false,  //同步
                     success: function (d) {
                         branchList = d.data;
@@ -294,13 +296,14 @@
         compile: function () {
             var model = YT.deploy.appHost.model;
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var branch = $("#branch").val();
             if(!branch){
                 $("#branch").focus();
                 alert("请输入分支名称");
                 return;
             }
-            var param = {appName:appName,branch:branch,model:model};
+            var param = {appId:appId,branch:branch,model:model};
             YT.deploy.appHost.writeMsg("执行编译开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/compile",param,function(d){
                 //打印消息
