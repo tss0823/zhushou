@@ -245,7 +245,7 @@ public class HttpNewUtils {
 
 
         RequestRes requestRes = new RequestRes();
-        requestRes.setUrl("http://test.doublefit.cn:8083/genFile/download.htm?id=208");
+        requestRes.setUrl("http://test.usefullc.cn:8083/genFile/download.htm?id=208");
         ResponseRes responseRes = execute(requestRes);
         log.info(responseRes.getStatus().toString());
         String tempPath = System.getProperty("java.io.tmpdir");

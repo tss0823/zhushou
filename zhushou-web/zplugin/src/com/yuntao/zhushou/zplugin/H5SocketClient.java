@@ -27,7 +27,7 @@ public class H5SocketClient extends WebSocketClient {
     }
 
     public H5SocketClient(String fixFilePath) throws URISyntaxException {
-        super(new URI("ws://zhushou.doublefit.cn:"+9003+"/index.index?platform=user&agent=plugin&token="+ ZhushouRpcUtils.getLoginSid()));
+        super(new URI("ws://zhushou.usefullc.cn:"+9003+"/index.index?platform=user&agent=plugin&token="+ ZhushouRpcUtils.getLoginSid()));
         this.fixFilePath = fixFilePath;
     }
 

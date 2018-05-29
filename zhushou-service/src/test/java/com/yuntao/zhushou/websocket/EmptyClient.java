@@ -40,7 +40,7 @@ public class EmptyClient extends WebSocketClient {
     }
 
     public static void main(String[] args) throws URISyntaxException {      
-        WebSocketClient client = new EmptyClient(new URI("ws://zhushou.doublefit.cn:9003/index.index?platform=user&token=91acea7f-2d41-49b1-a2b3-8f2bb2a91044"), new Draft_10());
+        WebSocketClient client = new EmptyClient(new URI("ws://zhushou.usefullc.cn:9003/index.index?platform=user&token=91acea7f-2d41-49b1-a2b3-8f2bb2a91044"), new Draft_10());
         client.connect();
         while(!client.getConnection().getReadyState().equals(WebSocket.READYSTATE.OPEN)){
 

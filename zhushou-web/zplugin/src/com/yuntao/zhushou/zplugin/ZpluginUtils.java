@@ -2,10 +2,14 @@ package com.yuntao.zhushou.zplugin;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.yuntao.zhushou.common.exception.BizException;
+import com.yuntao.zhushou.common.utils.BeanUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
+import com.yuntao.zhushou.model.domain.Project;
 import com.yuntao.zhushou.model.domain.User;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
+
+import java.util.Map;
 
 /**
  * Created by shan on 2017/9/8.
@@ -22,6 +26,17 @@ public class ZpluginUtils {
     public static void setTestBranch(String testBranch){
         PropertiesComponent.getInstance().setValue(ZpluginConstant.testBranch,testBranch);
     }
+    public static void setProjectEnName(String projectEnName){
+        try{
+            ResponseObject responseObject = ZhushouRpcUtils.getProjectByEnName(projectEnName);
+            Map<String, Object> dataMap = (Map<String, Object>) responseObject.getData();
+            Project project = (Project) BeanUtils.mapToBean(dataMap, Project.class);
+            PropertiesComponent.getInstance().setValue(ZpluginConstant.projectId,project.getId().toString());
+        }catch (Exception e){
+            throw e;
+        }
+        PropertiesComponent.getInstance().setValue(ZpluginConstant.projectEnName,projectEnName);
+    }
     public static void setLogPath(String logPath){
         PropertiesComponent.getInstance().setValue(ZpluginConstant.logPath,logPath);
     }
@@ -37,6 +52,14 @@ public class ZpluginUtils {
 
     public static String getTestBranch(){
         String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.testBranch);
+        return value;
+    }
+    public static String getProjectEnName(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.projectEnName);
+        return value;
+    }
+    public static String getProjectId(){
+        String value = PropertiesComponent.getInstance().getValue(ZpluginConstant.projectId);
         return value;
     }
 

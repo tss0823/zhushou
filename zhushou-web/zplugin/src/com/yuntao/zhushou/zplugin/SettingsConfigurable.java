@@ -45,6 +45,8 @@ public class SettingsConfigurable implements SearchableConfigurable {
         settingsForm.getTxtLogPath().setText(logPath);
         String testBranch = ZpluginUtils.getTestBranch();
         settingsForm.getTxtTestBranch().setText(testBranch);
+        String projectEnName = ZpluginUtils.getProjectEnName();
+        settingsForm.getTxtProjectEnName().setText(projectEnName);
         String appPorts = ZpluginUtils.getValue(ZpluginConstant.appPorts);
         settingsForm.getTxtAppPorts().setText(appPorts);
         return settingsForm.$$$getRootComponent$$$();
@@ -59,6 +61,7 @@ public class SettingsConfigurable implements SearchableConfigurable {
     public void apply() throws ConfigurationException {
         ZpluginUtils.setAccountInfo(settingsForm.getTxtAccountNo().getText(),settingsForm.getTxtPwd().getText());
         ZpluginUtils.setTestBranch(settingsForm.getTxtTestBranch().getText());
+        ZpluginUtils.setProjectEnName(settingsForm.getTxtProjectEnName().getText());
         ZpluginUtils.setLogPath(settingsForm.getTxtLogPath().getText());
         ZpluginUtils.setValue(ZpluginConstant.appPorts,settingsForm.getTxtAppPorts().getText());
     }
@@ -72,6 +75,8 @@ public class SettingsConfigurable implements SearchableConfigurable {
         settingsForm.getTxtLogPath().setText(logPath);
         String testBranch = ZpluginUtils.getTestBranch();
         settingsForm.getTxtTestBranch().setText(testBranch);
+        String projectEnName = ZpluginUtils.getProjectEnName();
+        settingsForm.getTxtProjectEnName().setText(projectEnName);
         String appPorts = ZpluginUtils.getValue(ZpluginConstant.appPorts);
         settingsForm.getTxtAppPorts().setText(appPorts);
     }

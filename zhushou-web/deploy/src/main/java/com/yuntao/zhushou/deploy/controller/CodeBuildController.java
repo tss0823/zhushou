@@ -8,6 +8,7 @@ import com.yuntao.zhushou.model.domain.*;
 import com.yuntao.zhushou.model.domain.codeBuild.DbConfigure;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import com.yuntao.zhushou.model.query.EntityQuery;
+import com.yuntao.zhushou.model.query.ProjectQuery;
 import com.yuntao.zhushou.model.query.PropertyQuery;
 import com.yuntao.zhushou.model.vo.EntityVo;
 import com.yuntao.zhushou.service.inter.*;
@@ -56,6 +57,18 @@ public class CodeBuildController extends BaseController {
 
     @Autowired
     private ProjectService projectService;
+
+    @RequestMapping("getProjectByEnName")
+    @NeedLogin
+    public ResponseObject getProjectByEnName(@RequestParam String enName) {
+//        User user = userService.getCurrentUser();
+        ProjectQuery query = new ProjectQuery();
+        query.setEnName(enName);
+        Project project = projectService.selectOne(query);
+        ResponseObject responseObject = ResponseObjectUtils.buildResObject();
+        responseObject.setData(project);
+        return responseObject;
+    }
 
     @RequestMapping("list")
     @NeedLogin

@@ -1,7 +1,6 @@
 package com.yuntao.zhushou.zplugin;
 
 import com.intellij.openapi.components.ApplicationComponent;
-import com.yuntao.zhushou.common.exception.BizException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -55,7 +54,8 @@ public class ZhushouComponent implements ApplicationComponent {
             }
 
         } catch (Exception e) {
-            throw new BizException("init ws failed!",e);
+            bisLog.info("init ws failed!",e);
+            log.error("init ws failed!",e);
         }
 
     }

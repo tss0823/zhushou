@@ -45,10 +45,10 @@ public final class HttpSnoopClientTest {
         System.setProperty("https.proxyPort", "8888");
 
         //init
-        urlList.add("http://user.api.doublefit.cn/user/getUserData");
-        urlList.add("http://user.api.doublefit.cn/fileRes/token");
-        urlList.add("http://user.api.doublefit.cn/user/getLoginUser");
-        urlList.add("http://user.api.doublefit.cn/activeTask/start");
+        urlList.add("http://user.api.usefullc.cn/user/getUserData");
+        urlList.add("http://user.api.usefullc.cn/fileRes/token");
+        urlList.add("http://user.api.usefullc.cn/user/getLoginUser");
+        urlList.add("http://user.api.usefullc.cn/activeTask/start");
 
         //data
         Map<String,String> dataMap = new HashMap<>();
@@ -103,7 +103,7 @@ public final class HttpSnoopClientTest {
                     int dataIndex = RandomUtils.nextInt(0, dataSize);
                     paramMap = dataList.get(dataIndex);
                 }
-                url = "http://user.api.doublefit.cn/user/getLoginUser";
+                url = "http://user.api.usefullc.cn/user/getLoginUser";
 //                url = "http://tool.chinaz.com/map.aspx";
                 MyTestThread myTestThread = new MyTestThread(url, paramMap);
                 myTestThread.setIndex(i);

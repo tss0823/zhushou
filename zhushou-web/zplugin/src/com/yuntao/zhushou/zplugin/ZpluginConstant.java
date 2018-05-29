@@ -6,10 +6,12 @@ package com.yuntao.zhushou.zplugin;
 public interface ZpluginConstant {
 
 
-    String zhushouUrl = "http://zhushou.doublefit.cn/";
+    String zhushouUrl = "http://zhushou.usefullc.cn/";
     String acountNo = "zhushou.accountNo";
     String pwd = "zhushou.pwd";
     String testBranch = "zhushou.testBranch";
+    String projectEnName = "zhushou.projectEnName";
+    String projectId = "zhushou.projectId";
     String logPath = "zhushou.logPath";
     String wsLogPath = "zhushou.wsLogPath";
     String userInfo = "zhushou.userInfo";

@@ -5,7 +5,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.yuntao.zhushou.common.exception.BizException;
 import com.yuntao.zhushou.common.utils.ExceptionUtils;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
+import com.yuntao.zhushou.model.domain.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import com.yuntao.zhushou.zplugin.ActionManager;
 import com.yuntao.zhushou.zplugin.AnalyseModelUtils;

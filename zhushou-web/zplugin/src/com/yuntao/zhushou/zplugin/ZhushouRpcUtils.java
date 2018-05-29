@@ -79,11 +79,34 @@ public class ZhushouRpcUtils {
         }
     }
 
+    public static ResponseObject getProjectByEnName(String enName) {
+        RequestRes requestRes = new RequestRes();
+        String url = zhushouUrl + "codeBuild/getProjectByEnName";
+        requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
+        queryMap.put("enName", enName);
+        requestRes.setParams(queryMap);
+        //headers
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Cookie", getLoginCookie());
+        requestRes.setHeaders(headerMap);
+        ResponseRes responseRes = HttpNewUtils.execute(requestRes);
+        String bodyText = responseRes.getBodyText();
+        if (responseRes.getStatus() == 200) {
+            ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
+            return responseObject;
+        } else {
+            throw new BizException(bodyText);
+        }
+    }
+
     public static ResponseObject entitySave(Entity entity) {
         RequestRes requestRes = new RequestRes();
         String url = zhushouUrl + "codeBuild/entitySave";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
@@ -105,6 +128,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/entityUpdate";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
@@ -125,6 +149,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/getEntityByEnName";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         queryMap.put("enName", enName);
         requestRes.setParams(queryMap);
         //headers
@@ -169,6 +194,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/buildSql";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         queryMap.put("ids", ids);
         requestRes.setParams(queryMap);
         //headers
@@ -189,6 +215,9 @@ public class ZhushouRpcUtils {
         RequestRes requestRes = new RequestRes();
         String url = zhushouUrl + "codeBuild/getDbConfigure";
         requestRes.setUrl(url);
+        Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
+        requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Cookie", getLoginCookie());
@@ -208,6 +237,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/buildApp";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         queryMap.put("ids", ids);
         requestRes.setParams(queryMap);
         //headers
@@ -229,6 +259,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/buildSqlSave";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
+        queryMap.put("projectId", ZpluginUtils.getProjectId());
         queryMap.put("sql", sql);
         requestRes.setParams(queryMap);
         //headers

@@ -42,10 +42,10 @@ public final class HttpClientTest2 {
         System.setProperty("https.proxyPort", "8888");
 
         //init
-        urlList.add("http://user.api.doublefit.cn/user/getUserData");
-        urlList.add("http://user.api.doublefit.cn/fileRes/token");
-        urlList.add("http://user.api.doublefit.cn/user/getLoginUser");
-        urlList.add("http://user.api.doublefit.cn/user/getLoginUser");
+        urlList.add("http://user.api.usefullc.cn/user/getUserData");
+        urlList.add("http://user.api.usefullc.cn/fileRes/token");
+        urlList.add("http://user.api.usefullc.cn/user/getLoginUser");
+        urlList.add("http://user.api.usefullc.cn/user/getLoginUser");
         executeMain();
 
 
@@ -88,7 +88,7 @@ public final class HttpClientTest2 {
 //                            requestRes.setProxy(true);
 //                            requestRes.setProxyHost("127.0.0.1");
 //                            requestRes.setProxyPort(8888);
-//                            requestRes.setUrl("http://user.api.doublefit.cn/user/getUserData");
+//                            requestRes.setUrl("http://user.api.usefullc.cn/user/getUserData");
 //                            ResponseRes responseRes = HttpNewUtils.execute(requestRes);
 //                            String bodyText = responseRes.getBodyText();
 //                            System.out.println("test "+Thread.currentThread().getName()+",bodyTest="+bodyText);
@@ -96,13 +96,13 @@ public final class HttpClientTest2 {
 
                             System.setProperty("http.proxyHost", "127.0.0.1");
                             System.setProperty("http.proxyPort", "8888");
-                            org.jsoup.Connection.Response response = Jsoup.connect("http://user.api.doublefit.cn/user/getUserData2").userAgent(
+                            org.jsoup.Connection.Response response = Jsoup.connect("http://user.api.usefullc.cn/user/getUserData2").userAgent(
                                     "my agent").timeout(10000).execute();
                             String body = response.body();
                             System.out.println("test index="+index+","+Thread.currentThread().getName()+",bodyTest="+body);
                             // Prepare the HTTP request.
 //                            HttpRequest request = new DefaultFullHttpRequest(
-//                                    HttpVersion.HTTP_1_1, HttpMethod.POST, "http://user.api.doublefit.cn/user/getUserData");
+//                                    HttpVersion.HTTP_1_1, HttpMethod.POST, "http://user.api.usefullc.cn/user/getUserData");
 ////            request.headers().set(HttpHeaders.Names.HOST, host);
 ////            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
 //                            request.headers().set(HttpHeaders.Names.ACCEPT_ENCODING, HttpHeaders.Values.GZIP);

@@ -42,7 +42,7 @@ public class MyTestThread extends Thread {
 //                            requestRes.setProxy(true);
 //                            requestRes.setProxyHost("127.0.0.1");
 //                            requestRes.setProxyPort(8888);
-//                            requestRes.setUrl("http://user.api.doublefit.cn/user/getUserData");
+//                            requestRes.setUrl("http://user.api.usefullc.cn/user/getUserData");
 //                            ResponseRes responseRes = HttpNewUtils.execute(requestRes);
 //                            String bodyText = responseRes.getBodyText();
 //                            System.out.println("test "+Thread.currentThread().getName()+",bodyTest="+bodyText);

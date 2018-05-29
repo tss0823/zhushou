@@ -36,6 +36,9 @@ public class ProjectQuery extends BaseQuery {
     /**  企业id * */
     private Long companyId;
 
+    /**  英文名称 * */
+    private String enName;
+
     /**  名称 * */
     private String name;
 
@@ -95,8 +98,13 @@ public class ProjectQuery extends BaseQuery {
     public String getDesc() {
         return this.desc;
     }
-    
 
 
+    public String getEnName() {
+        return enName;
+    }
 
+    public void setEnName(String enName) {
+        this.enName = enName;
+    }
 }

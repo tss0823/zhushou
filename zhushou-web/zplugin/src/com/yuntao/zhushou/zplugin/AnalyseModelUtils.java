@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.yuntao.zhushou.common.exception.BizException;
-import com.yuntao.zhushou.model.domain.codeBuild.Property;
+import com.yuntao.zhushou.model.domain.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

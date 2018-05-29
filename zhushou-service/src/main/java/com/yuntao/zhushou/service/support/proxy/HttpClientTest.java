@@ -20,7 +20,7 @@ public class HttpClientTest {
             System.setProperty("http.proxyPort", "8888");
 
             RequestRes requestRes = new RequestRes();
-            requestRes.setUrl("http://test.user.api.doublefit.cn/invite/money");
+            requestRes.setUrl("http://test.user.api.usefullc.cn/invite/money");
             requestRes.setProxyHost("127.0.0.1");
             requestRes.setProxy(true);
             requestRes.setProxyPort(8888);
@@ -29,7 +29,7 @@ public class HttpClientTest {
             requestRes.setHeaders(headerMap);
 //            requestRes.setParamText("");
             ResponseRes responseRes = HttpNewUtils.execute(requestRes);
-//            org.jsoup.Connection.Response response = Jsoup.connect("http://user.api.doublefit.cn/user/getUserData").userAgent(
+//            org.jsoup.Connection.Response response = Jsoup.connect("http://user.api.usefullc.cn/user/getUserData").userAgent(
 //                    "my agent").timeout(10000).execute();
             Map<String, String> headers = responseRes.getHeaders();
             Set<Map.Entry<String, String>> entries = headers.entrySet();

@@ -17,7 +17,7 @@ public class AutoDeployTest {
 
     public static void main(String[] args) {
         try {
-            List<String> readLines = FileUtils.readLines(new File("/u01/doublefit/test.json"),"utf-8");
+            List<String> readLines = FileUtils.readLines(new File("/u01/usefullc/test.json"),"utf-8");
             String json = StringUtils.join(readLines, "");
             JSONObject jsonObject = new JSONObject(json);
             String ref = jsonObject.getString("ref");
