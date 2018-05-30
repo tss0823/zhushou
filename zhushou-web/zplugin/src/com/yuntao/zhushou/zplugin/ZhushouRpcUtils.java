@@ -106,7 +106,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/entitySave";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
-        queryMap.put("projectId", ZpluginUtils.getProjectId());
+//        queryMap.put("projectId", ZpluginUtils.getProjectId());
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
@@ -128,7 +128,7 @@ public class ZhushouRpcUtils {
         String url = zhushouUrl + "codeBuild/entityUpdate";
         requestRes.setUrl(url);
         Map<String, Object> queryMap = BeanUtils.beanToMapNotNull(entity);
-        queryMap.put("projectId", ZpluginUtils.getProjectId());
+//        queryMap.put("projectId", ZpluginUtils.getProjectId());
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
@@ -195,7 +195,7 @@ public class ZhushouRpcUtils {
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("projectId", ZpluginUtils.getProjectId());
-        queryMap.put("ids", ids);
+        queryMap.put("entityIds", ids);
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();
@@ -238,7 +238,7 @@ public class ZhushouRpcUtils {
         requestRes.setUrl(url);
         Map<String, Object> queryMap = new HashMap();
         queryMap.put("projectId", ZpluginUtils.getProjectId());
-        queryMap.put("ids", ids);
+        queryMap.put("entityIds", ids);
         requestRes.setParams(queryMap);
         //headers
         Map<String, String> headerMap = new HashMap<>();

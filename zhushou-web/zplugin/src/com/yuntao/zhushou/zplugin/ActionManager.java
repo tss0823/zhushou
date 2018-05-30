@@ -34,6 +34,9 @@ import static com.yuntao.zhushou.zplugin.ZhushouRpcUtils.getLoginCookie;
 public class ActionManager {
     private final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(ActionManager.class);
+
+    private static String zhushouUrl = ZpluginConstant.zhushouUrl;
+
     /**
      * @param action      0 newEntity,1 addProperty 2 delProperty 3 delEntity
      * @param entityParam
@@ -47,8 +50,12 @@ public class ActionManager {
         ResponseObject entityResObj = ZhushouRpcUtils.getEntityByEnName(entityParam.getEnName());
         Map<String, Object> dataMap = (Map<String, Object>) entityResObj.getData();
         Entity entity = (Entity) BeanUtils.mapToBean(dataMap, Entity.class);
+        if(entity == null){
+            entity = new Entity();
+        }
 
         //save entity
+        entity.setProjectId(Long.valueOf(ZpluginUtils.getProjectId()));
         entity.setEnName(entityParam.getEnName());
         entity.setCnName(entityParam.getCnName());
         List<Property> editPropertyList = null;
@@ -141,7 +148,7 @@ public class ActionManager {
             }
             sql = sb.toString();
         }else if(action == 3){
-            sql = "DROP TABLE `"+entityParam.getEnName()+"`;";
+            sql = "DROP TABLE IF EXISTS `"+entityParam.getEnName()+"`;";
         }
 
 
@@ -157,16 +164,25 @@ public class ActionManager {
 
         //build app
         String outFilePath = null;
-        if(action != 2){  //删除property 不需要
+        if(action == 0 || action == 1 || action == 3){  //删除property 不需要
             responseObject = ZhushouRpcUtils.buildApp(entity.getId().toString());
-            String downloadUrl = responseObject.getData().toString();
+            String attachmentId = responseObject.getData().toString();
+            String downloadUrl = zhushouUrl+"attachment/download?id="+attachmentId;
+            bisLog.info("downloadUrl="+downloadUrl);
 
             //下载到临时目录
             RequestRes requestRes = new RequestRes();
             requestRes.setUrl(downloadUrl);
+            //        headers
+            Map<String, String> headerMap = new HashMap<>();
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(getLoginCookie())) {
+                headerMap.put("Cookie", getLoginCookie());
+            }
+            requestRes.setHeaders(headerMap);
             ResponseRes responseRes = HttpNewUtils.execute(requestRes);
             String tempPath = System.getProperty("java.io.tmpdir");
             String filePath = tempPath + "" + System.currentTimeMillis() + ".zip";
+            bisLog.info("zipFilePath="+filePath);
             File file = new File(filePath);
             try {
                 FileUtils.writeByteArrayToFile(file, responseRes.getResult());
@@ -176,7 +192,7 @@ public class ActionManager {
 
             //然后解压到项目
             outFilePath = filePath.substring(0, filePath.length() - 4);
-            ZipUtil.unpack(new File(filePath), new File(outFilePath));
+            ZipUtil.unpack(file, new File(outFilePath));
         }
 
         if(action == 3){  //删除实体最后操作

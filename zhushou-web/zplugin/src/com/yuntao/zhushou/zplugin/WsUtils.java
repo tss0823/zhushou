@@ -60,11 +60,12 @@ public class WsUtils {
         return h5SocketClient;
     }
 
-    public static  boolean isClose(){
+    public static boolean isClose() {
         return (h5SocketClient == null || !h5SocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.CLOSED.name()) ||
                 !h5SocketClient.getConnection().getReadyState().name().equals(WebSocket.READYSTATE.NOT_YET_CONNECTED.name()));
     }
-    public static  void close(){
+
+    public static void close() {
         h5SocketClient.close();
     }
 }

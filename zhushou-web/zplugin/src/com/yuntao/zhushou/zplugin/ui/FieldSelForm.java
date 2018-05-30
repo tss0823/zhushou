@@ -165,12 +165,13 @@ public class FieldSelForm {
             entityParam = AnalyseModelUtils.analyseProperty(this.event);
             if (entityParam != null && entityParam.getPropertyList() != null) {
                 for (Property property : entityParam.getPropertyList()) {
-//                StringBuilder sb = new StringBuilder();
-//                sb.append(property.getEnName());
-//                sb.append(":");
-//                sb.append(property.getCnName());
-//                sb.append(" [" + property.getDataType() + ":" + (StringUtils.isNotEmpty(property.getLength()) ? property.getLength() : "") + "]");
-//                objects.add(sb.toString());
+//                    StringBuilder sb = new StringBuilder(property.getCnName());
+//                    sb.append("#");
+//                    sb.append(property.getEnName());
+//                    sb.append("#");
+//                    sb.append(property.getDataType());
+//                    sb.append("#");
+//                    sb.append(property.getLength());
                     listModel.addElement(property);
                 }
             }

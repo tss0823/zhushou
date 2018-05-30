@@ -68,6 +68,20 @@ public class Property implements Serializable {
     public Property(){
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(""+id);
+        sb.append("#");
+        sb.append(cnName);
+        sb.append("#");
+        sb.append(enName);
+        sb.append("#");
+        sb.append(dataType);
+        sb.append("#");
+        sb.append(length);
+        return sb.toString();
+    }
+
     public void setId(Long value) {
         this.id = value;
     }
@@ -166,7 +180,8 @@ public class Property implements Serializable {
     public String getRemark() {
         return this.remark;
     }
-    
+
+
 
 
 

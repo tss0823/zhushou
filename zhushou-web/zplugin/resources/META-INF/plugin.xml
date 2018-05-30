@@ -50,6 +50,7 @@
     <applicationConfigurable instance="com.yuntao.zhushou.zplugin.SettingsConfigurable" />
   </extensions>
 
+
   <actions>
     <!-- Add your actions here -->
     <!--<action id="BootStrapAction" class="com.yuntao.zhushou.zplugin.action.BootStrapAction" text="BootStrapAction"-->
@@ -101,5 +102,18 @@
       <implementation-class>com.yuntao.zhushou.zplugin.ZhushouComponent</implementation-class>
     </component>
   </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+    <component>
+      <implementation-class>com.yuntao.zhushou.zplugin.Zproject</implementation-class>
+    </component>
+  </project-components>
+
+  <extensions defaultExtensionNs="com.intellij">
+  <!-- Add your extensions here -->
+  <applicationService serviceInterface="com.yuntao.zhushou.zplugin.ZApplicationService" serviceImplementation="com.yuntao.zhushou.zplugin.ZApplicationService">
+  </applicationService>
+  </extensions>
 
 </idea-plugin>
