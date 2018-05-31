@@ -20,6 +20,7 @@ import com.yuntao.zhushou.service.support.bis.HttpProxyServerSupport;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,9 @@ import java.util.*;
  */
 @Controller
 public class CommonController extends BaseController {
+
+    @Value("${warn.event}")
+    private boolean warnEvent;
 
     @Autowired
     private HttpProxyServerSupport httpProxyServerSupport;
@@ -77,45 +81,47 @@ public class CommonController extends BaseController {
             }
         }).start();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try{
-                        WarnEventQuery query = new WarnEventQuery();
-                        query.setStatus(YesNoIntType.no.getCode());
-                        query.setExecTimeEnd(DateUtil.getFmtYMDHMS(new Date().getTime()));
-                        List<WarnEvent> warnEventList = warnEventService.selectList(query);
-                        if (CollectionUtils.isEmpty(warnEventList)) {
-                            Thread.sleep(DateUtil.MINITUE_5_MILLIS);  //5分钟
+        if(warnEvent){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true){
+                        try{
+                            WarnEventQuery query = new WarnEventQuery();
+                            query.setStatus(YesNoIntType.no.getCode());
+                            query.setExecTimeEnd(DateUtil.getFmtYMDHMS(new Date().getTime()));
+                            List<WarnEvent> warnEventList = warnEventService.selectList(query);
+                            if (CollectionUtils.isEmpty(warnEventList)) {
+                                Thread.sleep(DateUtil.MINITUE_5_MILLIS);  //5分钟
+                            }
+                            warnEventService.sendTask(warnEventList);
+                        }catch (Exception e){
+                            bisLog.error("send warn event msg failed!",e);
                         }
-                        warnEventService.sendTask(warnEventList);
-                    }catch (Exception e){
-                        bisLog.error("send warn event msg failed!",e);
                     }
                 }
-            }
-        }).start();
+            }).start();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try{
-                        WarnEventResultQuery query = new WarnEventResultQuery();
-                        query.setStatus(YesNoIntType.no.getCode());
-                        query.setMaxTryCount(3);
-                        List<WarnEventResult> warnEventResultList = warnEventResultService.selectList(query);
-                        if (CollectionUtils.isEmpty(warnEventResultList)) {
-                            Thread.sleep(60 * 1000);  //一分钟
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true){
+                        try{
+                            WarnEventResultQuery query = new WarnEventResultQuery();
+                            query.setStatus(YesNoIntType.no.getCode());
+                            query.setMaxTryCount(3);
+                            List<WarnEventResult> warnEventResultList = warnEventResultService.selectList(query);
+                            if (CollectionUtils.isEmpty(warnEventResultList)) {
+                                Thread.sleep(60 * 1000);  //一分钟
+                            }
+                            warnEventService.tryErrorSendTask(warnEventResultList);
+                        }catch (Exception e){
+                            bisLog.error("send warn event msg failed!",e);
                         }
-                        warnEventService.tryErrorSendTask(warnEventResultList);
-                    }catch (Exception e){
-                        bisLog.error("send warn event msg failed!",e);
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
 
     }
 

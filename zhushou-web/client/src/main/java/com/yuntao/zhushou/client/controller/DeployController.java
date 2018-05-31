@@ -174,25 +174,24 @@ public class DeployController extends BaseController {
     }
 
     private String getShellPath(String fileName) {
-        String deployShellBaseBir = AppConfigUtils.getValue("deploy_shell_baseBir");
-        if (StringUtils.isEmpty(deployShellBaseBir)) {
-            ClassPathResource resource = new ClassPathResource("script");
-            deployShellBaseBir = resource.getPath();
+        String deployShellBaseDir = AppConfigUtils.getValue("deploy_shell_baseDir");
+        if (StringUtils.isEmpty(deployShellBaseDir)) {
+            deployShellBaseDir= Thread.currentThread().getContextClassLoader().getResource("script").getPath();
         }
-        return deployShellBaseBir + File.separator + fileName;
+        return deployShellBaseDir + File.separator + fileName;
     }
     private String getDeployShellPath() {
-        String deployShellBaseBir = AppConfigUtils.getValue("deploy_shell_baseBir");
-        if (StringUtils.isEmpty(deployShellBaseBir)) {
+        String deployShellBaseDir = AppConfigUtils.getValue("deploy_shell_baseDir");
+        if (StringUtils.isEmpty(deployShellBaseDir)) {
             ClassPathResource resource = new ClassPathResource("script");
-            deployShellBaseBir = resource.getPath();
+            deployShellBaseDir = resource.getPath();
         }
         String deployCodeDir = AppConfigUtils.getValue("deploy_codeDir");
         String deployWebDir = AppConfigUtils.getValue("deploy_webDir");
         String deployUser = AppConfigUtils.getValue("deploy_user");
         String deployPwd = AppConfigUtils.getValue("deploy_pwd");
         
-        return deployShellBaseBir + File.separator + "deploy.sh "+deployShellBaseBir +","+deployCodeDir+","+deployWebDir+","+deployUser+","+deployPwd;
+        return deployShellBaseDir + File.separator + "deploy.sh "+deployShellBaseDir +","+deployCodeDir+","+deployWebDir+","+deployUser+","+deployPwd;
     }
 
     @RequestMapping("branchList")
