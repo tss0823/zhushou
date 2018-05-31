@@ -50,6 +50,9 @@ public class HttpNewUtils {
 
     private static String userAgent = null;
 
+    private static final int connectTimeout = 10000;
+    private static final int socketTimeout = 10000;
+
 
     static {
         cm.setMaxTotal(20);//连接池最大并发连接数
@@ -58,7 +61,7 @@ public class HttpNewUtils {
 
     }
 
-    final static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(10000).setSocketTimeout(10000).build();
+    final static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectTimeout).setSocketTimeout(socketTimeout).build();
 
     static CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieSpecRegistry(null).setConnectionManager(cm).build();
 
@@ -128,7 +131,20 @@ public class HttpNewUtils {
         if(requestRes.isProxy()){
             proxy = new HttpHost(requestRes.getProxyHost(), requestRes.getProxyPort(), "http");
         }
-        httpPost.setConfig(requestConfig);
+        if(requestRes.getConnectTimeout() != null || requestRes.getSocketTimeout() != null){
+            int thisConnectTimeout = connectTimeout;
+            int thisSocketTimeout = socketTimeout;
+            if(requestRes.getConnectTimeout() != null){
+                thisConnectTimeout = requestRes.getConnectTimeout();
+            }
+            if(requestRes.getSocketTimeout() != null){
+                thisSocketTimeout = requestRes.getSocketTimeout();
+            }
+            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(thisConnectTimeout).setSocketTimeout(thisSocketTimeout).build();
+            httpPost.setConfig(requestConfig);
+        }else{
+            httpPost.setConfig(requestConfig);
+        }
         //处理headers
         Map<String, String> headers = requestRes.getHeaders();
         if(MapUtils.isNotEmpty(headers)){

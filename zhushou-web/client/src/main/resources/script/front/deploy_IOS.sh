@@ -10,7 +10,7 @@ fileName=$6
 
 if [ $paramNum -lt 5 ]
 then
-echo "useage ./deploy_IOS.sh appName frontModel version outputPath fileName"
+echo "usage ./deploy_IOS.sh appName frontModel version outputPath fileName"
 exit 0
 fi
 

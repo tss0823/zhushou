@@ -26,6 +26,10 @@ public class RequestRes {
 
     private int proxyPort;
 
+    private Integer connectTimeout;
+
+    private Integer socketTimeout;
+
 
     public String getUrl() {
         return url;
@@ -105,5 +109,21 @@ public class RequestRes {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public void setConnectTimeout(Integer connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public void setSocketTimeout(Integer socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
+
+    public Integer getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public Integer getSocketTimeout() {
+        return socketTimeout;
     }
 }

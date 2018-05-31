@@ -15,7 +15,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -183,8 +182,7 @@ public class DeployController extends BaseController {
     private String getDeployShellPath() {
         String deployShellBaseDir = AppConfigUtils.getValue("deploy_shell_baseDir");
         if (StringUtils.isEmpty(deployShellBaseDir)) {
-            ClassPathResource resource = new ClassPathResource("script");
-            deployShellBaseDir = resource.getPath();
+            deployShellBaseDir= Thread.currentThread().getContextClassLoader().getResource("script").getPath();
         }
         String deployCodeDir = AppConfigUtils.getValue("deploy_codeDir");
         String deployWebDir = AppConfigUtils.getValue("deploy_webDir");

@@ -314,13 +314,14 @@
         compileAndDeploy: function () {
             var model = YT.deploy.appHost.model;
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var branch = $("#branch").val();
             if(!branch){
                 $("#branch").focus();
                 alert("请输入分支名称");
                 return;
             }
-            var param = {appName:appName,branch:branch,model:model};
+            var param = {appId:appId,branch:branch,model:model};
             YT.deploy.appHost.writeMsg("执行编译并发布[所有应用]开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/compileAndDeploy",param,function(d){
                 //打印消息
@@ -331,13 +332,14 @@
         singleCompileAndDeploy: function () {
             var model = YT.deploy.appHost.model;
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var branch = $("#branch").val();
             if(!branch){
                 $("#branch").focus();
                 alert("请输入分支名称");
                 return;
             }
-            var param = {appName:appName,branch:branch,model:model};
+            var param = {appId:appId,branch:branch,model:model};
             YT.deploy.appHost.writeMsg("执行编译并发布["+appName+"]开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/singleCompileAndDeploy",param,function(d){
                 //打印消息
@@ -347,6 +349,7 @@
 
         batchDeploy: function () {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if(!confirm("您确认要批量发布【 "+appName+" 】 > "+model+" 吗？")){
                 return;
@@ -358,7 +361,7 @@
                 }
             });
 //			alert(ipArray.join(","));
-            var param = {appName:appName,model:model,ipList:ipArray};
+            var param = {appId:appId,model:model,ipList:ipArray};
             YT.deploy.appHost.writeMsg("执行批量发布开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/deploy",param,function(d){
                 //打印消息
@@ -368,6 +371,7 @@
 
         batchRestart: function () {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if(!confirm("您确认要批量重启【 "+appName+" 】 > "+model+" 吗？")){
                 return;
@@ -379,7 +383,7 @@
                 }
             });
 //			alert(ipArray.join(","));
-            var param = {appName:appName,model:model,ipList:ipArray};
+            var param = {appId:appId,model:model,ipList:ipArray};
             YT.deploy.appHost.writeMsg("执行批量重启开始,请稍等...\r\n",true);
             YT.deploy.util.reqPost("/deploy/restart",param,function(d){
                 //打印消息
@@ -389,6 +393,7 @@
         
         batchRollback: function () {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if(!confirm("您确认要批量回滚【 "+appName+" 】 > "+model+" 吗？")){
                 return;
@@ -400,7 +405,7 @@
                 }
             });
 
-            YT.deploy.util.reqGet("/host/getLastBackVer",{appName:appName,ip:ipArray[0]},function(d){
+            YT.deploy.util.reqGet("/host/getLastBackVer",{appId:appId,ip:ipArray[0]},function(d){
                 var deployLogList = d.data;
                 if(deployLogList.length == 0){
                     alert("没有可以回滚的版本");
@@ -454,11 +459,12 @@
 
         deploy: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要发布【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行发布开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/deploy", param, function (d) {
                 //打印消息
@@ -469,11 +475,12 @@
         
         deployStatic: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要静态发布【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行静态发布开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/deployStatic", param, function (d) {
                 //打印消息
@@ -484,11 +491,12 @@
 
         restart: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要重启【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行重启开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/restart", param, function (d) {
                 //打印消息
@@ -498,11 +506,12 @@
         },
         debug: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要调式重启【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行调式重启开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/debug", param, function (d) {
                 //打印消息
@@ -512,11 +521,12 @@
         },
         start: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要上线【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行上线开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/start", param, function (d) {
                 //打印消息
@@ -528,11 +538,12 @@
 
         stop: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要下线【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
-            var param = {appName: appName, model: model, ipList: [ip]};
+            var param = {appId: appId, model: model, ipList: [ip]};
             YT.deploy.appHost.writeMsg("执行下线开始,请稍等...\r\n", true);
             YT.deploy.util.reqPost("/deploy/stop", param, function (d) {
                 //打印消息
@@ -543,12 +554,13 @@
         },
         rollback: function (ip) {
             var appName = YT.deploy.appHost.appName;
+            var appId = YT.deploy.appHost.appId;
             var model = YT.deploy.appHost.model;
             if (!confirm("您确认要回滚【 " + appName + " 】 > " + model + " 吗？")) {
                 return;
             }
 
-            YT.deploy.util.reqGet("/host/getLastBackVer",{appName:appName,ip:ip},function(d){
+            YT.deploy.util.reqGet("/host/getLastBackVer",{appId:appId,ip:ip},function(d){
                 var deployLogList = d.data;
                 if(deployLogList.length == 0){
                     alert("没有可以回滚的版本");

@@ -9,13 +9,14 @@ deployUser=`echo "${firstParam}" | awk -F ',' '{print $4}'`
 deployPwd=`echo "${firstParam}" | awk -F ',' '{print $5}'`
 
 firstParam=$2
+echo "firstParam=$2"
 fun=`echo "${firstParam}" | awk -F ',' '{print $1}'` 
 codeName=`echo "${firstParam}" | awk -F ',' '{print $2}'` 
 branch=`echo "${firstParam}" | awk -F ',' '{print $3}'` 
 model=`echo "${firstParam}" | awk -F ',' '{print $4}'` 
 compileProperty=`echo "${firstParam}" | awk -F ',' '{print $5}'` 
 #echo "compileProprty=${compileProperty}"
-if [ $paramNum -eq 1 -a "${fun}" == "package" ];then
+if [ $paramNum -eq 2 -a "${fun}" == "package" ];then
 echo "package execute.."
 sh ${deployShellBaseBir}/package.sh ${codeName} $branch ${model} "${compileProperty}" "${deployCodeDir}"
 exit 0
@@ -23,7 +24,7 @@ fi
 
 if [ $paramNum -lt 3 ]
 then
-echo "useage ./deploy.sh [package][install][restart][debug][start][stop][run][all][rollback],codeName,branch,model,compileProperty appName ip1,ip2"
+echo "usage ./deploy.sh [package][install][restart][debug][start][stop][run][all][rollback],codeName,branch,model,compileProperty appName ip1,ip2"
 exit 0
 fi
 
@@ -51,7 +52,7 @@ sh ${deployShellBaseBir}/package.sh ${codeName} $branch ${model} "{compileProper
     exit 0
  fi
 else
-echo "useage ./deploy.sh [package][install][restart][debug][start][stop][run][all][rollback],codeName,branch,model compileProperty appName ip1,ip2"
+echo "usage ./deploy.sh [package][install][restart][debug][start][stop][run][all][rollback],codeName,branch,model compileProperty appName ip1,ip2"
 exit 0
 fi
 appName=$2

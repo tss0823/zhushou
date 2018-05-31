@@ -18,7 +18,7 @@ eval ${e_cmd}
 paramNum=$#
 #if [ $paramNum -lt 2 ]
 #then
-#echo "useage merge from_branch to_branch "
+#echo "usage merge from_branch to_branch "
 #exit 0
 #fi
 

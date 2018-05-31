@@ -79,6 +79,8 @@ public class DeployController extends BaseController {
         Map<String,String> params = new HashMap<>();
         params.put("codeName",project.getCodeName());
         requestRes.setParams(params);
+        requestRes.setConnectTimeout(30000);  //等待加载脚本流，时间有点长
+        requestRes.setSocketTimeout(30000);  //等待加载脚本流，时间有点长
         ResponseRes responseRes = HttpNewUtils.execute(requestRes);
         String resData = new String(responseRes.getResult());
         ResponseObject responseObject = JsonUtils.json2Object(resData, ResponseObject.class);
