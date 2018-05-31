@@ -8,7 +8,6 @@ import com.yuntao.zhushou.model.query.AtProcessInstQuery;
 import com.yuntao.zhushou.model.vo.AtProcessInstVo;
 import com.yuntao.zhushou.service.inter.AtProcessInstService;
 import com.yuntao.zhushou.service.inter.AtTemplateService;
-import com.yuntao.zhushou.service.support.YTWebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class AtProcessInstServiceImpl implements AtProcessInstService {
     private AtTemplateService atTemplateService;
 
 //    @Autowired
-    private YTWebSocketServer YTWebSocketServer;
+//    private YTWebSocketServer YTWebSocketServer;
 
     @Override
     public List<AtProcessInst> selectList(AtProcessInstQuery query) {

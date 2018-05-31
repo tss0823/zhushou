@@ -69,8 +69,10 @@ public class ApplicationConfig {
     @Bean(name = "propertyPlaceholderConfigurer")
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerProd() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("env/config-prod.properties"));
-        LOG.info("env/config-prod.properties loaded");
+        String projectDir = System.getProperty("user.dir");
+        String path = projectDir+ File.separator+"conf/config.properties";
+        ppc.setLocation(new FileSystemResource(path));
+        LOG.info("config.properties loaded");
         return ppc;
     }
 

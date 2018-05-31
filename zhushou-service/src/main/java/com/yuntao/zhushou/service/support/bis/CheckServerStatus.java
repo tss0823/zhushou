@@ -1,6 +1,5 @@
 package com.yuntao.zhushou.service.support.bis;
 
-import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
@@ -9,7 +8,6 @@ import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.HostService;
-import com.yuntao.zhushou.service.support.YTWebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,8 @@ public class CheckServerStatus {
     @Autowired
     private HostService hostService;
 
-    @Autowired
-    private YTWebSocketServer ytWebSocketServer;
+//    @Autowired
+//    private YTWebSocketServer ytWebSocketServer;
 
 //    @PostConstruct
     public void init(){
@@ -72,6 +70,6 @@ public class CheckServerStatus {
         String result = JsonUtils.object2Json(resultMap);
 
         //推送到前端
-        ytWebSocketServer.sendMessage(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK,result);
+//        ytWebSocketServer.sendMessage(MsgConstant.ResponseBizType.SERVER_STATUS_CHECK,result);
     }
 }

@@ -2,10 +2,6 @@ package com.yuntao.zhushou.service.job;
 
 import com.yuntao.zhushou.common.constant.MsgConstant;
 import com.yuntao.zhushou.common.utils.AppConfigUtils;
-import com.yuntao.zhushou.common.utils.HttpUtils;
-import com.yuntao.zhushou.common.utils.JsonUtils;
-import com.yuntao.zhushou.common.utils.ResponseObjectUtils;
-import com.yuntao.zhushou.common.constant.AppConstant;
 import com.yuntao.zhushou.common.web.MsgResponseObject;
 import com.yuntao.zhushou.common.web.ws.AppObject;
 import com.yuntao.zhushou.common.web.ws.HostObject;
@@ -13,16 +9,12 @@ import com.yuntao.zhushou.model.domain.App;
 import com.yuntao.zhushou.model.domain.Company;
 import com.yuntao.zhushou.model.domain.Host;
 import com.yuntao.zhushou.model.enums.LogModel;
-import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.query.CompanyQuery;
 import com.yuntao.zhushou.service.inter.AppService;
 import com.yuntao.zhushou.service.inter.CompanyService;
 import com.yuntao.zhushou.service.inter.HostService;
-import com.yuntao.zhushou.service.support.YTWebSocketServer;
 import com.yuntao.zhushou.service.support.deploy.DZMessageHelperServer;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.util.CollectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +22,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by shan on 2016/2/23.
@@ -65,15 +55,15 @@ public class CheckServerStatusJob {
     @Scheduled(cron = "*/5 * * * * ?")
 //    @Profile("prod")
     public void check() {
-//        if (!execRun.compareAndSet(false, true)) {
-//            return;
-//        }
+        String model = AppConfigUtils.getValue("profiles.active");
+        if (!model.equals(LogModel.PROD.getCode())) {
+            return;
+        }
+        doCheck();
+    }
 
+    public void doCheck() {
         try {
-            String model = AppConfigUtils.getValue("profiles.active");
-            if (!model.equals(LogModel.PROD.getCode())) {
-                return;
-            }
 //            List<App> appList = appService.selectAllList();
 //            Map<String, Map<String, ResponseObject>> resultMap = new HashMap<>();
             //list all company
@@ -82,9 +72,9 @@ public class CheckServerStatusJob {
                 //get all app by company id
                 String key = company.getKey();
                 AtomicBoolean atomicBoolean = execMap.get(key);
-                if(atomicBoolean == null){
+                if (atomicBoolean == null) {
                     atomicBoolean = new AtomicBoolean(false);
-                    execMap.put(key,atomicBoolean);
+                    execMap.put(key, atomicBoolean);
                 }
                 //没有执行完就跳过
                 if (!atomicBoolean.compareAndSet(false, true)) {
@@ -133,7 +123,6 @@ public class CheckServerStatusJob {
         } finally {
 //            execRun.set(false);
         }
-
 
     }
 }

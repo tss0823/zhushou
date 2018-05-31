@@ -15,7 +15,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,8 +39,8 @@ public class DeployController extends BaseController {
 //    @Autowired
 //    private UserService userService;
 
-    @Value("${model}")
-    private String model;
+//    @Value("${model}")
+//    private String model;
 
     @Autowired
     private CDWebSocketMsgHandler cdWebSocketMsgHandler;

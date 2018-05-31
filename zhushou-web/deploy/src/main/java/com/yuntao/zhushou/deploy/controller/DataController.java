@@ -10,6 +10,7 @@ import com.yuntao.zhushou.model.enums.*;
 import com.yuntao.zhushou.model.query.*;
 import com.yuntao.zhushou.model.vo.IdocUrlFrontVo;
 import com.yuntao.zhushou.service.inter.*;
+import com.yuntao.zhushou.service.job.CheckServerStatusJob;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,9 @@ public class DataController extends  BaseController {
 
     @Autowired
     private HostService hostService;
+
+    @Autowired
+    private CheckServerStatusJob checkServerStatusJob;
 
     @RequestMapping("appConfigData")
     public ResponseObject appConfigData() {
@@ -149,6 +153,14 @@ public class DataController extends  BaseController {
         query.setCompanyId(user.getCompanyId());
         List<Template> dataList = templateService.selectList(query);
         responseObject.setData(dataList);
+        return responseObject;
+    }
+
+    @RequestMapping("testCheck")
+    @NeedLogin
+    public ResponseObject testCheck() {
+        ResponseObject responseObject = new ResponseObject();
+        checkServerStatusJob.doCheck();
         return responseObject;
     }
 }
