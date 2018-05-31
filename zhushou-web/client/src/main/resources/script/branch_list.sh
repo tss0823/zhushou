@@ -1,7 +1,7 @@
 #!/bin/bash
 #branch_list
-codeName=$1
-cd /u01/code/${codeName}
+codePath=$1
+cd ${codePath}
 git pull
 git fetch -p
 echo "branchList"

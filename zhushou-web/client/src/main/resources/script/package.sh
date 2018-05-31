@@ -22,9 +22,10 @@ then
 fi
 
 compileProperty=$4
+deployCodeDir=$5
 
 #package
-source_dir="/u01/code/${codeName}"
+source_dir="${deployCodeDir}/${codeName}"
 echo "cd ${source_dir}"
 cd ${source_dir}
 #pull new branch

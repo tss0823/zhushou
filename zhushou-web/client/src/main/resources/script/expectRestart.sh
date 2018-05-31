@@ -3,6 +3,7 @@ set appName [lindex $argv 0 ]
 set ip [lindex $argv 1 ]  
 set user [lindex $argv 2 ]  
 set password [lindex $argv 3 ]  
+set deployWebDir [lindex $argv 6 ]
 #remote login
 spawn ssh ${user}@$ip      
 expect {  
@@ -12,7 +13,7 @@ expect {
 #set timeout 1
 #expect "Last login"  
 expect "$*"  
-set tomcat_home "/u01/deploy/project/tomcat_${appName}"
+set tomcat_home "${deployWebDir}/tomcat_${appName}"
 send "cd ${tomcat_home}\r"
 #send "ls\r"
 puts ${tomcat_home}

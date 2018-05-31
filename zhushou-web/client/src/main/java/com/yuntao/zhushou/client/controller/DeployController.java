@@ -102,7 +102,8 @@ public class DeployController extends BaseController {
         //执行前先清空历史残留队里消息,for 浏览器 or client 可能中断执行
         clearExecMsg();
         cancelExecute = false;
-        if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
+//        if (SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
+            if (SystemUtils.IS_OS_WINDOWS) {
 //            if (!StringUtils.equals(model,"test") ) {
             for (int i = 0; i < 5; i++) {
                 offerExecMsg("windows 执行测试");
@@ -181,11 +182,25 @@ public class DeployController extends BaseController {
         }
         return deployShellBaseBir + File.separator + fileName;
     }
+    private String getDeployShellPath() {
+        String deployShellBaseBir = AppConfigUtils.getValue("deploy_shell_baseBir");
+        if (StringUtils.isEmpty(deployShellBaseBir)) {
+            ClassPathResource resource = new ClassPathResource("script");
+            deployShellBaseBir = resource.getPath();
+        }
+        String deployCodeDir = AppConfigUtils.getValue("deploy_codeDir");
+        String deployWebDir = AppConfigUtils.getValue("deploy_webDir");
+        String deployUser = AppConfigUtils.getValue("deploy_user");
+        String deployPwd = AppConfigUtils.getValue("deploy_pwd");
+        
+        return deployShellBaseBir + File.separator + "deploy.sh "+deployShellBaseBir +","+deployCodeDir+","+deployWebDir+","+deployUser+","+deployPwd;
+    }
 
     @RequestMapping("branchList")
     public ResponseObject branchList(@RequestParam String codeName) {
+        String deployCodeDir = AppConfigUtils.getValue("deploy_codeDir");
         String filePath = getShellPath("branch_list.sh  ");
-        String cmd = "sh " + filePath + codeName;
+        String cmd = "sh " + filePath + deployCodeDir+File.separator+codeName;
         execShellScript(cmd, "branchList");
         String msg = null;
         Set<String> resultSet = new TreeSet<>();
@@ -243,7 +258,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
@@ -287,7 +302,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
@@ -342,7 +357,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " package," + codeName + "," + branch + "," + model + "," + "'" + compileProperty + "'";
                     execShellScript(cmd, "compile");
                     compileResult = true;
@@ -439,7 +454,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " run," + codeName + " " + appName + " " + ipList;
                     execShellScript(cmd, "deploy");
                 } catch (Exception e) {
@@ -492,7 +507,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " install," + codeName + " " + appName + " " + ipList;
                     execShellScript(cmd, "deployStatic");
                 } catch (Exception e) {
@@ -523,7 +538,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " stop " + appName + " " + ipList;
                     execShellScript(cmd, "stop");
 //                    deployExecuteService.stop(user,appName,model,ipList);
@@ -555,7 +570,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " start " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 } catch (Exception e) {
@@ -586,7 +601,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " restart " + appName + " " + ipList;
                     execShellScript(cmd, "restart");
                 } catch (Exception e) {
@@ -617,7 +632,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " debug " + appName + " " + ipList;
                     execShellScript(cmd, "debug");
                 } catch (Exception e) {
@@ -648,7 +663,7 @@ public class DeployController extends BaseController {
             @Override
             public void run() {
                 try {
-                    String filePath = getShellPath("deploy.sh");
+                    String filePath = getDeployShellPath();
                     String cmd = "sh " + filePath + " rollback," + backVer + " " + appName + " " + ipList;
                     execShellScript(cmd, "rollback");
                 } catch (Exception e) {

@@ -4,8 +4,9 @@ set appName [lindex $argv 0 ]
 set ip [lindex $argv 1 ]  
 set user [lindex $argv 2 ]  
 set password [lindex $argv 3 ]  
-set back_ver [lindex $argv 4 ]  
-set tomcat_home "/u01/deploy/project/tomcat_${appName}"
+set back_ver [lindex $argv 4 ]
+set deployWebDir [lindex $argv 7 ]
+set tomcat_home "${deployWebDir}/tomcat_${appName}"
 set tomcat_webapp_dir "${tomcat_home}/webapps/ROOT" 
 #remote login
 spawn ssh  ${user}@$ip      

@@ -2,6 +2,13 @@
 #deploy run=install && restart
 paramNum=$#
 firstParam=$1
+deployShellBaseBir=`echo "${firstParam}" | awk -F ',' '{print $1}'` 
+deployCodeDir=`echo "${firstParam}" | awk -F ',' '{print $2}'`
+deployWebDir=`echo "${firstParam}" | awk -F ',' '{print $3}'`
+deployUser=`echo "${firstParam}" | awk -F ',' '{print $4}'`
+deployPwd=`echo "${firstParam}" | awk -F ',' '{print $5}'`
+
+firstParam=$2
 fun=`echo "${firstParam}" | awk -F ',' '{print $1}'` 
 codeName=`echo "${firstParam}" | awk -F ',' '{print $2}'` 
 branch=`echo "${firstParam}" | awk -F ',' '{print $3}'` 
@@ -10,7 +17,7 @@ compileProperty=`echo "${firstParam}" | awk -F ',' '{print $5}'`
 #echo "compileProprty=${compileProperty}"
 if [ $paramNum -eq 1 -a "${fun}" == "package" ];then
 echo "package execute.."
-sh /u01/deploy/script/package.sh ${codeName} $branch ${model} "${compileProperty}"
+sh ${deployShellBaseBir}/package.sh ${codeName} $branch ${model} "${compileProperty}" "${deployCodeDir}"
 exit 0
 fi
 
@@ -38,7 +45,7 @@ back_ver=${codeName}
 echo "rollback execute ..."
 elif [ "${fun}" == "all" ];then
 echo "all execute ..."
-sh /u01/deploy/script/package.sh ${codeName} $branch ${model} "{compileProperty}"
+sh ${deployShellBaseBir}/package.sh ${codeName} $branch ${model} "{compileProperty}" "${deployCodeDir}"
  if (( $? )) 
  then 
     exit 0
@@ -56,8 +63,8 @@ ipList=$3
 ipMap=`echo "${ipList}" | sed "s/,/ /g"` 
 
 str_d=`date "+%Y%m%d_%H%M_%S"`
-pwd="123456"
-user="root"
+pwd=${deployPwd}
+user=${deployUser}
 
 
 for var in $ipMap; do
@@ -66,36 +73,35 @@ echo "ip=$ip"
 publishName="${appName}"
 if [ "${fun}" == "install" ] || [ "${fun}" == "run" ] || [ "${fun}" == "all" ]
 then
-sh /u01/deploy/script/install.sh ${codeName} ${appName} ${ip} ${user} ${pwd} ${str_d}
+sh ${deployShellBaseBir}/install.sh ${codeName} ${appName} ${ip} ${user} ${pwd} ${str_d} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 
 #restart
 if [ "${fun}" == "restart" ] || [ "${fun}" == "run" ] || [ "${fun}" == "all" ]
 then
-/usr/bin/expect /u01/deploy/script/expectRestart.sh ${appName} ${ip} ${user} ${pwd}
+/usr/bin/expect ${deployShellBaseBir}/expectRestart.sh ${appName} ${ip} ${user} ${pwd} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 
 #debug
 if [ "${fun}" == "debug" ]
 then
-/usr/bin/expect /u01/deploy/script/expectDebug.sh ${appName} ${ip} ${user} ${pwd}
+/usr/bin/expect ${deployShellBaseBir}/expectDebug.sh ${appName} ${ip} ${user} ${pwd} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 
 #start
 if [ "${fun}" == "start" ]
 then
-/usr/bin/expect /u01/deploy/script/expectStart.sh ${appName} ${ip} ${user} ${pwd}
+/usr/bin/expect ${deployShellBaseBir}/expectStart.sh ${appName} ${ip} ${user} ${pwd} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 
 #stop
 if [ "${fun}" == "stop" ]
 then
-/usr/bin/expect /u01/deploy/script/expectStop.sh ${appName} ${ip} ${user} ${pwd}
+/usr/bin/expect ${deployShellBaseBir}/expectStop.sh ${appName} ${ip} ${user} ${pwd} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 
 if [ "${fun}" == "rollback" ] 
 then
-#echo 2222222
-/usr/bin/expect /u01/deploy/script/expectRollback.sh ${appName} ${ip} ${user} ${pwd} ${back_ver}
+/usr/bin/expect ${deployShellBaseBir}/expectRollback.sh ${appName} ${ip} ${user} ${pwd} ${back_ver} ${deployShellBaseBir} ${deployCodeDir} ${deployWebDir}
 fi
 done
