@@ -6,7 +6,9 @@ package com.yuntao.zhushou.zplugin;
 public interface ZpluginConstant {
 
 
-    String zhushouUrl = "http://zhushou.usefullc.cn/";
+    String domain = "zhushou.meitu.com";
+    String zhushouUrl = "http://"+domain+"/";
+    String zhushouWsUrl = "ws://"+domain+"/";
     String acountNo = "zhushou.accountNo";
     String pwd = "zhushou.pwd";
     String testBranch = "zhushou.testBranch";

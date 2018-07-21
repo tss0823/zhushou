@@ -5,6 +5,7 @@ import com.yuntao.zhushou.common.http.HttpNewUtils;
 import com.yuntao.zhushou.common.http.RequestRes;
 import com.yuntao.zhushou.common.http.ResponseRes;
 import com.yuntao.zhushou.common.utils.BeanUtils;
+import com.yuntao.zhushou.common.utils.DbUtils;
 import com.yuntao.zhushou.common.utils.JsonUtils;
 import com.yuntao.zhushou.common.web.ResponseObject;
 import com.yuntao.zhushou.model.domain.Entity;
@@ -110,6 +111,7 @@ public class ActionManager {
 
         //build sql
 //        List<Property> propertyList = entityParam.getPropertyList();
+        String tableName = DbUtils.getTableName(entity.getTableName(), entityParam.getEnName());
         String sql = null;
         if (action == 0) {
             ResponseObject responseObject = ZhushouRpcUtils.buildSql(entity.getId().toString());
@@ -118,7 +120,7 @@ public class ActionManager {
         } else if (action == 1) {
             StringBuilder sb = new StringBuilder();
             for (Property property : selectPropertyList) {
-                sb.append("ALTER TABLE `" + entityParam.getEnName() + "` ADD `" + property.getEnName() + "`");
+                sb.append("ALTER TABLE `" + tableName + "` ADD `" + property.getEnName() + "`");
                 String dataType = property.getDataType();
                 String dbType = MysqlDataTypeEnum.getDbValueByJavaValue(dataType);
                 sb.append(" "+dbType);
@@ -144,11 +146,11 @@ public class ActionManager {
         }else if(action == 2){
             StringBuilder sb = new StringBuilder();
             for (Property property : selectPropertyList) {
-                sb.append("ALTER TABLE `"+entityParam.getEnName()+"` DROP `"+property.getEnName()+"`;");
+                sb.append("ALTER TABLE `"+tableName+"` DROP `"+property.getEnName()+"`;");
             }
             sql = sb.toString();
         }else if(action == 3){
-            sql = "DROP TABLE IF EXISTS `"+entityParam.getEnName()+"`;";
+            sql = "DROP TABLE IF EXISTS `"+tableName+"`;";
         }
 
 
@@ -158,8 +160,8 @@ public class ActionManager {
         DbConfigure dbConfigure = new DbConfigure();
         BeanUtils.mapToBean(dataMap, dbConfigure);
         JdbcUtils.execute(dbConfigure, sql);
-        ZhushouRpcUtils.buildSqlSave(sql);
-        bisLog.info("execute sql >>>");
+        ResponseObject responseObjectSql = ZhushouRpcUtils.buildSqlSave(sql);
+        bisLog.info("execute sql >>> result=",responseObjectSql);
         bisLog.info(sql);
 
         //build app

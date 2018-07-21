@@ -25,7 +25,7 @@ public class JdbcUtils {
             // 执行DDL,创建数据表
             String[] split = sql.split(";");
             if(split.length > 1){
-                for (int i = 0; i < split.length -1; i++) {
+                for (int i = 0; i < split.length; i++) {
                     String s = split[i];
                     if (StringUtils.isNotEmpty(s)) {
                         stmt.addBatch(s);
@@ -45,6 +45,18 @@ public class JdbcUtils {
     }
 
     public static void main(String[] args) {
+        String sql = "aaa;bbb;";
+        String[] split = sql.split(";");
+        if(split.length > 1){
+            for (int i = 0; i < split.length; i++) {
+                String s = split[i];
+                if (StringUtils.isNotEmpty(s)) {
+                    bisLog.info("sql="+s);
+                }
+            }
+        }
+    }
+    public static void main2(String[] args) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             // 获取数据库连接

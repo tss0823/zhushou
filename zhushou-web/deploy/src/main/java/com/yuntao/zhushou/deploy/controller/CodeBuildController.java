@@ -173,9 +173,10 @@ public class CodeBuildController extends BaseController {
 
     @RequestMapping("buildSqlSave")
     @NeedLogin
-    public ResponseObject buildSqlSave(@RequestParam  String sql) {
+    public ResponseObject buildSqlSave(@RequestParam Long projectId,@RequestParam  String sql) {
         User user = userService.getCurrentUser();
         CodeBuildSql codeBuildSql = new CodeBuildSql();
+        codeBuildSql.setProjectId(projectId);
         codeBuildSql.setCompanyId(user.getCompanyId());
         codeBuildSql.setUserId(user.getId());
         codeBuildSql.setContent(sql);

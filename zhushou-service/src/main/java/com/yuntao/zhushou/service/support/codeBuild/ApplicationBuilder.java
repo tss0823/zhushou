@@ -15,6 +15,7 @@ import com.yuntao.zhushou.service.impl.AbstService;
 import com.yuntao.zhushou.service.inter.AttachmentService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 //import org.apache.commons.io.FileUtils;
@@ -82,7 +84,7 @@ public class ApplicationBuilder extends AbstService {
 
     private String getGenPath() {
         String gtime = DateUtil.getFmtyMdHmNoSymbol(System.currentTimeMillis());
-        String genPath = System.getProperty("java.io.tmpdir") + File.separator + gtime;
+        String genPath = System.getProperty("java.io.tmpdir") + gtime;
         return genPath;
     }
 
@@ -136,7 +138,7 @@ public class ApplicationBuilder extends AbstService {
             String entityCnName = entityBo.getCnName();
             String entityEnName = entityBo.getEnName();
             String upperEntityEnName = StringUtils.capitalize(entityEnName);
-            String tableName = DbUtils.javaToTableName(entityEnName);
+            String tableName = DbUtils.getTableName(entityBo.getTableName(),entityEnName);
 //            String shortName = entityBo.getShortName();
 //            if (StringUtils.isEmpty(shortName)) {
 //                shortName = appShortName;
@@ -206,6 +208,13 @@ public class ApplicationBuilder extends AbstService {
         // 返回
         String genZipPath = genPath + ".zip";
         ZipUtils.zipFile(genPath, genZipPath, null);
+//        try {
+//            Process process = Runtime.getRuntime().exec("zip -r " + genZipPath + " " + genPath);
+////            InputStream inputStream = process.getInputStream();
+////            List<String> strings = IOUtils.readLines(inputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return genZipPath;
 //        return genAttachment(genPath);
 
@@ -331,7 +340,7 @@ public class ApplicationBuilder extends AbstService {
 //        if (!org.springframework.util.StringUtils.isEmpty(entity.getShortName())) {
 //            shortName = entity.getShortName();
 //        }
-        String tableName = DbUtils.javaToTableName(entity.getEnName());
+        String tableName = DbUtils.getTableName(entity.getTableName(),entity.getEnName());
 //        if (!org.springframework.util.StringUtils.isEmpty(shortName)) {
 //            tableName = shortName + "_" + tableName;
 //        }
@@ -399,5 +408,9 @@ public class ApplicationBuilder extends AbstService {
         sb.append("\n\n");
         sql = sb.toString();
         return sql;
+    }
+
+    public static void main(String[] args) {
+        ZipUtils.zipFile("/var/folders/vc/sxkyjmp92hv16x3vxysqr4jc0000gn/T/20180714233537", "/var/folders/vc/sxkyjmp92hv16x3vxysqr4jc0000gn/T/20180714233537.zip", null);
     }
 }

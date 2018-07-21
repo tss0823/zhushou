@@ -39,9 +39,12 @@ public class CodeBuildSql implements Serializable {
         
     @ModelFieldComment(value = "内容")
     private String content;
-        
+
     @ModelFieldComment(value = "用户id")
     private Long userId;
+
+    @ModelFieldComment(value = "项目id")
+    private Long projectId;
         
     
     public CodeBuildSql(){
@@ -96,8 +99,13 @@ public class CodeBuildSql implements Serializable {
     public Long getUserId() {
         return this.userId;
     }
-    
 
 
+    public Long getProjectId() {
+        return projectId;
+    }
 
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 }

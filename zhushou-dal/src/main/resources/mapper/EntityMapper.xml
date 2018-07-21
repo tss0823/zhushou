@@ -14,10 +14,11 @@
         <result column="appId" property="appId"/>
 		<result column="enName" property="enName"/>
 		<result column="cnName" property="cnName"/>
+        <result column="tableName" property="tableName"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
-	 `id`, `gmtCreate`, `gmtModify`, `delState`, `projectId`,`appId`, `enName`, `cnName`
+	 `id`, `gmtCreate`, `gmtModify`, `delState`, `projectId`,`appId`, `enName`, `cnName`,`tableName`
 	</sql>
 
 	<sql id="Base_Table_Name">
@@ -33,6 +34,7 @@
         <if test="appId != null "> and  `appId` = #{appId} </if>
 		<if test="enName != null  and enName != ''"> and  `enName` = #{enName} </if>
 		<if test="cnName != null  and cnName != ''"> and  `cnName` = #{cnName} </if>
+        <if test="tableName != null  and tableName != ''"> and  `tableName` = #{tableName} </if>
 	</sql>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -66,11 +68,11 @@
         <include refid="Base_Table_Name"/>
         (
 		`gmtCreate`,
-		`gmtModify`,`delState`,`projectId`,`appId`,`enName`,`cnName`
+		`gmtModify`,`delState`,`projectId`,`appId`,`enName`,`cnName`,`tableName`
 		)
 		values
 		(
-		 now(6), now(6), 1, #{projectId},#{appId}, #{enName}, #{cnName}
+		 now(6), now(6), 1, #{projectId},#{appId}, #{enName}, #{cnName},#{tableName}
 		)
     </insert>
 
@@ -82,6 +84,7 @@
             <if test="appId != null">`appId` = #{appId}, </if>
 			<if test="enName != null and enName != ''">`enName` = #{enName}, </if>
 			<if test="cnName != null and cnName != ''">`cnName` = #{cnName}, </if>
+            <if test="tableName != null  and tableName != ''">`tableName` = #{tableName}, </if>
         </set>
         ,gmtModify = now(6)
         where id = #{id}

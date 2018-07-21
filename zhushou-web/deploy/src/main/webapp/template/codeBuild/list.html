@@ -57,9 +57,10 @@
             <th style="width:8%">项目</th>
             <!--<th style="width:10%">应用</th>-->
             <th style="width:8%">英文名称</th>
-            <th style="width:10%">中文名称</th>
-            <th style="width:12%">创建时间</th>
-            <th style="width:12%">修改时间</th>
+            <th style="width:9%">中文名称</th>
+            <th style="width:9%">表名称</th>
+            <th style="width:9%">创建时间</th>
+            <th style="width:9%">修改时间</th>
             <th style="width:10%">操作</th>
         </tr>
         </thead>
@@ -78,6 +79,7 @@
             </td>
             <td>{{bean.enName}}</td>
             <td>{{bean.cnName}}</td>
+            <td>{{bean.tableName}}</td>
             <td>{{bean.gmtCreate | dateFormat:'yyyy-MM-dd hh:mm' }}</td>
             <td>{{bean.gmtModify | dateFormat:'yyyy-MM-dd hh:mm' }}</td>
             <td>

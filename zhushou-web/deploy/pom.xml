@@ -89,7 +89,7 @@
                     <!--<mainClass></mainClass>-->
                     <!--<serverXml>src/main/resources/tomcat/server.xml</serverXml>-->
                     <!-- http port -->
-                    <port>1027</port>
+                    <port>28081</port>
                     <!-- application path always starts with / -->
                     <path>/</path>
                 </configuration>

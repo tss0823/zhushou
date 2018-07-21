@@ -70,8 +70,11 @@ public class Property implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(""+id);
-        sb.append("#");
+        StringBuilder sb = new StringBuilder();
+        if(id != null){
+            sb.append(id);
+            sb.append("#");
+        }
         sb.append(cnName);
         sb.append("#");
         sb.append(enName);

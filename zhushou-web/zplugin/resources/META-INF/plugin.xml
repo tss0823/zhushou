@@ -2,7 +2,7 @@
   <id>zhushou</id>
   <name>Zhushou</name>
   <version>3.0</version>
-  <vendor email="shengshan.tang@zhihan.tld" url="http://www.chinamons.com">杭州智晗信息技术有限公司</vendor>
+  <vendor email="tss@meitu.com" url="http://www.meitu.com">杭州美图公司</vendor>
 
   <description><![CDATA[
       代码，SQL一键生成，一键同步<br>
@@ -78,6 +78,11 @@
         <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl meta D"/>-->
       </action>
     </group>
+
+    <action id="EditorBasics.EditorIllustration" class="com.yuntao.zhushou.zplugin.action.PopXmlAction" text="生成JAVA方法"
+            description="sqlMap to gen java code">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+    </action>
 
     <!--<action id="MainAction" class="com.yuntao.zhushou.zplugin.action.MainAction" text="助手"-->
             <!--description="MainAction">-->

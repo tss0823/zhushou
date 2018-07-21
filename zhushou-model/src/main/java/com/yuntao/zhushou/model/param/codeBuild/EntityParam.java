@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class EntityParam extends Entity {
 
+    private String clsFullName;
+
     List<Property> propertyList;
 
     public List<Property> getPropertyList() {
@@ -19,5 +21,13 @@ public class EntityParam extends Entity {
 
     public void setPropertyList(List<Property> propertyList) {
         this.propertyList = propertyList;
+    }
+
+    public String getClsFullName() {
+        return clsFullName;
+    }
+
+    public void setClsFullName(String clsFullName) {
+        this.clsFullName = clsFullName;
     }
 }

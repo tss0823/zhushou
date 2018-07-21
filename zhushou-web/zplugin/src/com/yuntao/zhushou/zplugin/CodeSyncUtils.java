@@ -192,6 +192,8 @@ public class CodeSyncUtils {
                     boolean insertColumnMatch = false;
                     boolean insertCanMatch = false;
                     boolean insertValueMatch = false;
+                    boolean insertValueBatchMatch = false;
+                    boolean insertValueBatchMatchStart = false;
 
                     for (String line : readLines) {
                         if (startResultMatch && StringUtils.contains(line, "</resultMap>")) {
@@ -237,6 +239,21 @@ public class CodeSyncUtils {
                             }
                             xmlSb.append("\n");
                             insertValueMatch = false;
+                        }else if (insertValueBatchMatchStart && StringUtils.contains(line, ")")) {
+                            //add new content
+                            xmlSb.delete(xmlSb.length() - 1, xmlSb.length());  //先删除/n
+                            for (Property property : propertyList) {
+                                String value = "#{item." + property.getEnName() + "}";
+                                if (StringUtils.isNotEmpty(property.getDefaultValue())) {
+                                    value = property.getDefaultValue();
+                                    if (property.getDataType().equals("java.lang.String")) {
+                                        value = "'" + value + "'";
+                                    }
+                                }
+                                xmlSb.append("," + value);
+                            }
+                            xmlSb.append("\n");
+                            insertValueBatchMatchStart = false;
                         }
                         xmlSb.append(line);
                         xmlSb.append("\n");
@@ -259,9 +276,15 @@ public class CodeSyncUtils {
                             updateMatch = false;
                         } else if (StringUtils.contains(line, "insert into")) {
                             insertColumnMatch = true;
-                        } else if (insertCanMatch && StringUtils.contains(line, "#")) {
+                        } else if (insertCanMatch && !insertValueBatchMatch && StringUtils.contains(line, "#")) {
                             insertValueMatch = true;
                             insertCanMatch = false;
+                        } else if (insertCanMatch && StringUtils.contains(line, "foreach")) {
+                            insertValueBatchMatch = true;
+                            insertCanMatch = false;
+                        }else if(insertValueBatchMatch &&  StringUtils.contains(line, "#")){
+                            insertValueBatchMatchStart = true;
+                            insertValueBatchMatch = false;
                         }
                     }
                     xmlSb.delete(xmlSb.length() - 1, xmlSb.length());
@@ -325,7 +348,7 @@ public class CodeSyncUtils {
                             }
 
                         } else if (insertValueMatch) {
-                            String pattern = ",?\\s*\\#\\{" + property.getEnName() + "\\}";
+                            String pattern = ",?\\s*\\#\\{(item\\.)?" + property.getEnName() + "\\}";
                             Pattern r = Pattern.compile(pattern);
                             Matcher m = r.matcher(line);
                             if (m.find()) {
@@ -382,6 +405,9 @@ public class CodeSyncUtils {
             for (File leafFile : files) {
                 String newFilePath = leafFile.getPath().replaceAll(outFilePath, projectPath);
                 File newFile = new File(newFilePath);//
+                if (!newFile.exists()) {  //文件不存在
+                    continue;
+                }
                 String fileContent = FileUtils.readFileToString(newFile);
                 if (newFile.getName().endsWith("DalConfig.java")) {
                     String pattern = "@Bean[^" + javaEnName + "Mapper]*public " + javaEnName + "Mapper[^\\}]*\\}\\s*\\n?\\s*\\t?";

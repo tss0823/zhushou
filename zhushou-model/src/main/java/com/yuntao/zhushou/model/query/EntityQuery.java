@@ -45,6 +45,9 @@ public class EntityQuery extends BaseQuery {
     /**  中文名称 * */
     private String cnName;
 
+    /**  表名称 * */
+    private String tableName;
+
     
 
     public EntityQuery(){}

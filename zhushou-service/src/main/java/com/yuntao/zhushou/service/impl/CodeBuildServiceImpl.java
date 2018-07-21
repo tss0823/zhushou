@@ -105,7 +105,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
         for (Long entityId : entityIds) {
             Entity entity = entityService.findById(entityId);
             EntityBo entityBo = BeanUtils.beanCopy(entity,EntityBo.class);
-            String tableName = DbUtils.javaToTableName(entity.getEnName());
+            String tableName = DbUtils.getTableName(entity.getTableName(),entity.getEnName());
             entityBo.setTableName(tableName);
             String upperEntityEnName = StringUtils.capitalize(entity.getEnName());
             entityBo.setUpperEntityEnName(upperEntityEnName);
@@ -152,7 +152,7 @@ public class CodeBuildServiceImpl extends AbstService implements CodeBuildServic
             byte[] contents = FileUtils.readFileToByteArray(genZipFile);
             attachment.setContent(contents);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("get attachment failed!",e);
         }
         attachmentService.insert(attachment);
 

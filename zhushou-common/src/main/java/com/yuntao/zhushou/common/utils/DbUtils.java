@@ -14,6 +14,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DbUtils {
 
+	public static String getTableName(String tableName,String enName){
+		if (StringUtils.isNotEmpty(tableName)) {
+			return tableName;
+		}else{
+			return javaToTableName(enName);
+		}
+	}
+
 	/**
 	 * java骆驼命名转table名
 	 * @param name

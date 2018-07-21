@@ -8,7 +8,7 @@ public class EmbeddedServer {
     public static void main(String[] args) throws Exception {
         // System.setProperty("hongbaoAppType","proxy");
         Tomcat tomcat = new Tomcat();
-        tomcat.setPort(1027);
+        tomcat.setPort(28081);
         tomcat.setBaseDir("target/tomcat");
         String userDir = System.getProperty("user.dir");
 

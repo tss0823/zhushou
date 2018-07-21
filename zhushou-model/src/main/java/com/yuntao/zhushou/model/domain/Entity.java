@@ -42,9 +42,12 @@ public class Entity implements Serializable {
         
     @ModelFieldComment(value = "英文名称")
     private String enName;
-        
+
     @ModelFieldComment(value = "中文名称")
     private String cnName;
+
+    @ModelFieldComment(value = "表名称")
+    private String tableName;
         
     
     public Entity(){
@@ -107,5 +110,13 @@ public class Entity implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

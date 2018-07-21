@@ -38,14 +38,6 @@ public class EntityBo extends Entity {
         this.upperEntityEnName = upperEntityEnName;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
     public List<PropertyBo> getPropList() {
         return propList;
     }

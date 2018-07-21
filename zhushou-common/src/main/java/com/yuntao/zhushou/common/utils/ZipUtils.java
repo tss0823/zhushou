@@ -172,8 +172,11 @@ public class ZipUtils {
         List ret = new ArrayList();
         File[] tmp = baseDir.listFiles();
         for (int i = 0; i < tmp.length; i++) {
-            if (tmp[i].isFile()) ret.add(tmp[i]);
-            if (tmp[i].isDirectory()) ret.addAll(getSubFiles(tmp[i]));
+            if (tmp[i].isFile()) {
+                ret.add(tmp[i]);
+            }else if (tmp[i].isDirectory()) {
+                ret.addAll(getSubFiles(tmp[i]));
+            }
         }
         return ret;
     }

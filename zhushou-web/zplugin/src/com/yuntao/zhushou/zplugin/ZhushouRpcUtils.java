@@ -63,20 +63,20 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            Map<String, String> headers = responseRes.getHeaders();
-            String resCookie = headers.get("Set-Cookie");
-            if (StringUtils.isNotEmpty(resCookie)) {
-                loginCookie = resCookie;
+            if (responseObject.isSuccess()) {
+                Map<String, String> headers = responseRes.getHeaders();
+                String resCookie = headers.get("Set-Cookie");
+                if (StringUtils.isNotEmpty(resCookie)) {
+                    loginCookie = resCookie;
+                }
+                Map<String, Object> data = (Map<String, Object>) responseObject.getData();
+                Object userObj = data.get("user");
+                String userInfo = JsonUtils.object2Json(userObj);
+                ZpluginUtils.setUserInfo(userInfo);
+                return responseObject;
             }
-            Map<String, Object> data = (Map<String, Object>) responseObject.getData();
-            Object userObj = data.get("user");
-            String userInfo = JsonUtils.object2Json(userObj);
-            ZpluginUtils.setUserInfo(userInfo);
-
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject getProjectByEnName(String enName) {
@@ -95,10 +95,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject entitySave(Entity entity) {
@@ -117,10 +118,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject entityUpdate(Entity entity) {
@@ -138,10 +140,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject getEntityByEnName(String enName) {
@@ -160,10 +163,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
 
@@ -182,10 +186,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
 
@@ -205,10 +210,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject getDbConfigure() {
@@ -226,10 +232,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject buildApp(String ids) {
@@ -248,10 +255,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject buildSqlSave(String sql) {
@@ -270,10 +278,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static List<Property> propertyList(Long entityId) {
@@ -327,10 +336,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject appUserDataList() {
@@ -354,10 +364,11 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 
     public static ResponseObject hotReload(String appName) {
@@ -385,9 +396,10 @@ public class ZhushouRpcUtils {
         String bodyText = responseRes.getBodyText();
         if (responseRes.getStatus() == 200) {
             ResponseObject responseObject = JsonUtils.json2Object(bodyText, ResponseObject.class);
-            return responseObject;
-        } else {
-            throw new BizException(bodyText);
+            if (responseObject.isSuccess()) {
+                return responseObject;
+            }
         }
+        throw new BizException(bodyText);
     }
 }
