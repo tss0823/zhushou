@@ -32,10 +32,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: shengshan.tang
@@ -79,17 +76,17 @@ public class XmlGenFormJava {
                     throw new RuntimeException("请选择sqlMap块再操作");
                 }
 
-
-
                 PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
                 PsiDirectory parent = psiFile.getParent();
                 String parentPath = parent.getVirtualFile().getParent().getPath();
                 VirtualFile mybatisConfigFile = LocalFileSystem.getInstance().findFileByPath(parentPath + File.separator + "mybatis-config.xml");
 
+                Map<String,EntityParam> aliasEntityMap = new HashMap<>();
                 try {
                     InputStream inputStream = mybatisConfigFile.getInputStream();
-                    List<String> strings = IOUtils.readLines(inputStream);
-                    Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(StringUtils.join(strings));
+//                    List<String> strings = IOUtils.readLines(inputStream);
+//                    strings.remove(0);
+                    Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(inputStream);
                     String domainPath = parentPath.substring(0,parentPath.lastIndexOf(File.separator))+"java";
                     Map<String, String> clsPathMap = SqlMapAnayse.anayseBeanPath(domainPath, stringStringMap);
                     Set<Map.Entry<String, String>> entries = clsPathMap.entrySet();
@@ -97,6 +94,7 @@ public class XmlGenFormJava {
                         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(entry.getValue());
                         PsiFile clsPsiFile = PsiManager.getInstance(project).findFile(virtualFile);
                         EntityParam entityParam = AnalyseModelUtils.analyseProperty(clsPsiFile);
+                        aliasEntityMap.put(entry.getKey(),entityParam);
 
                     }
                 } catch (IOException e1) {
@@ -104,10 +102,14 @@ public class XmlGenFormJava {
                 }
 
 
-//                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text);
+                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,aliasEntityMap);
+                JOptionPane.showMessageDialog(mainJpanel, text);
 
+                //获取当前实体alias
+                String mapperFileName = psiFile.getName();
+                int index = mapperFileName.lastIndexOf("Mapper.xml");
+                String prefix = mapperFileName.substring(0,index);
 
-//                JOptionPane.showMessageDialog(mainJpanel, text);
 //                System.out.println(text);
 
             }

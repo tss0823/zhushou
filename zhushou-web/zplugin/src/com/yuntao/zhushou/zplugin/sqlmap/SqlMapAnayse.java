@@ -6,6 +6,7 @@ import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapMethod;
 import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapParam;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.io.SAXReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,58 +27,54 @@ import java.util.regex.Pattern;
  */
 public class SqlMapAnayse {
 
-    private static Map<String,String> resultMap = new HashMap<>();
+    private static Map<String, String> resultMap = new HashMap<>();
+
     static {
-        resultMap.put("insert","int");
-        resultMap.put("update","int");
-        resultMap.put("delete","int");
-        resultMap.put("select","List");
+        resultMap.put("insert", "int");
+        resultMap.put("update", "int");
+        resultMap.put("delete", "int");
+        resultMap.put("select", "List");
     }
 
-    public static SqlMapMethod anayse(String text, Map<String,EntityParam> aliasEntityMap){
-
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    public static SqlMapMethod anayse(String text, Map<String, EntityParam> aliasEntityMap) {
+        SqlMapMethod sqlMapMethod = new SqlMapMethod();
         try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-//            String text = "<update id=\"deleteById\" parameterType=\"Long\">\n" +
-//                    "        update <include refid=\"Base_Table_Name\"/> set isDelete = 1 where id = #{id}\n" +
-//                    "    </update>";
+            //创建解析器
+            SAXReader reader = new SAXReader();
             InputStream inputStream = new ByteArrayInputStream(text.getBytes());
-            Document document = db.parse(inputStream);
-            Element element = document.getDocumentElement();
-            String tagName = element.getTagName();
+            org.dom4j.Document document = reader.read(inputStream);
+            org.dom4j.Element element = document.getRootElement();
+            String tagName = element.getName();
             String resultValue = resultMap.get(tagName);
             if (StringUtils.isEmpty(resultValue)) {
-                throw new RuntimeException("sqlmap 必须是 "+resultMap.keySet().toString());
+                throw new RuntimeException("sqlmap 必须是 " + resultMap.keySet().toString());
             }
-
-            SqlMapMethod sqlMapMethod = new SqlMapMethod();
-            String id = element.getAttribute("id");
+            String id = element.attributeValue("id");
             sqlMapMethod.setName(id);
 
             //参数处理 TODO parameterMap
-            String parameterType = element.getAttribute("parameterType");
+            String parameterType = element.attributeValue("parameterType");
             if (StringUtils.isNotEmpty(parameterType)) {  //参数
                 String parameterTypeAlias = parameterType;
                 //判断是否简称还是全名称
                 int lastIndex = parameterType.lastIndexOf(".");
-                if(lastIndex > 0){
+                if (lastIndex > 0) {
                     //获取简称
-                    parameterTypeAlias = parameterType.substring(lastIndex+1);
+                    parameterTypeAlias = parameterType.substring(lastIndex + 1);
                 }
                 EntityParam entityParam = aliasEntityMap.get(parameterTypeAlias);
-                if(entityParam == null){
-                    throw new RuntimeException("暂不支持处理 "+parameterType);
+                if (entityParam == null) {
+                    throw new RuntimeException("暂不支持处理 " + parameterType);
                 }
                 SqlMapParam sqlMapParam = new SqlMapParam(parameterTypeAlias, StringUtils.uncapitalize(parameterTypeAlias));
                 sqlMapMethod.addSqlMapParam(sqlMapParam);
                 sqlMapMethod.addImportCls(entityParam.getClsFullName());
 
-            }else{  //没有设置参数
+            } else {  //没有设置参数
 
             }
             //
-            String textContent = element.getTextContent();
+            String textContent = element.getText();
             List<String> paramList = new ArrayList<>();
 
             //获取参数
@@ -86,78 +83,75 @@ public class SqlMapAnayse {
             Matcher m = r.matcher(textContent);
             while (m.find()) {
                 String group = m.group();
-                String paramName = group.substring(2,group.length()-1);
-                if(paramList.contains(paramName)){
+                String paramName = group.substring(2, group.length() - 1);
+                if (paramList.contains(paramName)) {
                     continue;
                 }
                 paramList.add(paramName);
             }
 
             //返回参数处理
-            if (StringUtils.equals(tagName,"select")) {
-                String resultType = element.getAttribute("resultType");
-                String resultMap = element.getAttribute("resultMap");
-                if(StringUtils.isNotEmpty(resultType)){  //一般select 必须存在 resultType
+            if (StringUtils.equals(tagName, "select")) {
+                String resultType = element.attributeValue("resultType");
+                String resultMap = element.attributeValue("resultMap");
+                if (StringUtils.isNotEmpty(resultType)) {  //一般select 必须存在 resultType
                     String resultTypeAlias = resultType;
                     //判断是否简称还是全名称
                     int lastIndex = resultType.lastIndexOf(".");
-                    if(lastIndex > 0){
+                    if (lastIndex > 0) {
                         //获取简称
-                        resultTypeAlias = resultType.substring(lastIndex+1);
+                        resultTypeAlias = resultType.substring(lastIndex + 1);
                     }
                     EntityParam entityParam = aliasEntityMap.get(resultTypeAlias);
-                    if(entityParam == null){
-                        throw new RuntimeException("暂不支持处理 "+parameterType);
+                    if (entityParam == null) {
+                        throw new RuntimeException("暂不支持处理 " + parameterType);
                     }
                     sqlMapMethod.setReturnType(resultTypeAlias);
                     sqlMapMethod.addImportCls(entityParam.getClsFullName());
-                }else if(StringUtils.isNotEmpty(resultMap)){  //一般select 必须存在 resultMap
+                } else if (StringUtils.isNotEmpty(resultMap)) {  //一般select 必须存在 resultMap
 
-                }else{  //非查询
-                   throw new RuntimeException("select must exist resultType or resultMap") ;
+                } else {  //非查询
+                    throw new RuntimeException("select must exist resultType or resultMap");
                 }
-            }else{
+            } else {
                 sqlMapMethod.setReturnType(resultValue);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return sqlMapMethod;
     }
 
-    public static Map<String,String> anayseMyBatisConfig(String text){
-        Map<String,String> map = new HashMap<>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try{
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            InputStream inputStream = new ByteArrayInputStream(text.getBytes());
-            Document document = db.parse(inputStream);
-            Element element = document.getDocumentElement();
-            Node lastChild = element.getLastChild();
-            NodeList childNodes = lastChild.getChildNodes();
-            int length = childNodes.getLength();
-            for (int i = 0; i < length; i++) {
-                Node item = childNodes.item(i);
-                Node alias = item.getNextSibling().getAttributes().getNamedItem("alias");
-                Node type = item.getNextSibling().getAttributes().getNamedItem("type");
-                map.put(alias.getNodeValue(),type.getNodeValue());
+    public static Map<String, String> anayseMyBatisConfig(InputStream inputStream) {
+        Map<String, String> map = new HashMap<>();
+        try {
+            //创建解析器
+            SAXReader reader = new SAXReader();
+            org.dom4j.Document document = reader.read(inputStream);
+            org.dom4j.Element root = document.getRootElement();
+            List<org.dom4j.Node> typeAlias = root.selectNodes("typeAliases/typeAlias");
+
+            for (org.dom4j.Node node : typeAlias) {
+                String alias = node.valueOf("@alias");
+                String type = node.valueOf("@type");
+                map.put(alias,type);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return map;
     }
 
-    public static Map<String,String> anayseBeanPath(String parentPath,Map<String,String>  aliasBeanMap){
+    public static Map<String, String> anayseBeanPath(String parentPath, Map<String, String> aliasBeanMap) {
         Set<Map.Entry<String, String>> entries = aliasBeanMap.entrySet();
-        Map<String,String> clssPathMap = new HashMap<>();
+        Map<String, String> clssPathMap = new HashMap<>();
         for (Map.Entry<String, String> entry : entries) {
             String key = entry.getKey();
             String value = entry.getValue();
-            String clsPath = parentPath+"java"+File.separator+value.replaceAll("\\.",File.separator+".java");
-            clssPathMap.put(key,clsPath);
+            String clsPath = parentPath + "java" + File.separator + value.replaceAll("\\.", File.separator + ".java");
+            clssPathMap.put(key, clsPath);
 
 
         }
@@ -170,15 +164,18 @@ public class SqlMapAnayse {
         Matcher m = r.matcher("abdf#{name}sfdfs=32#{age}");
         while (m.find()) {
             String group = m.group();
-            String paramName = group.substring(2,group.length()-1);
+            String paramName = group.substring(2, group.length() - 1);
             System.out.println(paramName);
         }
     }
 
 
     public static void main(String[] args) throws IOException {
-        List<String> strings = IOUtils.readLines(new FileInputStream(new File("/Users/pro/workspace/darwin/darwin-dal/src/main/resources/mybatis-config.xml")));
-        Map<String, String> stringStringMap = anayseMyBatisConfig(StringUtils.join(strings,""));
+
+//        List<String> strings = IOUtils.readLines();
+//        File configFile = new File("/Users/pro/workspace/darwin/darwin-dal/src/main/resources/mybatis-config.xml");
+        FileInputStream fileInputStream = new FileInputStream(new File("/Users/pro/workspace/darwin/darwin-dal/src/main/resources/mybatis-config.xml"));
+        Map<String, String> stringStringMap = anayseMyBatisConfig(fileInputStream);
         System.out.println(stringStringMap);
 
     }
