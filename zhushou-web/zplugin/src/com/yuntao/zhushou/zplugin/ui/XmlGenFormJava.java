@@ -87,28 +87,29 @@ public class XmlGenFormJava {
 //                    List<String> strings = IOUtils.readLines(inputStream);
 //                    strings.remove(0);
                     Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(inputStream);
-                    String domainPath = parentPath.substring(0,parentPath.lastIndexOf(File.separator))+"java";
+                    String domainPath = parentPath.substring(0,parentPath.lastIndexOf(File.separator)+1)+"java";
                     Map<String, String> clsPathMap = SqlMapAnayse.anayseBeanPath(domainPath, stringStringMap);
                     Set<Map.Entry<String, String>> entries = clsPathMap.entrySet();
                     for (Map.Entry<String, String> entry : entries) {
                         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(entry.getValue());
                         PsiFile clsPsiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                        EntityParam entityParam = AnalyseModelUtils.analyseProperty(clsPsiFile);
+                        EntityParam entityParam = AnalyseModelUtils.analysePropertyForXmlGen(clsPsiFile);
                         aliasEntityMap.put(entry.getKey(),entityParam);
 
                     }
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    throw new RuntimeException(e1);
                 }
 
-
-                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,aliasEntityMap);
-                JOptionPane.showMessageDialog(mainJpanel, text);
 
                 //获取当前实体alias
                 String mapperFileName = psiFile.getName();
                 int index = mapperFileName.lastIndexOf("Mapper.xml");
                 String prefix = mapperFileName.substring(0,index);
+
+                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,prefix,aliasEntityMap);
+                JOptionPane.showMessageDialog(mainJpanel, text);
+
 
 //                System.out.println(text);
 

@@ -30,6 +30,73 @@ public class AnalyseModelUtils {
     public AnalyseModelUtils() {
     }
 
+    public static EntityParam analysePropertyForXmlGen(PsiFile psiFile) {
+        EntityParam entityParam = new EntityParam();
+        PsiClass psiClass = PsiTreeUtil.findChildOfAnyType(psiFile, PsiClass.class);
+        if (psiClass == null) {
+            throw new BizException("请选择实体类去生成");
+        }
+
+        PsiAnnotation[] clsAnnotions = psiClass.getModifierList().getAnnotations();
+        String clsEnName = psiClass.getName();
+        String entityEnName = StringUtils.uncapitalize(clsEnName);
+        entityParam.setEnName(entityEnName);
+
+        if (clsAnnotions != null && clsAnnotions.length > 0) {
+            PsiNameValuePair[] clsAttributes = clsAnnotions[0].getParameterList().getAttributes();
+            for (PsiNameValuePair clsAttribute : clsAttributes) {
+                String value = clsAttribute.getValue().getText();
+                value = value.substring(1, value.length() - 1);
+                entityParam.setCnName(value);
+            }
+        }
+
+        PsiField[] allFields = psiClass.getAllFields();
+        List<Property> propertyList = new ArrayList<>();
+        entityParam.setPropertyList(propertyList);
+        for (PsiField field : allFields) {
+            String enName = field.getName();
+            String dataType = field.getType().getCanonicalText();
+            Property property = new Property();
+            property.setEnName(enName);
+            property.setDataType(dataType);
+            property.setIsNull(true);
+            if (enName.equals("id")) {
+                property.setPrimaryKey(true);
+                property.setIsNull(false);
+            } else {
+                property.setPrimaryKey(false);
+            }
+            PsiAnnotation[] annotations = field.getModifierList().getAnnotations();
+            if (annotations != null && annotations.length > 0) {
+                PsiNameValuePair[] attributes = annotations[0].getParameterList().getAttributes();
+                for (PsiNameValuePair attribute : attributes) {
+                    try {
+                        String name = attribute.getName();
+                        String text = attribute.getValue().getText();
+                        if (name.equals("value")) {
+                            text = text.substring(1, text.length() - 1);
+                            property.setCnName(text);
+                        } else if (name.equals("required") && text.equals("true")) {
+                            property.setIsNull(false);
+                        } else if (name.equals("maxLength")) {
+                            property.setLength(text);
+                        } else if (name.equals("defaultValue")) {
+                            text = text.substring(1, text.length() - 1);
+                            property.setDefaultValue(text);
+                        }
+
+                    } catch (Exception e) {
+                        break;
+                    }
+                }
+            }
+            propertyList.add(property);
+        }
+        return entityParam;
+
+    }
+
     public static EntityParam analyseProperty(PsiFile psiFile) {
         EntityParam entityParam = new EntityParam();
         PsiClass psiClass = PsiTreeUtil.findChildOfAnyType(psiFile, PsiClass.class);
@@ -104,8 +171,6 @@ public class AnalyseModelUtils {
             if (state) {
                 propertyList.add(property);
             }
-
-//                System.out.printf("field="+allField);
         }
         return entityParam;
     }

@@ -36,7 +36,7 @@ public class SqlMapAnayse {
         resultMap.put("select", "List");
     }
 
-    public static SqlMapMethod anayse(String text, Map<String, EntityParam> aliasEntityMap) {
+    public static SqlMapMethod anayse(String text,String currentAlias ,Map<String, EntityParam> aliasEntityMap) {
         SqlMapMethod sqlMapMethod = new SqlMapMethod();
         try {
             //创建解析器
@@ -109,9 +109,18 @@ public class SqlMapAnayse {
                     sqlMapMethod.setReturnType(resultTypeAlias);
                     sqlMapMethod.addImportCls(entityParam.getClsFullName());
                 } else if (StringUtils.isNotEmpty(resultMap)) {  //一般select 必须存在 resultMap
-
+                    if(resultMap.equals("BaseResultMap")){  //暂时这么处理，后需要反向找到resultMap type
+                        sqlMapMethod.setReturnType(currentAlias);
+                        EntityParam entityParam = aliasEntityMap.get(currentAlias);
+                        sqlMapMethod.addImportCls(entityParam.getClsFullName());
+                    }
                 } else {  //非查询
                     throw new RuntimeException("select must exist resultType or resultMap");
+                }
+                //处理返回object or list
+                if(!sqlMapMethod.getName().startsWith("get") && !sqlMapMethod.getName().startsWith("find")){  //list
+                    sqlMapMethod.setReturnType("List<"+sqlMapMethod.getReturnType()+">");
+                    sqlMapMethod.addImportCls("java.lang.List");
                 }
             } else {
                 sqlMapMethod.setReturnType(resultValue);
@@ -150,7 +159,7 @@ public class SqlMapAnayse {
         for (Map.Entry<String, String> entry : entries) {
             String key = entry.getKey();
             String value = entry.getValue();
-            String clsPath = parentPath + "java" + File.separator + value.replaceAll("\\.", File.separator + ".java");
+            String clsPath = parentPath + File.separator + value.replaceAll("\\.", File.separator )+".java";
             clssPathMap.put(key, clsPath);
 
 
