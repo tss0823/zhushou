@@ -11,4 +11,4 @@ module=$1
 cd ${projectDir}/zhushou-web/${module}
 pwd
 echo "start ${module} ..."
-mvn tomcat7:run > ${projectDir}/logs/zhushou.log 2>&1 &
+mvn tomcat7:run -Dbase.home=${projectDir}> ${projectDir}/logs/zhushou.log 2>&1 &

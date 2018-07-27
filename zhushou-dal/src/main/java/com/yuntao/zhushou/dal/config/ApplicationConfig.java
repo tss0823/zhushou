@@ -13,6 +13,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * 等价于spring-config.xml
@@ -20,7 +24,7 @@ import java.io.File;
 @Configuration
 public class ApplicationConfig {
 
-    private static Logger LOG = LoggerFactory.getLogger(ApplicationConfig.class);
+    protected final static Logger bisLog = org.slf4j.LoggerFactory.getLogger("bis");
 
     /**
      * 线上环境的profile名称
@@ -33,6 +37,9 @@ public class ApplicationConfig {
 
     @Value("${profiles.active}")
     private String active;
+
+    @Value("${config.dir}")
+    private String configDir;
 
     public boolean isProd() {
         return PROFILE_NAME_PROD.equals(active);
@@ -47,12 +54,27 @@ public class ApplicationConfig {
      */
     @Profile("dev")
     @Bean(name = "propertyPlaceholderConfigurer")
-    public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerDev() {
+    public  PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerDev() {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("filtered.properties");
+        Properties p = new Properties();
+        try {
+            p.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        bisLog.info("active={}",active);
+//        bisLog.info("configDir={}",configDir);
+        String baseHome = p.getProperty("base.home");
+        bisLog.info("baseHome={}",baseHome);
+
+        String configPath = baseHome + File.separator + "conf";
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
-        String projectDir = System.getProperty("user.dir");
-        String path = projectDir+ File.separator+"conf/config.properties";
+//        String projectDir = System.getProperty("user.dir");
+        String path = configPath + File.separator+"config.properties";
+        bisLog.info("config path={}",path);
+
         ppc.setLocation(new FileSystemResource(path));
-        LOG.info("config.properties loaded");
+        bisLog.info("config.properties loaded");
         return ppc;
     }
 
@@ -61,7 +83,7 @@ public class ApplicationConfig {
     public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurerTest() {
         PropertySourcesPlaceholderConfigurer ppc = new PropertySourcesPlaceholderConfigurer();
         ppc.setLocation(new ClassPathResource("env/config-test.properties"));
-        LOG.info("env/config-test.properties loaded");
+        bisLog.info("env/config-test.properties loaded");
         return ppc;
     }
 
@@ -72,7 +94,7 @@ public class ApplicationConfig {
         String projectDir = System.getProperty("user.dir");
         String path = projectDir+ File.separator+"conf/config.properties";
         ppc.setLocation(new FileSystemResource(path));
-        LOG.info("config.properties loaded");
+        bisLog.info("config.properties loaded");
         return ppc;
     }
 

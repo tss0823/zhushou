@@ -625,6 +625,7 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
+                <base.home>${user.dir}</base.home>
                 <log.dir>${user.home}/logs/zhushou</log.dir>
                 <maven.test.skip>true</maven.test.skip>
                 <libScope>compile</libScope>
@@ -638,6 +639,7 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
+                <base.home>${user.dir}</base.home>
                 <log.dir>/u01/logs/app/zhushou</log.dir>
                 <libScope>compile</libScope>
             </properties>
@@ -647,6 +649,7 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
+                <base.home>${user.home}</base.home>
                 <log.dir>/u01/logs/app/zhushou</log.dir>
                 <libScope>compile</libScope>
             </properties>
