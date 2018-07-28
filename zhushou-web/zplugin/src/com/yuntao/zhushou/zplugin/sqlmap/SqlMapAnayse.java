@@ -1,22 +1,16 @@
 package com.yuntao.zhushou.zplugin.sqlmap;
 
-import com.yuntao.zhushou.model.domain.Entity;
+import com.yuntao.zhushou.model.domain.Property;
 import com.yuntao.zhushou.model.param.codeBuild.EntityParam;
 import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapMethod;
 import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapParam;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,12 +32,13 @@ public class SqlMapAnayse {
 
     public static SqlMapMethod anayse(String text,String currentAlias ,Map<String, EntityParam> aliasEntityMap) {
         SqlMapMethod sqlMapMethod = new SqlMapMethod();
+        EntityParam currentEntityParam = aliasEntityMap.get(currentAlias);
         try {
             //创建解析器
             SAXReader reader = new SAXReader();
             InputStream inputStream = new ByteArrayInputStream(text.getBytes());
-            org.dom4j.Document document = reader.read(inputStream);
-            org.dom4j.Element element = document.getRootElement();
+            Document document = reader.read(inputStream);
+            Element element = document.getRootElement();
             String tagName = element.getName();
             String resultValue = resultMap.get(tagName);
             if (StringUtils.isEmpty(resultValue)) {
@@ -77,6 +72,7 @@ public class SqlMapAnayse {
             String textContent = element.getText();
             List<String> paramList = new ArrayList<>();
 
+
             //获取参数
             String pattern = "\\#\\{[^\\}]+\\}";
             Pattern r = Pattern.compile(pattern);
@@ -87,7 +83,15 @@ public class SqlMapAnayse {
                 if (paramList.contains(paramName)) {
                     continue;
                 }
-                paramList.add(paramName);
+                //match param
+                List<Property> propertyList = currentEntityParam.getPropertyList();
+                for (Property property : propertyList) {
+                    if (property.getEnName().equals(paramName)) {
+
+                    }
+                }
+
+                sqlMapMethod.addSqlMapParam(paramName);
             }
 
             //返回参数处理
@@ -111,8 +115,7 @@ public class SqlMapAnayse {
                 } else if (StringUtils.isNotEmpty(resultMap)) {  //一般select 必须存在 resultMap
                     if(resultMap.equals("BaseResultMap")){  //暂时这么处理，后需要反向找到resultMap type
                         sqlMapMethod.setReturnType(currentAlias);
-                        EntityParam entityParam = aliasEntityMap.get(currentAlias);
-                        sqlMapMethod.addImportCls(entityParam.getClsFullName());
+                        sqlMapMethod.addImportCls(currentEntityParam.getClsFullName());
                     }
                 } else {  //非查询
                     throw new RuntimeException("select must exist resultType or resultMap");
@@ -137,11 +140,12 @@ public class SqlMapAnayse {
         try {
             //创建解析器
             SAXReader reader = new SAXReader();
-            org.dom4j.Document document = reader.read(inputStream);
-            org.dom4j.Element root = document.getRootElement();
-            List<org.dom4j.Node> typeAlias = root.selectNodes("typeAliases/typeAlias");
+//            System.setProperty("javax.xml.parsers.SAXParserFactory", "org.apache.xerces.jaxp.SAXParserFactoryImpl");
+            Document document = reader.read(inputStream);
+            Element root = document.getRootElement();
+            List<Node> typeAlias = root.selectNodes("typeAliases/typeAlias");
 
-            for (org.dom4j.Node node : typeAlias) {
+            for (Node node : typeAlias) {
                 String alias = node.valueOf("@alias");
                 String type = node.valueOf("@type");
                 map.put(alias,type);
