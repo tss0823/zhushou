@@ -20,6 +20,7 @@ import com.yuntao.zhushou.zplugin.AnalyseModelUtils;
 import com.yuntao.zhushou.zplugin.ZpluginConstant;
 import com.yuntao.zhushou.zplugin.ZpluginUtils;
 import com.yuntao.zhushou.zplugin.sqlmap.SqlMapAnayse;
+import com.yuntao.zhushou.zplugin.sqlmap.SqlMapContextMgr;
 import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,86 +63,48 @@ public class XmlGenFormJava {
 
 
     public XmlGenFormJava(AnActionEvent event) {
-        btnOk.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //生成java method code
-                final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-                final Project project = event.getProject();
-                //Access document, caret, and selection
-                final Document document = editor.getDocument();
-                final SelectionModel selectionModel = editor.getSelectionModel();
-                String text = selectionModel.getSelectedText();
-                if (StringUtils.isBlank(text)) {
-                    throw new RuntimeException("请选择sqlMap块再操作");
-                }
+        btnOk.addActionListener(e -> {
+            //生成java method code
+            final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+            final Project project = event.getProject();
+            SqlMapContextMgr.project = project;
+            //TODO
+            //Access document, caret, and selection
+//                final Document document = editor.getDocument();
+            final SelectionModel selectionModel = editor.getSelectionModel();
+            String text = selectionModel.getSelectedText();
+            if (StringUtils.isBlank(text)) {
+                throw new RuntimeException("请选择sqlMap块再操作");
+            }
 
-                PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
-                PsiDirectory parent = psiFile.getParent();
-                String parentPath = parent.getVirtualFile().getParent().getPath();
-                VirtualFile mybatisConfigFile = LocalFileSystem.getInstance().findFileByPath(parentPath + File.separator + "mybatis-config.xml");
-
-                Map<String,EntityParam> aliasEntityMap = new HashMap<>();
-                try {
-                    InputStream inputStream = mybatisConfigFile.getInputStream();
-//                    List<String> strings = IOUtils.readLines(inputStream);
-//                    strings.remove(0);
-                    Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(inputStream);
-                    String domainPath = parentPath.substring(0,parentPath.lastIndexOf(File.separator)+1)+"java";
-                    Map<String, String> clsPathMap = SqlMapAnayse.anayseBeanPath(domainPath, stringStringMap);
-                    Set<Map.Entry<String, String>> entries = clsPathMap.entrySet();
-                    for (Map.Entry<String, String> entry : entries) {
-                        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(entry.getValue());
-                        PsiFile clsPsiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                        EntityParam entityParam = AnalyseModelUtils.analysePropertyForXmlGen(clsPsiFile);
-                        aliasEntityMap.put(entry.getKey(),entityParam);
-
-                    }
-                } catch (IOException e1) {
-                    throw new RuntimeException(e1);
-                }
+            PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
+            PsiDirectory parent = psiFile.getParent();
+            String parentPath = parent.getVirtualFile().getParent().getPath();
+//                VirtualFile mybatisConfigFile = LocalFileSystem.getInstance().findFileByPath();
+            String configFilePath = parentPath + File.separator + "mybatis-config.xml";
+            Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(configFilePath);
+            SqlMapContextMgr.entityNameAliasMap = stringStringMap;
 
 
-                //获取当前实体alias
-                String mapperFileName = psiFile.getName();
-                int index = mapperFileName.lastIndexOf("Mapper.xml");
-                String prefix = mapperFileName.substring(0,index);
+            //获取当前实体alias
+            String mapperFileName = psiFile.getName();
+            int index = mapperFileName.lastIndexOf("Mapper.xml");
+            String prefix = mapperFileName.substring(0,index);
 
-                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,prefix,aliasEntityMap);
-                JOptionPane.showMessageDialog(mainJpanel, text);
+            SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,prefix);
+            JOptionPane.showMessageDialog(mainJpanel, sqlMapMethod);
 
 
 //                System.out.println(text);
 
-            }
         });
 
-        chkDao.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                XmlGenFormJava.this.chkAction(e);
-            }
-        });
-        chkManager.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                XmlGenFormJava.this.chkAction(e);
-            }
-        });
+        chkDao.addActionListener(e -> XmlGenFormJava.this.chkAction(e));
+        chkManager.addActionListener(e -> XmlGenFormJava.this.chkAction(e));
 
-        chkService.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                XmlGenFormJava.this.chkAction(e);
-            }
-        });
+        chkService.addActionListener(e -> XmlGenFormJava.this.chkAction(e));
 
-        chkClient.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                XmlGenFormJava.this.chkAction(e);
-            }
-        });
+        chkClient.addActionListener(e -> XmlGenFormJava.this.chkAction(e));
 
     }
 
