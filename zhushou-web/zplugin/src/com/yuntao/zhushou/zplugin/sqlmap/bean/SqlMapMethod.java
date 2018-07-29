@@ -11,6 +11,10 @@ import java.util.Set;
  */
 public class SqlMapMethod {
 
+    private String aliasName;
+
+    private String packageName;
+
     private String name;
 
     private List<SqlMapParam> sqlMapParamList = new ArrayList<>();
@@ -60,5 +64,21 @@ public class SqlMapMethod {
 
     public void addImportCls(String importCls) {
         this.importSet.add(importCls);
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getAliasName() {
+        return aliasName;
+    }
+
+    public void setAliasName(String aliasName) {
+        this.aliasName = aliasName;
     }
 }

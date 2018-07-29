@@ -105,7 +105,8 @@ public class SqlMapAnayse {
                     String item = rootElement.attributeValue("item");
                     for (Property property : propertyList) {
                         if (property.getEnName().equals(item)) {
-                            SqlMapParam sqlMapParam = new SqlMapParam("List<"+property.getDataType()+">", collection);
+                            String shortTypeName = SqlMapUtils.getShortTypeName(property.getDataType());
+                            SqlMapParam sqlMapParam = new SqlMapParam("List<"+shortTypeName+">", collection);
                             sqlMapMethod.addSqlMapParam(sqlMapParam);
                             sqlMapMethod.addImportCls("java.util.List");
                             break;
@@ -119,7 +120,7 @@ public class SqlMapAnayse {
                 for (String paramName : paramSet) {
                     for (Property property : propertyList) {
                         if (property.getEnName().equals(paramName)) {
-                            SqlMapParam sqlMapParam = new SqlMapParam(property.getDataType(), property.getEnName());
+                            SqlMapParam sqlMapParam = new SqlMapParam(SqlMapUtils.getShortTypeName(property.getDataType()), property.getEnName());
                             sqlMapMethod.addSqlMapParam(sqlMapParam);
                             break;
                         }

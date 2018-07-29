@@ -21,6 +21,7 @@ import com.yuntao.zhushou.zplugin.ZpluginConstant;
 import com.yuntao.zhushou.zplugin.ZpluginUtils;
 import com.yuntao.zhushou.zplugin.sqlmap.SqlMapAnayse;
 import com.yuntao.zhushou.zplugin.sqlmap.SqlMapContextMgr;
+import com.yuntao.zhushou.zplugin.sqlmap.SqlMapUtils;
 import com.yuntao.zhushou.zplugin.sqlmap.bean.SqlMapMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,38 +65,63 @@ public class XmlGenFormJava {
 
     public XmlGenFormJava(AnActionEvent event) {
         btnOk.addActionListener(e -> {
-            //生成java method code
-            final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-            final Project project = event.getProject();
-            SqlMapContextMgr.project = project;
-            //TODO
-            //Access document, caret, and selection
+            try{
+                //生成java method code
+                final Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+                final Project project = event.getProject();
+                SqlMapContextMgr.project = project;
+                //TODO
+                //Access document, caret, and selection
 //                final Document document = editor.getDocument();
-            final SelectionModel selectionModel = editor.getSelectionModel();
-            String text = selectionModel.getSelectedText();
-            if (StringUtils.isBlank(text)) {
-                throw new RuntimeException("请选择sqlMap块再操作");
-            }
+                final SelectionModel selectionModel = editor.getSelectionModel();
+                String text = selectionModel.getSelectedText();
+                if (StringUtils.isBlank(text)) {
+                    throw new RuntimeException("请选择sqlMap块再操作");
+                }
 
-            PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
-            PsiDirectory parent = psiFile.getParent();
-            String parentPath = parent.getVirtualFile().getParent().getPath();
+                PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
+                if (!psiFile.getVirtualFile().getPath().endsWith("Mapper.xml")) {
+                    throw new RuntimeException("请在Mapper.xml文件中操作");
+                }
+                PsiDirectory parent = psiFile.getParent();
+                String parentPath = parent.getVirtualFile().getParent().getPath();
 //                VirtualFile mybatisConfigFile = LocalFileSystem.getInstance().findFileByPath();
-            String configFilePath = parentPath + File.separator + "mybatis-config.xml";
-            Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(configFilePath);
-            SqlMapContextMgr.entityNameAliasMap = stringStringMap;
+                String configFilePath = parentPath + File.separator + "mybatis-config.xml";
+                Map<String, String> stringStringMap = SqlMapAnayse.anayseMyBatisConfig(configFilePath);
+                SqlMapContextMgr.entityNameAliasMap = stringStringMap;
 
 
-            //获取当前实体alias
-            String mapperFileName = psiFile.getName();
-            int index = mapperFileName.lastIndexOf("Mapper.xml");
-            String prefix = mapperFileName.substring(0,index);
-
-            SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,prefix);
-            JOptionPane.showMessageDialog(mainJpanel, sqlMapMethod);
+                //获取当前实体alias
+                String mapperFileName = psiFile.getName();
+                int index = mapperFileName.lastIndexOf("Mapper.xml");
+                String prefix = mapperFileName.substring(0,index);
 
 
-//                System.out.println(text);
+                SqlMapMethod sqlMapMethod = SqlMapAnayse.anayse(text,prefix);
+                sqlMapMethod.setAliasName(prefix);
+                String clsFullName = stringStringMap.get(prefix);
+                int dalIndex = clsFullName.indexOf("dal");
+                String packageName = clsFullName.substring(0, dalIndex);
+                sqlMapMethod.setPackageName(packageName);
+
+
+                //设置 需要生成那些module 方法
+                int size = chkList.size();
+                for (int i = size-1; i >= 0; i--) {
+                    JCheckBox jCheckBox = chkList.get(i);
+                    boolean selected = jCheckBox.getModel().isSelected();
+                    if(selected){
+                        sqlMapMethod.setGenScope(jCheckBox.getText());
+                        break;
+                    }
+                }
+                SqlMapUtils.genSqlMapJavaMethod(sqlMapMethod);
+                JOptionPane.showMessageDialog(mainJpanel, "生成成功");
+            }catch (Exception ex){
+                JOptionPane.showMessageDialog(mainJpanel, "生成失败 "+ExceptionUtils.getPrintStackTrace(ex));
+            }finally {
+                frame.dispose();
+            }
 
         });
 
