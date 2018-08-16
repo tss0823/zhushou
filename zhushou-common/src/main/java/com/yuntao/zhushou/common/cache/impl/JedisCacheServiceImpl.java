@@ -4,6 +4,7 @@ import com.yuntao.zhushou.common.cache.CacheService;
 import com.yuntao.zhushou.common.cache.JedisService;
 import com.yuntao.zhushou.common.cache.QueueService;
 import com.yuntao.zhushou.common.utils.SerializeNewUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,9 @@ public class JedisCacheServiceImpl implements CacheService ,QueueService,JedisSe
     public void init() {
         List<JedisShardInfo> shards = new ArrayList<>();
         JedisShardInfo jedisShardInfo = new JedisShardInfo(host, port);
-        jedisShardInfo.setPassword(pwd);
+        if(StringUtils.isNotEmpty(pwd)){
+            jedisShardInfo.setPassword(pwd);
+        }
         shards.add(jedisShardInfo);
         JedisPoolConfig config = new JedisPoolConfig();
         //控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；

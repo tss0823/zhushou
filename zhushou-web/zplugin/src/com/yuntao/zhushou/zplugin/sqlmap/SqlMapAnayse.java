@@ -142,7 +142,7 @@ public class SqlMapAnayse {
                         sqlMapMethod.setReturnType(objectClass.getTypeName());
                     }catch (Exception e){
                         //引用类型,如果抛出异常，则说明不是原始类型
-                        EntityParam entityParam = SqlMapUtils.getEntityParamByclassType(parameterType);
+                        EntityParam entityParam = SqlMapUtils.getEntityParamByclassType(resultType);
                         sqlMapMethod.setReturnType(entityParam.getAliasName());
                         sqlMapMethod.addImportCls(entityParam.getClsFullName());
                     }
