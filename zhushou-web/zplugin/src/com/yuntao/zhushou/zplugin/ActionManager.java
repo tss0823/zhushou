@@ -59,6 +59,7 @@ public class ActionManager {
         entity.setProjectId(Long.valueOf(ZpluginUtils.getProjectId()));
         entity.setEnName(entityParam.getEnName());
         entity.setCnName(entityParam.getCnName());
+        entity.setTableName(entityParam.getTableName());
         List<Property> editPropertyList = null;
         List<Property> selectPropertyList = entityParam.getPropertyList();
         if (action == 0) {  //保存实体

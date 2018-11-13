@@ -14,6 +14,7 @@ public class JdbcUtils {
     protected final static Logger log = org.slf4j.LoggerFactory.getLogger(JdbcUtils.class);
     public static void execute(DbConfigure dbConfigure, String sql) {
         bisLog.info("param sql="+sql);
+        sql = sql.replaceAll("\\n","");
         try {
             Class.forName(dbConfigure.getDriver());
             // 获取数据库连接

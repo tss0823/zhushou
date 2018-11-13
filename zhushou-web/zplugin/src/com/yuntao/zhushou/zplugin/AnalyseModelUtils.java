@@ -117,9 +117,17 @@ public class AnalyseModelUtils {
             throw new RuntimeException("实体注解参数不能为空");
         }
         for (PsiNameValuePair clsAttribute : clsAttributes) {
+            String name = clsAttribute.getName();
             String value = clsAttribute.getValue().getText();
             value = value.substring(1, value.length() - 1);
-            entityParam.setCnName(value);
+            if (StringUtils.isBlank(name) || StringUtils.equalsIgnoreCase(name,"value")) {
+                entityParam.setCnName(value);
+            }else if(StringUtils.equalsIgnoreCase(name,"tableName")){
+                entityParam.setTableName(value);
+            }
+        }
+        if (StringUtils.isEmpty(entityParam.getTableName())) {
+            entityParam.setTableName(StringUtils.uncapitalize(entityParam.getEnName()));
         }
 
         PsiField[] allFields = psiClass.getAllFields();
